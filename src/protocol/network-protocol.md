@@ -60,36 +60,14 @@ NetworkManager
 
 ### Transport Selection
 
-Transport preference can be configured via `NodeConfig`:
+Configure transport via [node configuration](../node/configuration.md):
 
-```json
-{
-  "network": {
-    "transport_preference": "tcp_only"  // or "iroh_only", "hybrid"
-  }
-}
+```toml
+[network]
+transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
 ```
 
-**Transport Modes:**
-- `tcp_only`: Use only TCP transport (default, Bitcoin compatible)
-- `iroh_only`: Use only Iroh transport (experimental)
-- `hybrid`: Use both TCP and Iroh simultaneously
+**Modes**: `tcp_only` (default, Bitcoin compatible), `iroh_only` (experimental), `hybrid` (both simultaneously)
 
-### Protocol Adapter
-
-The protocol adapter handles message serialization between:
-- Consensus-proof `NetworkMessage` types
-- Transport-specific wire formats (TCP Bitcoin P2P vs Iroh message format)
-
-### Message Bridge
-
-The message bridge connects consensus-proof message processing with the transport layer:
-- Converts messages to/from transport formats
-- Processes incoming messages
-- Generates responses
-
-### Feature Flags
-
-- **Default**: TCP-only (Bitcoin compatible)
-- **`iroh` feature**: Enable Iroh transport support
+The **protocol adapter** serializes between consensus-proof `NetworkMessage` types and transport-specific wire formats. The **message bridge** processes messages and generates responses. Default is TCP-only; enable Iroh via `iroh` feature flag.
 

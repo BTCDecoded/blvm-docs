@@ -21,52 +21,13 @@ The consensus layer implements formal verification for Bitcoin consensus rules u
 
 ## Network Protocol Verification
 
-The network protocol message parsing, serialization, and processing are formally verified using Kani model checking, extending formal verification beyond consensus to the network layer.
+Network protocol message parsing, serialization, and processing are formally verified using Kani model checking (16 proofs total), extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
 
-### Verified Properties
+**Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 
-1. **Message Header Parsing**: Magic number, command string, payload length, checksum extraction
-2. **Checksum Validation**: Invalid checksums are rejected, checksum calculation correctness
-3. **Size Limit Enforcement**: Oversized messages are rejected, payload size limits enforced
-4. **Round-Trip Properties**: All message types verify `parse(serialize(msg)) == msg`
+**Verified Messages**: Phase 1 (8 proofs): Version, VerAck, Ping, Pong. Phase 2 (8 proofs): Transaction, Block, Headers, Inv, GetData, GetHeaders.
 
-### Verified Message Types
+**Mathematical Specifications**: Round-trip property `∀ msg: parse(serialize(msg)) = msg`, checksum validation rejects invalid checksums, size limits enforced for all messages.
 
-**Phase 1: Core Messages** (8 proofs):
-- Version, VerAck, Ping, Pong messages
-
-**Phase 2: Consensus-Critical Messages** (8 proofs):
-- Transaction, Block, Headers, Inv, GetData, GetHeaders messages
-
-### Mathematical Specifications
-
-**Round-Trip Property:**
-```
-∀ msg ∈ ProtocolMessage: parse(serialize(msg)) = msg
-```
-
-**Checksum Validation:**
-```
-∀ payload, checksum: checksum ≠ calculate_checksum(payload) ⟹
-  parse_message(payload, checksum) = error
-```
-
-**Size Limit Enforcement:**
-```
-∀ message: |message| > MAX_PROTOCOL_MESSAGE_LENGTH ⟹
-  parse_message(message) = error
-```
-
-### Running Network Verification
-
-```bash
-# Install Kani
-cargo install kani-verifier --version 0.41.0
-
-# Run all network protocol proofs
-cd bllvm-node
-cargo kani --features verify
-```
-
-Network protocol verification runs automatically in CI. All proofs must pass, and verification code is excluded from release builds via the `verify` feature.
+Verification runs automatically in CI. Proofs excluded from release builds via `verify` feature.
 

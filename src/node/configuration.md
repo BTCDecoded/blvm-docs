@@ -46,13 +46,13 @@ export BLLVM_RPC_PORT=8332
 
 ```bash
 # Start with specific network
-cargo run -- --network testnet
+bllvm --network testnet
 
 # Use custom config file
-cargo run -- --config /path/to/config.toml
+bllvm --config /path/to/config.toml
 
 # Override data directory
-cargo run -- --data-dir /custom/path
+bllvm --data-dir /custom/path
 ```
 
 ## Storage Backends
@@ -117,13 +117,19 @@ keep_blocks = 288  # Keep last 288 blocks (2 days)
 
 ### Transport Options
 
-- **TCP**: Traditional Bitcoin P2P protocol
-- **Iroh/QUIC**: Modern transport protocol (experimental)
+Configure transport selection (see [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer)):
+- **TCP**: Traditional Bitcoin P2P protocol (default)
+- **Iroh/QUIC**: Modern transport protocol (experimental, requires `iroh` feature)
+
+```toml
+[network]
+transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
+```
 
 ### Peer Discovery
 
 - Automatic peer discovery on the network
-- Manual peer configuration via config file
+- Manual peer configuration via config file or `--addnode` CLI option
 - DNS seed support for mainnet/testnet
 
 ## Security Settings

@@ -1,10 +1,6 @@
 # Module Development
 
-The SDK provides a composition framework for building custom Bitcoin implementations through declarative module composition.
-
-## Module System Overview
-
-The BTCDecoded reference-node includes a process-isolated module system that enables optional features (Lightning, merge mining, privacy enhancements) without affecting consensus or base node stability.
+The BTCDecoded reference-node includes a process-isolated module system that enables optional features (Lightning, merge mining, privacy enhancements) without affecting consensus or base node stability. Modules run in separate processes with IPC communication, providing security through isolation.
 
 ### Core Principles
 
@@ -104,23 +100,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-### Command-Line Arguments
-
-Modules receive the following command-line arguments:
-
-- `--module-id <id>`: Unique module instance ID
-- `--socket-path <path>`: Path to IPC socket
-- `--data-dir <dir>`: Module data directory
-
-Configuration is passed via environment variables:
-- `MODULE_CONFIG_*`: Module-specific configuration
-
 ### Module Lifecycle
 
-1. **Initialization**: Connect to node IPC socket
-2. **Start**: Subscribe to events, initialize module state
-3. **Running**: Process events and handle API requests
-4. **Stop**: Clean shutdown, disconnect from node
+Modules receive command-line arguments (`--module-id`, `--socket-path`, `--data-dir`) and configuration via environment variables (`MODULE_CONFIG_*`). Lifecycle: **Initialization** (connect IPC) → **Start** (subscribe events) → **Running** (process events/requests) → **Stop** (clean shutdown).
 
 ### Querying Node Data
 
@@ -184,34 +166,20 @@ if let Some(event) = client.receive_event().await? {
 
 ## Configuration
 
-### Node Configuration
+Module system is configured in node config (see [Node Configuration](../node/configuration.md)):
 
-Module system configuration in `NodeConfig`:
+```toml
+[modules]
+enabled = true
+modules_dir = "modules"
+data_dir = "data/modules"
+enabled_modules = []  # Empty = auto-discover all
 
-```json
-{
-  "modules": {
-    "enabled": true,
-    "modules_dir": "modules",
-    "data_dir": "data/modules",
-    "socket_dir": "data/modules/sockets",
-    "enabled_modules": [],  // Empty = auto-discover all
-    "module_configs": {
-      "my-module": {
-        "setting1": "value1"
-      }
-    }
-  }
-}
+[modules.module_configs.my-module]
+setting1 = "value1"
 ```
 
-### Module Configuration
-
-Modules can have their own configuration files:
-- TOML format: `config.toml` in module directory
-- Key-value format: `config` file in module directory
-
-Configuration is passed to modules via environment variables.
+Modules can have their own `config.toml` files, passed via environment variables.
 
 ## Security Model
 
@@ -243,10 +211,11 @@ All module API requests are validated:
 
 ## API Reference
 
-See inline documentation in `reference-node/src/module/` for detailed API reference.
+**Node API Operations**: `GetBlock`, `GetBlockHeader`, `GetTransaction`, `HasTransaction`, `GetChainTip`, `GetBlockHeight`, `GetUtxo` (read-only)
 
-- **Module Traits**: `reference-node/src/module/traits.rs`
-- **IPC Protocol**: `reference-node/src/module/ipc/protocol.rs`
-- **Node API**: `reference-node/src/module/api/node_api.rs`
-- **Security**: `reference-node/src/module/security/`
+**Event Types**: `NewBlock`, `NewTransaction`, `BlockDisconnected`, `ChainReorg`
+
+**Permissions**: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `send_transactions` (future)
+
+For detailed API reference, see `reference-node/src/module/` (traits, IPC protocol, Node API, security).
 
