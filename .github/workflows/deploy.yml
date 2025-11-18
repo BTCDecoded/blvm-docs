@@ -39,48 +39,12 @@ jobs:
       - name: Add .nojekyll to deployment root
         run: touch book/.nojekyll
         
-      - name: Verify and copy custom.css
+      - name: Copy custom.css to output directory
         run: |
-          echo "=== Checking for custom.css ==="
-          # Check both root and src/ directory
           if [ -f custom.css ]; then
-            echo "✓ custom.css exists in root"
             cp custom.css book/custom.css
-            echo "✓ Copied custom.css from root to book/"
           elif [ -f src/custom.css ]; then
-            echo "✓ custom.css exists in src/"
             cp src/custom.css book/custom.css
-            echo "✓ Copied custom.css from src/ to book/"
-          else
-            echo "⚠ custom.css not found in root or src/ (non-fatal)"
-          fi
-          
-          echo "=== Verifying CSS file in book/ ==="
-          if [ -f book/custom.css ]; then
-            ls -la book/custom.css
-            echo "✓ custom.css is in book/ directory"
-          else
-            echo "✗ custom.css NOT in book/ directory!"
-          fi
-          
-          echo "=== Checking if CSS is linked in HTML ==="
-          if [ -f book/index.html ]; then
-            if grep -q "custom.css" book/index.html; then
-              echo "✓ custom.css found in index.html"
-              grep "custom.css" book/index.html
-            else
-              echo "⚠ custom.css NOT linked in index.html - mdBook may not have included it"
-              echo "Checking head section:"
-              grep -A 5 "<head>" book/index.html | head -10
-            fi
-          fi
-          
-          if [ -f book/governance/overview.html ]; then
-            if grep -q "custom.css" book/governance/overview.html; then
-              echo "✓ custom.css found in overview.html"
-            else
-              echo "⚠ custom.css NOT linked in overview.html"
-            fi
           fi
 
       - name: Setup Pages
