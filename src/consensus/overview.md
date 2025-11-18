@@ -4,3 +4,10 @@ The consensus layer (`bllvm-consensus`) provides a pure mathematical implementat
 
 {{#include ../../../modules/bllvm-consensus/README.md}}
 
+## See Also
+
+- [Consensus Architecture](architecture.md) - Consensus layer design
+- [Formal Verification](formal-verification.md) - Verification methodology
+- [Mathematical Correctness](mathematical-correctness.md) - Verification approach and coverage
+- [Orange Paper](../reference/orange-paper.md) - Mathematical foundation
+

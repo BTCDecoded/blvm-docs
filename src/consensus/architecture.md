@@ -55,3 +55,11 @@ The consensus layer is designed as a pure mathematical implementation with no si
 ![Spec Maintenance Workflow](../images/spec-maintenance-workflow.png)
 *Figure: Specification maintenance workflow showing how changes are detected, verified, and integrated.*
 
+## See Also
+
+- [Consensus Overview](overview.md) - Consensus layer introduction
+- [Formal Verification](formal-verification.md) - Verification methodology and tools
+- [Mathematical Correctness](mathematical-correctness.md) - Verification approach and coverage
+- [Orange Paper](../reference/orange-paper.md) - Mathematical foundation
+- [Protocol Architecture](../protocol/architecture.md) - Protocol layer built on consensus
+

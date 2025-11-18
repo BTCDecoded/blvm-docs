@@ -57,3 +57,11 @@ transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
 
 The **protocol adapter** serializes between consensus-proof `NetworkMessage` types and transport-specific wire formats. The **message bridge** processes messages and generates responses. Default is TCP-only; enable Iroh via `iroh` feature flag.
 
+## See Also
+
+- [Protocol Architecture](architecture.md) - Protocol layer design
+- [Message Formats](message-formats.md) - P2P message specifications
+- [Protocol Overview](overview.md) - Protocol layer introduction
+- [Node Configuration](../node/configuration.md) - Network and transport configuration
+- [Protocol Specifications](../reference/protocol-specifications.md) - BIP implementations
+

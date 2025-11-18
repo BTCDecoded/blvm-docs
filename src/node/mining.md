@@ -18,3 +18,10 @@ The node provides a **Block Template API** for generating blocks for mining, **m
 
 For implementation details, see the [bllvm-node README](../../modules/bllvm-node/README.md).
 
+## See Also
+
+- [Node Operations](operations.md) - Node operation and management
+- [RPC API Reference](rpc-api.md) - Mining-related RPC methods (`getblocktemplate`, `submitblock`)
+- [Node Configuration](configuration.md) - Mining configuration options
+- [Protocol Specifications](../reference/protocol-specifications.md) - Stratum V2 and mining protocols
+
