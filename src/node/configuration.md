@@ -57,10 +57,61 @@ cargo run -- --data-dir /custom/path
 
 ## Storage Backends
 
-The node supports multiple storage backends:
+The node supports multiple storage backends with automatic fallback:
 
-- **sled**: Default embedded database (recommended)
-- **redb**: Alternative embedded database
+### Database Backends
+
+- **redb** (default, recommended): Production-ready embedded database
+- **sled**: Beta, fallback option
+- **auto**: Auto-select based on availability (prefers redb, falls back to sled)
+
+### Storage Configuration
+
+```toml
+[storage]
+data_dir = "/var/lib/bllvm"
+backend = "auto"  # or "redb", "sled"
+
+[storage.cache]
+block_cache_mb = 100
+utxo_cache_mb = 50
+header_cache_mb = 10
+
+[storage.pruning]
+enabled = false
+keep_blocks = 288  # Keep last 288 blocks (2 days)
+```
+
+### Backend Selection
+
+The system automatically selects the best available backend:
+1. Attempts to use redb (default)
+2. Falls back to sled if redb fails and sled is available
+3. Returns error if no backend is available
+
+### Cache Configuration
+
+Storage cache sizes can be configured:
+- **Block cache**: Default 100 MB, caches recently accessed blocks
+- **UTXO cache**: Default 50 MB, caches frequently accessed UTXOs
+- **Header cache**: Default 10 MB, caches block headers
+
+### Pruning
+
+Pruning allows reducing storage requirements by removing old block data:
+
+```toml
+[storage.pruning]
+enabled = true
+keep_blocks = 288  # Keep last 288 blocks (2 days)
+```
+
+**Pruning Modes:**
+- **Disabled** (default): Keep all blocks
+- **Light client**: Keep last N blocks (configurable)
+- **Full pruning**: Remove all blocks, keep only UTXO set (future)
+
+**Note**: Pruning reduces storage but limits ability to serve historical blocks to peers.
 
 ## Network Configuration
 
