@@ -39,21 +39,18 @@ jobs:
       - name: Add .nojekyll to deployment root
         run: touch book/.nojekyll
         
-      - name: Ensure custom.css is deployed
+      - name: Copy and inject custom.css
         run: |
-          # Copy CSS to output (mdBook should do this via additional-css, but ensure it's there)
+          # Copy CSS file to output
           if [ -f custom.css ]; then
             cp custom.css book/custom.css
           fi
           
-          # Verify CSS is linked in HTML - if not, mdBook's additional-css didn't work
-          # Check one HTML file to see if CSS link exists
+          # Inject CSS link if mdBook didn't include it (additional-css may not work)
           if [ -f book/index.html ] && ! grep -q "custom.css" book/index.html; then
-            echo "⚠ mdBook did not include custom.css link, injecting manually..."
-            # Use Python for reliable HTML manipulation
-            python3 << 'EOF'
+            echo "Injecting custom.css link into HTML files..."
+            python3 << 'PYTHON_SCRIPT'
 import os
-import re
 for root, dirs, files in os.walk('book'):
     for file in files:
         if file.endswith('.html'):
@@ -61,16 +58,16 @@ for root, dirs, files in os.walk('book'):
             with open(path, 'r', encoding='utf-8') as f:
                 content = f.read()
             if 'custom.css' not in content:
-                # Calculate relative path to CSS from this HTML file
-                depth = path.count(os.sep) - 1  # Subtract 1 for 'book'
-                css_path = '../' * depth + 'custom.css' if depth > 0 else 'custom.css'
-                # Insert before </head>
+                # Calculate relative path: depth from book/ root
+                rel_path = os.path.relpath('book', root)
+                if rel_path == '.':
+                    css_path = 'custom.css'
+                else:
+                    css_path = os.path.join(rel_path, 'custom.css').replace('\\', '/')
                 content = content.replace('</head>', f'<link rel="stylesheet" href="{css_path}">\n</head>')
                 with open(path, 'w', encoding='utf-8') as f:
                     f.write(content)
-EOF
-          else
-            echo "✓ CSS link found in HTML (mdBook included it)"
+PYTHON_SCRIPT
           fi
 
       - name: Setup Pages
