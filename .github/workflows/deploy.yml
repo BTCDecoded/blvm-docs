@@ -35,6 +35,16 @@ jobs:
 
       - name: Build book
         run: mdbook build
+        
+      - name: Verify custom.css is included
+        run: |
+          if [ -f custom.css ]; then
+            echo "✓ custom.css exists in root"
+            cp custom.css book/ || echo "Note: mdBook should copy this automatically"
+          else
+            echo "✗ custom.css not found!"
+            exit 1
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
