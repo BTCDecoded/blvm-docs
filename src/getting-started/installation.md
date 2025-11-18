@@ -104,10 +104,10 @@ bllvm-verify --help
 
 ## Building from Source (Advanced)
 
-If you need to build from source (for development, custom features, or unsupported platforms), see the [Development Guide](../development/compilation.md).
+Building from source requires Rust 1.70+ and is primarily for development. Clone the [bllvm-node repository](https://github.com/BTCDecoded/bllvm-node) and follow the build instructions in its README.
 
 ## Next Steps
 
 - See [Quick Start](quick-start.md) for running your first node
-- See [Configuration](configuration.md) for detailed setup options
+- See [Node Configuration](../node/configuration.md) for detailed setup options
 
