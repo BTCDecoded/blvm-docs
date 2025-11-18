@@ -46,5 +46,20 @@ Emergency keyholders (5-of-7) can activate emergency mode for critical situation
 - **Review Periods**: Reduced to 30 days during emergency
 - **Signature Thresholds**: Unchanged
 
+## Keyholder Diversity
+
+![Keyholder Diversity Radar](../images/keyholder-diversity-radar.png)
+*Figure: Keyholder diversity analysis showing distribution of maintainers across jurisdictions, backgrounds, and expertise areas.*
+
+## Release Pipeline Gate Strength
+
+![Release Pipeline Gate Strength](../images/release-pipeline-gate-strength.png)
+*Figure: Gate strength across the release pipeline. Each gate requires specific signatures and review periods based on the change tier.*
+
+## Maintainer Jurisdiction
+
+![Maintainer Jurisdiction](../images/maintainer-jurisdiction.png)
+*Figure: Maintainer jurisdiction concentration increases vulnerability to coordinated regulatory pressure or legal action when key decision-makers operate under similar legal frameworks.*
+
 For detailed maintainer procedures, see [MAINTAINER_GUIDE.md](../../modules/governance/guides/MAINTAINER_GUIDE.md).
 

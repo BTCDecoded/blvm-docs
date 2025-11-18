@@ -52,5 +52,15 @@ Bitcoin Commons uses multisig thresholds for all governance decisions, with diff
 
 When both layer and tier apply, the system uses **"most restrictive wins"** rule. See [LAYER_TIER_MODEL.md](../../modules/governance/LAYER_TIER_MODEL.md) for the complete decision matrix.
 
+## Multisig Threshold Sensitivity
+
+![Multisig Threshold Sensitivity](../images/multisig-threshold-sensitivity.png)
+*Figure: Multisig threshold sensitivity analysis showing how different threshold configurations affect security and decision-making speed.*
+
+## Governance Signature Thresholds
+
+![Governance Signature Thresholds](../images/governance-signature-thresholds.png)
+*Figure: Signature thresholds by layer showing the graduated security model.*
+
 For configuration details, see the [governance configuration files](../../modules/governance/config/).
 

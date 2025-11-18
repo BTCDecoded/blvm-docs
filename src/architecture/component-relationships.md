@@ -60,12 +60,20 @@ bllvm-commons (depends on bllvm-sdk)
 
 ## Data Flow
 
+![How the Stack Works](../images/how-the-stack-works-in-practice.png)
+*Figure: End-to-end data flow through Reference Node, Consensus Proof, Protocol Engine, modules, and governance.*
+
 1. **Orange Paper** provides mathematical consensus specifications
 2. **bllvm-consensus** directly implements mathematical functions
 3. **bllvm-protocol** wraps bllvm-consensus with protocol-specific parameters
 4. **bllvm-node** uses bllvm-protocol and bllvm-consensus for validation
 5. **bllvm-sdk** provides governance primitives
 6. **bllvm-commons** uses bllvm-sdk for cryptographic operations
+
+## Architecture Comparison
+
+![Architecture Comparison](../images/architecture-comparison-trans.png)
+*Figure: Core vs Commons architectural comparison, modular design with cryptographic enforcement addresses Core's structural limitations.*
 
 ## Cross-Layer Validation
 

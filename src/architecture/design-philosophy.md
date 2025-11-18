@@ -73,6 +73,12 @@ Cryptographic governance provides:
 - **Resistance to Capture**: Multi-signature requirements make capture expensive
 - **User Protection**: Economic nodes can veto harmful changes
 
+![Centralized vs Decentralized](../images/centralized-vs-decentralized.png)
+*Figure: Bitcoin Commons moves governance from centralized control (few maintainers, single point of failure) to decentralized, forkable governance (distributed maintainers, multiple implementations, user choice).*
+
+![Governance Asymmetry](../images/governance-assymetry-snapshot.png)
+*Figure: Governance asymmetry: cryptographic consensus vs informal development governance.*
+
 ## Trade-offs
 
 ### Performance vs Correctness
