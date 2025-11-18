@@ -16,7 +16,7 @@ preferred-dark-theme = "navy"
 git-repository-url = "https://github.com/BTCDecoded/bllvm-docs"
 git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/BTCDecoded/bllvm-docs/edit/main/{path}"
-additional-css = ["theme/custom.css"]
+additional-css = ["custom.css"]
 
 [output.html.search]
 enable = true
