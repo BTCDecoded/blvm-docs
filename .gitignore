@@ -1,0 +1,22 @@
+# mdBook output
+book/
+
+# Rust build artifacts (if any)
+target/
+Cargo.lock
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+

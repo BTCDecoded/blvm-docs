@@ -1,0 +1,21 @@
+[submodule "modules/bllvm-spec"]
+	path = modules/bllvm-spec
+	url = https://github.com/BTCDecoded/bllvm-spec.git
+[submodule "modules/bllvm-consensus"]
+	path = modules/bllvm-consensus
+	url = https://github.com/BTCDecoded/bllvm-consensus.git
+[submodule "modules/bllvm-protocol"]
+	path = modules/bllvm-protocol
+	url = https://github.com/BTCDecoded/bllvm-protocol.git
+[submodule "modules/bllvm-node"]
+	path = modules/bllvm-node
+	url = https://github.com/BTCDecoded/bllvm-node.git
+[submodule "modules/bllvm-sdk"]
+	path = modules/bllvm-sdk
+	url = https://github.com/BTCDecoded/bllvm-sdk.git
+[submodule "modules/governance"]
+	path = modules/governance
+	url = https://github.com/BTCDecoded/governance.git
+[submodule "modules/bllvm"]
+	path = modules/bllvm
+	url = https://github.com/BTCDecoded/bllvm.git
