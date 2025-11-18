@@ -36,6 +36,11 @@ jobs:
       - name: Build book
         run: mdbook build
         
+      - name: Add .nojekyll to prevent Jekyll processing
+        run: |
+          touch book/.nojekyll
+          echo "✓ Created .nojekyll file in book/ directory"
+        
       - name: Copy custom.css to output directory
         run: |
           if [ -f custom.css ]; then
