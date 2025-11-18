@@ -1,41 +1,62 @@
 /* Custom CSS for chart images with white backgrounds */
-/* TEST: This should make all images have white backgrounds */
-/* Universal selector for all images - most comprehensive */
+/* Force white background on all images with maximum specificity */
+
+/* Universal selector - highest priority */
 img {
     background-color: white !important;
-    padding: 8px;
-    border-radius: 4px;
-    display: inline-block;
+    background-image: none !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
     box-shadow: 0 0 0 1px rgba(0,0,0,0.1) !important;
 }
 
-/* More specific: target images in the images directory - multiple selectors for coverage */
+/* Target all PNG images */
+img[src$='.png'],
+img[src*='.png'],
+img[src*='png'] {
+    background-color: white !important;
+    background-image: none !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+}
+
+/* Target images in various path patterns */
 img[src*='images/'],
 img[src*='../images/'],
 img[src*='/images/'],
-img[src*='./images/'] {
+img[src*='./images/'],
+img[src*='images'] {
     background-color: white !important;
-    padding: 8px;
-    border-radius: 4px;
-    display: inline-block;
+    background-image: none !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
 }
 
-/* Target PNG images specifically - catch all PNG files */
-img[src$='.png'],
-img[src*='.png'] {
-    background-color: white !important;
-    padding: 8px;
-    border-radius: 4px;
-    display: inline-block;
-}
-
-/* More specific: target images within content areas */
+/* Target images within content areas with high specificity */
 .chapter-content img,
 .content img,
 main img,
-section img {
+section img,
+article img,
+.chapter img,
+.page img {
     background-color: white !important;
-    padding: 8px;
-    border-radius: 4px;
-    display: inline-block;
+    background-image: none !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+}
+
+/* Even more specific selectors for mdBook structure */
+.mdbook-content img,
+.mdbook-body img,
+.book-content img {
+    background-color: white !important;
+    background-image: none !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
 }

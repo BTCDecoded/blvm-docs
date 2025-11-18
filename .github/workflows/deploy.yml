@@ -36,23 +36,31 @@ jobs:
       - name: Build book
         run: mdbook build
         
-      - name: Copy custom.css to output directory
+      - name: Verify and copy custom.css
         run: |
-          echo "Checking for custom.css files..."
+          echo "=== Checking custom.css files ==="
           if [ -f custom.css ]; then
             echo "✓ custom.css exists in root"
-            cp custom.css book/custom.css
-            echo "✓ Copied custom.css to book/ directory"
+            # mdBook should copy additional-css automatically, but verify
+            if [ ! -f book/custom.css ]; then
+              echo "⚠ custom.css not in book/, copying manually..."
+              cp custom.css book/custom.css
+            else
+              echo "✓ custom.css already in book/ (copied by mdBook)"
+            fi
+          else
+            echo "✗ custom.css not found in root!"
+            exit 1
           fi
-          if [ -f theme/custom.css ]; then
-            echo "✓ theme/custom.css exists"
-            cp theme/custom.css book/theme/custom.css 2>/dev/null || mkdir -p book/theme && cp theme/custom.css book/theme/custom.css
-            echo "✓ Copied theme/custom.css to book/theme/ directory"
+          echo ""
+          echo "=== Verifying CSS in HTML ==="
+          if [ -f book/governance/overview.html ]; then
+            echo "Checking governance/overview.html for CSS link:"
+            grep -i "custom.css" book/governance/overview.html || echo "⚠ custom.css link not found in HTML"
           fi
-          echo "CSS files in book directory:"
-          find book -name "custom.css" -type f
-          echo "Checking HTML files for CSS links:"
-          grep -l "custom.css" book/*.html 2>/dev/null | head -3 || echo "No custom.css links found in HTML"
+          echo ""
+          echo "=== CSS file contents (first 5 lines) ==="
+          head -5 book/custom.css 2>/dev/null || echo "⚠ Could not read book/custom.css"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
