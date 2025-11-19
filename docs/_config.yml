@@ -1,0 +1,7 @@
+# GitHub Pages Jekyll configuration
+# Note: .nojekyll disables Jekyll, but this file is here for reference
+
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-sitemap
+

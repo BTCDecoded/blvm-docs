@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Styling and Layout - Bitcoin Commons Documentation</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Bitcoin Commons Documentation</a>
+                <span class="version-badge" id="version">v1.0.0</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <nav class="sidebar">
+            <ul class="sidebar-nav" id="nav">
+                <li><a href="index.html" >Home</a></li>
+<li><a href="QUICK_START.html" >Quick Start</a></li>
+<li><a href="ARCHITECTURE.html" >Architecture</a></li>
+<li><a href="INTEGRATION.html" >Integration</a></li>
+<li><a href="CONFIGURATION.html" >Configuration</a></li>
+<li><a href="TROUBLESHOOTING.html" >Troubleshooting</a></li>
+<li><a href="PERFORMANCE_TUNING.html" >Performance Tuning</a></li>
+<li><a href="BEST_PRACTICES.html" >Best Practices</a></li>
+<li><a href="CONFIGURATION_DEFAULTS.html" >Configuration Defaults</a></li>
+<li><a href="PROTOCOL_CONSTANTS.html" >Protocol Constants</a></li>
+<li><a href="RPC_METHODS.html" >RPC Methods</a></li>
+<li><a href="ERROR_CODES.html" >Error Codes</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <div id="content"></div>
+        </main>
+    </div>
+
+    <script>
+        // Load version
+        fetch('VERSION')
+            .then(r => r.text())
+            .then(v => {
+                const badge = document.getElementById('version');
+                if (badge) badge.textContent = 'v' + v.trim();
+            })
+            .catch(() => {});
+
+        // Configure marked
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(code, { language: lang }).value;
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            breaks: true,
+            gfm: true
+        });
+
+        // Load and render markdown
+        fetch('DOCUMENTATION_STYLING.md')
+            .then(r => r.text())
+            .then(md => {
+                document.getElementById('content').innerHTML = marked.parse(md);
+                // Update active nav
+                const current = 'DOCUMENTATION_STYLING.html';
+                document.querySelectorAll('.sidebar-nav a').forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href') === current) {
+                        a.classList.add('active');
+                    }
+                });
+            })
+            .catch(e => {
+                document.getElementById('content').innerHTML = '<p>Documentation not found.</p>';
+            });
+    </script>
+</body>
+</html>
