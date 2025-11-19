@@ -1,0 +1,36 @@
+name: Archive Documentation Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to archive (e.g., 1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Set Version
+        run: |
+          echo "${{ github.event.inputs.version }}" > VERSION
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      
+      - name: Archive Version
+        run: |
+          chmod +x tools/archive-version.sh
+          ./tools/archive-version.sh || echo "Archive may already exist"
+      
+      - name: Commit Archive
+        run: |
+          git add archive/versions/ VERSION
+          git commit -m "Archive documentation version ${{ github.event.inputs.version }}" || echo "No changes to commit"
+          git push || echo "Nothing to push"

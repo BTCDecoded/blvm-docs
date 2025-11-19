@@ -1,0 +1,115 @@
+name: Create Documentation Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g., 1.1.0)'
+        required: true
+        type: string
+      release_type:
+        description: 'Release type'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        required: true
+      release_notes:
+        description: 'Release notes (markdown)'
+        required: false
+        type: string
+        default: 'Documentation release'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for tags
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Update Version
+        run: |
+          echo "${{ github.event.inputs.version }}" > VERSION
+          python3 tools/update-version-in-docs.py
+          echo "✅ Updated version to ${{ github.event.inputs.version }}"
+      
+      - name: Archive if Major Release
+        if: github.event.inputs.release_type == 'major'
+        run: |
+          chmod +x tools/archive-version.sh
+          ./tools/archive-version.sh || echo "⚠️  Archive may already exist (continuing)"
+      
+      - name: Create Release Notes
+        id: release_notes
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          TYPE="${{ github.event.inputs.release_type }}"
+          NOTES="${{ github.event.inputs.release_notes }}"
+          
+          cat > /tmp/release_notes.md << EONOTES
+          # Documentation Release v$VERSION
+          
+          **Release Type:** $TYPE
+          
+          ## Release Notes
+          
+          $NOTES
+          
+          ## Version Information
+          
+          This documentation corresponds to BLLVM version $VERSION.
+          
+          ## Access
+          
+          - [Current Documentation](https://btcdecoded.github.io/bllvm-docs/)
+          EONOTES
+          
+          if [ "$TYPE" = "major" ]; then
+            MAJOR=$(echo "$VERSION" | cut -d. -f1-2)
+            echo "" >> /tmp/release_notes.md
+            echo "## Archived Version" >> /tmp/release_notes.md
+            echo "" >> /tmp/release_notes.md
+            echo "Previous major version archived at: [archive/versions/v$MAJOR/](https://github.com/BTCDecoded/bllvm-docs/tree/main/archive/versions/v$MAJOR)" >> /tmp/release_notes.md
+          fi
+          
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/release_notes.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Commit Changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add VERSION INDEX.md README.md archive/
+          git diff --staged --quiet || git commit -m "Release documentation v${{ github.event.inputs.version }}"
+      
+      - name: Create Git Tag
+        run: |
+          git tag -a "v${{ github.event.inputs.version }}" -m "Documentation release v${{ github.event.inputs.version }}"
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ github.event.inputs.version }}"
+          name: "Documentation v${{ github.event.inputs.version }}"
+          body: ${{ steps.release_notes.outputs.notes }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Push Changes
+        run: |
+          git push origin main || echo "Nothing to push"
+          git push origin "v${{ github.event.inputs.version }}"

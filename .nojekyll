@@ -1,0 +1,2 @@
+# Disable Jekyll processing for GitHub Pages
+# This ensures markdown files are served directly

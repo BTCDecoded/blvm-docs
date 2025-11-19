@@ -2,42 +2,7 @@
 
 **Version:** 1.0.0
 
-Centralized documentation for the Bitcoin Commons system architecture, integration, and deployment.
-
-## Documentation Structure
-
-### System Documentation
-
-- [Architecture](ARCHITECTURE.md) - 6-tier system architecture
-- [Integration](INTEGRATION.md) - Cross-repository integration patterns
-- [Quick Start](QUICK_START.md) - System-wide quick start guide
-- [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions
-- [Performance Tuning](PERFORMANCE_TUNING.md) - Performance optimization guide
-- [Best Practices](BEST_PRACTICES.md) - Configuration and usage recommendations
-- [Deployment](DEPLOYMENT.md) - Multi-component deployment (coming soon)
-- [Configuration](CONFIGURATION.md) - Unified configuration guide
-- [Configuration Defaults](CONFIGURATION_DEFAULTS.md) - Auto-generated configuration defaults
-- [Protocol Constants](PROTOCOL_CONSTANTS.md) - Bitcoin protocol constants
-- [RPC Methods](RPC_METHODS.md) - Available RPC methods
-- [Error Codes](ERROR_CODES.md) - Error code reference
-- [Monitoring](MONITORING.md) - System-wide monitoring (coming soon)
-- [Security](SECURITY.md) - System-wide security model (coming soon)
-- [Governance](GOVERNANCE.md) - Governance model (coming soon)
-- [Releases](RELEASES.md) - Release documentation (coming soon)
-
-### Component Documentation
-
-Component-specific documentation is in each repository's `docs/` directory:
-
-- **bllvm-consensus**: `bllvm-consensus/docs/` - Consensus layer documentation
-- **bllvm-protocol**: `bllvm-protocol/docs/` - Protocol layer documentation
-- **bllvm-node**: `bllvm-node/docs/` - Node implementation documentation
-- **bllvm-sdk**: `bllvm-sdk/docs/` - SDK documentation
-- **bllvm-commons**: `bllvm-commons/docs/` - Governance system documentation
-
-### Historical Documentation
-
-Historical documentation is archived in [archive/](archive/) organized by repository.
+Welcome to the Bitcoin Commons documentation.
 
 ## Quick Navigation
 
@@ -53,7 +18,60 @@ Historical documentation is archived in [archive/](archive/) organized by reposi
 
 **Configuring the system?** → See [Configuration](CONFIGURATION.md) and [Best Practices](BEST_PRACTICES.md)
 
-**Deploying to production?** → See [Deployment](DEPLOYMENT.md) (coming soon)
+## Documentation Structure
+
+### System Documentation
+
+- [Architecture](ARCHITECTURE.md) - 6-tier system architecture
+- [Integration](INTEGRATION.md) - Cross-repository integration patterns
+- [Quick Start](QUICK_START.md) - System-wide quick start guide
+- [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions
+- [Performance Tuning](PERFORMANCE_TUNING.md) - Performance optimization guide
+- [Best Practices](BEST_PRACTICES.md) - Configuration and usage recommendations
+- [Configuration](CONFIGURATION.md) - Unified configuration guide
+- [Configuration Defaults](CONFIGURATION_DEFAULTS.md) - Auto-generated configuration defaults
+- [Protocol Constants](PROTOCOL_CONSTANTS.md) - Bitcoin protocol constants
+- [RPC Methods](RPC_METHODS.md) - Available RPC methods
+- [Error Codes](ERROR_CODES.md) - Error code reference
+
+### Auto-Generated Documentation
+
+The following documentation is automatically extracted from source code:
+
+- [Configuration Defaults](CONFIGURATION_DEFAULTS.md) - Configuration defaults
+- [Protocol Constants](PROTOCOL_CONSTANTS.md) - Bitcoin protocol constants
+- [RPC Methods](RPC_METHODS.md) - Available RPC methods
+- [Error Codes](ERROR_CODES.md) - Error code reference
+
+### Component Documentation
+
+Component-specific documentation is in each repository's `docs/` directory:
+
+- **bllvm-consensus**: `bllvm-consensus/docs/` - Consensus layer documentation
+- **bllvm-protocol**: `bllvm-protocol/docs/` - Protocol layer documentation
+- **bllvm-node**: `bllvm-node/docs/` - Node implementation documentation
+- **bllvm-sdk**: `bllvm-sdk/docs/` - SDK documentation
+- **bllvm-commons**: `bllvm-commons/docs/` - Governance system documentation
+
+### Historical Documentation
+
+Historical documentation is archived in [archive/](archive/) organized by repository.
+
+## Version Information
+
+**Current Version:** 1.0.0
+
+This documentation corresponds to BLLVM version 1.0.0
+
+### Archived Versions
+
+Previous major versions are archived for reference. See [archived versions](archive/versions/README.md) for details.
+
+**Available versions:**
+- [Current (v1.0)](.) - Latest documentation
+- No archived versions yet
+
+To access archived documentation after archiving, navigate to `archive/versions/vX.Y/` where X.Y is the major version.
 
 ## Documentation Principles
 
@@ -112,7 +130,7 @@ We welcome feedback on documentation:
 
 ## Edit This Page
 
-Found an issue with this page? [Edit it on GitHub](https://github.com/BTCDecoded/bllvm-docs/edit/main/README.md)
+Found an issue with this page? [Edit it on GitHub](https://github.com/BTCDecoded/bllvm-docs/edit/main/INDEX.md)
 
 ## Related Resources
 
@@ -120,32 +138,3 @@ Found an issue with this page? [Edit it on GitHub](https://github.com/BTCDecoded
 - [Governance Documentation](../governance/README.md)
 - [Component Repositories](../)
 
-## Auto-Generated Documentation
-
-The following documentation is automatically extracted from source code:
-
-- [Configuration Defaults](CONFIGURATION_DEFAULTS.md) - Configuration defaults
-- [Protocol Constants](PROTOCOL_CONSTANTS.md) - Bitcoin protocol constants
-- [RPC Methods](RPC_METHODS.md) - Available RPC methods
-- [Error Codes](ERROR_CODES.md) - Error code reference
-
-To regenerate:
-```bash
-cd bllvm-docs
-python3 tools/extract-defaults.py
-python3 tools/extract-constants.py
-python3 tools/extract-rpc-methods.py
-python3 tools/extract-errors.py
-```
-
-## Releases
-
-Documentation releases provide versioned snapshots for posterity. See [Release System](RELEASE_SYSTEM.md) for details.
-
-**Current Version:** 1.0.0
-
-**Creating a Release:**
-1. Use GitHub Actions: "Create Documentation Release" workflow
-2. Or manually: Follow process in [RELEASE_SYSTEM.md](RELEASE_SYSTEM.md)
-
-**Archived Versions:** [archive/versions/](archive/versions/)
