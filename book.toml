@@ -32,6 +32,4 @@ heading-split-level = 3
 editable = false
 copyable = true
 
-[output.html.redirect]
-"index.html" = "introduction.html"
 
