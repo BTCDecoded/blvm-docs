@@ -140,7 +140,7 @@ python3 tools/extract-errors.py
 
 ## Releases
 
-Documentation releases provide versioned snapshots for posterity. See [Release System](RELEASE_SYSTEM.md) for details.
+Documentation releases provide versioned snapshots. See [Release System](RELEASE_SYSTEM.md) for details.
 
 **Current Version:** 1.0.0
 

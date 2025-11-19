@@ -166,7 +166,7 @@ bllvm-docs/
 ### For Users
 - ✅ Access to versioned documentation
 - ✅ Can reference specific documentation versions
-- ✅ Archived versions preserved for posterity
+- ✅ Archived versions preserved
 - ✅ Clear version information
 
 ### For Maintainers
@@ -206,5 +206,5 @@ bllvm-docs/
 ✅ **Integrated**: Works with existing archive and version systems
 ✅ **Validated**: All components tested and working
 
-The release system is ready for use and provides a professional, automated way to create versioned documentation releases for posterity.
+The release system is ready for use and provides a professional, automated way to create versioned documentation releases.
 
