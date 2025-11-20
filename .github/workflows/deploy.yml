@@ -1,0 +1,91 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  # Optional: Schedule for automated submodule updates
+  # schedule:
+  #   - cron: '0 0 * * 0'  # Weekly on Sunday
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: 'latest'
+
+      - name: Build book
+        run: mdbook build
+        
+      - name: Add .nojekyll to deployment root
+        run: touch book/.nojekyll
+        
+      - name: Copy and inject custom.css
+        run: |
+          # Copy CSS file to output
+          if [ -f custom.css ]; then
+            cp custom.css book/custom.css
+          fi
+          
+          # Inject CSS link if mdBook didn't include it (additional-css may not work)
+          if [ -f book/index.html ] && ! grep -q "custom.css" book/index.html; then
+            echo "Injecting custom.css link into HTML files..."
+            python3 << 'EOF'
+          import os
+          for root, dirs, files in os.walk('book'):
+              for file in files:
+                  if file.endswith('.html'):
+                      path = os.path.join(root, file)
+                      with open(path, 'r', encoding='utf-8') as f:
+                          content = f.read()
+                      if 'custom.css' not in content:
+                          # Calculate relative path: depth from book/ root
+                          rel_path = os.path.relpath('book', root)
+                          if rel_path == '.':
+                              css_path = 'custom.css'
+                          else:
+                              css_path = os.path.join(rel_path, 'custom.css').replace('\\', '/')
+                          content = content.replace('</head>', f'<link rel="stylesheet" href="{css_path}">\n</head>')
+                          with open(path, 'w', encoding='utf-8') as f:
+                              f.write(content)
+          EOF
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: book
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
