@@ -2,6 +2,15 @@
 
 {{#include ../../../DESIGN.md}}
 
+## Architecture Overview
+
+Bitcoin Commons uses two distinct classification systems:
+
+1. **6-Tier Technical Architecture**: Repository layers (Orange Paper → consensus → protocol → node → SDK → commons)
+2. **5-Tier Governance System**: Action classification (Routine → Feature → Consensus-Adjacent → Emergency → Governance)
+
+These are different dimensions: technical layers vs governance action types. When both apply, the most restrictive requirement wins.
+
 ## BLLVM Stack Architecture
 
 ![BLLVM Stack Architecture](../images/stack.png)
