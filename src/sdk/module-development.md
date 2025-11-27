@@ -71,8 +71,8 @@ entry_point = "my-module"
 A minimal module implements the module lifecycle and connects to the node via IPC:
 
 ```rust
-use reference_node::module::ipc::client::ModuleIpcClient;
-use reference_node::module::traits::{ModuleContext, ModuleError};
+use bllvm_node::module::ipc::client::ModuleIpcClient;
+use bllvm_node::module::traits::{ModuleContext, ModuleError};
 use std::env;
 
 #[tokio::main]

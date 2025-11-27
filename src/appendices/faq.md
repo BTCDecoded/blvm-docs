@@ -82,7 +82,7 @@ Merge mining allows miners to mine multiple blockchains simultaneously using the
 
 ### What's the current status of BLLVM?
 
-Orange Paper complete, bllvm-consensus with nearly 200 formal proofs, bllvm-protocol, bllvm-node, and bllvm-sdk all implemented. All 6 tiers are functional, but not yet battle-tested in production.
+Orange Paper complete, bllvm-consensus with 201 formal proofs (210 total including tests), bllvm-protocol, bllvm-node, and bllvm-sdk all implemented. All 6 tiers are functional, but not yet battle-tested in production.
 
 ### What's the current status of Bitcoin Commons governance?
 
