@@ -173,6 +173,102 @@ let (filtered_txs, spam_summary) = spam_filter.filter_block_with_witness(
 );
 ```
 
+## Mempool-Level Spam Filtering
+
+In addition to block-level filtering, spam filtering can be applied at the mempool entry point to reject spam transactions before they enter the mempool.
+
+### Configuration
+
+Enable mempool-level spam filtering in `MempoolConfig`:
+
+```rust
+use bllvm_consensus::config::MempoolConfig;
+
+let mut config = MempoolConfig::default();
+config.reject_spam_in_mempool = true; // Enable spam rejection at mempool entry
+
+// Optional: Customize spam filter configuration
+#[cfg(feature = "utxo-commitments")]
+{
+    use bllvm_consensus::utxo_commitments::config::SpamFilterConfigSerializable;
+    config.spam_filter_config = Some(SpamFilterConfigSerializable {
+        filter_ordinals: true,
+        filter_dust: true,
+        filter_brc20: true,
+        // ... other spam filter settings
+    });
+}
+```
+
+### Standard Transaction Checks
+
+The mempool also enforces stricter standard transaction checks:
+
+#### OP_RETURN Limits
+
+- **Maximum OP_RETURN size**: 80 bytes (Bitcoin Core standard, configurable)
+- **Multiple OP_RETURN rejection**: By default, transactions with more than 1 OP_RETURN output are rejected
+- **Configuration**: `MempoolConfig::max_op_return_size`, `max_op_return_outputs`, `reject_multiple_op_return`
+
+#### Envelope Protocol Rejection
+
+- **Envelope protocol detection**: Rejects scripts starting with `OP_FALSE OP_IF` (used by Ordinals)
+- **Configuration**: `MempoolConfig::reject_envelope_protocol` (default: true)
+
+#### Script Size Limits
+
+- **Maximum standard script size**: 200 bytes (configurable)
+- **Configuration**: `MempoolConfig::max_standard_script_size`
+
+### Per-Peer Transaction Rate Limiting
+
+To prevent peer flooding, transaction rate limiting is enforced per peer:
+
+- **Burst limit**: 10 transactions (configurable)
+- **Rate limit**: 1 transaction per second (configurable)
+- **Configuration**: `MempoolPolicyConfig::tx_rate_limit_burst`, `tx_rate_limit_per_sec`
+- **Location**: `blvm-node/src/network/mod.rs`
+
+Transactions exceeding the rate limit are dropped before processing.
+
+### Example Configuration
+
+```toml
+[mempool]
+# Enable spam filtering at mempool entry
+reject_spam_in_mempool = true
+
+# OP_RETURN limits
+max_op_return_size = 80
+max_op_return_outputs = 1
+reject_multiple_op_return = true
+
+# Standard script checks
+max_standard_script_size = 200
+reject_envelope_protocol = true
+
+# Fee rate requirements for large transactions
+min_fee_rate_large_tx = 2
+large_tx_threshold_bytes = 1000
+
+[mempool_policy]
+# Per-peer transaction rate limiting
+tx_rate_limit_burst = 10
+tx_rate_limit_per_sec = 1
+
+# Per-peer byte rate limiting
+tx_byte_rate_limit = 100000   # 100 KB/s
+tx_byte_rate_burst = 1000000  # 1 MB burst
+
+# Spam-aware eviction
+eviction_strategy = "spamfirst"
+
+[spam_ban]
+# Spam-specific peer banning
+spam_ban_threshold = 10
+spam_ban_duration_seconds = 3600  # 1 hour
+```
+
 ## Integration Points
 
 ### UTXO Commitments
@@ -190,6 +286,15 @@ Spam filtering is used in protocol extensions for filtered block generation:
 - **Location**: `bllvm-node/src/network/protocol_extensions.rs`
 - **Usage**: Generates filtered blocks for network peers
 - **Benefit**: Reduces bandwidth for filtered block relay
+
+### Mempool Entry
+
+Spam filtering can be applied at mempool entry to reject spam transactions:
+
+- **Location**: `bllvm-consensus/src/mempool.rs::accept_to_memory_pool_with_config()`
+- **Usage**: Optional spam check before accepting transactions to mempool
+- **Benefit**: Prevents spam from entering mempool, reducing memory usage
+- **Status**: Opt-in (default: disabled) to maintain backward compatibility
 
 ## Bandwidth Savings
 
@@ -211,6 +316,63 @@ Spam filtering is used in protocol extensions for filtered block generation:
 3. **Bandwidth Optimization**: For nodes with limited bandwidth
 4. **Storage Optimization**: Reduce data that needs to be stored
 5. **Network Efficiency**: Reduce bandwidth for filtered block relay
+6. **Mempool Management**: Reject spam transactions at mempool entry (opt-in)
+7. **Peer Flooding Prevention**: Rate limit transactions per peer to prevent DoS
+
+## Additional Spam Mitigation
+
+### Already Implemented
+
+- **Input/Output Limits**: Consensus-level limits (MAX_INPUTS = 1000, MAX_OUTPUTS = 1000) prevent transactions with excessive inputs/outputs
+- **Ancestor/Descendant Limits**: Package limits prevent transaction package spam (default: 25 transactions, 101 kB)
+- **DoS Protection**: Automatic peer banning for connection rate violations
+- **Per-Peer Byte Rate Limiting**: Limits bytes per second per peer (default: 100 KB/s, 1 MB burst)
+- **Fee Rate Requirements for Large Transactions**: Requires higher fees for large transactions (default: 2 sat/vB for transactions >1000 bytes)
+- **Spam-Aware Eviction**: Evict spam transactions first when mempool is full (eviction strategy: `SpamFirst`)
+- **Spam-Specific Peer Banning**: Auto-ban peers that repeatedly send spam transactions (default: ban after 10 spam transactions, 1 hour duration)
+
+### Per-Peer Byte Rate Limiting
+
+Prevents large transaction flooding by limiting bytes per second per peer:
+
+```toml
+[mempool_policy]
+tx_byte_rate_limit = 100000  # 100 KB/s
+tx_byte_rate_burst = 1000000 # 1 MB burst
+```
+
+### Fee Rate Requirements for Large Transactions
+
+Large transactions must pay higher fees to discourage spam:
+
+```toml
+[mempool]
+min_fee_rate_large_tx = 2      # 2 sat/vB (higher than standard 1 sat/vB)
+large_tx_threshold_bytes = 1000 # Transactions >1 KB require higher fees
+```
+
+### Spam-Aware Eviction Strategy
+
+When mempool is full, spam transactions are evicted first:
+
+```toml
+[mempool_policy]
+eviction_strategy = "spamfirst"  # Evict spam transactions first
+```
+
+**Note**: Requires `utxo-commitments` feature. Falls back to `lowest_fee_rate` if feature is disabled.
+
+### Spam-Specific Peer Banning
+
+Tracks spam violations per peer and auto-bans repeat offenders:
+
+```toml
+[spam_ban]
+spam_ban_threshold = 10           # Ban after 10 spam transactions
+spam_ban_duration_seconds = 3600  # Ban for 1 hour
+```
+
+Peers that repeatedly send spam transactions are automatically banned for the configured duration.
 
 ## See Also
 
