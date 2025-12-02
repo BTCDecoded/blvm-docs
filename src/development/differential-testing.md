@@ -4,7 +4,7 @@
 
 Bitcoin Commons implements differential testing to compare validation results with Bitcoin Core, providing empirical validation of consensus correctness. This ensures compatibility and catches consensus divergences.
 
-**Location**: Differential testing is implemented in `bllvm-bench` (separate repository), not in `bllvm-consensus`. The `bllvm-consensus` repository contains only a placeholder/skeleton implementation.
+**Location**: Differential testing is implemented in `blvm-bench` (separate repository), not in `bllvm-consensus`. The `bllvm-consensus` repository contains only a placeholder/skeleton implementation.
 
 ## Purpose
 
@@ -17,7 +17,7 @@ Differential testing serves to:
 
 ## Implementation Location
 
-**Primary Implementation**: `bllvm-bench` repository
+**Primary Implementation**: `blvm-bench` repository
 - Full differential testing infrastructure
 - Bitcoin Core RPC integration
 - Regtest node management
@@ -25,8 +25,8 @@ Differential testing serves to:
 
 **Skeleton Implementation**: `bllvm-consensus/tests/integration/differential_tests.rs`
 - Skeleton implementation exists
-- Full implementation is in `bllvm-bench` repository
-- Integration with `bllvm-bench` is planned
+- Full implementation is in `blvm-bench` repository
+- Integration with `blvm-bench` is planned
 
 **Code**: ```1:8:bllvm-consensus/tests/integration/differential_tests.rs``` (skeleton)
 
@@ -186,10 +186,10 @@ Historical consensus validation tests:
 
 ### Running Differential Tests
 
-Differential tests are run from the `bllvm-bench` repository:
+Differential tests are run from the `blvm-bench` repository:
 
 ```bash
-cd bllvm-bench
+cd blvm-bench
 cargo test --features differential
 ```
 
@@ -202,7 +202,7 @@ cargo test --test bip_differential
 ### Prerequisites
 
 - Bitcoin Core binary available (auto-discovered or via `CORE_PATH` environment variable)
-- `bllvm-bench` repository cloned
+- `blvm-bench` repository cloned
 - Network connectivity for RPC calls (if using remote Core node)
 
 **Note**: The placeholder in `bllvm-consensus` is not functional and should not be used.
@@ -261,12 +261,12 @@ The differential testing system includes:
 - Mainnet block tests
 - Historical consensus tests
 
-**Primary Location**: `bllvm-bench` repository
-- `bllvm-bench/src/core_builder.rs` - Bitcoin Core binary detection
-- `bllvm-bench/src/regtest_node.rs` - Regtest node management
-- `bllvm-bench/src/core_rpc_client.rs` - RPC client wrapper
-- `bllvm-bench/src/differential.rs` - Comparison framework
-- `bllvm-bench/tests/integration/bip_differential.rs` - BIP-specific tests
+**Primary Location**: `blvm-bench` repository
+- `blvm-bench/src/core_builder.rs` - Bitcoin Core binary detection
+- `blvm-bench/src/regtest_node.rs` - Regtest node management
+- `blvm-bench/src/core_rpc_client.rs` - RPC client wrapper
+- `blvm-bench/src/differential.rs` - Comparison framework
+- `blvm-bench/tests/integration/bip_differential.rs` - BIP-specific tests
 
 **Placeholder Location**: `bllvm-consensus/tests/integration/differential_tests.rs` (skeleton, not fully implemented)
 
