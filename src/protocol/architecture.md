@@ -25,7 +25,7 @@ The bllvm-protocol sits between the pure mathematical consensus rules (bllvm-con
 - **Validation Rules**: Protocol-specific size limits and validation logic
 
 ### Protocol Evolution
-- **Version Support**: Bitcoin V1 (current), V2 (future), and experimental variants
+- **Version Support**: Bitcoin V1, V2 (planned), and experimental variants
 - **Feature Management**: Enable/disable features based on protocol version
 - **Breaking Changes**: Track and manage protocol evolution
 

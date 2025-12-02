@@ -40,9 +40,9 @@ NetworkManager
 
 ### Transport Options
 
-**TCP Transport** (Default): Fully implemented transport for Bitcoin P2P protocol compatibility using traditional TCP sockets. Maintains Bitcoin wire protocol format and is compatible with standard Bitcoin nodes.
+**TCP Transport** (Default): Transport for Bitcoin P2P protocol compatibility using traditional TCP sockets. Maintains Bitcoin wire protocol format and is compatible with standard Bitcoin nodes.
 
-**Iroh Transport** (Experimental): QUIC-based transport using Iroh for P2P networking with public key-based peer identity and NAT traversal support. Status: Skeleton complete, requires Iroh API integration for full functionality.
+**Iroh Transport**: QUIC-based transport using Iroh for P2P networking with public key-based peer identity and NAT traversal support.
 
 ### Transport Selection
 

@@ -93,7 +93,7 @@ Cryptographic governance provides:
 - **Rationale**: Complex code is harder to verify
 - **Mitigation**: Add features only when necessary
 
-## Future Evolution
+## Design Evolution
 
 BLLVM is designed to support Bitcoin's evolution for the next 500 years:
 

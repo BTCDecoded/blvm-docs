@@ -120,7 +120,7 @@ Cypherpunks focused on eliminating trusted third parties in transactions. Bitcoi
 
 ### What is BLLVM?
 
-BLLVM (Bitcoin Low-Level Virtual Machine) is the technical stack that provides mathematical rigor for Bitcoin implementations. It includes: (1) Orange Paper - complete mathematical specification of Bitcoin consensus, (2) bllvm-consensus - pure mathematical implementation with formal verification, (3) bllvm-protocol - Bitcoin abstraction layer, (4) bllvm-node - full node implementation, (5) bllvm-sdk - developer toolkit. Think of it as a compiler-like architecture where the Orange Paper is the IR (intermediate representation).
+BLLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations, similar to how LLVM provides compiler infrastructure for programming languages. It includes: (1) Orange Paper - complete mathematical specification serving as the IR (intermediate representation), (2) Optimization Passes - runtime optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination), (3) bllvm-consensus - optimized mathematical implementation with formal verification, (4) bllvm-protocol - Bitcoin abstraction layer, (5) bllvm-node - full node implementation, (6) bllvm-sdk - developer toolkit. The optimization passes transform the Orange Paper specification into optimized, production-ready code.
 
 ### What is the Orange Paper?
 
@@ -136,7 +136,7 @@ Bitcoin Core embeds consensus rules in 350,000+ lines of C++ with no mathematica
 
 ### What does "compiler-like architecture" mean?
 
-Like a compiler has source code → IR → machine code, BLLVM has: Bitcoin Core code → Orange Paper (IR) → bllvm-consensus → bllvm-node. The Orange Paper serves as the intermediate representation that multiple implementations can target, just like multiple compilers can target the same IR. This enables implementation diversity while maintaining consensus correctness.
+Like a compiler has source code → IR → optimization passes → machine code, BLLVM has: Bitcoin Core code → Orange Paper (IR) → optimization passes → bllvm-consensus → bllvm-node. The Orange Paper serves as the intermediate representation that gets transformed through optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination) into optimized code. Just like multiple compilers can target the same LLVM IR, multiple Bitcoin implementations can target the Orange Paper specification. This enables implementation diversity while maintaining consensus correctness through shared mathematical foundations.
 
 ### What is formal verification in BLLVM?
 

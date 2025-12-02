@@ -401,7 +401,7 @@ let message = GovernanceMessage::Release {
 
 // Sign message
 let message_bytes = message.to_signing_bytes();
-let signature = sign_message(&keypair.secret_key_bytes(), &message_bytes)?;
+let signature = sign_message(&keypair.secret_key, &message_bytes)?;
 
 // Verify signature
 let verified = verify_signature(&signature, &message_bytes, &keypair.public_key())?;

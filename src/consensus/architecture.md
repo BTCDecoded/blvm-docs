@@ -6,10 +6,11 @@ The consensus layer is designed as a pure mathematical implementation with no si
 
 1. **Pure Functions**: All functions are deterministic and side-effect-free
 2. **Mathematical Accuracy**: Direct implementation of Orange Paper specifications
-3. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
-4. **Comprehensive Testing**: Extensive test coverage with integration tests
-5. **No Consensus Rule Interpretation**: Only mathematical implementation
-6. **Formal Verification**: Kani model checking and property-based testing ensure correctness
+3. **Optimization Passes**: LLVM-like optimization passes transform the Orange Paper specification into optimized code (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination)
+4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
+5. **Comprehensive Testing**: Extensive test coverage with integration tests
+6. **No Consensus Rule Interpretation**: Only mathematical implementation
+7. **Formal Verification**: Kani model checking and property-based testing ensure correctness
 
 ## Core Functions
 
@@ -45,6 +46,19 @@ The consensus layer is designed as a pure mathematical implementation with no si
 ### Advanced Features
 - **SegWit**: Witness data validation and weight calculation
 - **Taproot**: P2TR output validation and key aggregation
+
+## Optimization Passes
+
+BLLVM includes LLVM-like optimization passes that transform the Orange Paper specification into optimized, production-ready code:
+
+- **Pass 2: Constant Folding** - Pre-computed constants and constant propagation to avoid runtime computation in hot paths
+- **Pass 3: Memory Layout Optimization** - Cache-aligned structures (32-byte alignment) and compact stack frames for better cache performance
+- **Pass 5: SIMD Vectorization** - Batch hash operations (SHA256, double SHA256, RIPEMD160, HASH160) with parallel processing using Rayon
+- **Bounds Check Optimization** - Uses Kani-proven bounds to remove redundant runtime bounds checks
+- **Dead Code Elimination** - Markers for unused code paths that can be eliminated
+- **Inlining Hints** - `hot_inline!` macro for aggressive inlining of hot functions
+
+These optimization passes are similar to LLVM's optimization infrastructure, transforming the mathematical specification (Orange Paper) into optimized code while maintaining correctness through formal verification.
 
 ## Mathematical Protections
 

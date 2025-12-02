@@ -105,7 +105,7 @@ keep_blocks = 288  # Keep last 288 blocks (2 days)
 **Pruning Modes:**
 - **Disabled** (default): Keep all blocks
 - **Light client**: Keep last N blocks (configurable)
-- **Full pruning**: Remove all blocks, keep only UTXO set (future)
+- **Full pruning**: Remove all blocks, keep only UTXO set (planned)
 
 **Note**: Pruning reduces storage but limits ability to serve historical blocks to peers.
 

@@ -34,23 +34,48 @@ modules/
 Every module must include a `module.toml` manifest file:
 
 ```toml
+# ============================================================================
+# Module Manifest
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Core Identity (Required)
+# ----------------------------------------------------------------------------
 name = "my-module"
 version = "1.0.0"
+entry_point = "my-module"
+
+# ----------------------------------------------------------------------------
+# Metadata (Optional)
+# ----------------------------------------------------------------------------
 description = "Description of what this module does"
 author = "Your Name <your.email@example.com>"
 
-# Required capabilities/permissions
+# ----------------------------------------------------------------------------
+# Capabilities
+# ----------------------------------------------------------------------------
+# Permissions this module requires to function
 capabilities = [
-    "read_blockchain",      # Required to query blockchain data
-    "subscribe_events",     # Required to receive node events
+    "read_blockchain",    # Query blockchain data
+    "subscribe_events",   # Receive node events
 ]
 
-# Optional dependencies on other modules
+# ----------------------------------------------------------------------------
+# Dependencies
+# ----------------------------------------------------------------------------
+# Required dependencies (module cannot load without these)
 [dependencies]
-# "another-module" = ">=0.1.0"
+"bllvm-lightning" = ">=1.0.0"
 
-# Entry point (binary name)
-entry_point = "my-module"
+# Optional dependencies (module can work without these)
+[optional_dependencies]
+"bllvm-mesh" = ">=0.5.0"
+
+# ----------------------------------------------------------------------------
+# Configuration Schema (Optional)
+# ----------------------------------------------------------------------------
+[config_schema]
+poll_interval = "Polling interval in seconds (default: 5)"
 ```
 
 **Required Fields:**
@@ -62,7 +87,15 @@ entry_point = "my-module"
 - `description`: Human-readable description
 - `author`: Module author
 - `capabilities`: List of required permissions
-- `dependencies`: Other module dependencies
+- `dependencies`: Required (hard) dependencies - module cannot load without them
+- `optional_dependencies`: Optional (soft) dependencies - module can work without them
+
+**Dependency Version Constraints:**
+- `>=1.0.0` - Greater than or equal to version
+- `<=2.0.0` - Less than or equal to version
+- `=1.2.3` - Exact version match
+- `^1.0.0` - Compatible version (>=1.0.0 and <2.0.0)
+- `~1.2.0` - Patch updates only (>=1.2.0 and <1.3.0)
 
 ## Module Development
 
@@ -186,7 +219,7 @@ Modules operate with **whitelist-only access control**. Each module declares req
 - `read_utxo`: Query UTXO set (read-only)
 - `read_chain_state`: Query chain state (height, tip)
 - `subscribe_events`: Receive node events
-- `send_transactions`: Submit transactions to mempool (future)
+- `send_transactions`: Submit transactions to mempool (planned)
 
 ### Sandboxing
 
@@ -210,7 +243,7 @@ All module API requests are validated:
 
 **Event Types**: `NewBlock`, `NewTransaction`, `BlockDisconnected`, `ChainReorg`
 
-**Permissions**: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `send_transactions` (future)
+**Permissions**: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `send_transactions` (planned)
 
 For detailed API reference, see `reference-node/src/module/` (traits, IPC protocol, Node API, security).
 

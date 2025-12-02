@@ -4,11 +4,13 @@ Key terms and concepts used throughout the BLLVM documentation.
 
 ## BLLVM Components
 
-**BLLVM** (Bitcoin Low-Level Virtual Machine) - The technical stack providing mathematical rigor for Bitcoin implementations through the Orange Paper, formal verification, and compiler-like architecture.
+**BLLVM** (Bitcoin Low-Level Virtual Machine) - Compiler-like infrastructure for Bitcoin implementations, providing mathematical rigor through the Orange Paper (IR), optimization passes, formal verification, and compiler-like architecture. Similar to how LLVM provides compiler infrastructure with optimization passes, BLLVM provides Bitcoin implementation infrastructure with optimization passes.
 
-**Orange Paper** - Complete mathematical specification of Bitcoin's consensus protocol, serving as the "intermediate representation" (IR) in BLLVM's compiler-like architecture.
+**Orange Paper** - Complete mathematical specification of Bitcoin's consensus protocol, serving as the "intermediate representation" (IR) in BLLVM's compiler-like architecture. Gets transformed through optimization passes into optimized code.
 
-**bllvm-consensus** - Pure mathematical implementation of Bitcoin consensus rules with formal verification (Kani proofs). Foundation layer with no dependencies.
+**Optimization Passes** - Runtime optimization passes in bllvm-consensus that transform the Orange Paper specification into optimized code: Pass 2 (Constant Folding), Pass 3 (Memory Layout Optimization), Pass 5 (SIMD Vectorization), plus bounds check optimization, dead code elimination, and inlining hints. These passes are similar to LLVM's optimization passes.
+
+**bllvm-consensus** - Optimized mathematical implementation of Bitcoin consensus rules with formal verification (Kani proofs). Includes optimization passes that transform the Orange Paper specification into production-ready code. Foundation layer with no dependencies.
 
 **bllvm-protocol** - Protocol abstraction layer enabling support for multiple Bitcoin variants (mainnet, testnet, regtest) while maintaining consensus compatibility.
 
@@ -36,7 +38,7 @@ Key terms and concepts used throughout the BLLVM documentation.
 
 **Spec Drift Detection** - Automated detection when implementation code diverges from the Orange Paper mathematical specification.
 
-**Compiler-Like Architecture** - Architecture where Bitcoin Core code → Orange Paper (IR) → bllvm-consensus → bllvm-node, similar to source code → IR → machine code in compilers.
+**Compiler-Like Architecture** - Architecture where Bitcoin Core code → Orange Paper (IR) → optimization passes → bllvm-consensus → bllvm-node, similar to source code → IR → optimization passes → machine code in compilers. The optimization passes transform the mathematical specification into optimized, production-ready code, just like LLVM's optimization passes transform IR into optimized machine code.
 
 **Process Isolation** - Module system design where each module runs in a separate process with isolated memory, preventing failures from propagating to the base node.
 
@@ -74,10 +76,10 @@ Key terms and concepts used throughout the BLLVM documentation.
 
 **RPC** (Remote Procedure Call) - JSON-RPC 2.0 interface for interacting with the node. BLLVM implements 28 Bitcoin Core-compatible methods.
 
-## Status & Phases
+## Governance Phases
 
-**Phase 1** (Infrastructure Building) - Current phase where all core components are implemented but governance is not yet activated. Test keys only.
+**Phase 1** (Infrastructure Building) - All core components are implemented. Governance is not activated. Test keys are used.
 
-**Phase 2** (Governance Activation) - Future phase when governance rules will be enforced with real cryptographic keys and keyholder onboarding.
+**Phase 2** (Governance Activation) - Governance rules are enforced with real cryptographic keys and keyholder onboarding.
 
-**Phase 3** (Full Operation) - Future phase representing mature, stable system with battle-tested governance and production deployment.
+**Phase 3** (Full Operation) - Mature, stable system with battle-tested governance and production deployment.

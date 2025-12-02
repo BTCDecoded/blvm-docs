@@ -35,7 +35,7 @@ bllvm-commons (depends on bllvm-sdk)
 - **Type**: Rust library
 - **Dependencies**: bllvm-consensus (exact version)
 - **Governance**: Layer 3 (Implementation - 4-of-5 maintainers, 90 days)
-- **Supports**: mainnet, testnet, regtest, and future protocol variants
+- **Supports**: mainnet, testnet, regtest, and additional protocol variants
 
 ### Tier 4: Reference Node (bllvm-node)
 - **Purpose**: Minimal, production-ready Bitcoin implementation
