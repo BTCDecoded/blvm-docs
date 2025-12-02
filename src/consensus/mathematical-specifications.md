@@ -226,3 +226,11 @@ The mathematical specifications system includes:
 
 **Location**: `bllvm-consensus/docs/VERIFICATION.md`, `bllvm-consensus/docs/MATHEMATICAL_SPECIFICATIONS_COMPLETE.md`, `bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md`
 
+## See Also
+
+- [Consensus Overview](overview.md) - Consensus layer introduction
+- [Consensus Architecture](architecture.md) - Consensus layer design
+- [Formal Verification](formal-verification.md) - Kani verification details
+- [Mathematical Correctness](mathematical-correctness.md) - Correctness guarantees
+- [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
+

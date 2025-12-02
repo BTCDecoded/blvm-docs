@@ -268,3 +268,10 @@ The UTXO Commitments system includes:
 
 **Location**: `bllvm-consensus/src/utxo_commitments/`, `bllvm-node/src/network/utxo_commitments_client.rs`
 
+## See Also
+
+- [Consensus Overview](overview.md) - Consensus layer introduction
+- [Consensus Architecture](architecture.md) - Consensus layer design
+- [Network Protocol](../protocol/network-protocol.md) - Network protocol details
+- [Node Configuration](../node/configuration.md) - UTXO commitment configuration
+- [Storage Backends](../node/storage-backends.md) - Storage backend details

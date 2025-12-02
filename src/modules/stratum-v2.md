@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Stratum V2 module (`bllvm-stratum-v2`) provides Stratum V2 mining protocol support for bllvm-node, including Stratum V2 server implementation, mining pool management, merge mining coordination, and mining job distribution.
+The Stratum V2 module (`bllvm-stratum-v2`) implements [Stratum V2 mining protocol](../node/mining-stratum-v2.md) support for bllvm-node: Stratum V2 server implementation, mining pool management, merge mining coordination, and mining job distribution. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
@@ -30,7 +30,7 @@ cargo bllvm-module install bllvm-stratum-v2
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/BTCDecoded/bllvm-stratum-v2.git
+   git clone https://github.com/BTCDecoded/blvm-stratum-v2.git
    cd bllvm-stratum-v2
    ```
 
@@ -69,7 +69,7 @@ pool_url = "stratum+tcp://pool.example.com:3333"
 
 ## Module Manifest
 
-The module includes a `module.toml` manifest:
+The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
 name = "bllvm-stratum-v2"
@@ -171,6 +171,9 @@ The module integrates with the node via the Node API IPC protocol:
 
 - [Module System Overview](overview.md) - Overview of all available modules
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
+- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
 - [Stratum V2 + Merge Mining](../node/mining-stratum-v2.md) - Stratum V2 protocol documentation
+- [Mining Integration](../node/mining.md) - Mining functionality
 
 

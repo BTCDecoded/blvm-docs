@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Governance module (`bllvm-governance`) provides governance integration for bllvm-node, including webhook notifications to bllvm-commons, economic node tracking, veto system integration, and governance proposal monitoring.
+The Governance module (`bllvm-governance`) integrates governance functionality for bllvm-node: webhook notifications to [bllvm-commons](../governance/overview.md), [economic node tracking](../governance/economic-nodes.md), [veto system integration](../governance/economic-nodes.md#veto-mechanism), and governance proposal monitoring. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
@@ -30,7 +30,7 @@ cargo bllvm-module install bllvm-governance
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/BTCDecoded/bllvm-governance.git
+   git clone https://github.com/BTCDecoded/blvm-governance.git
    cd bllvm-governance
    ```
 
@@ -69,7 +69,7 @@ enabled = true
 
 ## Module Manifest
 
-The module includes a `module.toml` manifest:
+The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
 name = "bllvm-governance"
@@ -183,7 +183,10 @@ The module integrates with the node via the Node API IPC protocol:
 
 - [Module System Overview](overview.md) - Overview of all available modules
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
+- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
 - [Governance Overview](../governance/overview.md) - Governance system documentation
 - [Economic Nodes](../governance/economic-nodes.md) - Economic node system documentation
+- [PR Process](../development/pr-process.md) - Governance tiers and PR review process
 
 

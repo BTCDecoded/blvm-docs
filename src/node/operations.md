@@ -1,6 +1,6 @@
 # Node Operations
 
-Operational guide for running and maintaining a BLLVM node.
+Operational guide for running and maintaining a BLVM node.
 
 ## Starting the Node
 
@@ -25,7 +25,7 @@ bllvm --config bllvm.toml
 
 ## Node Lifecycle
 
-The node follows a well-defined lifecycle with multiple states and transitions.
+The node follows a lifecycle with multiple states and transitions.
 
 ### Lifecycle States
 
@@ -62,10 +62,10 @@ State transitions are managed by the `SyncStateMachine`:
 
 When starting for the first time, the node will:
 
-1. **Initialize Components**: Storage, network, RPC, modules
+1. **Initialize Components**: [Storage](storage-backends.md), [network](transport-abstraction.md), [RPC](rpc-api.md), [modules](../modules/overview.md)
 2. **Connect to P2P Network**: Discover peers via DNS seeds or persistent peers
 3. **Download Headers**: Request and validate block headers
-4. **Download Blocks**: Request and validate full blocks
+4. **Download Blocks**: Request and validate blocks
 5. **Build UTXO Set**: Construct UTXO set from validated blocks
 6. **Sync to Current Height**: Continue until caught up with network
 
@@ -76,10 +76,10 @@ When starting for the first time, the node will:
 Once synced, the node maintains:
 
 - **Peer Connections**: Active P2P connections
-- **Block Validation**: Validates and relays new blocks
+- **Block Validation**: Validates and relays new blocks (via [bllvm-consensus](../consensus/overview.md))
 - **Transaction Processing**: Validates and relays transactions
 - **Chain State Updates**: Updates chain tip and height
-- **RPC Requests**: Serves JSON-RPC API requests
+- **RPC Requests**: Serves [JSON-RPC API](rpc-api.md) requests
 - **Health Monitoring**: Periodic health checks
 
 **Code**: ```1000:1102:bllvm-node/src/node/mod.rs```
@@ -139,7 +139,7 @@ RUST_LOG=trace bllvm
 
 ### Database Maintenance
 
-The node automatically maintains block storage, UTXO set, chain indexes, and transaction indexes.
+The node automatically maintains [block storage](storage-backends.md), UTXO set, chain indexes, and transaction indexes.
 
 ### Backup
 
@@ -156,11 +156,19 @@ When updating the node:
 
 1. Stop the node gracefully
 2. Backup data directory
-3. Download new binary from [GitHub Releases](https://github.com/BTCDecoded/bllvm-node/releases)
+3. Download new binary from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases)
 4. Replace old binary with new one
 5. Restart node
 
 ## Troubleshooting
 
 See [Troubleshooting](../appendices/troubleshooting.md) for detailed solutions to common issues.
+
+## See Also
+
+- [Node Configuration](configuration.md) - Configuration options
+- [Node Overview](overview.md) - Node architecture and features
+- [RPC API Reference](rpc-api.md) - Complete RPC API documentation
+- [Troubleshooting](../appendices/troubleshooting.md) - Common issues and solutions
+- [Performance Optimizations](performance.md) - Performance tuning
 

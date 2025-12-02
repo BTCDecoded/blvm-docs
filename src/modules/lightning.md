@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Lightning Network module (`bllvm-lightning`) provides Lightning Network payment processing capabilities for bllvm-node. It handles invoice verification, payment routing, channel management, and payment state tracking.
+The Lightning Network module (`bllvm-lightning`) handles Lightning Network payment processing for bllvm-node: invoice verification, payment routing, channel management, and payment state tracking. For information on developing custom modules, see [Module Development](../sdk/module-development.md). For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
@@ -30,7 +30,7 @@ cargo bllvm-module install bllvm-lightning
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/BTCDecoded/bllvm-lightning.git
+   git clone https://github.com/BTCDecoded/blvm-lightning.git
    cd bllvm-lightning
    ```
 
@@ -69,7 +69,7 @@ enabled = true
 
 ## Module Manifest
 
-The module includes a `module.toml` manifest:
+The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
 name = "bllvm-lightning"
@@ -143,5 +143,8 @@ The module integrates with the node via the Node API IPC protocol:
 - [Module System Overview](overview.md) - Overview of all available modules
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
 - [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
+- [SDK API Reference](../sdk/api-reference.md) - Complete SDK API documentation
+- [SDK Examples](../sdk/examples.md) - Module development examples
 
 

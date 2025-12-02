@@ -4,33 +4,33 @@
 
 ### What is Bitcoin Commons?
 
-Bitcoin Commons is a project that solves Bitcoin's governance asymmetry through two complementary innovations: BLLVM (the technical stack providing mathematical rigor) and Bitcoin Commons (the governance framework providing coordination without civil war). Together, they enable safe alternative Bitcoin implementations with forkable governance.
+Bitcoin Commons is a project that solves Bitcoin's governance asymmetry through two complementary innovations: [BLVM](../introduction.md) (the technical stack providing mathematical rigor) and Bitcoin Commons (the governance framework providing coordination without civil war). Together, they enable safe alternative Bitcoin implementations with forkable governance. See [Introduction](../introduction.md) and [Governance Overview](../governance/overview.md) for details.
 
 ### How is this different from Bitcoin Core?
 
-Bitcoin Core is a single implementation with informal governance. Bitcoin Commons provides: (1) BLLVM - Mathematical rigor enabling safe alternatives, (2) Commons - Forkable governance enabling coordination. Bitcoin Core has excellent consensus security; Bitcoin Commons adds governance security and implementation diversity.
+Bitcoin Core is a single implementation with informal governance. Bitcoin Commons provides: (1) BLVM - Mathematical rigor enabling safe alternatives, (2) Commons - Forkable governance enabling coordination. Bitcoin Core has excellent consensus security; Bitcoin Commons adds governance security and implementation diversity.
 
 ### Is this a fork of Bitcoin?
 
-No. Neither BLLVM nor Bitcoin Commons forks Bitcoin's blockchain or consensus rules. BLLVM provides mathematical specification enabling safe alternative implementations. Bitcoin Commons provides governance framework enabling coordination. Both maintain full Bitcoin consensus compatibility.
+No. Neither BLVM nor Bitcoin Commons forks Bitcoin's blockchain or consensus rules. BLVM provides mathematical specification enabling safe alternative implementations. Bitcoin Commons provides governance framework enabling coordination. Both maintain full Bitcoin consensus compatibility.
 
 ### Is the system production ready?
 
-The system is in Phase 1 (Infrastructure Complete). All core components of both BLLVM and Bitcoin Commons are implemented, but governance is not yet activated. Phase 2 (Governance Activation) will proceed when a suitable cohort of keyholders has been found. The system is not yet battle-tested in production.
+The system is in Phase 1 (Infrastructure Complete). All core components of both BLVM and Bitcoin Commons are implemented, but governance is not yet activated. Phase 2 (Governance Activation) will proceed when a suitable cohort of keyholders has been found. The system is not yet battle-tested in production.
 
-### How do BLLVM and Bitcoin Commons work together?
+### How do BLVM and Bitcoin Commons work together?
 
-BLLVM provides the mathematical foundation and compiler-like architecture (Orange Paper as IR, formal verification passes). Bitcoin Commons provides the governance framework (coordination without civil war). The modular architecture is where both meet: BLLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. You can't have safe alternative implementations without BLLVM's mathematical rigor, and you can't have coordination without Commons' governance framework.
+BLVM provides the mathematical foundation and compiler-like architecture (Orange Paper as IR, formal verification passes). Bitcoin Commons provides the governance framework (coordination without civil war). The modular architecture is where both meet: BLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. You can't have safe alternative implementations without BLVM's mathematical rigor, and you can't have coordination without Commons' governance framework.
 
 ### What are the two innovations?
 
-**BLLVM (Bitcoin Low-Level Virtual Machine)**: Technical innovation providing mathematical rigor through the Orange Paper (mathematical specification), formal verification (Kani proofs), proofs locked to code, and a compiler-like architecture. This ensures correctness.
+**BLVM (Bitcoin Low-Level Virtual Machine)**: Technical innovation providing mathematical rigor through the [Orange Paper](../reference/orange-paper.md) (mathematical specification), [formal verification](../consensus/formal-verification.md) ([Kani proofs](../consensus/formal-verification.md)), proofs locked to code, and a compiler-like architecture. This ensures correctness. See [Introduction](../introduction.md) and [Consensus Overview](../consensus/overview.md) for details.
 
-**Bitcoin Commons (Cryptographic Commons)**: Governance innovation providing forkable governance through Ostrom's principles, cryptographic enforcement, 5-tier governance model, and transparent audit trails. This ensures coordination.
+**Bitcoin Commons (Cryptographic Commons)**: Governance innovation providing forkable governance through Ostrom's principles, cryptographic enforcement, [5-tier governance model](../governance/layer-tier-model.md), and [transparent audit trails](../governance/audit-trails.md). This ensures coordination. See [Governance Overview](../governance/overview.md) for details.
 
 ### What's the relationship between Bitcoin Commons and BTCDecoded?
 
-Bitcoin Commons is the governance framework; BTCDecoded is the first complete implementation of both innovations (BLLVM + Commons). Think of BLLVM as the technical foundation, Bitcoin Commons as the governance constitution, and BTCDecoded as the first "government" built on both. Other implementations can adopt the same framework.
+Bitcoin Commons is the governance framework; BTCDecoded is the first complete implementation of both innovations (BLVM + Commons). Think of BLVM as the technical foundation, Bitcoin Commons as the governance constitution, and BTCDecoded as the first "government" built on both. Other implementations can adopt the same framework.
 
 ### What is Bitcoin Commons (the governance framework)?
 
@@ -52,21 +52,21 @@ Users can fork the governance rules (not just the code) if they disagree with de
 
 Elinor Ostrom's Nobel Prize-winning research identified 8 principles for managing commons successfully. Bitcoin Commons applies these through: clearly defined boundaries, proportional equivalence, collective choice, monitoring, graduated sanctions, conflict resolution, minimal recognition of rights, and nested enterprises.
 
-### Why do you need both BLLVM and Bitcoin Commons?
+### Why do you need both BLVM and Bitcoin Commons?
 
-BLLVM solves the technical problem (mathematical rigor, safe alternative implementations). Bitcoin Commons solves the governance problem (coordination without civil war). You can't have safe alternatives without BLLVM's mathematical foundation, and you can't have coordination without Commons' governance framework. They enable each other.
+BLVM solves the technical problem (mathematical rigor, safe alternative implementations). Bitcoin Commons solves the governance problem (coordination without civil war). You can't have safe alternatives without BLVM's mathematical foundation, and you can't have coordination without Commons' governance framework. They enable each other.
 
 ### How does the modular architecture combine both innovations?
 
-The modular architecture has three layers: (1) Mandatory Consensus (BLLVM ensures correctness), (2) Optional Modules (Commons enables competition), (3) Economic Coordination (merge mining funds both). BLLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. The architecture is where both meet.
+The modular architecture has three layers: (1) Mandatory Consensus (BLVM ensures correctness), (2) Optional Modules (Commons enables competition), (3) Economic Coordination (merge mining funds both). BLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. The architecture is where both meet.
 
-### Can you use BLLVM without Bitcoin Commons governance?
+### Can you use BLVM without Bitcoin Commons governance?
 
-Technically yes: BLLVM is a technical stack that can be used independently. However, without Bitcoin Commons governance, you'd still have the governance capture problem. The innovations are designed to work together: BLLVM enables safe alternatives, Commons enables coordination between alternatives.
+Technically yes: BLVM is a technical stack that can be used independently. However, without Bitcoin Commons governance, you'd still have the governance capture problem. The innovations are designed to work together: BLVM enables safe alternatives, Commons enables coordination between alternatives.
 
-### Can you use Bitcoin Commons governance without BLLVM?
+### Can you use Bitcoin Commons governance without BLVM?
 
-The governance framework could theoretically be applied to other implementations, but BLLVM's mathematical rigor (Orange Paper, formal verification) is what makes alternative implementations safe. Without BLLVM, you'd have governance but still risk consensus bugs from informal implementations.
+The governance framework could theoretically be applied to other implementations, but BLVM's mathematical rigor (Orange Paper, formal verification) is what makes alternative implementations safe. Without BLVM, you'd have governance but still risk consensus bugs from informal implementations.
 
 ### What happens if governance is captured?
 
@@ -80,7 +80,7 @@ Through merge mining revenue. Secondary chains merge-mine with Bitcoin, providin
 
 Merge mining allows miners to mine multiple blockchains simultaneously using the same proof-of-work. Bitcoin Commons implementations can merge-mine with Bitcoin, providing economic sustainability without changing Bitcoin's consensus. 1% of merged chain rewards fund development.
 
-### What's the current status of BLLVM?
+### What's the current status of BLVM?
 
 Orange Paper complete, bllvm-consensus with nearly 200 formal proofs, bllvm-protocol, bllvm-node, and bllvm-sdk all implemented. All 6 tiers are functional, but not yet battle-tested in production.
 
@@ -94,15 +94,15 @@ Phase 2 activation will proceed when a suitable cohort of keyholders has been fo
 
 ### How can I contribute?
 
-Review BLLVM code and formal proofs, review Bitcoin Commons governance rules, submit issues and pull requests, help with testing and security audits, build your own implementation using both innovations, or participate in governance discussions.
+Review BLVM code and formal proofs, review Bitcoin Commons governance rules, submit issues and pull requests, help with testing and security audits, build your own implementation using both innovations, or participate in governance discussions.
 
 ### Can I build my own implementation?
 
-Yes! You can use BLLVM's technical stack (Orange Paper, bllvm-consensus) and adopt Bitcoin Commons governance framework. Fork the governance model, customize it for your organization, and build your own Bitcoin-compatible implementation. See the [Implementations Registry](https://github.com/BTCDecoded/governance/blob/main/IMPLEMENTATIONS_REGISTRY.md).
+Yes! You can use BLVM's technical stack (Orange Paper, bllvm-consensus) and adopt Bitcoin Commons governance framework. Fork the governance model, customize it for your organization, and build your own Bitcoin-compatible implementation. See the [Implementations Registry](https://github.com/BTCDecoded/governance/blob/main/IMPLEMENTATIONS_REGISTRY.md).
 
 ### Where is the code?
 
-All code is open source on GitHub under the [BTCDecoded organization](https://github.com/BTCDecoded). Key repositories: BLLVM (bllvm-spec/Orange Paper, bllvm-consensus, bllvm-protocol, bllvm-node, bllvm-sdk) and Commons (governance, governance-app).
+All code is open source on GitHub under the [BTCDecoded organization](https://github.com/BTCDecoded). Key repositories: BLVM (bllvm-spec/Orange Paper, bllvm-consensus, bllvm-protocol, bllvm-node, bllvm-sdk) and Commons (governance, governance-app).
 
 ### What documentation should I read?
 
@@ -114,43 +114,43 @@ Bitcoin's codebase is a commons: a shared resource that benefits everyone but no
 
 ### How does this relate to cypherpunk philosophy?
 
-Cypherpunks focused on eliminating trusted third parties in transactions. Bitcoin Commons extends this to development: eliminate trusted parties in governance through cryptographic enforcement, transparency, and forkability. BLLVM extends this to implementation: eliminate trusted implementations through mathematical proof.
+Cypherpunks focused on eliminating trusted third parties in transactions. Bitcoin Commons extends this to development: eliminate trusted parties in governance through cryptographic enforcement, transparency, and forkability. BLVM extends this to implementation: eliminate trusted implementations through mathematical proof.
 
 ## Technical Questions
 
-### What is BLLVM?
+### What is BLVM?
 
-BLLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations, similar to how LLVM provides compiler infrastructure for programming languages. It includes: (1) Orange Paper - complete mathematical specification serving as the IR (intermediate representation), (2) Optimization Passes - runtime optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination), (3) bllvm-consensus - optimized mathematical implementation with formal verification, (4) bllvm-protocol - Bitcoin abstraction layer, (5) bllvm-node - full node implementation, (6) bllvm-sdk - developer toolkit. The optimization passes transform the Orange Paper specification into optimized, production-ready code.
+BLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations, similar to how LLVM provides compiler infrastructure for programming languages. It includes: (1) Orange Paper - complete mathematical specification serving as the IR (intermediate representation), (2) Optimization Passes - runtime optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination), (3) bllvm-consensus - optimized mathematical implementation with formal verification, (4) bllvm-protocol - Bitcoin abstraction layer, (5) bllvm-node - full node implementation, (6) bllvm-sdk - developer toolkit. The optimization passes transform the Orange Paper specification into optimized, production-ready code.
 
 ### What is the Orange Paper?
 
-The Orange Paper is a complete mathematical specification of Bitcoin's consensus protocol, extracted from Bitcoin Core using AI-assisted analysis. It serves as the "intermediate representation" (IR) in BLLVM's compiler-like architecture. It enables safe alternative implementations by providing formal, verifiable consensus rules that can be mathematically proven correct.
+The Orange Paper is a complete mathematical specification of Bitcoin's consensus protocol, extracted from Bitcoin Core using AI-assisted analysis. It serves as the "intermediate representation" (IR) in BLVM's compiler-like architecture. It enables safe alternative implementations by providing formal, verifiable consensus rules that can be mathematically proven correct.
 
-### How does formal verification work in BLLVM?
+### How does formal verification work in BLVM?
 
-BLLVM uses Kani model checking to formally verify consensus-critical code. The Orange Paper provides the mathematical specification; bllvm-consensus implements it with proofs locked to code. All consensus decisions flow through verified functions, and the dependency chain prevents bypassing verification. This provides mathematical proof of correctness, not just testing.
+BLVM uses Kani model checking to formally verify consensus-critical code. The Orange Paper provides the mathematical specification; bllvm-consensus implements it with proofs locked to code. All consensus decisions flow through verified functions, and the dependency chain prevents bypassing verification. This provides mathematical proof of correctness, not just testing.
 
-### How is BLLVM different from Bitcoin Core?
+### How is BLVM different from Bitcoin Core?
 
-Bitcoin Core embeds consensus rules in 350,000+ lines of C++ with no mathematical specification. BLLVM provides: (1) Mathematical specification (Orange Paper), (2) Formal verification (Kani proofs), (3) Proofs locked to code, (4) Compiler-like architecture enabling safe alternative implementations. BLLVM doesn't replace Bitcoin Core; it enables safe alternatives.
+Bitcoin Core embeds consensus rules in 350,000+ lines of C++ with no mathematical specification. BLVM provides: (1) Mathematical specification (Orange Paper), (2) Formal verification (Kani proofs), (3) Proofs locked to code, (4) Compiler-like architecture enabling safe alternative implementations. BLVM doesn't replace Bitcoin Core; it enables safe alternatives.
 
 ### What does "compiler-like architecture" mean?
 
-Like a compiler has source code → IR → optimization passes → machine code, BLLVM has: Bitcoin Core code → Orange Paper (IR) → optimization passes → bllvm-consensus → bllvm-node. The Orange Paper serves as the intermediate representation that gets transformed through optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination) into optimized code. Just like multiple compilers can target the same LLVM IR, multiple Bitcoin implementations can target the Orange Paper specification. This enables implementation diversity while maintaining consensus correctness through shared mathematical foundations.
+Like a compiler has source code → IR → optimization passes → machine code, BLVM has: Bitcoin Core code → Orange Paper (IR) → optimization passes → bllvm-consensus → bllvm-node. The Orange Paper serves as the intermediate representation that gets transformed through optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination) into optimized code. Just like multiple compilers can target the same LLVM IR, multiple Bitcoin implementations can target the Orange Paper specification. This enables implementation diversity while maintaining consensus correctness through shared mathematical foundations.
 
-### What is formal verification in BLLVM?
+### What is formal verification in BLVM?
 
-BLLVM uses Kani model checking to mathematically prove code correctness. The Orange Paper provides the specification; bllvm-consensus implements it with proofs. All consensus decisions flow through verified functions. This provides mathematical proof, not just testing.
+BLVM uses Kani model checking to mathematically prove code correctness. The Orange Paper provides the specification; bllvm-consensus implements it with proofs. All consensus decisions flow through verified functions. This provides mathematical proof, not just testing.
 
-### How many formal proofs does BLLVM have?
+### How many formal proofs does BLVM have?
 
-BLLVM has nearly 200 formal proofs in the source code, providing comprehensive formal verification coverage of consensus-critical functions. The proofs are embedded directly in the codebase and verified continuously.
+BLVM has nearly 200 formal proofs in the source code, providing comprehensive formal verification coverage of consensus-critical functions. The proofs are embedded directly in the codebase and verified continuously.
 
 ### What does "proofs locked to code" mean?
 
 Formal verification proofs are embedded in the code itself, not separate documentation. The proofs verify that the code matches the Orange Paper specification. If code changes, proofs must be updated, ensuring correctness is maintained.
 
-### How does BLLVM prevent consensus bugs?
+### How does BLVM prevent consensus bugs?
 
 Through multiple layers: (1) Orange Paper provides mathematical specification, (2) Formal verification proves implementation matches spec, (3) Proofs locked to code prevent drift, (4) Dependency chain forces all consensus through verified functions, (5) Spec drift detection alerts if code diverges from spec.
 
@@ -160,7 +160,7 @@ All governance actions require cryptographic signatures from maintainers. The go
 
 ### What BIPs are implemented?
 
-BLLVM implements numerous Bitcoin Improvement Proposals. See [Protocol Specifications](../reference/protocol-specifications.md) for a complete list, including consensus-critical BIPs (BIP65, BIP112, BIP68, BIP113, BIP125, BIP141/143, BIP340/341/342), network protocol BIPs (BIP152, BIP157/158, BIP331), and application-level BIPs (BIP21, BIP32/39/44, BIP174, BIP350/351).
+BLVM implements numerous Bitcoin Improvement Proposals. See [Protocol Specifications](../reference/protocol-specifications.md) for a complete list, including consensus-critical BIPs (BIP65, BIP112, BIP68, BIP113, BIP125, BIP141/143, BIP340/341/342), network protocol BIPs (BIP152, BIP157/158, BIP331), and application-level BIPs (BIP21, BIP32/39/44, BIP174, BIP350/351).
 
 ### What storage backends are supported?
 
@@ -170,9 +170,9 @@ The node supports multiple storage backends with automatic fallback: **redb** (d
 
 The network layer supports multiple transport protocols: **TCP** (default, Bitcoin P2P compatible) and **Iroh/QUIC** (experimental). See [Network Protocol](../protocol/network-protocol.md) for details.
 
-### How do I install BLLVM?
+### How do I install BLVM?
 
-Pre-built binaries are available from [GitHub Releases](https://github.com/BTCDecoded/bllvm-node/releases). See [Installation](../getting-started/installation.md) for platform-specific instructions.
+Pre-built binaries are available from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases). See [Installation](../getting-started/installation.md) for platform-specific instructions.
 
 ### What experimental features are available?
 

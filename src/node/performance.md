@@ -296,3 +296,10 @@ The performance optimization system includes:
 
 **Location**: `bllvm-consensus/src/optimizations.rs`, `bllvm-consensus/src/block.rs`, `bllvm-consensus/src/config.rs`, `bllvm-node/src/validation/mod.rs`
 
+## See Also
+
+- [Node Overview](overview.md) - Node implementation details
+- [Node Configuration](configuration.md) - Performance configuration options
+- [Benchmarking](../development/benchmarking.md) - Performance benchmarking
+- [Storage Backends](storage-backends.md) - Storage performance
+- [Consensus Architecture](../consensus/architecture.md) - Optimization passes

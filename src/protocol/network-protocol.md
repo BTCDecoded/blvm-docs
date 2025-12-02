@@ -1,10 +1,10 @@
 # Network Protocol
 
-The protocol layer abstracts Bitcoin's P2P network protocol, enabling support for multiple network variants.
+The protocol layer abstracts Bitcoin's P2P network protocol, supporting multiple network variants. See [Protocol Overview](overview.md) for details.
 
 ## Protocol Abstraction
 
-The bllvm-protocol provides abstraction for P2P message formats (standard Bitcoin wire protocol), connection management, peer discovery, block synchronization, and transaction relay.
+The bllvm-protocol abstracts P2P message formats (standard Bitcoin wire protocol), connection management, peer discovery, block synchronization, and transaction relay. See [Protocol Architecture](architecture.md) for details.
 
 ## Network Variants
 
@@ -29,7 +29,7 @@ For implementation details, see the [bllvm-protocol README](../../modules/bllvm-
 
 ## Transport Abstraction Layer
 
-The network layer supports multiple transport protocols through a unified abstraction:
+The network layer uses multiple transport protocols through a unified abstraction (see [Transport Abstraction](../node/transport-abstraction.md)):
 
 ```
 NetworkManager
@@ -40,9 +40,9 @@ NetworkManager
 
 ### Transport Options
 
-**TCP Transport** (Default): Transport for Bitcoin P2P protocol compatibility using traditional TCP sockets. Maintains Bitcoin wire protocol format and is compatible with standard Bitcoin nodes.
+**TCP Transport** (Default): Bitcoin P2P protocol compatibility using traditional TCP sockets. Maintains Bitcoin wire protocol format and is compatible with standard Bitcoin nodes. See [Transport Abstraction](../node/transport-abstraction.md#tcp-transport).
 
-**Iroh Transport**: QUIC-based transport using Iroh for P2P networking with public key-based peer identity and NAT traversal support.
+**Iroh Transport**: QUIC-based transport using Iroh for P2P networking with public key-based peer identity and NAT traversal support. See [Transport Abstraction](../node/transport-abstraction.md#iroh-transport).
 
 ### Transport Selection
 
@@ -55,7 +55,7 @@ transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
 
 **Modes**: `tcp_only` (default, Bitcoin compatible), `iroh_only` (experimental), `hybrid` (both simultaneously)
 
-The **protocol adapter** serializes between consensus-proof `NetworkMessage` types and transport-specific wire formats. The **message bridge** processes messages and generates responses. Default is TCP-only; enable Iroh via `iroh` feature flag.
+The **protocol adapter** serializes between blvm-consensus `NetworkMessage` types and transport-specific wire formats. The **message bridge** processes messages and generates responses. Default is TCP-only; enable Iroh via `iroh` feature flag.
 
 ## See Also
 

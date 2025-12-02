@@ -1,6 +1,6 @@
 # Quick Start
 
-Get up and running with BLLVM in minutes.
+Get up and running with BLVM in minutes.
 
 ## Running Your First Node
 
@@ -11,23 +11,23 @@ After [installing](installation.md) the binary, you can start a node:
 Regtest mode is safe for development - it creates an isolated network:
 
 ```bash
-bllvm
+blvm
 ```
 
 Or explicitly:
 
 ```bash
-bllvm --network regtest
+blvm --network regtest
 ```
 
-This starts a node in regtest mode (default), creating an isolated network with instant block generation, perfect for testing and development.
+Starts a node in regtest mode (default), creating an isolated network with instant block generation for testing and development.
 
 ### Testnet Mode
 
 Connect to Bitcoin testnet:
 
 ```bash
-bllvm --network testnet
+blvm --network testnet
 ```
 
 ### Mainnet Mode
@@ -35,7 +35,7 @@ bllvm --network testnet
 ⚠️ **Warning**: Only use mainnet if you understand the risks.
 
 ```bash
-bllvm --network mainnet
+blvm --network mainnet
 ```
 
 ## Basic Node Operations
@@ -53,24 +53,24 @@ curl -X POST http://localhost:8332 \
 ### Verifying Installation
 
 ```bash
-bllvm --version  # Verify installation
-bllvm --help     # View available options
+blvm --version  # Verify installation
+blvm --help     # View available options
 ```
 
-The node connects to the P2P network, syncs blockchain state, accepts RPC commands on port 8332 (default), and can mine blocks if configured.
+The node connects to the P2P network, syncs blockchain state, accepts [RPC commands](rpc-api.md) on port 8332 (default), and can [mine blocks](mining.md) if configured.
 
 ## Using the SDK
 
 ### Generate a Governance Keypair
 
 ```bash
-bllvm-keygen --output my-key.key
+blvm-keygen --output my-key.key
 ```
 
 ### Sign a Message
 
 ```bash
-bllvm-sign release \
+blvm-sign release \
   --version v1.0.0 \
   --commit abc123 \
   --key my-key.key \
@@ -80,7 +80,7 @@ bllvm-sign release \
 ### Verify Signatures
 
 ```bash
-bllvm-verify release \
+blvm-verify release \
   --version v1.0.0 \
   --commit abc123 \
   --signatures sig1.txt,sig2.txt,sig3.txt \
@@ -93,4 +93,13 @@ bllvm-verify release \
 - [First Node Setup](first-node.md) - Detailed configuration guide
 - [Node Configuration](../node/configuration.md) - Full configuration options
 - [RPC API Reference](../node/rpc-api.md) - Interact with your node
+
+## See Also
+
+- [Installation](installation.md) - Installing BLVM
+- [First Node Setup](first-node.md) - Complete setup guide
+- [Node Configuration](../node/configuration.md) - Configuration options
+- [Node Operations](../node/operations.md) - Managing your node
+- [RPC API Reference](../node/rpc-api.md) - Complete RPC API
+- [Troubleshooting](../appendices/troubleshooting.md) - Common issues
 

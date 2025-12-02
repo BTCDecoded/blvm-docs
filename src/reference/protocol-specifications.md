@@ -1,6 +1,6 @@
 # Protocol Specifications
 
-Bitcoin Improvement Proposals (BIPs) implemented in BLLVM. All consensus-critical BIPs are formally verified. See [Formal Verification](../consensus/formal-verification.md) for verification details.
+Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical BIPs are [formally verified](../consensus/formal-verification.md). See [Formal Verification](../consensus/formal-verification.md) for verification details.
 
 ## Consensus-Critical BIPs
 
@@ -13,15 +13,15 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLLVM. All consensus-critica
 - **BIP113**: Median time-past for CLTV timestamp validation (`bllvm-consensus/src/block.rs`) ✅ Kani proofs
 
 **Transaction Features**:
-- **BIP125** (RBF): Replace-by-fee with all 5 requirements (`bllvm-consensus/src/mempool.rs`) ✅ Comprehensive tests
+- **BIP125** (RBF): Replace-by-fee with all 5 requirements (`bllvm-consensus/src/mempool.rs`) ✅ Tests
 - **BIP141/143** (SegWit): Witness validation, weight calculation, P2WPKH/P2WSH (`bllvm-consensus/src/segwit.rs`) ✅ Kani proofs
 - **BIP340/341/342** (Taproot): P2TR validation framework (`bllvm-consensus/src/taproot.rs`) ✅ Kani proofs
 
 ## Network Protocol BIPs
 
-- **BIP152**: Compact block relay - short transaction IDs, block reconstruction (`bllvm-node/src/network/compact_blocks.rs`)
-- **BIP157/158**: Client-side block filtering - GCS filter construction, fully integrated with network layer, works over all transports (`bllvm-node/src/bip157.rs`, `bip158.rs`)
-- **BIP331**: Package relay - efficient transaction relay (`bllvm-node/src/network/package_relay.rs`)
+- **BIP152**: Compact block relay - short transaction IDs, block reconstruction (see [Compact Blocks](../node/transport-abstraction.md#compact-blocks))
+- **BIP157/158**: Client-side block filtering - GCS filter construction, integrated with network layer, works over all transports (see [BIP157/158](../node/transport-abstraction.md#bip157-158))
+- **BIP331**: Package relay - efficient transaction relay (see [Package Relay](../node/package-relay.md))
 
 ## Application-Level BIPs
 
@@ -33,5 +33,5 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLLVM. All consensus-critica
 
 ## Experimental Features
 
-Available in [experimental build variant](../getting-started/installation.md#experimental-variant): UTXO commitments, BIP119 CTV (CheckTemplateVerify), Dandelion++ privacy relay, Stratum V2 mining protocol.
+Available in [experimental build variant](../getting-started/installation.md#experimental-variant): [UTXO commitments](../consensus/utxo-commitments.md), BIP119 CTV (CheckTemplateVerify), [Dandelion++ privacy relay](../node/privacy-relay.md), [Stratum V2 mining protocol](../node/mining-stratum-v2.md).
 

@@ -1,6 +1,6 @@
 # Multisig Configuration
 
-Bitcoin Commons uses multisig thresholds for all governance decisions, with different thresholds based on the layer and tier of the change.
+Bitcoin Commons uses multisig thresholds for governance decisions, with different thresholds based on the layer and tier of the change. See [Layer-Tier Model](layer-tier-model.md) for details.
 
 ## Layer-Based Thresholds
 
@@ -50,7 +50,7 @@ Bitcoin Commons uses multisig thresholds for all governance decisions, with diff
 
 ## Combined Model
 
-When both layer and tier apply, the system uses **"most restrictive wins"** rule. See [LAYER_TIER_MODEL.md](../../modules/governance/LAYER_TIER_MODEL.md) for the complete decision matrix.
+When both layer and tier apply, the system uses **"most restrictive wins"** rule. See [Layer-Tier Model](layer-tier-model.md) for the decision matrix.
 
 ## Multisig Threshold Sensitivity
 
@@ -64,3 +64,10 @@ When both layer and tier apply, the system uses **"most restrictive wins"** rule
 
 For configuration details, see the [governance configuration files](../../modules/governance/config/).
 
+## See Also
+
+- [Layer-Tier Model](layer-tier-model.md) - How layers and tiers combine
+- [PR Process](../development/pr-process.md) - How thresholds apply to PRs
+- [Governance Model](governance-model.md) - Governance system
+- [Keyholder Procedures](keyholder-procedures.md) - Maintainer signing process
+- [Governance Overview](overview.md) - Governance system introduction

@@ -1,6 +1,6 @@
 # System Overview
 
-Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem consisting of six tiers that build upon the Orange Paper's mathematical specifications. The system provides direct mathematical implementation of consensus rules, protocol abstraction, a minimal reference implementation, and a developer-friendly SDK.
+Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on the [Orange Paper](../reference/orange-paper.md) mathematical specifications. The system implements consensus rules directly from the spec, provides protocol abstraction, delivers a minimal reference implementation, and includes a developer SDK.
 
 ## 6-Tier Component Architecture
 
@@ -18,10 +18,10 @@ Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem consisting o
 6. bllvm-commons (governance enforcement engine)
 ```
 
-## BLLVM Stack Architecture
+## BLVM Stack Architecture
 
-![BLLVM Stack Architecture](../images/stack.png)
-*Figure: BLLVM architecture showing bllvm-spec (Orange Paper) as the foundation, bllvm-consensus as the core implementation with verification paths (Kani proofs, spec drift detection, hash verification), and dependent components (bllvm-protocol, bllvm-node, bllvm-sdk) building on the verified consensus layer.*
+![BLVM Stack Architecture](../images/stack.png)
+*Figure: BLVM architecture showing bllvm-spec (Orange Paper) as the foundation, bllvm-consensus as the core implementation with verification paths (Kani proofs, spec drift detection, hash verification), and dependent components (bllvm-protocol, bllvm-node, bllvm-sdk) building on the verified consensus layer.*
 
 ## Tiered Architecture
 
@@ -30,44 +30,44 @@ Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem consisting o
 
 ## Component Overview
 
-### Tier 1: Orange Paper (Mathematical Foundation)
+### Tier 1: [Orange Paper](../reference/orange-paper.md) (Mathematical Foundation)
 - Mathematical specifications for Bitcoin consensus rules
-- Serves as the source of truth for all implementations
+- Source of truth for all implementations
 - Timeless, immutable consensus rules
 
-### Tier 2: bllvm-consensus (Pure Math Implementation)
-- Direct implementation of Orange Paper functions
-- 201 Kani proofs verify mathematical correctness
+### Tier 2: [bllvm-consensus](../consensus/overview.md) (Pure Math Implementation)
+- Direct implementation of [Orange Paper](../reference/orange-paper.md) functions
+- [201 Kani proofs](../consensus/formal-verification.md) verify mathematical correctness
 - Side-effect-free, deterministic functions
-- All consensus-critical dependencies pinned to exact versions
+- Consensus-critical dependencies pinned to exact versions
 
 **Code**: ```1:260:bllvm-consensus/README.md```
 
-### Tier 3: bllvm-protocol (Protocol Abstraction)
+### Tier 3: [bllvm-protocol](../protocol/overview.md) (Protocol Abstraction)
 - Bitcoin protocol abstraction for multiple variants
 - Supports mainnet, testnet, regtest
-- Commons-specific protocol extensions (UTXO commitments, ban list sharing)
+- Commons-specific protocol extensions ([UTXO commitments](../consensus/utxo-commitments.md), ban list sharing)
 - BIP implementations (BIP152, BIP157, BIP158, BIP173/350/351)
 
 **Code**: ```1:344:bllvm-protocol/README.md```
 
-### Tier 4: bllvm-node (Full Node Implementation)
+### Tier 4: [bllvm-node](../node/overview.md) (Node Implementation)
 - Minimal, production-ready Bitcoin node
-- Storage layer (database abstraction with multiple backends)
-- Network manager (multi-transport: TCP, QUIC, Iroh)
-- RPC server (JSON-RPC 2.0 + optional REST API)
-- Module system (process-isolated runtime modules)
+- [Storage layer](../node/storage-backends.md) (database abstraction with multiple backends)
+- Network manager ([multi-transport](../node/transport-abstraction.md): TCP, QUIC, Iroh)
+- [RPC server](../node/rpc-api.md) (JSON-RPC 2.0 + optional REST API)
+- [Module system](../architecture/module-system.md) (process-isolated runtime modules)
 - Payment processing (Lightning, vaults, covenants)
-- Mining coordination (Stratum V2, merge mining)
+- [Mining coordination](../node/mining-stratum-v2.md) (Stratum V2, merge mining)
 - Governance integration (webhooks, user signaling)
 - ZeroMQ notifications (optional)
 
 **Code**: ```1:178:bllvm-node/README.md```
 
-### Tier 5: bllvm-sdk (Developer Toolkit)
-- Governance primitives (key management, signatures, multisig)
+### Tier 5: [bllvm-sdk](../sdk/overview.md) (Developer Toolkit)
+- Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
 - CLI tools (bllvm-keygen, bllvm-sign, bllvm-verify)
-- Composition framework (declarative node composition)
+- [Composition framework](../architecture/module-system.md) (declarative node composition)
 - Bitcoin-compatible signing standards
 
 **Code**: ```1:130:bllvm-sdk/README.md```
@@ -98,10 +98,10 @@ Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem consisting o
 ## Key Features
 
 ### Mathematical Rigor
-- Direct implementation of Orange Paper specifications
-- Formal verification with Kani model checking
-- Property-based testing for mathematical invariants
-- 201 Kani proofs verify all critical consensus functions
+- Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
+- [Formal verification](../consensus/formal-verification.md) with [Kani model checking](../consensus/formal-verification.md)
+- [Property-based testing](../development/property-based-testing.md) for mathematical invariants
+- [201 Kani proofs](../consensus/formal-verification.md) verify critical consensus functions
 
 ### Protocol Abstraction
 - Multiple Bitcoin variants (mainnet, testnet, regtest)
@@ -110,18 +110,18 @@ Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem consisting o
 - Protocol evolution support
 
 ### Production Ready
-- Full Bitcoin node functionality
-- Performance optimizations (PGO, parallel validation)
-- Multiple storage backends with automatic fallback
-- Multi-transport networking (TCP, QUIC, Iroh)
+- Bitcoin node functionality
+- [Performance optimizations](../node/performance.md) (PGO, parallel validation)
+- [Multiple storage backends](../node/storage-backends.md) with automatic fallback
+- [Multi-transport networking](../node/transport-abstraction.md) (TCP, QUIC, Iroh)
 - Payment processing infrastructure
-- REST API alongside JSON-RPC
+- REST API alongside [JSON-RPC](../node/rpc-api.md)
 
 ### Governance Infrastructure
-- Cryptographic governance primitives
-- Multisig threshold enforcement
-- Transparent audit trails
-- Forkable governance rules
+- [Cryptographic governance primitives](../governance/overview.md)
+- [Multisig threshold enforcement](../governance/multisig-configuration.md)
+- [Transparent audit trails](../governance/audit-trails.md)
+- [Forkable governance rules](../governance/governance-fork.md)
 
 ## See Also
 

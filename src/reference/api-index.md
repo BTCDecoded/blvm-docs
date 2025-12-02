@@ -1,6 +1,6 @@
 # API Index
 
-Quick reference and cross-references to all BLLVM APIs across the ecosystem.
+Quick reference and cross-references to all BLVM APIs across the ecosystem.
 
 ## Complete API Documentation
 
@@ -27,7 +27,7 @@ For detailed Rust API documentation with full type signatures, examples, and imp
 - `Script`, `ScriptOpcode`
 - `ValidationResult`
 
-**Documentation:** See [Consensus Architecture](../consensus/architecture.md) and [Formal Verification](../consensus/formal-verification.md).
+**Documentation:** See [Consensus Overview](../consensus/overview.md), [Consensus Architecture](../consensus/architecture.md), and [Formal Verification](../consensus/formal-verification.md).
 
 ### Protocol Layer (bllvm-protocol)
 
@@ -41,7 +41,7 @@ For detailed Rust API documentation with full type signatures, examples, and imp
 - `PeerConnection`, `ConnectionState`
 - `BlockTemplate` (for mining)
 
-**Documentation:** See [Network Protocol](../protocol/network-protocol.md) and [Protocol Architecture](../protocol/architecture.md).
+**Documentation:** See [Protocol Overview](../protocol/overview.md), [Network Protocol](../protocol/network-protocol.md), and [Protocol Architecture](../protocol/architecture.md).
 
 ### Node Implementation (bllvm-node)
 
@@ -93,7 +93,7 @@ pub struct ModuleContext {
 
 #### RPC API
 
-**RPC Methods:** 28 Bitcoin Core-compatible JSON-RPC methods. See [RPC API Reference](../node/rpc-api.md) for complete list.
+**RPC Methods:** Bitcoin Core-compatible JSON-RPC methods. See [RPC API Reference](../node/rpc-api.md) for complete list.
 
 **Key Categories:**
 - Blockchain methods (8): `getblockchaininfo`, `getblock`, `getblockhash`, `getblockheader`, `getbestblockhash`, `getblockcount`, `getdifficulty`, `gettxoutsetinfo`, `verifychain`
@@ -117,10 +117,10 @@ pub struct ModuleContext {
 - `get_block_height(&self) -> Result<u64>`
 
 **Backends:**
-- `redb` - Production-ready embedded database (default)
-- `sled` - Beta fallback option
+- `redb` - Production-ready embedded database (default, see [Storage Backends](../node/storage-backends.md#redb))
+- `sled` - Beta fallback option (see [Storage Backends](../node/storage-backends.md#sled))
 
-**Documentation:** See [Node Configuration](../node/configuration.md#storage-backends).
+**Documentation:** See [Storage Backends](../node/storage-backends.md) and [Node Configuration](../node/configuration.md#storage-backends).
 
 ### Developer SDK (bllvm-sdk)
 

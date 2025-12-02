@@ -1,6 +1,6 @@
 # Governance Overview
 
-The governance system provides cryptographic enforcement of development processes across all Bitcoin Commons repositories.
+The governance system enforces development processes cryptographically across Bitcoin Commons repositories. See [Governance Model](governance-model.md) for details.
 
 {{#include ../../../modules/governance/README.md}}
 

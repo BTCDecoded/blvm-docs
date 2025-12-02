@@ -1,6 +1,6 @@
 # Consensus Layer Overview
 
-The consensus layer (`bllvm-consensus`) provides a pure mathematical implementation of Bitcoin consensus rules from the Orange Paper. All functions are deterministic, side-effect-free, and directly implement the mathematical specifications without interpretation.
+The consensus layer (`bllvm-consensus`) provides a pure mathematical implementation of Bitcoin consensus rules from the [Orange Paper](../reference/orange-paper.md). All functions are deterministic, side-effect-free, and directly implement the mathematical specifications without interpretation.
 
 ## Architecture Position
 
@@ -17,7 +17,7 @@ Tier 2 of the 6-tier Bitcoin Commons architecture:
 
 ## Core Functions
 
-Implements all major Bitcoin consensus functions from the Orange Paper:
+Implements major Bitcoin consensus functions from the [Orange Paper](../reference/orange-paper.md):
 
 ### Transaction Validation
 - `CheckTransaction`: Transaction structure and limit validation
@@ -65,22 +65,22 @@ Implements all major Bitcoin consensus functions from the Orange Paper:
 ## Design Principles
 
 1. **Pure Functions**: All functions are deterministic and side-effect-free
-2. **Mathematical Accuracy**: Direct implementation of Orange Paper specifications
-3. **Optimization Passes**: LLVM-like optimization passes transform specifications into optimized code
+2. **Mathematical Accuracy**: Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
+3. **Optimization Passes**: LLVM-like [optimization passes](architecture.md#optimization-passes) transform specifications into optimized code
 4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
-5. **Comprehensive Testing**: Extensive test coverage with integration tests
+5. **Comprehensive Testing**: Extensive test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
-7. **Formal Verification**: Kani model checking and property-based testing ensure correctness
+7. **Formal Verification**: [Kani model checking](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
 
 ## Formal Verification
 
 Implements mathematical verification of Bitcoin consensus rules:
 
 ### Verification Statistics
-- **201 Kani Proofs**: Verify all critical consensus functions (201 in `src/`, 9 in `tests/`)
-- **35 Property Tests**: Verify mathematical invariants
+- **201 [Kani Proofs](formal-verification.md)**: Verify all critical consensus functions (201 in `src/`, 9 in `tests/`)
+- **35 [Property Tests](../development/property-based-testing.md)**: Verify mathematical invariants
 - **913 Runtime Assertions**: Catch edge cases (814 `assert!` + 99 `debug_assert!`)
-- **13 Fuzz Targets**: Discover vulnerabilities
+- **13 [Fuzz Targets](../development/fuzzing.md)**: Discover vulnerabilities
 
 **Code**: ```1:412:bllvm-consensus/src/block.rs```
 
@@ -96,7 +96,7 @@ Implements mathematical verification of Bitcoin consensus rules:
 
 ## BIP Implementation
 
-All critical Bitcoin Improvement Proposals (BIPs) are implemented:
+Critical Bitcoin Improvement Proposals (BIPs) implemented:
 
 - **BIP30**: Duplicate coinbase prevention (integrated in `connect_block()`)
 - **BIP34**: Block height in coinbase (integrated in `connect_block()`)  

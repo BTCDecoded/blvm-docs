@@ -2,7 +2,7 @@
 
 ## Introduction
 
-BLLVM node supports a modular architecture where optional features are provided as separate, process-isolated modules. This enables extending node functionality without affecting consensus or base node stability.
+BLVM node uses a modular architecture where optional features run as separate, process-isolated modules. This extends node functionality without affecting consensus or base node stability.
 
 ## Available Modules
 
@@ -17,7 +17,7 @@ The following modules are available for bllvm-node:
 
 ## Module System Architecture
 
-All modules run in separate processes with IPC communication, providing:
+All modules run in separate processes with IPC communication (see [Module System Architecture](../architecture/module-system.md) for details), providing:
 
 - **Process Isolation**: Each module runs in isolated memory space
 - **Crash Containment**: Module failures don't affect the base node
@@ -58,7 +58,7 @@ cargo bllvm-module install bllvm-stratum-v2
 
 ## Module Configuration
 
-Each module requires a `config.toml` file in its module directory. See individual module documentation for configuration options.
+Each module requires a `config.toml` file in its module directory. See individual module documentation ([Lightning](lightning.md), [Mesh](mesh.md), [Governance](governance.md), [Stratum V2](stratum-v2.md)) for configuration options.
 
 ## Module Lifecycle
 
@@ -72,6 +72,9 @@ Modules can be:
 
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
 - [Module Development](../sdk/module-development.md) - Guide for developing custom modules
-- [Node Configuration](../reference/configuration-reference.md) - Node-level module configuration
+- [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
+- [SDK API Reference](../sdk/api-reference.md) - Complete SDK API documentation
+- [SDK Examples](../sdk/examples.md) - Module development examples
+- [Node Configuration](../node/configuration.md) - Node-level module configuration
 
 

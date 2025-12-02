@@ -316,3 +316,11 @@ The security controls system includes:
 
 **Location**: `bllvm-commons/src/validation/security_controls.rs`, `bllvm-commons/src/bin/security-gate.rs`
 
+## See Also
+
+- [Threat Models](threat-models.md) - Security threat analysis
+- [Developer Security Checklist](DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
+- [Security Architecture Review Template](ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process
+- [Security Testing Template](SECURITY_TESTING_TEMPLATE.md) - Security testing guidelines
+- [Contributing](../development/contributing.md) - Development workflow
+- [PR Process](../development/pr-process.md) - Security review in PR process

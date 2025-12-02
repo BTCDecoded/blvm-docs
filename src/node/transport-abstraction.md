@@ -167,7 +167,7 @@ The `ProtocolAdapter` handles message serialization between:
 
 ## Message Bridge
 
-The `MessageBridge` bridges consensus-proof message processing with transport layer:
+The `MessageBridge` bridges blvm-consensus message processing with transport layer:
 - Converts messages to/from transport formats
 - Processes incoming messages
 - Generates responses

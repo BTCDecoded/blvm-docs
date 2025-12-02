@@ -4,7 +4,7 @@ The protocol layer (`bllvm-protocol`) provides Bitcoin protocol abstraction that
 
 ## Architecture Position
 
-This is **Tier 3** of the 5-tier Bitcoin Commons architecture (BLLVM technology stack):
+This is **Tier 3** of the 5-tier Bitcoin Commons architecture (BLVM technology stack):
 
 ```
 1. Orange Paper (mathematical foundation)

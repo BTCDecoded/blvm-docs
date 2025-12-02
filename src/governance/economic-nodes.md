@@ -158,3 +158,11 @@ Economic node status reported in: GitHub status checks, Nostr events, monthly re
 | Annual renewal encourages stability | Inactive nodes lose status |
 | Good behavior increases influence | Public disclosure of violations |
 
+## See Also
+
+- [PR Process](../development/pr-process.md) - How economic node veto works in PRs
+- [Layer-Tier Model](layer-tier-model.md) - Governance tier system
+- [Governance Model](governance-model.md) - Complete governance system
+- [Governance Overview](overview.md) - Governance system introduction
+- [Keyholder Procedures](keyholder-procedures.md) - Maintainer responsibilities
+

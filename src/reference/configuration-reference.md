@@ -1,6 +1,6 @@
 # Configuration Reference
 
-Complete reference for all BLLVM node configuration options. Configuration can be provided via TOML file, JSON file, command-line arguments, or environment variables.
+Reference for BLVM node configuration options. Configuration can be provided via TOML file, JSON file, command-line arguments, or environment variables. See [Node Configuration](../node/configuration.md) for usage examples.
 
 ## Configuration File Format
 
@@ -59,7 +59,7 @@ rate_limit_rate = 10
   - `"iroh_only"` - Use only Iroh transport (requires `iroh` feature, experimental)
   - `"hybrid"` - Use both TCP and Iroh simultaneously (requires `iroh` feature)
   - `"all"` - Use all available transports (requires both `quinn` and `iroh` features)
-- **Description**: Transport protocol selection. See [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer) for details.
+- **Description**: Transport protocol selection. See [Transport Abstraction](../node/transport-abstraction.md) for details.
 
 #### `max_peers`
 - **Type**: `integer`
@@ -425,12 +425,12 @@ bllvm --data-dir /custom/path            # Override data directory
 
 ## Environment Variables
 
-Configuration can also be set via environment variables (prefixed with `BLLVM_`):
+Configuration can also be set via environment variables (prefixed with `BLVM_`):
 
 ```bash
-export BLLVM_NETWORK=testnet
-export BLLVM_DATA_DIR=/var/lib/bllvm
-export BLLVM_RPC_PORT=8332
+export BLVM_NETWORK=testnet
+export BLVM_DATA_DIR=/var/lib/bllvm
+export BLVM_RPC_PORT=8332
 ```
 
 ## Configuration Precedence

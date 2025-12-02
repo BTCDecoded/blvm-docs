@@ -98,3 +98,10 @@ pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {
 - `config/action-tiers.yml` - Tier definitions
 - `config/tier-classification-rules.yml` - PR classification
 
+## See Also
+
+- [PR Process](../development/pr-process.md) - How governance tiers apply to pull requests
+- [Governance Model](governance-model.md) - Governance system
+- [Multisig Configuration](multisig-configuration.md) - Signature threshold configuration
+- [Economic Nodes](economic-nodes.md) - Economic node veto system
+- [Governance Overview](overview.md) - Governance system introduction

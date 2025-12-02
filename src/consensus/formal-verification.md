@@ -409,3 +409,13 @@ Network protocol message parsing, serialization, and processing are formally ver
 
 Verification runs automatically in CI. Proofs excluded from release builds via `verify` feature.
 
+
+## See Also
+
+- [Consensus Overview](overview.md) - Consensus layer introduction
+- [Consensus Architecture](architecture.md) - Consensus layer design
+- [Mathematical Specifications](mathematical-specifications.md) - Mathematical spec details
+- [Mathematical Correctness](mathematical-correctness.md) - Correctness guarantees
+- [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
+- [Fuzzing](../development/fuzzing.md) - Fuzzing infrastructure
+- [Testing Infrastructure](../development/testing.md) - Complete testing overview

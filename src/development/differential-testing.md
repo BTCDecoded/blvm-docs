@@ -122,9 +122,9 @@ Differential fuzzing compares internal consistency:
 
 ### Internal Consistency
 
-Differential fuzzing tests internal consistency within consensus-proof:
+Differential fuzzing tests internal consistency within blvm-consensus:
 
-- **No Bitcoin Core Dependency**: Tests consensus-proof independently
+- **No Bitcoin Core Dependency**: Tests blvm-consensus independently
 - **Round-Trip Properties**: Serialization round-trips
 - **Validation Consistency**: Validation consistency across code paths
 - **Calculation Determinism**: Deterministic calculations
@@ -272,3 +272,10 @@ The differential testing system includes:
 
 **Differential Fuzzing**: `bllvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs` (internal consistency testing, not Core comparison)
 
+## See Also
+
+- [Testing Infrastructure](testing.md) - Overview of all testing techniques
+- [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
+- [Property-Based Testing](property-based-testing.md) - Verify invariants with random inputs
+- [Formal Verification](../consensus/formal-verification.md) - Kani model checking
+- [Contributing](contributing.md) - Testing requirements for contributions

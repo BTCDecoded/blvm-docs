@@ -8,11 +8,11 @@ Our verification approach follows: **"Rust + Tests + Math Specs = Source of Trut
 
 ### Layer 1: Empirical Testing (Required, Must Pass)
 - **Unit tests**: Comprehensive test coverage for all consensus functions
-- **Property-based tests**: Randomized testing with `proptest` to discover edge cases
+- **[Property-based tests](../development/property-based-testing.md)**: Randomized testing with `proptest` to discover edge cases
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification (Required, Must Pass)
-- **Kani model checking**: Bounded symbolic verification with mathematical invariants
+- **[Kani model checking](formal-verification.md)**: Bounded symbolic verification with mathematical invariants
 - **Mathematical specifications**: Formal documentation of consensus rules
 - **State space exploration**: Verification of all possible execution paths
 

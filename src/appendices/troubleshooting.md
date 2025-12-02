@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Common issues and solutions when running BLLVM nodes.
+Common issues and solutions when running BLVM nodes. See [Node Operations](../node/operations.md) for operational details.
 
 ## Node Won't Start
 
@@ -11,7 +11,7 @@ Common issues and solutions when running BLLVM nodes.
 **Solution**:
 ```bash
 # Use a different port
-bllvm --rpc-port 8333
+blvm --rpc-port 8333
 
 # Or find and stop the process using the port
 lsof -i :8332
@@ -25,10 +25,10 @@ kill <PID>
 **Solution**:
 ```bash
 # Fix directory permissions
-sudo chown -R $USER:$USER /var/lib/bllvm
+sudo chown -R $USER:$USER /var/lib/blvm
 
 # Or use a user-writable directory
-bllvm --data-dir ~/.bllvm
+blvm --data-dir ~/.blvm
 ```
 
 ## Storage Issues
@@ -54,7 +54,7 @@ bllvm --data-dir ~/.bllvm
 rm -rf data/blocks data/chainstate
 
 # Restart and resync
-bllvm
+blvm
 ```
 
 ## Network Issues
@@ -66,7 +66,7 @@ bllvm
 **Solutions**:
 - Check firewall settings (port 8333 for mainnet, 18333 for testnet)
 - Verify network connectivity
-- Try adding manual peers: `bllvm --addnode <peer-ip>:8333`
+- Try adding manual peers: `blvm --addnode <peer-ip>:8333`
 - Check DNS seed resolution
 
 ### Connection Drops
@@ -152,3 +152,10 @@ bllvm
 - See [RPC API](../node/rpc-api.md) for available methods
 - Check GitHub issues for known problems
 
+## See Also
+
+- [Node Operations](../node/operations.md) - Node management and operations
+- [Node Configuration](../node/configuration.md) - Configuration options
+- [Getting Started](../getting-started/first-node.md) - First node setup
+- [FAQ](faq.md) - Frequently asked questions
+- [Migration Guides](migration-guides.md) - Migration from other implementations

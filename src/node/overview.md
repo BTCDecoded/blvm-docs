@@ -1,6 +1,6 @@
 # Node Implementation Overview
 
-The node implementation (`bllvm-node`) provides a minimal, production-ready Bitcoin node that adds only non-consensus infrastructure to the consensus and protocol layers. All consensus logic comes from `bllvm-consensus`, and protocol abstraction comes from `bllvm-protocol`.
+The node implementation (`bllvm-node`) is a minimal, production-ready Bitcoin node that adds only non-consensus infrastructure to the consensus and protocol layers. Consensus logic comes from [bllvm-consensus](../consensus/overview.md), and protocol abstraction from [bllvm-protocol](../protocol/overview.md).
 
 ## Architecture
 
@@ -36,7 +36,7 @@ The node follows a layered architecture:
 **Code**: ```1:2680:bllvm-node/src/network/mod.rs```
 
 ### Storage Layer
-- Database abstraction with multiple backends
+- Database abstraction with multiple backends (see [Storage Backends](storage-backends.md))
 - Automatic backend fallback on failure
 - Block storage and indexing
 - UTXO set management
@@ -47,17 +47,17 @@ The node follows a layered architecture:
 **Code**: ```1:89:bllvm-node/src/storage/mod.rs```
 
 ### RPC Server
-- JSON-RPC 2.0 compliant API
+- JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
 - REST API (optional feature, runs alongside JSON-RPC)
-- Optional QUIC transport support
+- Optional QUIC transport support (see [QUIC RPC](quic-rpc.md))
 - Authentication and rate limiting
-- Comprehensive method coverage
+- Method coverage
 
 **Code**: ```1:47:bllvm-node/src/rpc/mod.rs```
 
 ### Module System
-- Process-isolated modules
-- IPC communication (Unix domain sockets)
+- Process-isolated modules (see [Module System Architecture](../architecture/module-system.md))
+- IPC communication (Unix domain sockets, see [Module IPC Protocol](../architecture/module-ipc-protocol.md))
 - Security sandboxing
 - Permission-based API access
 - Hot reload support
@@ -98,39 +98,39 @@ The node follows a layered architecture:
 
 ## Design Principles
 
-1. **Zero Consensus Re-implementation**: All consensus logic delegated to `bllvm-consensus`
-2. **Protocol Abstraction**: Uses `bllvm-protocol` for variant support (mainnet, testnet, regtest)
-3. **Pure Infrastructure**: Only adds storage, networking, RPC, orchestration
-4. **Production Ready**: Full Bitcoin node functionality with performance optimizations
+1. **Zero Consensus Re-implementation**: All consensus logic delegated to [bllvm-consensus](../consensus/overview.md)
+2. **Protocol Abstraction**: Uses [bllvm-protocol](../protocol/overview.md) for variant support (mainnet, testnet, regtest)
+3. **Pure Infrastructure**: Adds storage, networking, RPC, orchestration only
+4. **Production Ready**: Full Bitcoin node functionality with [performance optimizations](performance.md)
 
 ## Features
 
 ### Network Features
-- Multi-transport architecture (TCP, QUIC)
-- Privacy-preserving relay (Dandelion++)
+- [Multi-transport architecture](transport-abstraction.md) (TCP, QUIC)
+- [Privacy-preserving relay](privacy-relay.md) (Dandelion++)
 - High-performance block relay (Fibre)
-- Package relay (BIP331)
-- UTXO commitments support
+- [Package relay](package-relay.md) (BIP331)
+- [UTXO commitments](../consensus/utxo-commitments.md) support
 
 ### Storage Features
-- Multiple database backends with abstraction layer
+- [Multiple database backends](storage-backends.md) with abstraction layer
 - Automatic backend fallback on failure
 - Pruning support
 - Transaction indexing
 - UTXO set management
 
 ### Module Features
-- Process isolation
-- IPC communication
+- [Process isolation](../architecture/module-system.md#process-isolation)
+- [IPC communication](../architecture/module-ipc-protocol.md)
 - Security sandboxing
 - Hot reload
 - Module registry
 
 ### Mining Features
 - Block template generation
-- Stratum V2 protocol
+- [Stratum V2 protocol](mining-stratum-v2.md)
 - Merge mining support
-- Mining pool coordination
+- [Mining pool coordination](mining.md)
 
 ### Payment Features
 - Lightning Network module support
@@ -156,7 +156,7 @@ The node follows a layered architecture:
 
 ## Metrics and Monitoring
 
-The node includes comprehensive metrics collection:
+The node includes metrics collection:
 
 - **Network Metrics**: Peer count, bytes sent/received, connection statistics
 - **Storage Metrics**: Block count, UTXO count, database size

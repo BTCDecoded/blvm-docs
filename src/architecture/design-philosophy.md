@@ -1,12 +1,12 @@
 # Design Philosophy
 
-BLLVM is built on core principles that guide all design decisions.
+BLVM is built on core principles that guide all design decisions.
 
 ## Core Principles
 
 ### 1. Mathematical Correctness First
 
-- Direct implementation of Orange Paper specifications
+- Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
 - No interpretation or approximation
 - Formal verification ensures correctness
 - Pure functions with no side effects
@@ -20,14 +20,14 @@ BLLVM is built on core principles that guide all design decisions.
 
 ### 3. Zero Consensus Re-implementation
 
-- All consensus logic comes from bllvm-consensus
+- All consensus logic comes from [bllvm-consensus](../consensus/overview.md)
 - Application layers cannot modify consensus rules
 - Protocol abstraction enables variants without consensus changes
 - Clear security boundaries
 
 ### 4. Cryptographic Governance
 
-- Apply Bitcoin's cryptographic primitives to governance
+- Apply Bitcoin's cryptographic primitives to [governance](../governance/overview.md)
 - Make power visible, capture expensive, exit cheap
 - Multi-signature requirements for all changes
 - Transparent audit trails
@@ -37,7 +37,7 @@ BLLVM is built on core principles that guide all design decisions.
 - Users control what software they run
 - No forced network upgrades
 - Forkable governance model
-- Economic node veto power
+- [Economic node](../governance/economic-nodes.md) veto power
 
 ## Design Decisions
 
@@ -95,7 +95,7 @@ Cryptographic governance provides:
 
 ## Design Evolution
 
-BLLVM is designed to support Bitcoin's evolution for the next 500 years:
+BLVM is designed to support Bitcoin's evolution for the next 500 years:
 
 - **Protocol Evolution**: New variants without consensus changes
 - **Feature Addition**: New capabilities through protocol abstraction

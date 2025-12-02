@@ -1,6 +1,6 @@
 # Developer SDK Overview
 
-The developer SDK (`bllvm-sdk`) provides governance infrastructure and composition framework for Bitcoin. It offers reusable governance primitives and a composition framework for building alternative Bitcoin implementations.
+The developer SDK (`bllvm-sdk`) provides governance infrastructure and a composition framework for Bitcoin. It includes reusable governance primitives and a composition framework for building alternative Bitcoin implementations.
 
 ## Architecture Position
 
@@ -22,8 +22,8 @@ Tier 5 of the 6-tier Bitcoin Commons architecture:
 Cryptographic primitives for governance operations:
 
 - **Key Management**: Generate and manage governance keypairs
-- **Signature Creation**: Sign governance messages using Bitcoin-compatible standards
-- **Signature Verification**: Verify signatures and multisig thresholds
+- **Signature Creation**: Sign governance messages using [Bitcoin-compatible standards](api-reference.md#bitcoin-compatible-signing)
+- **Signature Verification**: Verify signatures and [multisig thresholds](../governance/multisig-configuration.md)
 - **Multisig Logic**: Threshold-based collective decision making
 - **Message Formats**: Structured messages for releases, approvals, decisions
 
@@ -84,8 +84,8 @@ let valid = multisig.verify(&message.to_signing_bytes(), &[signature])?;
 
 Threshold-based signature verification:
 
-- **N-of-M Thresholds**: Configurable signature requirements (e.g., 6-of-7)
-- **Key Management**: Maintainer key registration and rotation
+- **N-of-M Thresholds**: Configurable signature requirements (e.g., 6-of-7, see [Multisig Configuration](../governance/multisig-configuration.md))
+- **Key Management**: [Maintainer key registration](../governance/keyholder-procedures.md) and rotation
 - **Signature Aggregation**: Combine multiple signatures
 - **Verification**: Cryptographic verification of threshold satisfaction
 
@@ -113,7 +113,7 @@ Uses Bitcoin message signing standards:
 ## What This Is NOT
 
 - NOT a general-purpose Bitcoin library
-- NOT the GitHub enforcement engine (that's bllvm-commons)
+- NOT the GitHub enforcement engine (that's [bllvm-commons](../governance/overview.md))
 - NOT handling wallet keys or user funds
 - NOT competing with rust-bitcoin or BDK
 

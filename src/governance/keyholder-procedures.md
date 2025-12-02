@@ -53,3 +53,10 @@ Emergency keyholders (5-of-7) can activate emergency mode for critical situation
 
 For detailed maintainer procedures, see [MAINTAINER_GUIDE.md](../../modules/governance/guides/MAINTAINER_GUIDE.md).
 
+## See Also
+
+- [PR Process](../development/pr-process.md) - How maintainers sign PRs
+- [Multisig Configuration](multisig-configuration.md) - Signature threshold requirements
+- [Layer-Tier Model](layer-tier-model.md) - Governance tier system
+- [Governance Model](governance-model.md) - Governance system
+- [Governance Overview](overview.md) - Governance system introduction

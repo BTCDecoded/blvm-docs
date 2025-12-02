@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons uses a multi-layered testing strategy combining formal verification, property-based testing, fuzzing, integration tests, and runtime assertions. This comprehensive approach ensures correctness across all consensus-critical code.
+Bitcoin Commons uses a multi-layered testing strategy combining [formal verification](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](fuzzing.md), integration tests, and runtime assertions. This approach ensures correctness across consensus-critical code.
 
 ## Testing Strategy
 
@@ -10,9 +10,9 @@ Bitcoin Commons uses a multi-layered testing strategy combining formal verificat
 
 The testing strategy uses multiple complementary techniques:
 
-1. **Formal Verification (Kani)**: Proves correctness for all inputs (bounded)
-2. **Property-Based Testing (Proptest)**: Verifies invariants with random inputs (unbounded)
-3. **Fuzzing (libFuzzer)**: Discovers edge cases through random generation
+1. **[Formal Verification](../consensus/formal-verification.md) (Kani)**: Proves correctness for all inputs (bounded)
+2. **[Property-Based Testing](property-based-testing.md) (Proptest)**: Verifies invariants with random inputs (unbounded)
+3. **[Fuzzing](fuzzing.md) (libFuzzer)**: Discovers edge cases through random generation
 4. **Integration Tests**: Verifies end-to-end correctness
 5. **Unit Tests**: Tests individual functions
 6. **Runtime Assertions**: Catches violations during execution
@@ -27,7 +27,7 @@ The testing strategy uses multiple complementary techniques:
 Unit tests verify individual functions in isolation:
 
 - **Location**: `tests/` directory, `#[test]` functions
-- **Coverage**: All public functions
+- **Coverage**: Public functions
 - **Examples**: Transaction validation, block validation, script execution
 
 **Code**: ```52:94:bllvm-consensus/estimate_test_coverage.py```
@@ -38,7 +38,7 @@ Property-based tests verify mathematical invariants:
 
 - **Location**: `tests/consensus_property_tests.rs` and other property test files
 - **Count**: 35 property tests in main file, 141 property test functions total
-- **Coverage**: All mathematical invariants
+- **Coverage**: Mathematical invariants
 - **Tool**: Proptest
 
 **Code**: ```1:2025:bllvm-consensus/tests/consensus_property_tests.rs```
@@ -60,17 +60,17 @@ Fuzz tests discover edge cases through random generation:
 - **Location**: `fuzz/fuzz_targets/` directory
 - **Count**: 13 fuzz targets
 - **Tool**: libFuzzer
-- **Coverage**: All critical consensus functions
+- **Coverage**: Critical consensus functions
 
 **Code**: ```1:269:bllvm-consensus/fuzz/README.md```
 
 ### Formal Verification (Kani)
 
-Kani proofs verify correctness for all inputs:
+[Kani proofs](../consensus/formal-verification.md) verify correctness for all inputs:
 
 - **Location**: `src/` and `tests/` directories
 - **Count**: 201 proofs in `src/`, 9 in `tests/` (210 total)
-- **Coverage**: All critical consensus functions
+- **Coverage**: Critical consensus functions
 - **Tool**: Kani model checker
 
 **Code**: ```1:412:bllvm-docs/src/consensus/formal-verification.md```
@@ -80,7 +80,7 @@ Kani proofs verify correctness for all inputs:
 Runtime assertions catch violations during execution:
 
 - **Count**: 913 total assertions (99 `debug_assert!` + 814 `assert!`)
-- **Coverage**: All critical paths
+- **Coverage**: Critical paths
 - **Production**: Available via feature flag
 
 **Code**: ```156:160:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
@@ -101,7 +101,7 @@ MIRI detects undefined behavior:
 
 | Verification Technique | Count | Status |
 |----------------------|-------|--------|
-| **Kani Formal Proofs** | **201** (210 total) | ✅ All critical functions |
+| **Kani Formal Proofs** | **201** (210 total) | ✅ Critical functions |
 | **Property Tests** | **35** (141 functions) | ✅ All mathematical invariants |
 | **Runtime Assertions** | **913** | ✅ All critical paths |
 | **Fuzz Targets** | **13** | ✅ Edge case discovery |
@@ -272,3 +272,12 @@ The testing infrastructure includes:
 
 **Location**: `bllvm-consensus/tests/`, `bllvm-consensus/fuzz/`, `bllvm-consensus/src/`
 
+## See Also
+
+- [Property-Based Testing](property-based-testing.md) - Verify mathematical invariants
+- [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
+- [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
+- [Benchmarking](benchmarking.md) - Performance measurement
+- [Snapshot Testing](snapshot-testing.md) - Output consistency verification
+- [Formal Verification](../consensus/formal-verification.md) - Kani model checking
+- [Contributing](contributing.md) - Testing requirements for contributions

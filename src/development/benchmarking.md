@@ -10,7 +10,7 @@ Bitcoin Commons maintains a comprehensive benchmarking infrastructure to measure
 
 The benchmarking infrastructure is maintained in a separate repository (`blvm-bench`) that:
 
-- Runs performance benchmarks across all BLLVM components
+- Runs performance benchmarks across all BLVM components
 - Generates benchmark reports and visualizations
 - Publishes results to `benchmarks.thebitcoincommons.org`
 - Tracks performance over time
@@ -234,3 +234,9 @@ The benchmarking infrastructure includes:
 
 **Location**: `blvm-bench` repository, benchmark results at [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org)
 
+## See Also
+
+- [Testing Infrastructure](testing.md) - Overview of all testing techniques
+- [Node Performance](../node/performance.md) - Performance optimizations
+- [CI/CD Workflows](ci-cd-workflows.md) - CI integration
+- [Contributing](contributing.md) - Performance requirements for contributions

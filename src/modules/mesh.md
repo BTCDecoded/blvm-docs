@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Commons Mesh module (`bllvm-mesh`) provides payment-gated mesh networking capabilities for bllvm-node. It implements the Commons Mesh routing protocol with fee distribution, traffic classification, and anti-monopoly protection.
+The Commons Mesh module (`bllvm-mesh`) implements payment-gated mesh networking for bllvm-node. It implements the Commons Mesh routing protocol with fee distribution, traffic classification, and anti-monopoly protection. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
@@ -31,7 +31,7 @@ cargo bllvm-module install bllvm-mesh
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/BTCDecoded/bllvm-mesh.git
+   git clone https://github.com/BTCDecoded/blvm-mesh.git
    cd bllvm-mesh
    ```
 
@@ -74,7 +74,7 @@ listen_addr = "0.0.0.0:8334"
 
 ## Module Manifest
 
-The module includes a `module.toml` manifest:
+The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
 name = "bllvm-mesh"
@@ -162,6 +162,8 @@ The module integrates with the node via the Node API IPC protocol:
 
 - [Module System Overview](overview.md) - Overview of all available modules
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
-- [Commons Mesh Implementation Plan](../../MESH_IMPLEMENTATION_PLAN.md) - Detailed mesh networking architecture
+- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
+- [SDK API Reference](../sdk/api-reference.md) - Complete SDK API documentation
 
 

@@ -1,6 +1,6 @@
 # Protocol Layer Overview
 
-The protocol layer (`bllvm-protocol`) provides Bitcoin protocol abstraction for multiple variants and protocol evolution. It sits between the pure mathematical consensus rules (`bllvm-consensus`) and the full Bitcoin implementation (`bllvm-node`), enabling support for mainnet, testnet, regtest, and future protocol variants.
+The protocol layer (`bllvm-protocol`) abstracts Bitcoin protocol for multiple variants and protocol evolution. It sits between the pure mathematical consensus rules ([bllvm-consensus](../consensus/overview.md)) and the Bitcoin node implementation ([bllvm-node](../node/overview.md)), supporting mainnet, testnet, regtest, and future protocol variants.
 
 ## Architecture Position
 
@@ -33,7 +33,7 @@ Each variant has specific network parameters:
 - **Genesis Blocks**: Network-specific genesis block hashes
 - **Difficulty Targets**: Proof-of-work difficulty adjustment
 - **Halving Intervals**: Block subsidy halving schedule (210,000 blocks)
-- **Feature Activation**: SegWit, Taproot activation heights
+- **Feature Activation**: [SegWit](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki), [Taproot](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki) activation heights
 
 **Code**: ```1:100:bllvm-protocol/src/network_params.rs```
 
@@ -41,7 +41,7 @@ Each variant has specific network parameters:
 
 ### Protocol Engine
 
-The `BitcoinProtocolEngine` provides the main interface:
+The `BitcoinProtocolEngine` is the main interface:
 
 ```rust
 pub struct BitcoinProtocolEngine {
@@ -61,7 +61,7 @@ pub struct BitcoinProtocolEngine {
 
 ### Network Messages
 
-Supports all Bitcoin P2P protocol messages:
+Supports Bitcoin P2P protocol messages:
 
 **Core Messages**:
 - `Version`, `VerAck` - Connection handshake
@@ -78,7 +78,7 @@ Supports all Bitcoin P2P protocol messages:
 - `GetBlockTxn`, `BlockTxn` - Transaction reconstruction
 
 **Commons Extensions**:
-- `GetUTXOSet`, `UTXOSet` - UTXO commitment protocol
+- `GetUTXOSet`, `UTXOSet` - [UTXO commitment protocol](../consensus/utxo-commitments.md)
 - `GetFilteredBlock`, `FilteredBlock` - Spam-filtered blocks
 - `GetBanList`, `BanList` - Distributed ban list sharing
 
@@ -108,7 +108,7 @@ Service flags indicate node capabilities:
 Protocol-specific validation rules:
 
 - **Size Limits**: Block (4MB), transaction (1MB), script (10KB)
-- **Feature Flags**: SegWit, Taproot, RBF support
+- **Feature Flags**: [SegWit](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki), [Taproot](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki), RBF support
 - **Fee Rules**: Minimum and maximum fee rates
 - **DoS Protection**: Message size limits, address count limits
 
@@ -118,7 +118,7 @@ Protocol-specific validation rules:
 
 ### UTXO Commitments
 
-Protocol messages for UTXO set synchronization:
+Protocol messages for [UTXO set synchronization](../consensus/utxo-commitments.md):
 
 - `GetUTXOSet` - Request UTXO set at specific height
 - `UTXOSet` - UTXO set response with merkle proof

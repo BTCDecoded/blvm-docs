@@ -1,6 +1,6 @@
 # Module Development
 
-The BTCDecoded reference-node includes a process-isolated module system that enables optional features (Lightning, merge mining, privacy enhancements) without affecting consensus or base node stability. Modules run in separate processes with IPC communication, providing security through isolation.
+The BTCDecoded blvm-node includes a process-isolated module system that enables optional features (Lightning, merge mining, privacy enhancements) without affecting consensus or base node stability. Modules run in separate processes with IPC communication, providing security through isolation.
 
 ### Core Principles
 
@@ -245,5 +245,14 @@ All module API requests are validated:
 
 **Permissions**: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `send_transactions` (planned)
 
-For detailed API reference, see `reference-node/src/module/` (traits, IPC protocol, Node API, security).
+For detailed API reference, see `blvm-node/src/module/` (traits, IPC protocol, Node API, security).
 
+## See Also
+
+- [SDK Overview](overview.md) - SDK introduction and capabilities
+- [SDK API Reference](api-reference.md) - Complete SDK API documentation
+- [SDK Examples](examples.md) - Module development examples
+- [Module System Architecture](../architecture/module-system.md) - Module system design
+- [Module IPC Protocol](../architecture/module-ipc-protocol.md) - IPC communication details
+- [Modules Overview](../modules/overview.md) - Available modules
+- [Node Configuration](../node/configuration.md) - Configuring modules

@@ -1,6 +1,6 @@
 # Installation
 
-This guide covers installing BLLVM from pre-built binaries available on GitHub releases.
+This guide covers installing BLVM from pre-built binaries available on GitHub releases.
 
 ## Prerequisites
 
@@ -8,11 +8,11 @@ Pre-built binaries are available for Linux, macOS, and Windows on common platfor
 
 ## Installing bllvm-node
 
-The reference node is the main entry point for running a BLLVM node.
+The reference node is the main entry point for running a BLVM node.
 
 ### Quick Start
 
-1. **Download the latest release** from [GitHub Releases](https://github.com/BTCDecoded/bllvm-node/releases)
+1. **Download the latest release** from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases)
 
 2. **Extract the archive** for your platform:
    ```bash
@@ -48,13 +48,13 @@ Releases include two variants:
 
 #### Base Variant (`bllvm-{version}-{platform}.tar.gz`)
 
-Stable, minimal release with core Bitcoin node functionality, production optimizations, standard storage backends, and process sandboxing. **Use this variant for**: Production deployments, stability priority.
+Stable, minimal release with core Bitcoin node functionality, production optimizations, standard [storage backends](../node/storage-backends.md), and process sandboxing. Use for production deployments prioritizing stability.
 
 #### Experimental Variant (`bllvm-experimental-{version}-{platform}.tar.gz`)
 
-Full-featured build with experimental features enabled: UTXO commitments, BIP119 CTV, Dandelion++, BIP158, Stratum V2, and enhanced signature operations counting. See [Protocol Specifications](../reference/protocol-specifications.md#experimental-features) for details.
+Full-featured build with experimental features: [UTXO commitments](../consensus/utxo-commitments.md), BIP119 CTV, [Dandelion++](../node/privacy-relay.md), BIP158, [Stratum V2](../node/mining-stratum-v2.md), and enhanced signature operations counting. See [Protocol Specifications](../reference/protocol-specifications.md#experimental-features) for details.
 
-**Use this variant for**: Development, testing, advanced features, or if you need any experimental capabilities.
+Use for development, testing, or when experimental capabilities are required.
 
 ## Installing bllvm-sdk Tools
 
@@ -104,10 +104,19 @@ bllvm-verify --help
 
 ## Building from Source (Advanced)
 
-Building from source requires Rust 1.70+ and is primarily for development. Clone the [bllvm-node repository](https://github.com/BTCDecoded/bllvm-node) and follow the build instructions in its README.
+Building from source requires Rust 1.70+ and is primarily for development. Clone the [blvm repository](https://github.com/BTCDecoded/blvm) and follow the build instructions in its README.
 
 ## Next Steps
 
 - See [Quick Start](quick-start.md) for running your first node
 - See [Node Configuration](../node/configuration.md) for detailed setup options
+
+## See Also
+
+- [Quick Start](quick-start.md) - Run your first node
+- [First Node Setup](first-node.md) - Complete setup guide
+- [Node Configuration](../node/configuration.md) - Configuration options
+- [Node Overview](../node/overview.md) - Node features and capabilities
+- [Release Process](../development/release-process.md) - How releases are created
+- [GitHub Releases](https://github.com/BTCDecoded/blvm/releases) - Download releases
 

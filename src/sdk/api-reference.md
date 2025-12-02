@@ -1,10 +1,10 @@
 # SDK API Reference
 
-Complete API documentation for the BLLVM Developer SDK, including governance primitives and composition framework.
+Complete API documentation for the BLVM Developer SDK, including governance primitives and composition framework.
 
 ## Overview
 
-The BLLVM SDK provides two main API categories:
+The BLVM SDK provides two main API categories:
 - **Governance Primitives**: Cryptographic operations for governance (keys, signatures, multisig)
 - **Composition Framework**: Module registry and node composition APIs
 
