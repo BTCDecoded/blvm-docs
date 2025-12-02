@@ -24,6 +24,7 @@
 - [Peer Consensus Protocol](consensus/peer-consensus.md)
 - [Mathematical Specifications](consensus/mathematical-specifications.md)
 - [Mathematical Correctness](consensus/mathematical-correctness.md)
+- [Spam Filtering](consensus/spam-filtering.md)
 - [UTXO Commitments](consensus/utxo-commitments.md)
 
 # Protocol Layer

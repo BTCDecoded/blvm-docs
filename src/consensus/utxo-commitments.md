@@ -113,16 +113,62 @@ The fast sync protocol achieves 98% bandwidth savings by:
 - Fast Sync: ~10 GB (headers + filtered blocks)
 - **Savings**: 98%
 
-## Spam Filtering
+## Spam Filtering Integration
 
-The system filters spam transactions from commitments:
+UTXO Commitments use spam filtering to reduce bandwidth during sync. Spam filtering is a general-purpose feature that can be used independently of UTXO commitments.
 
-- **Value Threshold**: Minimum transaction value
-- **Fee Rate Filtering**: Minimum fee rate requirements
-- **UTXO Count Limits**: Maximum UTXO count per transaction
-- **Summary Statistics**: Tracks spam metrics
+**For detailed spam filtering documentation, see**: [Spam Filtering](spam-filtering.md)
 
-**Code**: ```1:200:bllvm-consensus/src/utxo_commitments/spam_filter.rs```
+### Integration with UTXO Commitments
+
+When processing blocks for UTXO commitments, spam filtering is applied:
+
+- **Location**: ```206:310:bllvm-consensus/src/utxo_commitments/initial_sync.rs```
+- **Process**: All transactions are processed, but spam outputs are filtered out
+- **Benefit**: 40-60% bandwidth reduction during ongoing sync
+- **Critical Design**: INPUTS are always removed (maintains UTXO consistency), OUTPUTS are filtered (bandwidth savings)
+
+### Bandwidth Savings
+
+- **40-60% bandwidth reduction** during ongoing sync
+- Maintains consensus correctness
+- Enables efficient UTXO commitment synchronization
+
+## BIP158 Compact Block Filters
+
+The node implements BIP158 compact block filters for light client support. While this is implemented at the node level, it integrates with UTXO commitments for efficient filtered block serving.
+
+### Location
+- **Node Implementation**: `bllvm-node/src/bip158.rs`
+- **Service**: `bllvm-node/src/network/filter_service.rs`
+- **Integration**: Used for light client support
+
+### Capabilities
+
+#### Filter Generation
+- **Golomb-Rice Coded Sets (GCS)** for efficient encoding
+- **False Positive Rate**: ~1 in 524,288 (P=19)
+- **Filter Contents**:
+  1. All spendable output scriptPubKeys in the block
+  2. All scriptPubKeys from outputs spent by block's inputs
+
+#### Filter Header Chain
+- Maintains filter header chain for efficient verification
+- Checkpoints every 1000 blocks (per BIP157)
+- Enables light clients to verify filter integrity
+
+### Algorithm
+
+1. **Collect Scripts**: All output scriptPubKeys from block transactions and all scriptPubKeys from UTXOs being spent
+2. **Hash to Range**: Hash each script with SHA256, map to range [0, N*M) where N = number of elements, M = 2^19
+3. **Golomb-Rice Encoding**: Sort hashed values, compute differences, encode using Golomb-Rice
+4. **Filter Matching**: Light clients hash their scripts and check if script hash is in set
+
+### Integration with UTXO Commitments
+
+BIP158 filters can be included in `FilteredBlockMessage` alongside spam-filtered transactions and UTXO commitments, enabling efficient light client synchronization.
+
+**Code**: ```1:200:bllvm-node/src/bip158.rs```
 
 ## Verification
 
