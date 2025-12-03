@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons implements fuzzing infrastructure using libFuzzer for automated bug discovery. The system includes 12 fuzz targets covering all critical consensus validation functions, with sanitizer support and corpus management.
+Bitcoin Commons implements fuzzing infrastructure using libFuzzer for automated bug discovery. The system includes 19 fuzz targets covering all critical consensus validation functions, with sanitizer support and corpus management.
 
 ## Fuzz Targets
 
@@ -26,6 +26,13 @@ Bitcoin Commons implements fuzzing infrastructure using libFuzzer for automated 
 10. **economic_validation** - Supply and fee calculations
 11. **compact_block_reconstruction** - Compact block parsing
 12. **differential_fuzzing** - Internal consistency testing
+13. **block_header_validation** - Block header validation
+14. **merkle_validation** - Merkle tree validation
+15. **signature_verification** - Signature verification
+16. **taproot_validation** - Taproot validation
+17. **transaction_input_validation** - Transaction input validation
+18. **transaction_output_validation** - Transaction output validation
+19. **reorganization** - Chain reorganization handling
 
 **Location**: `bllvm-consensus/fuzz/fuzz_targets/`
 

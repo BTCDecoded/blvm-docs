@@ -80,7 +80,7 @@ Implements mathematical verification of Bitcoin consensus rules:
 - **201 [Kani Proofs](formal-verification.md)**: Verify all critical consensus functions (201 in `src/`, 9 in `tests/`)
 - **35 [Property Tests](../development/property-based-testing.md)**: Verify mathematical invariants
 - **913 Runtime Assertions**: Catch edge cases (814 `assert!` + 99 `debug_assert!`)
-- **13 [Fuzz Targets](../development/fuzzing.md)**: Discover vulnerabilities
+- **19 [Fuzz Targets](../development/fuzzing.md)**: Discover vulnerabilities
 
 **Code**: ```1:412:bllvm-consensus/src/block.rs```
 

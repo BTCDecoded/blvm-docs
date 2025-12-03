@@ -58,7 +58,7 @@ Integration tests verify end-to-end correctness:
 Fuzz tests discover edge cases through random generation:
 
 - **Location**: `fuzz/fuzz_targets/` directory
-- **Count**: 13 fuzz targets
+- **Count**: 19 fuzz targets
 - **Tool**: libFuzzer
 - **Coverage**: Critical consensus functions
 
@@ -104,7 +104,7 @@ MIRI detects undefined behavior:
 | **Kani Formal Proofs** | **201** (210 total) | ✅ Critical functions |
 | **Property Tests** | **35** (141 functions) | ✅ All mathematical invariants |
 | **Runtime Assertions** | **913** | ✅ All critical paths |
-| **Fuzz Targets** | **13** | ✅ Edge case discovery |
+| **Fuzz Targets** | **19** | ✅ Edge case discovery |
 | **MIRI Integration** | ✅ | ✅ Undefined behavior detection |
 | **Mathematical Specs** | **15+** | ✅ Complete formal documentation |
 
@@ -181,7 +181,7 @@ cargo kani
 All coverage goals met:
 - ✅ 201 Kani proofs covering all critical functions
 - ✅ 141 property test functions covering all invariants
-- ✅ 13 fuzz targets covering all critical paths
+- ✅ 19 fuzz targets covering all critical paths
 - ✅ 913 runtime assertions in all critical paths
 - ✅ Comprehensive integration test suite
 

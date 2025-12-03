@@ -134,7 +134,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 
 **Mitigations**:
 - Input validation and sanitization
-- Fuzzing (13 fuzz targets)
+- Fuzzing (19 fuzz targets)
 - Formal verification (201 Kani proofs)
 - Property-based testing (141 property tests)
 - Network protocol validation
