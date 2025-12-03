@@ -10,6 +10,7 @@ The Stratum V2 module (`bllvm-stratum-v2`) implements [Stratum V2 mining protoco
 - **Mining Pool Management**: Manages connections to mining pools
 - **Merge Mining Coordination**: Coordinates merge mining across multiple chains
 - **Mining Job Distribution**: Distributes mining jobs to connected miners
+- **Network Integration**: Fully integrated with node network layer (messages routed automatically)
 
 ## Installation
 
@@ -131,10 +132,13 @@ Merge mining features:
 Once installed and configured, the module automatically:
 
 1. Subscribes to mining-related events from the node
-2. Creates and distributes mining jobs to connected miners
-3. Manages mining pool connections (if configured)
-4. Coordinates merge mining across multiple chains
-5. Tracks mining rewards and publishes mining events
+2. Receives Stratum V2 messages via the node's network layer (automatic routing)
+3. Creates and distributes mining jobs to connected miners
+4. Manages mining pool connections (if configured)
+5. Coordinates merge mining across multiple chains
+6. Tracks mining rewards and publishes mining events
+
+The node's network layer automatically detects Stratum V2 messages (via TLV format) and routes them to this module via the event system. No additional network configuration is required.
 
 ## API Integration
 

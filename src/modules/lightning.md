@@ -47,25 +47,45 @@ cargo bllvm-module install bllvm-lightning
 
 ## Configuration
 
-Create a `config.toml` file in the module directory:
+The module supports multiple Lightning providers. Create a `config.toml` file in the module directory:
+
+### LNBits Provider (Recommended)
 
 ```toml
 [lightning]
-# Lightning node URL (optional, for external Lightning node integration)
-node_url = "http://localhost:8080"
+provider = "lnbits"
 
-# Lightning node public key (optional)
-node_pubkey = "your_node_pubkey_here"
+[lightning.lnbits]
+api_url = "https://lnbits.example.com"
+api_key = "your_lnbits_api_key"
+wallet_id = "optional_wallet_id"  # Optional
+```
 
-# Enable/disable module
-enabled = true
+### LDK Provider (Rust-native)
+
+```toml
+[lightning]
+provider = "ldk"
+
+[lightning.ldk]
+data_dir = "data/ldk"
+network = "testnet"  # or "mainnet" or "regtest"
+node_private_key = "hex_encoded_private_key"  # Optional, will generate if not provided
+```
+
+### Stub Provider (Testing)
+
+```toml
+[lightning]
+provider = "stub"
 ```
 
 ### Configuration Options
 
-- `node_url` (optional): URL of external Lightning node for integration
-- `node_pubkey` (optional): Public key of Lightning node
-- `enabled` (default: `true`): Enable or disable the module
+- `provider` (required): Lightning provider to use (`"lnbits"`, `"ldk"`, or `"stub"`)
+- **LNBits**: `api_url`, `api_key`, `wallet_id` (optional)
+- **LDK**: `data_dir`, `network`, `node_private_key` (optional)
+- **Stub**: No additional configuration needed
 
 ## Module Manifest
 
