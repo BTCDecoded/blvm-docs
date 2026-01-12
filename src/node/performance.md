@@ -10,7 +10,7 @@ Bitcoin Commons implements performance optimizations for faster initial block do
 
 Blocks are validated in parallel when they are deep enough from the chain tip. This optimization uses Rayon for parallel execution.
 
-**Code**: ```78:122:bllvm-node/src/validation/mod.rs```
+**Code**: ```78:122:blvm-node/src/validation/mod.rs```
 
 ### Safety Conditions
 
@@ -19,7 +19,7 @@ Parallel validation is only used when:
 - Each block uses its own UTXO set snapshot (independent validation)
 - Blocks are validated sequentially if too close to tip
 
-**Code**: ```86:90:bllvm-node/src/validation/mod.rs```
+**Code**: ```86:90:blvm-node/src/validation/mod.rs```
 
 ### Implementation
 
@@ -42,7 +42,7 @@ pub fn validate_blocks_parallel(
 }
 ```
 
-**Code**: ```80:118:bllvm-node/src/validation/mod.rs```
+**Code**: ```80:118:blvm-node/src/validation/mod.rs```
 
 ## Batch UTXO Operations
 
@@ -55,7 +55,7 @@ Transaction fees are calculated in batches by pre-fetching all UTXOs before vali
 3. Cache UTXOs for fee calculation
 4. Calculate fees using cached UTXOs
 
-**Code**: ```306:325:bllvm-consensus/src/block.rs```
+**Code**: ```306:325:blvm-consensus/src/block.rs```
 
 ### Implementation
 
@@ -78,7 +78,7 @@ for prevout in &all_prevouts {
 }
 ```
 
-**Code**: ```308:324:bllvm-consensus/src/block.rs```
+**Code**: ```308:324:blvm-consensus/src/block.rs```
 
 ### Configuration
 
@@ -88,7 +88,7 @@ enable_batch_utxo_lookups = true
 parallel_batch_size = 8
 ```
 
-**Code**: ```245:248:bllvm-consensus/src/config.rs```
+**Code**: ```245:248:blvm-consensus/src/config.rs```
 
 ## Assume-Valid Checkpoints
 
@@ -96,7 +96,7 @@ parallel_batch_size = 8
 
 Assume-valid checkpoints skip expensive signature verification for blocks before a configured height, providing 10-50x faster IBD.
 
-**Code**: ```58:86:bllvm-consensus/src/block.rs```
+**Code**: ```58:86:blvm-consensus/src/block.rs```
 
 ### Safety
 
@@ -105,7 +105,7 @@ This optimization is safe because:
 2. Block structure, Merkle roots, and PoW are still validated
 3. Only signature verification is skipped (the expensive operation)
 
-**Code**: ```79:85:bllvm-consensus/src/block.rs```
+**Code**: ```79:85:blvm-consensus/src/block.rs```
 
 ### Configuration
 
@@ -119,7 +119,7 @@ assume_valid_height = 700000  # Skip signatures before this height
 ASSUME_VALID_HEIGHT=700000
 ```
 
-**Code**: ```74:86:bllvm-consensus/src/block.rs```
+**Code**: ```74:86:blvm-consensus/src/block.rs```
 
 ### Performance Impact
 
@@ -144,7 +144,7 @@ Within a block, transaction validation is parallelized where safe:
    - State transitions
    - Maintains correctness
 
-**Code**: ```326:400:bllvm-consensus/src/block.rs```
+**Code**: ```326:400:blvm-consensus/src/block.rs```
 
 ### Implementation
 
@@ -172,7 +172,7 @@ Within a block, transaction validation is parallelized where safe:
 }
 ```
 
-**Code**: ```329:400:bllvm-consensus/src/block.rs```
+**Code**: ```329:400:blvm-consensus/src/block.rs```
 
 ## Advanced Indexing
 
@@ -184,7 +184,7 @@ Indexes transactions by address for fast lookup:
 - **Fast Lookup**: O(1) address-to-transaction mapping
 - **Incremental Updates**: Updates on each block
 
-**Code**: ```1:66:bllvm-node/INDEXING_OPTIMIZATIONS.md```
+**Code**: ```1:66:blvm-node/INDEXING_OPTIMIZATIONS.md```
 
 ### Value Range Indexing
 
@@ -208,7 +208,7 @@ pub mod precomputed_constants {
 }
 ```
 
-**Code**: ```15:37:bllvm-consensus/src/optimizations.rs```
+**Code**: ```15:37:blvm-consensus/src/optimizations.rs```
 
 ### Bounds Check Optimization
 
@@ -225,7 +225,7 @@ pub fn get_proven<T>(slice: &[T], index: usize, bound_check: bool) -> Option<&T>
 }
 ```
 
-**Code**: ```39:76:bllvm-consensus/src/optimizations.rs```
+**Code**: ```39:76:blvm-consensus/src/optimizations.rs```
 
 ### Cache-Friendly Memory Layouts
 
@@ -236,7 +236,7 @@ pub fn get_proven<T>(slice: &[T], index: usize, bound_check: bool) -> Option<&T>
 pub struct CacheAlignedHash([u8; 32]);
 ```
 
-**Code**: ```78:100:bllvm-consensus/src/optimizations.rs```
+**Code**: ```78:100:blvm-consensus/src/optimizations.rs```
 
 ## Performance Configuration
 
@@ -260,7 +260,7 @@ enable_cache_optimizations = true
 enable_batch_utxo_lookups = true
 ```
 
-**Code**: ```218:265:bllvm-consensus/src/config.rs```
+**Code**: ```218:265:blvm-consensus/src/config.rs```
 
 ### Default Values
 
@@ -270,7 +270,7 @@ enable_batch_utxo_lookups = true
 - `enable_cache_optimizations`: true
 - `enable_batch_utxo_lookups`: true
 
-**Code**: ```255:265:bllvm-consensus/src/config.rs```
+**Code**: ```255:265:blvm-consensus/src/config.rs```
 
 ## Benchmark Results
 
@@ -294,7 +294,7 @@ The performance optimization system includes:
 - Runtime optimizations (constant folding, bounds checks, cache-friendly layouts)
 - Performance configuration
 
-**Location**: `bllvm-consensus/src/optimizations.rs`, `bllvm-consensus/src/block.rs`, `bllvm-consensus/src/config.rs`, `bllvm-node/src/validation/mod.rs`
+**Location**: `blvm-consensus/src/optimizations.rs`, `blvm-consensus/src/block.rs`, `blvm-consensus/src/config.rs`, `blvm-node/src/validation/mod.rs`
 
 ## See Also
 

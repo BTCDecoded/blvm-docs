@@ -10,7 +10,7 @@ Bitcoin Commons implements multiple privacy-preserving and performance-optimized
 
 Dandelion++ provides privacy-preserving transaction relay with formal anonymity guarantees against transaction origin analysis. It operates in two phases: stem phase (obscures origin) and fluff phase (standard diffusion).
 
-**Code**: ```1:621:bllvm-node/src/network/dandelion.rs```
+**Code**: ```1:621:blvm-node/src/network/dandelion.rs```
 
 ### Architecture
 
@@ -31,7 +31,7 @@ pub struct StemPath {
 }
 ```
 
-**Code**: ```37:46:bllvm-node/src/network/dandelion.rs```
+**Code**: ```37:46:blvm-node/src/network/dandelion.rs```
 
 ### Stem Phase Behavior
 
@@ -41,7 +41,7 @@ pub struct StemPath {
 - Fluff probability: 10% per hop (default)
 - Maximum stem hops: 2 (default)
 
-**Code**: ```152:200:bllvm-node/src/network/dandelion.rs```
+**Code**: ```152:200:blvm-node/src/network/dandelion.rs```
 
 ### Fluff Phase Behavior
 
@@ -52,7 +52,7 @@ pub struct StemPath {
   - Stem timeout expiration
   - Maximum hop count reached
 
-**Code**: ```200:300:bllvm-node/src/network/dandelion.rs```
+**Code**: ```200:300:blvm-node/src/network/dandelion.rs```
 
 ### Configuration
 
@@ -64,7 +64,7 @@ fluff_probability = 0.1  # 10%
 max_stem_hops = 2
 ```
 
-**Code**: ```19:35:bllvm-node/src/network/dandelion.rs```
+**Code**: ```19:35:blvm-node/src/network/dandelion.rs```
 
 ### Benefits
 
@@ -79,7 +79,7 @@ max_stem_hops = 2
 
 Fibre (Fast Internet Bitcoin Relay Engine) provides high-performance block relay using UDP transport with Forward Error Correction (FEC) encoding for packet loss tolerance.
 
-**Code**: ```1:1293:bllvm-node/src/network/fibre.rs```
+**Code**: ```1:1293:blvm-node/src/network/fibre.rs```
 
 ### Architecture
 
@@ -98,7 +98,7 @@ Blocks are encoded using Reed-Solomon erasure coding:
 - **Shard Size**: Configurable (default: 1024 bytes)
 - **Parity Ratio**: Configurable (default: 0.2 = 20% parity)
 
-**Code**: ```65:173:bllvm-node/src/network/fibre.rs```
+**Code**: ```65:173:blvm-node/src/network/fibre.rs```
 
 ### Block Encoding Process
 
@@ -108,7 +108,7 @@ Blocks are encoded using Reed-Solomon erasure coding:
 4. Create FEC chunks for transmission
 5. Send chunks via UDP
 
-**Code**: ```617:708:bllvm-node/src/network/fibre.rs```
+**Code**: ```617:708:blvm-node/src/network/fibre.rs```
 
 ### Block Assembly Process
 
@@ -117,7 +117,7 @@ Blocks are encoded using Reed-Solomon erasure coding:
 3. When enough chunks received (data shards), reconstruct block
 4. Verify block hash matches
 
-**Code**: ```814:946:bllvm-node/src/network/fibre.rs```
+**Code**: ```814:946:blvm-node/src/network/fibre.rs```
 
 ### UDP Transport
 
@@ -128,7 +128,7 @@ Fibre uses UDP for low-latency transmission:
 - **Sequence Numbers**: Duplicate detection
 - **Timeout Handling**: Connection timeout management
 
-**Code**: ```216:498:bllvm-node/src/network/fibre.rs```
+**Code**: ```216:498:blvm-node/src/network/fibre.rs```
 
 ### Configuration
 
@@ -142,7 +142,7 @@ fec_parity_ratio = 0.2  # 20% parity
 max_assemblies = 100
 ```
 
-**Code**: ```506:559:bllvm-node/src/network/fibre.rs```
+**Code**: ```506:559:blvm-node/src/network/fibre.rs```
 
 ### Statistics
 
@@ -155,7 +155,7 @@ Fibre tracks comprehensive statistics:
 - Average latency
 - Success rate
 
-**Code**: ```1011:1040:bllvm-node/src/network/fibre.rs```
+**Code**: ```1011:1040:blvm-node/src/network/fibre.rs```
 
 ### Benefits
 
@@ -170,7 +170,7 @@ Fibre tracks comprehensive statistics:
 
 Package Relay (BIP331) allows nodes to relay and validate groups of transactions together, enabling efficient fee-bumping (RBF) and CPFP (Child Pays For Parent) scenarios.
 
-**Code**: ```1:400:bllvm-node/src/network/package_relay.rs```
+**Code**: ```1:400:blvm-node/src/network/package_relay.rs```
 
 ### Package Structure
 
@@ -181,7 +181,7 @@ A transaction package contains:
 - **Combined Fee**: Sum of all transaction fees
 - **Combined Weight**: Total weight for fee rate calculation
 
-**Code**: ```34:45:bllvm-node/src/network/package_relay.rs```
+**Code**: ```34:45:blvm-node/src/network/package_relay.rs```
 
 ### Package Validation
 
@@ -193,7 +193,7 @@ Packages are validated for:
 - **Ordering**: Parents must precede children
 - **No Duplicates**: No duplicate transactions
 
-**Code**: ```86:250:bllvm-node/src/network/package_relay.rs```
+**Code**: ```86:250:blvm-node/src/network/package_relay.rs```
 
 ### Use Cases
 
@@ -201,7 +201,7 @@ Packages are validated for:
 2. **CPFP**: Child transaction pays for parent's fees
 3. **Atomic Sets**: Multiple transactions that must be accepted together
 
-**Code**: ```1:15:bllvm-node/src/network/package_relay.rs```
+**Code**: ```1:15:blvm-node/src/network/package_relay.rs```
 
 ### Package ID Calculation
 
@@ -213,7 +213,7 @@ pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
 }
 ```
 
-**Code**: ```107:134:bllvm-node/src/network/package_relay.rs```
+**Code**: ```107:134:blvm-node/src/network/package_relay.rs```
 
 ### Configuration
 
@@ -225,7 +225,7 @@ max_package_weight = 404000  # 404k WU
 min_fee_rate = 1000  # 1 sat/vB
 ```
 
-**Code**: ```86:105:bllvm-node/src/network/package_relay.rs```
+**Code**: ```86:105:blvm-node/src/network/package_relay.rs```
 
 ### Benefits
 
@@ -245,7 +245,7 @@ The `RelayManager` coordinates all relay protocols:
 - Fibre integration (optional)
 - Package relay support
 
-**Code**: ```1:390:bllvm-node/src/network/relay.rs```
+**Code**: ```1:390:blvm-node/src/network/relay.rs```
 
 ### Protocol Selection
 
@@ -256,7 +256,7 @@ Relay protocols are selected based on:
 - Configuration settings
 - Runtime preferences
 
-**Code**: ```67:129:bllvm-node/src/network/relay.rs```
+**Code**: ```67:129:blvm-node/src/network/relay.rs```
 
 ## Components
 
@@ -267,5 +267,5 @@ The privacy relay system includes:
 - Relay manager coordination
 - Statistics tracking
 
-**Location**: `bllvm-node/src/network/dandelion.rs`, `bllvm-node/src/network/fibre.rs`, `bllvm-node/src/network/package_relay.rs`, `bllvm-node/src/network/relay.rs`
+**Location**: `blvm-node/src/network/dandelion.rs`, `blvm-node/src/network/fibre.rs`, `blvm-node/src/network/package_relay.rs`, `blvm-node/src/network/relay.rs`
 

@@ -4,7 +4,7 @@
 
 Bitcoin Commons implements differential testing to compare validation results with Bitcoin Core, providing empirical validation of consensus correctness. This ensures compatibility and catches consensus divergences.
 
-**Location**: Differential testing is implemented in `blvm-bench` (separate repository), not in `bllvm-consensus`. The `bllvm-consensus` repository contains only a placeholder/skeleton implementation.
+**Location**: Differential testing is fully implemented in `blvm-bench` with parallel execution support and comprehensive Bitcoin Core comparison infrastructure.
 
 ## Purpose
 
@@ -19,16 +19,14 @@ Differential testing serves to:
 
 **Primary Implementation**: `blvm-bench` repository
 - Full differential testing infrastructure
+- Parallel execution support
 - Bitcoin Core RPC integration
 - Regtest node management
+- Historical block replay testing
 - BIP-specific differential tests
+- FIBRE performance benchmarks
 
-**Skeleton Implementation**: `bllvm-consensus/tests/integration/differential_tests.rs`
-- Skeleton implementation exists
-- Full implementation is in `blvm-bench` repository
-- Integration with `blvm-bench` is planned
-
-**Code**: ```1:8:bllvm-consensus/tests/integration/differential_tests.rs``` (skeleton)
+**Code**: ```1:8:blvm-consensus/tests/integration/differential_tests.rs``` (skeleton)
 
 ## Architecture
 
@@ -39,7 +37,7 @@ Differential testing serves to:
 3. **Result Comparison**: Compare local and Core results
 4. **Divergence Detection**: Report any divergences
 
-**Code**: ```31:78:bllvm-consensus/tests/integration/differential_tests.rs```
+**Code**: ```31:78:blvm-consensus/tests/integration/differential_tests.rs```
 
 ### Bitcoin Core RPC Integration
 
@@ -49,7 +47,7 @@ Differential tests use Bitcoin Core RPC:
 - **submitblock**: Block validation
 - **JSON-RPC 2.0**: Standard RPC protocol
 
-**Code**: ```133:184:bllvm-consensus/tests/integration/differential_tests.rs```
+**Code**: ```133:184:blvm-consensus/tests/integration/differential_tests.rs```
 
 ## Transaction Validation Comparison
 
@@ -69,7 +67,7 @@ pub async fn compare_transaction_validation(
 4. Compare validation results
 5. Report divergence if results differ
 
-**Code**: ```31:78:bllvm-consensus/tests/integration/differential_tests.rs```
+**Code**: ```31:78:blvm-consensus/tests/integration/differential_tests.rs```
 
 ## Block Validation Comparison
 
@@ -89,7 +87,7 @@ pub async fn compare_block_validation(
 4. Compare validation results
 5. Report divergence if results differ
 
-**Code**: ```80:131:bllvm-consensus/tests/integration/differential_tests.rs```
+**Code**: ```80:131:blvm-consensus/tests/integration/differential_tests.rs```
 
 ## Configuration
 
@@ -105,7 +103,7 @@ pub struct CoreRpcConfig {
 
 **Default**: `http://127.0.0.1:8332` (local Bitcoin Core)
 
-**Code**: ```13:29:bllvm-consensus/tests/integration/differential_tests.rs```
+**Code**: ```13:29:blvm-consensus/tests/integration/differential_tests.rs```
 
 ## Differential Fuzzing
 
@@ -118,7 +116,7 @@ Differential fuzzing compares internal consistency:
 - **Calculation Idempotency**: Weight calculations, economic calculations are deterministic
 - **Cross-Validation**: Different code paths agree on validation results
 
-**Code**: ```1:20:bllvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs```
+**Code**: ```1:20:blvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs```
 
 ### Internal Consistency
 
@@ -129,7 +127,7 @@ Differential fuzzing tests internal consistency within blvm-consensus:
 - **Validation Consistency**: Validation consistency across code paths
 - **Calculation Determinism**: Deterministic calculations
 
-**Code**: ```227:239:bllvm-consensus/fuzz/README.md```
+**Code**: ```227:239:blvm-consensus/fuzz/README.md```
 
 ## Bitcoin Core Test Vectors
 
@@ -141,7 +139,7 @@ Bitcoin Core test vectors are integrated:
 - **Script Vectors**: `script_valid.json`, `script_invalid.json`
 - **Block Vectors**: `block_valid.json`, `block_invalid.json`
 
-**Code**: ```11:28:bllvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: ```11:28:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
 
 ### Test Execution
 
@@ -152,7 +150,7 @@ Test vectors are executed:
 - **Pass/Fail Reporting**: Report test results
 - **Graceful Handling**: Handle missing test data gracefully
 
-**Code**: ```11:28:bllvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: ```11:28:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
 
 ## Mainnet Block Tests
 
@@ -165,7 +163,7 @@ Real Bitcoin mainnet blocks are used:
 - **Taproot Activation**: Taproot activation block validation
 - **Historical Blocks**: Blocks from all consensus eras
 
-**Code**: ```43:49:bllvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: ```43:49:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
 
 ## Historical Consensus Tests
 
@@ -180,7 +178,7 @@ Historical consensus validation tests:
 - **Halving Points**: Historical block subsidy calculations
 - **Difficulty Adjustment**: Historical difficulty adjustment tests
 
-**Code**: ```29:41:bllvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: ```29:41:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
 
 ## Usage
 
@@ -205,7 +203,7 @@ cargo test --test bip_differential
 - `blvm-bench` repository cloned
 - Network connectivity for RPC calls (if using remote Core node)
 
-**Note**: The placeholder in `bllvm-consensus` is not functional and should not be used.
+**Note**: The placeholder in `blvm-consensus` is not functional and should not be used.
 
 ## Interpretation
 
@@ -220,7 +218,7 @@ pub struct ComparisonResult {
 }
 ```
 
-**Code**: ```31:78:bllvm-consensus/tests/integration/differential_tests.rs```
+**Code**: ```31:78:blvm-consensus/tests/integration/differential_tests.rs```
 
 ### Divergence Handling
 
@@ -268,9 +266,9 @@ The differential testing system includes:
 - `blvm-bench/src/differential.rs` - Comparison framework
 - `blvm-bench/tests/integration/bip_differential.rs` - BIP-specific tests
 
-**Placeholder Location**: `bllvm-consensus/tests/integration/differential_tests.rs` (skeleton, not fully implemented)
+**Placeholder Location**: `blvm-consensus/tests/integration/differential_tests.rs` (skeleton, not fully implemented)
 
-**Differential Fuzzing**: `bllvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs` (internal consistency testing, not Core comparison)
+**Differential Fuzzing**: `blvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs` (internal consistency testing, not Core comparison)
 
 ## See Also
 

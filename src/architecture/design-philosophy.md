@@ -20,7 +20,7 @@ BLVM is built on core principles that guide all design decisions.
 
 ### 3. Zero Consensus Re-implementation
 
-- All consensus logic comes from [bllvm-consensus](../consensus/overview.md)
+- All consensus logic comes from [blvm-consensus](../consensus/overview.md)
 - Application layers cannot modify consensus rules
 - Protocol abstraction enables variants without consensus changes
 - Clear security boundaries

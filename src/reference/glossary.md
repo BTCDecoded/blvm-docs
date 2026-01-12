@@ -8,15 +8,15 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Orange Paper** - Mathematical specification of Bitcoin's consensus protocol, serving as the "intermediate representation" (IR) in BLVM's compiler-like architecture. Transformed through [optimization passes](../consensus/architecture.md#optimization-passes) into optimized code. See [Orange Paper](orange-paper.md).
 
-**Optimization Passes** - Runtime optimization passes in [bllvm-consensus](../consensus/overview.md) that transform the [Orange Paper](orange-paper.md) specification into optimized code: Pass 2 (Constant Folding), Pass 3 (Memory Layout Optimization), Pass 5 (SIMD Vectorization), plus bounds check optimization, dead code elimination, and inlining hints. See [Optimization Passes](../consensus/architecture.md#optimization-passes).
+**Optimization Passes** - Runtime optimization passes in [blvm-consensus](../consensus/overview.md) that transform the [Orange Paper](orange-paper.md) specification into optimized code: Pass 2 (Constant Folding), Pass 3 (Memory Layout Optimization), Pass 5 (SIMD Vectorization), plus bounds check optimization, dead code elimination, and inlining hints. See [Optimization Passes](../consensus/architecture.md#optimization-passes).
 
-**bllvm-consensus** - Optimized mathematical implementation of Bitcoin consensus rules with [formal verification](../consensus/formal-verification.md) ([Kani proofs](../consensus/formal-verification.md)). Includes [optimization passes](../consensus/architecture.md#optimization-passes) that transform the [Orange Paper](orange-paper.md) specification into production-ready code. Foundation layer with no dependencies. See [Consensus Overview](../consensus/overview.md).
+**blvm-consensus** - Optimized mathematical implementation of Bitcoin consensus rules with [formal verification](../consensus/formal-verification.md) ([Kani proofs](../consensus/formal-verification.md)). Includes [optimization passes](../consensus/architecture.md#optimization-passes) that transform the [Orange Paper](orange-paper.md) specification into production-ready code. Foundation layer with no dependencies. See [Consensus Overview](../consensus/overview.md).
 
-**bllvm-protocol** - Protocol abstraction layer for multiple Bitcoin variants (mainnet, testnet, regtest) while maintaining consensus compatibility. See [Protocol Overview](../protocol/overview.md).
+**blvm-protocol** - Protocol abstraction layer for multiple Bitcoin variants (mainnet, testnet, regtest) while maintaining consensus compatibility. See [Protocol Overview](../protocol/overview.md).
 
-**bllvm-node** - Bitcoin node implementation with [storage](../node/storage-backends.md), [networking](../node/transport-abstraction.md), [RPC](../node/rpc-api.md), and [mining](../node/mining.md) capabilities. Production-ready reference implementation. See [Node Overview](../node/overview.md).
+**blvm-node** - Bitcoin node implementation with [storage](../node/storage-backends.md), [networking](../node/transport-abstraction.md), [RPC](../node/rpc-api.md), and [mining](../node/mining.md) capabilities. Production-ready reference implementation. See [Node Overview](../node/overview.md).
 
-**bllvm-sdk** - Developer toolkit providing [governance cryptographic primitives](../governance/overview.md), [module composition framework](../architecture/module-system.md), and CLI tools for key management and signing. See [SDK Overview](../sdk/overview.md).
+**blvm-sdk** - Developer toolkit providing [governance cryptographic primitives](../governance/overview.md), [module composition framework](../architecture/module-system.md), and CLI tools for key management and signing. See [SDK Overview](../sdk/overview.md).
 
 ## Governance
 
@@ -32,13 +32,13 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## Technical Concepts
 
-**Formal Verification** - Mathematical proof of code correctness using [Kani model checking](../consensus/formal-verification.md). BLVM has [201 formal proofs](../consensus/formal-verification.md) embedded in the codebase.
+**Formal Verification** - Mathematical proof of code correctness using [Kani model checking](../consensus/formal-verification.md). BLVM has [219 formal proofs](../consensus/formal-verification.md) embedded in the codebase.
 
 **Proofs Locked to Code** - [Formal verification](../consensus/formal-verification.md) proofs are embedded in the code itself, ensuring correctness is maintained as code changes.
 
 **Spec Drift Detection** - Automated detection when implementation code diverges from the [Orange Paper](orange-paper.md) mathematical specification.
 
-**Compiler-Like Architecture** - Architecture where [Orange Paper](orange-paper.md) (IR) → [optimization passes](../consensus/architecture.md#optimization-passes) → [bllvm-consensus](../consensus/overview.md) → [bllvm-node](../node/overview.md), similar to source code → IR → optimization passes → machine code in compilers. See [System Overview](../architecture/system-overview.md).
+**Compiler-Like Architecture** - Architecture where [Orange Paper](orange-paper.md) (IR) → [optimization passes](../consensus/architecture.md#optimization-passes) → [blvm-consensus](../consensus/overview.md) → [blvm-node](../node/overview.md), similar to source code → IR → optimization passes → machine code in compilers. See [System Overview](../architecture/system-overview.md).
 
 **Process Isolation** - [Module system](../architecture/module-system.md) design where each module runs in a separate process with isolated memory, preventing failures from propagating to the base node.
 
@@ -56,7 +56,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## Consensus & Protocol
 
-**Consensus Rules** - Mathematical rules that all Bitcoin nodes must follow to maintain network consensus. Defined in the [Orange Paper](orange-paper.md) and implemented in [bllvm-consensus](../consensus/overview.md).
+**Consensus Rules** - Mathematical rules that all Bitcoin nodes must follow to maintain network consensus. Defined in the [Orange Paper](orange-paper.md) and implemented in [blvm-consensus](../consensus/overview.md).
 
 **BIP** (Bitcoin Improvement Proposal) - Standards for Bitcoin protocol changes. BLVM implements numerous BIPs including BIP30, BIP34, BIP66, BIP90, BIP147, BIP141/143, BIP340/341/342. See [Protocol Specifications](protocol-specifications.md).
 

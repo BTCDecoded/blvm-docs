@@ -6,26 +6,66 @@ The consensus layer implements formal verification for Bitcoin consensus rules u
 
 Verification approach follows: **"Rust + Tests + Math Specs = Source of Truth"**
 
+```mermaid
+graph TB
+    subgraph "Layer 1: Empirical Testing"
+        UT[Unit Tests<br/>Comprehensive Coverage]
+        PT[Property Tests<br/>Randomized Edge Cases]
+        IT[Integration Tests<br/>Cross-System Validation]
+    end
+    
+    subgraph "Layer 2: Symbolic Verification"
+        KANI[Kani Model Checking<br/>219 Proofs, Tiered Execution]
+        SPEC[Math Specifications<br/>Orange Paper]
+        SSE[State Space Exploration<br/>All Execution Paths]
+    end
+    
+    subgraph "Layer 3: CI Enforcement"
+        AUTO[Automated Testing<br/>Required for Merge]
+        PROOF[Formal Proofs<br/>Separate Execution]
+        OTS[OpenTimestamps<br/>Immutable Audit Trail]
+    end
+    
+    UT --> AUTO
+    PT --> AUTO
+    IT --> AUTO
+    
+    KANI --> PROOF
+    SPEC --> KANI
+    SSE --> KANI
+    
+    PROOF --> OTS
+    AUTO --> OTS
+    
+    style UT fill:#bbf,stroke:#333,stroke-width:2px
+    style PT fill:#bbf,stroke:#333,stroke-width:2px
+    style IT fill:#bbf,stroke:#333,stroke-width:2px
+    style KANI fill:#bfb,stroke:#333,stroke-width:3px
+    style SPEC fill:#fbf,stroke:#333,stroke-width:2px
+    style AUTO fill:#ffb,stroke:#333,stroke-width:2px
+    style OTS fill:#fbb,stroke:#333,stroke-width:2px
+```
+
 ### Layer 1: Empirical Testing
 - **Unit tests**: Comprehensive test coverage for all consensus functions
 - **Property-based tests**: Randomized testing with `proptest` to discover edge cases
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification
-- **Kani model checking**: Bounded symbolic verification with mathematical invariants
+- **Kani model checking**: Bounded symbolic verification with mathematical invariants (219 proofs with tiered execution)
 - **Mathematical specifications**: Formal documentation of consensus rules
 - **State space exploration**: Verification of all possible execution paths
 
 ### Layer 3: CI Enforcement
 - **Automated testing**: All tests must pass before merge
-- **Formal proofs**: Run separately, not required for merge
+- **Formal proofs**: Run separately with tiered execution (strong/medium/slow tiers)
 - **OpenTimestamps audit logging**: Immutable proof of verification artifacts
 
 ## Verification Statistics
 
 ### Kani Formal Proofs
 
-**Total**: **201 proofs** in `src/` (210 total including 9 in `tests/`) across **25+ files**
+**Total**: **219 proofs** across **25+ files** with tiered execution system (strong/medium/slow tiers)
 
 **Breakdown by Module**:
 - `src/block.rs`: 19 proofs
@@ -58,6 +98,16 @@ Verification approach follows: **"Rust + Tests + Math Specs = Source of Truth"**
 ```bash
 cargo kani --features verify
 ```
+
+**Tier System**:
+- **Strong Tier**: Critical consensus proofs (AWS spot instance integration)
+- **Medium Tier**: Important proofs (parallel execution)
+- **Slow Tier**: Comprehensive coverage proofs
+
+**Infrastructure**:
+- AWS spot instance integration for expensive proof execution
+- Parallel proof execution with tiered scheduling
+- Automated proof verification in CI/CD
 
 ### Property-Based Tests
 
@@ -95,7 +145,7 @@ cargo test --test consensus_property_tests
 
 ### Fuzz Targets (libFuzzer)
 
-**Total**: **12 fuzz targets**
+**Total**: **19 fuzz targets**
 
 **Targets**:
 1. `block_validation.rs`

@@ -74,7 +74,7 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 37. `sha256_output_length` - Verifies SHA256 output length
 38. `double_sha256_output_length` - Verifies double SHA256 output length
 
-**Location**: `bllvm-consensus/tests/consensus_property_tests.rs`
+**Location**: `blvm-consensus/tests/consensus_property_tests.rs`
 
 ## Proptest Integration
 
@@ -308,7 +308,7 @@ The property-based testing system includes:
 - Automatic shrinking
 - MIRI integration
 
-**Location**: `bllvm-consensus/tests/consensus_property_tests.rs`, `bllvm-consensus/tests/unit/`
+**Location**: `blvm-consensus/tests/consensus_property_tests.rs`, `blvm-consensus/tests/unit/`
 
 ## See Also
 

@@ -17,7 +17,7 @@ Economic Node
     │   ├─→ Node B (relays to peers)
     │   └─→ Node C (relays to peers)
     │
-    └─→ Governance Application (bllvm-commons)
+    └─→ Governance Application (blvm-commons)
         (if governance relay enabled)
 ```
 
@@ -26,7 +26,7 @@ Economic Node
 1. **Gossip Mode**: Messages relayed to governance-enabled peers only
 2. **Relay Mode**: Messages forwarded to governance application via VPN/API
 
-**Code**: ```731:848:bllvm-node/src/network/mod.rs```
+**Code**: ```731:848:blvm-node/src/network/mod.rs```
 
 ## Governance Message Types
 
@@ -38,7 +38,7 @@ Economic node registration messages:
 - **Fields**: Node type, entity name, message ID
 - **Relay**: Gossiped to peers, optionally forwarded to governance app
 
-**Code**: ```731:803:bllvm-node/src/network/mod.rs```
+**Code**: ```731:803:blvm-node/src/network/mod.rs```
 
 ### EconomicNodeVeto
 
@@ -48,7 +48,7 @@ Economic node veto messages:
 - **Fields**: PR ID, signal type, message ID
 - **Relay**: Gossiped to peers, optionally forwarded to governance app
 
-**Code**: ```850:950:bllvm-node/src/network/mod.rs```
+**Code**: ```850:950:blvm-node/src/network/mod.rs```
 
 ### EconomicNodeStatus
 
@@ -58,7 +58,7 @@ Economic node status query messages:
 - **Fields**: Request ID, query parameters
 - **Relay**: Forwarded to governance app, response sent back to peer
 
-**Code**: ```950:1047:bllvm-node/src/network/mod.rs```
+**Code**: ```950:1047:blvm-node/src/network/mod.rs```
 
 ### EconomicNodeForkDecision
 
@@ -68,7 +68,7 @@ Governance fork decision messages:
 - **Fields**: Chosen ruleset, message ID
 - **Relay**: Gossiped to peers, optionally forwarded to governance app
 
-**Code**: ```1049:1100:bllvm-node/src/network/mod.rs```
+**Code**: ```1049:1100:blvm-node/src/network/mod.rs```
 
 ## Gossip Protocol
 
@@ -79,7 +79,7 @@ Nodes gossip governance messages to:
 - Excluding the sender
 - Using Bitcoin P2P protocol
 
-**Code**: ```805:848:bllvm-node/src/network/mod.rs```
+**Code**: ```805:848:blvm-node/src/network/mod.rs```
 
 ### Message Serialization
 
@@ -90,7 +90,7 @@ let msg_json = serde_json::to_vec(msg)?;
 peer.send_message(msg_json).await?;
 ```
 
-**Code**: ```829:844:bllvm-node/src/network/mod.rs```
+**Code**: ```829:844:blvm-node/src/network/mod.rs```
 
 ## Governance Relay
 
@@ -103,7 +103,7 @@ commons_url = "https://commons.example.com/api"
 vpn_enabled = true
 ```
 
-**Code**: ```486:559:bllvm-node/src/config/mod.rs```
+**Code**: ```486:559:blvm-node/src/config/mod.rs```
 
 ### Relay Process
 
@@ -112,7 +112,7 @@ vpn_enabled = true
 3. **Forward to Commons**: Send message to governance application via API
 4. **Gossip to Peers**: Also gossip message to other governance-enabled peers
 
-**Code**: ```731:803:bllvm-node/src/network/mod.rs```
+**Code**: ```731:803:blvm-node/src/network/mod.rs```
 
 ## Message Deduplication
 
@@ -124,7 +124,7 @@ The governance application deduplicates messages:
 - **Sender Tracking**: Tracks message origin
 - **Timestamp**: Prevents replay attacks
 
-**Code**: ```1:200:bllvm-commons/src/governance/message_dedup.rs```
+**Code**: ```1:200:blvm-commons/src/governance/message_dedup.rs```
 
 ## P2P Receiver
 
@@ -137,7 +137,7 @@ The governance application receives messages via P2P receiver:
 - **Storage**: Stores messages in database
 - **Processing**: Processes governance actions
 
-**Code**: ```1:28:bllvm-commons/src/governance/p2p_receiver.rs```
+**Code**: ```1:28:blvm-commons/src/governance/p2p_receiver.rs```
 
 ## Network Integration
 
@@ -149,7 +149,7 @@ Governance messages are integrated into Bitcoin P2P protocol:
 - **Backward Compatible**: Non-governance nodes ignore messages
 - **Service Flags**: Nodes advertise governance capability
 
-**Code**: ```1:200:bllvm-node/src/network/protocol.rs```
+**Code**: ```1:200:blvm-node/src/network/protocol.rs```
 
 ### Peer Management
 
@@ -159,7 +159,7 @@ Nodes track governance-enabled peers:
 - **Peer List**: Maintain list of governance peers
 - **Connection Management**: Handle peer connections/disconnections
 
-**Code**: ```814:848:bllvm-node/src/network/mod.rs```
+**Code**: ```814:848:blvm-node/src/network/mod.rs```
 
 ## Benefits
 
@@ -179,5 +179,5 @@ The P2P governance message system includes:
 - P2P receiver in governance application
 - Network protocol integration
 
-**Location**: `bllvm-node/src/network/mod.rs`, `bllvm-node/src/network/protocol.rs`, `bllvm-commons/src/governance/p2p_receiver.rs`, `bllvm-commons/src/governance/message_dedup.rs`
+**Location**: `blvm-node/src/network/mod.rs`, `blvm-node/src/network/protocol.rs`, `blvm-commons/src/governance/p2p_receiver.rs`, `blvm-commons/src/governance/message_dedup.rs`
 

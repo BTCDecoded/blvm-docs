@@ -50,6 +50,42 @@ curl -X POST http://localhost:8332 \
   -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
 ```
 
+**Example Response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "chain": "regtest",
+    "blocks": 100,
+    "headers": 100,
+    "bestblockhash": "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206",
+    "difficulty": 4.656542373906925e-10,
+    "mediantime": 1231006505,
+    "verificationprogress": 1.0,
+    "chainwork": "0000000000000000000000000000000000000000000000000000000000000064",
+    "pruned": false,
+    "initialblockdownload": false
+  },
+  "id": 1
+}
+```
+
+### Getting Peer Information
+
+```bash
+curl -X POST http://localhost:8332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "getpeerinfo", "params": [], "id": 2}'
+```
+
+### Getting Mempool Information
+
+```bash
+curl -X POST http://localhost:8332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "getmempoolinfo", "params": [], "id": 3}'
+```
+
 ### Verifying Installation
 
 ```bash

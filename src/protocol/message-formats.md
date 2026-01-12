@@ -20,7 +20,7 @@ Protocol-specific parameters include:
 - Block size limits
 - Feature activation heights
 
-For detailed protocol specifications, see the [bllvm-protocol README](../../modules/bllvm-protocol/README.md).
+For detailed protocol specifications, see the [blvm-protocol README](../../modules/blvm-protocol/README.md).
 
 ## See Also
 

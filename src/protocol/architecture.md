@@ -1,6 +1,6 @@
 # Protocol Layer Architecture
 
-The protocol layer (`bllvm-protocol`) provides Bitcoin protocol abstraction that enables multiple Bitcoin variants and protocol evolution.
+The protocol layer (`blvm-protocol`) provides Bitcoin protocol abstraction that enables multiple Bitcoin variants and protocol evolution.
 
 ## Architecture Position
 
@@ -8,15 +8,15 @@ This is **Tier 3** of the 5-tier Bitcoin Commons architecture (BLVM technology s
 
 ```
 1. Orange Paper (mathematical foundation)
-2. bllvm-consensus (pure math implementation)
-3. bllvm-protocol (Bitcoin abstraction) ← THIS CRATE
-4. bllvm-node (full node implementation)
-5. bllvm-sdk (developer toolkit)
+2. blvm-consensus (pure math implementation)
+3. blvm-protocol (Bitcoin abstraction) ← THIS CRATE
+4. blvm-node (full node implementation)
+5. blvm-sdk (developer toolkit)
 ```
 
 ## Purpose
 
-The bllvm-protocol sits between the pure mathematical consensus rules (bllvm-consensus) and the full Bitcoin implementation (bllvm-node). It provides:
+The blvm-protocol sits between the pure mathematical consensus rules (blvm-consensus) and the full Bitcoin implementation (blvm-node). It provides:
 
 ### Protocol Abstraction
 - **Multiple Variants**: Support for mainnet, testnet, and regtest
@@ -43,7 +43,7 @@ The bllvm-protocol sits between the pure mathematical consensus rules (bllvm-con
 - **Difficulty**: Proof-of-work targets
 - **Halving**: Block subsidy intervals
 
-For more details, see the [bllvm-protocol README](../../modules/bllvm-protocol/README.md).
+For more details, see the [blvm-protocol README](../../modules/blvm-protocol/README.md).
 
 ## See Also
 

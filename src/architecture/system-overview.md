@@ -4,24 +4,33 @@ Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on
 
 ## 6-Tier Component Architecture
 
-```
-1. Orange Paper (mathematical foundation)
-    ↓ (direct mathematical implementation)
-2. bllvm-consensus (pure math: CheckTransaction, ConnectBlock, etc.)
-    ↓ (protocol abstraction)
-3. bllvm-protocol (Bitcoin abstraction: mainnet, testnet, regtest)
-    ↓ (full node implementation)
-4. bllvm-node (validation, storage, mining, RPC)
-    ↓ (ergonomic API)
-5. bllvm-sdk (developer toolkit + governance primitives)
-    ↓ (cryptographic governance)
-6. bllvm-commons (governance enforcement engine)
+```mermaid
+graph TB
+    T1[Orange Paper<br/>Mathematical Foundation]
+    T2[blvm-consensus<br/>Pure Math Implementation]
+    T3[blvm-protocol<br/>Protocol Abstraction]
+    T4[blvm-node<br/>Full Node Implementation]
+    T5[blvm-sdk<br/>Developer Toolkit]
+    T6[blvm-commons<br/>Governance Enforcement]
+    
+    T1 -->|direct implementation| T2
+    T2 -->|protocol abstraction| T3
+    T3 -->|full node| T4
+    T4 -->|ergonomic API| T5
+    T5 -->|cryptographic governance| T6
+    
+    style T1 fill:#f9f,stroke:#333,stroke-width:2px
+    style T2 fill:#bbf,stroke:#333,stroke-width:2px
+    style T3 fill:#bfb,stroke:#333,stroke-width:2px
+    style T4 fill:#fbf,stroke:#333,stroke-width:2px
+    style T5 fill:#ffb,stroke:#333,stroke-width:2px
+    style T6 fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
 ## BLVM Stack Architecture
 
 ![BLVM Stack Architecture](../images/stack.png)
-*Figure: BLVM architecture showing bllvm-spec (Orange Paper) as the foundation, bllvm-consensus as the core implementation with verification paths (Kani proofs, spec drift detection, hash verification), and dependent components (bllvm-protocol, bllvm-node, bllvm-sdk) building on the verified consensus layer.*
+*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification paths (Kani proofs, spec drift detection, hash verification), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
 
 ## Tiered Architecture
 
@@ -35,44 +44,47 @@ Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on
 - Source of truth for all implementations
 - Timeless, immutable consensus rules
 
-### Tier 2: [bllvm-consensus](../consensus/overview.md) (Pure Math Implementation)
+### Tier 2: [blvm-consensus](../consensus/overview.md) (Pure Math Implementation)
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) functions
-- [201 Kani proofs](../consensus/formal-verification.md) verify mathematical correctness
+- [219 Kani proofs](../consensus/formal-verification.md) verify mathematical correctness
 - Side-effect-free, deterministic functions
 - Consensus-critical dependencies pinned to exact versions
 
-**Code**: ```1:260:bllvm-consensus/README.md```
+**Code**: ```1:260:blvm-consensus/README.md```
 
-### Tier 3: [bllvm-protocol](../protocol/overview.md) (Protocol Abstraction)
+### Tier 3: [blvm-protocol](../protocol/overview.md) (Protocol Abstraction)
 - Bitcoin protocol abstraction for multiple variants
 - Supports mainnet, testnet, regtest
 - Commons-specific protocol extensions ([UTXO commitments](../consensus/utxo-commitments.md), ban list sharing)
 - BIP implementations (BIP152, BIP157, BIP158, BIP173/350/351)
 
-**Code**: ```1:344:bllvm-protocol/README.md```
+**Code**: ```1:344:blvm-protocol/README.md```
 
-### Tier 4: [bllvm-node](../node/overview.md) (Node Implementation)
+### Tier 4: [blvm-node](../node/overview.md) (Node Implementation)
 - Minimal, production-ready Bitcoin node
 - [Storage layer](../node/storage-backends.md) (database abstraction with multiple backends)
 - Network manager ([multi-transport](../node/transport-abstraction.md): TCP, QUIC, Iroh)
-- [RPC server](../node/rpc-api.md) (JSON-RPC 2.0 + optional REST API)
+- [RPC server](../node/rpc-api.md) (JSON-RPC 2.0 with Bitcoin Core compatibility)
 - [Module system](../architecture/module-system.md) (process-isolated runtime modules)
-- Payment processing (Lightning, vaults, covenants)
+- Payment processing with CTV (CheckTemplateVerify) support
+- RBF and mempool policies (4 configurable modes)
+- Advanced indexing (address and value range indexing)
 - [Mining coordination](../node/mining-stratum-v2.md) (Stratum V2, merge mining)
+- P2P governance message relay
 - Governance integration (webhooks, user signaling)
 - ZeroMQ notifications (optional)
 
-**Code**: ```1:178:bllvm-node/README.md```
+**Code**: ```1:178:blvm-node/README.md```
 
-### Tier 5: [bllvm-sdk](../sdk/overview.md) (Developer Toolkit)
+### Tier 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
 - Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
-- CLI tools (bllvm-keygen, bllvm-sign, bllvm-verify)
+- CLI tools (blvm-keygen, blvm-sign, blvm-verify)
 - [Composition framework](../architecture/module-system.md) (declarative node composition)
 - Bitcoin-compatible signing standards
 
-**Code**: ```1:130:bllvm-sdk/README.md```
+**Code**: ```1:130:blvm-sdk/README.md```
 
-### Tier 6: bllvm-commons (Governance Enforcement)
+### Tier 6: blvm-commons (Governance Enforcement)
 - GitHub App for governance enforcement
 - Cryptographic signature verification
 - Multisig threshold enforcement
@@ -82,17 +94,17 @@ Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on
 ## Data Flow
 
 1. **Orange Paper** provides mathematical consensus specifications
-2. **bllvm-consensus** directly implements mathematical functions
-3. **bllvm-protocol** wraps bllvm-consensus with protocol-specific parameters
-4. **bllvm-node** uses bllvm-protocol and bllvm-consensus for validation
-5. **bllvm-sdk** provides governance primitives
-6. **bllvm-commons** uses bllvm-sdk for cryptographic operations
+2. **blvm-consensus** directly implements mathematical functions
+3. **blvm-protocol** wraps blvm-consensus with protocol-specific parameters
+4. **blvm-node** uses blvm-protocol and blvm-consensus for validation
+5. **blvm-sdk** provides governance primitives
+6. **blvm-commons** uses blvm-sdk for cryptographic operations
 
 ## Cross-Layer Validation
 
 - Dependencies between layers are strictly enforced
 - Consensus rule modifications are prevented in application layers
-- Equivalence proofs required between Orange Paper and bllvm-consensus
+- Equivalence proofs required between Orange Paper and blvm-consensus
 - Version coordination ensures compatibility across layers
 
 ## Key Features
@@ -101,7 +113,7 @@ Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
 - [Formal verification](../consensus/formal-verification.md) with [Kani model checking](../consensus/formal-verification.md)
 - [Property-based testing](../development/property-based-testing.md) for mathematical invariants
-- [201 Kani proofs](../consensus/formal-verification.md) verify critical consensus functions
+- [219 Kani proofs](../consensus/formal-verification.md) verify critical consensus functions
 
 ### Protocol Abstraction
 - Multiple Bitcoin variants (mainnet, testnet, regtest)

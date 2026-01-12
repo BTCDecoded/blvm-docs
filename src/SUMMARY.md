@@ -8,6 +8,10 @@
 - [Quick Start](getting-started/quick-start.md)
 - [First Node Setup](getting-started/first-node.md)
 
+# Examples
+
+- [RBF Configuration Example](examples/rbf-configuration-example.md)
+
 # Architecture
 
 - [System Overview](architecture/system-overview.md)
@@ -15,6 +19,9 @@
 - [Design Philosophy](architecture/design-philosophy.md)
 - [Module System](architecture/module-system.md)
 - [Module IPC Protocol](architecture/module-ipc-protocol.md)
+- [Event System Integration](architecture/event-system-integration.md)
+- [Event Consistency](architecture/event-consistency.md)
+- [Janitorial Events](architecture/janitorial-events.md)
 
 # Consensus Layer
 
@@ -38,6 +45,7 @@
 
 - [Overview](node/overview.md)
 - [Configuration](node/configuration.md)
+- [RBF and Mempool Policies](node/rbf-mempool-policies.md)
 - [Operations](node/operations.md)
 - [RPC API Reference](node/rpc-api.md)
 - [Storage Backends](node/storage-backends.md)

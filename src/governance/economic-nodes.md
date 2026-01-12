@@ -26,7 +26,7 @@ Economic nodes represent economic interests of Bitcoin users and provide veto me
 | **3. Auto-Activation** | If proofs verify → status = `active` immediately | No maintainer approval required |
 | **4. Weight Calculation** | System calculates veto weight from verified proofs | Automatic, based on on-chain data |
 
-**Code**: ```70:131:bllvm-commons/src/economic_nodes/registry.rs```
+**Code**: ```70:131:blvm-commons/src/economic_nodes/registry.rs```
 
 ### Commons Contributors (Automatic Registration)
 
@@ -39,10 +39,10 @@ Economic nodes represent economic interests of Bitcoin users and provide veto me
 | **5. Auto-Activation** | If proofs verify → status = `active` immediately |
 
 **Code**:
-- Contribution Tracking: ```1:219:bllvm-commons/src/governance/contributions.rs```
-- Zap Tracking: ```1:281:bllvm-commons/src/nostr/zap_tracker.rs```
-- Auto-Registration: ```1:498:bllvm-commons/src/economic_nodes/auto_registration.rs```
-- Registration: ```70:131:bllvm-commons/src/economic_nodes/registry.rs```
+- Contribution Tracking: ```1:219:blvm-commons/src/governance/contributions.rs```
+- Zap Tracking: ```1:281:blvm-commons/src/nostr/zap_tracker.rs```
+- Auto-Registration: ```1:498:blvm-commons/src/economic_nodes/auto_registration.rs```
+- Registration: ```70:131:blvm-commons/src/economic_nodes/registry.rs```
 
 ### Cryptographic Proof Requirements
 
@@ -52,7 +52,7 @@ Economic nodes represent economic interests of Bitcoin users and provide veto me
 | **Exchanges/Custodians** | Holdings signature challenge | Cryptographic proof of address control |
 | **Commons Contributors** | Merge mining blocks, fee forwarding txs, zap events, BIP70 payments | On-chain verification of contributions |
 
-**Code**: ```220:320:bllvm-commons/src/economic_nodes/registry.rs```
+**Code**: ```220:320:blvm-commons/src/economic_nodes/registry.rs```
 
 **Ongoing Requirements**: Nodes must maintain qualification thresholds. System automatically verifies on-chain proofs during weight recalculation.
 
@@ -71,7 +71,7 @@ Economic nodes represent economic interests of Bitcoin users and provide veto me
 - If fork threshold met → governance fork automatically enabled
 - Users can choose between original and forked rulesets
 
-**Code**: ```113:379:bllvm-commons/src/economic_nodes/veto.rs```
+**Code**: ```113:379:blvm-commons/src/economic_nodes/veto.rs```
 
 ### Veto Process
 
@@ -91,7 +91,7 @@ Economic nodes represent economic interests of Bitcoin users and provide veto me
 | Growth | 20% | 25% hashpower → 0.20 weight (capped) |
 | Mature | 10% | 35% hashpower → 0.10 weight (capped) |
 
-**Code**: ```343:363:bllvm-commons/src/economic_nodes/registry.rs```
+**Code**: ```343:363:blvm-commons/src/economic_nodes/registry.rs```
 
 ### Other Economic Node Weights
 
@@ -117,8 +117,8 @@ Thresholds adjust automatically based on:
 - **Consolidation Metrics**: If top pool > 30%, mining threshold increases by 50%
 
 **Code**: 
-- Phase: ```157:181:bllvm-commons/src/governance/phase_calculator.rs```
-- Consolidation: ```140:177:bllvm-commons/src/economic_nodes/consolidation.rs```
+- Phase: ```157:181:blvm-commons/src/governance/phase_calculator.rs```
+- Consolidation: ```140:177:blvm-commons/src/economic_nodes/consolidation.rs```
 
 ### Threshold Adjustment
 
@@ -134,7 +134,7 @@ Manual adjustments require Tier 5 change (5-of-5 maintainers), economic analysis
 4. Veto window (15 days for signal submission)
 5. Decision (block or allow based on veto threshold)
 
-**Code**: ```19:131:bllvm-commons/src/enforcement/merge_block.rs```
+**Code**: ```19:131:blvm-commons/src/enforcement/merge_block.rs```
 
 ### Status Reporting
 
@@ -147,7 +147,7 @@ Economic node status reported in: GitHub status checks, Nostr events, monthly re
 | **Node Security** | Hardware security modules, multi-factor authentication, incident response, regular audits |
 | **Veto Security** | Cryptographic signature verification, replay protection (nonces), timestamp validation, multiple independent verifications |
 
-**Code**: ```33:111:bllvm-commons/src/economic_nodes/veto.rs```
+**Code**: ```33:111:blvm-commons/src/economic_nodes/veto.rs```
 
 ## Economic Incentives
 

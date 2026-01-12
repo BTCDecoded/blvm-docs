@@ -20,10 +20,10 @@ Like a compiler transforms source code → IR → optimized machine code, BLVM t
    - Bounds Check Optimization (using [Kani](consensus/formal-verification.md)-proven bounds)
    - Dead Code Elimination
    - Inlining Hints for hot functions
-3. **[bllvm-consensus](consensus/overview.md)** - Optimized implementation with [formal verification](consensus/formal-verification.md)
-4. **[bllvm-protocol](protocol/overview.md)** - Protocol abstraction for mainnet, testnet, regtest
-5. **[bllvm-node](node/overview.md)** - Full Bitcoin node with storage, networking, RPC
-6. **[bllvm-sdk](sdk/overview.md)** - Developer toolkit and [module composition](architecture/module-system.md)
+3. **[blvm-consensus](consensus/overview.md)** - Optimized implementation with [formal verification](consensus/formal-verification.md)
+4. **[blvm-protocol](protocol/overview.md)** - Protocol abstraction for mainnet, testnet, regtest
+5. **[blvm-node](node/overview.md)** - Full Bitcoin node with storage, networking, RPC
+6. **[blvm-sdk](sdk/overview.md)** - Developer toolkit and [module composition](architecture/module-system.md)
 7. **[Governance](governance/overview.md)** - Cryptographic governance enforcement
 
 ### Why "LLVM"?
@@ -53,27 +53,36 @@ This unified documentation site aggregates content from multiple source reposito
 
 Report bugs or request features on GitHub Issues, ask questions in GitHub Discussions, or report security issues to security@btcdecoded.org.
 
-## Status
-
-⚠️ **Current Status**: Phase 1 (Infrastructure Building)
+## Key Features
 
 ### Core Components
 
-- **[bllvm-consensus](consensus/overview.md)** - BIP integration (BIP30, BIP34, BIP66, BIP90, BIP147)
-- **[bllvm-protocol](protocol/overview.md)** - Protocol variants and network messages
-- **[bllvm-node](node/overview.md)** - Full node with RPC and storage
-- **[bllvm-sdk](sdk/overview.md)** - Governance primitives and CLI tools
-- **bllvm-commons** - GitHub integration, OTS, Nostr, cross-layer validation
+- **[blvm-consensus](consensus/overview.md)** - Pure mathematical implementation with 219 Kani proofs, BIP integration (BIP30, BIP34, BIP66, BIP90, BIP147)
+- **[blvm-protocol](protocol/overview.md)** - Protocol variants (mainnet, testnet, regtest) and network messages
+- **[blvm-node](node/overview.md)** - Full Bitcoin node with RPC, storage, and [module system](architecture/module-system.md)
+- **[blvm-sdk](sdk/overview.md)** - Governance primitives and CLI tools (blvm-keygen, blvm-sign, blvm-verify)
+- **blvm-commons** - GitHub integration, OpenTimestamps, Nostr, cross-layer validation
 
-### Production Readiness
+### Module System
 
-- **Core Functionality** - Major features implemented (see [Node Overview](node/overview.md))
-- **Governance Activation** - Governance rules not enforced (Phase 1, see [Governance Overview](governance/overview.md))
-- **Maintainer Keys** - Test keys in use (2 real, 5+ test keys)
-- **Integration Tests** - Test suite (see [Testing Infrastructure](development/testing.md))
-- **Differential Testing** - Infrastructure exists, RPC library integration pending (see [Differential Testing](development/differential-testing.md))
+BLVM includes a process-isolated module system enabling optional features:
 
-**Note**: System is functionally complete but not yet activated in production. See [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) for detailed information.
+- **[blvm-lightning](modules/lightning.md)** - Lightning Network module (LDK implementation)
+- **[blvm-mesh](modules/mesh.md)** - Mesh networking module
+- **[blvm-governance](modules/governance.md)** - Governance integration module
+- **[blvm-stratum-v2](modules/stratum-v2.md)** - Stratum V2 mining module
+
+### Recent Enhancements
+
+- **Module System Overhaul**: Enhanced security and process isolation
+- **RBF and Mempool Policies**: Configurable replacement-by-fee modes
+- **Payment Processing**: CTV (CheckTemplateVerify) support
+- **Advanced Indexing**: Address and value range indexing
+- **Kani Proof Tiering**: Strong/medium/slow tiers for critical proofs
+- **Differential Testing**: Infrastructure for comparing against Bitcoin Core
+- **FIBRE Protocol**: High-performance relay protocol support
+
+See [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) for complete implementation details.
 
 ## License
 

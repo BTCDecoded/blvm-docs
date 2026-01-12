@@ -9,14 +9,14 @@ Configuration files support both TOML (`.toml`) and JSON (`.json`) formats. TOML
 ### Example Configuration File
 
 ```toml
-# bllvm.toml
+# blvm.toml
 listen_addr = "127.0.0.1:8333"
 transport_preference = "tcp_only"
 max_peers = 100
 protocol_version = "BitcoinV1"
 
 [storage]
-data_dir = "/var/lib/bllvm"
+data_dir = "/var/lib/blvm"
 database_backend = "auto"
 
 [storage.cache]
@@ -418,9 +418,9 @@ secondary_chains = []
 Configuration can be overridden via command-line arguments:
 
 ```bash
-bllvm --config /path/to/config.toml     # Load config from file
-bllvm --network testnet                  # Override protocol version
-bllvm --data-dir /custom/path            # Override data directory
+blvm --config /path/to/config.toml     # Load config from file
+blvm --network testnet                  # Override protocol version
+blvm --data-dir /custom/path            # Override data directory
 ```
 
 ## Environment Variables
@@ -429,7 +429,7 @@ Configuration can also be set via environment variables (prefixed with `BLVM_`):
 
 ```bash
 export BLVM_NETWORK=testnet
-export BLVM_DATA_DIR=/var/lib/bllvm
+export BLVM_DATA_DIR=/var/lib/blvm
 export BLVM_RPC_PORT=8332
 ```
 

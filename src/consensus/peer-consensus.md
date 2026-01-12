@@ -15,7 +15,7 @@ The protocol uses an N-of-M consensus model:
 - **Threshold**: Consensus threshold (e.g., 70% agreement)
 - **Diversity**: Peers must be diverse across ASNs, subnets, geographic regions
 
-**Code**: ```1:6:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```1:6:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ### Peer Information
 
@@ -31,7 +31,7 @@ pub struct PeerInfo {
 }
 ```
 
-**Code**: ```20:28:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```20:28:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ## Diverse Peer Discovery
 
@@ -44,7 +44,7 @@ Peers must be diverse across:
 - **Geographic Regions**: Geographic diversity
 - **Bitcoin Implementations**: Implementation diversity
 
-**Code**: ```104:143:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```104:143:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ### Discovery Process
 
@@ -54,7 +54,7 @@ Peers must be diverse across:
 4. **Select Diverse Set**: Select diverse peer set
 5. **Stop at Target**: Stop when target number reached
 
-**Code**: ```111:143:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```111:143:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ## Consensus Finding
 
@@ -67,7 +67,7 @@ Commitments are grouped by their values:
 - **UTXO Count**: Number of UTXOs
 - **Block Height**: Block height of commitment
 
-**Code**: ```254:269:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```254:269:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ### Consensus Threshold
 
@@ -78,7 +78,7 @@ Consensus threshold check:
 - **Required Count**: `ceil(total_peers * threshold)`
 - **Verification**: Check if agreement count >= required count
 
-**Code**: ```294:333:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```294:333:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ### Mathematical Invariants
 
@@ -89,7 +89,7 @@ Consensus finding maintains invariants:
 - `best_agreement_count <= total_peers`
 - If `agreement_count >= required_agreement_count`, then `agreement_count/total_peers >= threshold`
 
-**Code**: ```298:321:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```298:321:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ## Checkpoint Height Determination
 
@@ -104,7 +104,7 @@ Checkpoint height determined from peer chain tips:
   - Checkpoint height is always >= 0
   - Checkpoint height <= median_tip
 
-**Code**: ```145:153:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```145:153:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ## Ban List Sharing
 
@@ -117,7 +117,7 @@ Nodes share ban lists to protect against malicious peers:
 - **Merging**: Ban list merging from multiple peers
 - **Network-Wide Protection**: Protects entire network
 
-**Code**: ```4310:4345:bllvm-node/src/network/mod.rs```
+**Code**: ```4310:4345:blvm-node/src/network/mod.rs```
 
 ### Ban List Validation
 
@@ -128,7 +128,7 @@ Ban list entries are validated:
 - **Merging Logic**: Merged with local ban list
 - **Duplicate Prevention**: Duplicate entries prevented
 
-**Code**: ```4316:4345:bllvm-node/src/network/mod.rs```
+**Code**: ```4316:4345:blvm-node/src/network/mod.rs```
 
 ### Ban List Merging
 
@@ -139,7 +139,7 @@ Ban lists are merged from multiple peers:
 - **Merging**: Merge with local ban list
 - **Conflict Resolution**: Resolve conflicts (longest ban wins)
 
-**Code**: ```1:24:bllvm-node/src/network/ban_list_merging.rs```
+**Code**: ```1:24:blvm-node/src/network/ban_list_merging.rs```
 
 ## Filtered Blocks
 
@@ -152,7 +152,7 @@ Nodes can request filtered blocks:
 - **Efficiency**: More efficient than full blocks
 - **Privacy**: Better privacy for light clients
 
-**Code**: ```56:59:bllvm-node/src/network/protocol.rs```
+**Code**: ```56:59:blvm-node/src/network/protocol.rs```
 
 ## Network-Wide Malicious Peer Protection
 
@@ -165,7 +165,7 @@ Network-wide protection against malicious peers:
 - **Auto-Ban**: Automatic banning of abusive peers
 - **Eclipse Prevention**: Prevent eclipse attacks
 
-**Code**: ```125:127:bllvm-node/SECURITY.md```
+**Code**: ```125:127:blvm-node/SECURITY.md```
 
 ## Configuration
 
@@ -181,7 +181,7 @@ pub struct ConsensusConfig {
 }
 ```
 
-**Code**: ```56:93:bllvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: ```56:93:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
 
 ## Benefits
 
@@ -202,7 +202,7 @@ The peer consensus protocol includes:
 - Filtered block protocol
 - Network-wide malicious peer protection
 
-**Location**: `bllvm-consensus/src/utxo_commitments/peer_consensus.rs`, `bllvm-node/src/network/ban_list_merging.rs`, `bllvm-node/src/network/mod.rs`
+**Location**: `blvm-consensus/src/utxo_commitments/peer_consensus.rs`, `blvm-node/src/network/ban_list_merging.rs`, `blvm-node/src/network/mod.rs`
 
 ## See Also
 

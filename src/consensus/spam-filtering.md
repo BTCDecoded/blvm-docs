@@ -4,7 +4,7 @@
 
 Spam filtering provides transaction-level filtering for bandwidth optimization and non-monetary transaction detection. The system filters spam transactions to achieve 40-60% bandwidth savings during ongoing sync while maintaining consensus correctness.
 
-**Code**: ```1:680:bllvm-consensus/src/utxo_commitments/spam_filter.rs```
+**Code**: ```1:680:blvm-consensus/src/utxo_commitments/spam_filter.rs```
 
 **Note**: While the implementation is located in the `utxo_commitments` module for organizational purposes, spam filtering is a general-purpose feature that can be used independently of UTXO commitments.
 
@@ -79,14 +79,14 @@ When processing a spam transaction:
 
 This ensures UTXO set consistency even when spam transactions spend non-spam inputs.
 
-**Implementation**: ```206:310:bllvm-consensus/src/utxo_commitments/initial_sync.rs```
+**Implementation**: ```206:310:blvm-consensus/src/utxo_commitments/initial_sync.rs```
 
 ## Configuration
 
 ### Default Configuration
 
 ```rust
-use bllvm_consensus::utxo_commitments::spam_filter::{SpamFilter, SpamFilterConfig};
+use blvm_consensus::utxo_commitments::spam_filter::{SpamFilter, SpamFilterConfig};
 
 // Default configuration (all detection methods enabled except low_fee_rate)
 let filter = SpamFilter::new();
@@ -119,7 +119,7 @@ let filter = SpamFilter::with_config(config);
 For improved detection accuracy, especially for Taproot/SegWit-based Ordinals, use `is_spam_with_witness()`:
 
 ```rust
-use bllvm_consensus::witness::Witness;
+use blvm_consensus::witness::Witness;
 
 let filter = SpamFilter::new();
 let witnesses: Vec<Witness> = /* witness data for each input */;
@@ -136,7 +136,7 @@ let result = filter.is_spam(&tx);
 ### Basic Usage
 
 ```rust
-use bllvm_consensus::utxo_commitments::spam_filter::SpamFilter;
+use blvm_consensus::utxo_commitments::spam_filter::SpamFilter;
 
 let filter = SpamFilter::new();
 let result = filter.is_spam(&transaction);
@@ -182,7 +182,7 @@ In addition to block-level filtering, spam filtering can be applied at the mempo
 Enable mempool-level spam filtering in `MempoolConfig`:
 
 ```rust
-use bllvm_consensus::config::MempoolConfig;
+use blvm_consensus::config::MempoolConfig;
 
 let mut config = MempoolConfig::default();
 config.reject_spam_in_mempool = true; // Enable spam rejection at mempool entry
@@ -190,7 +190,7 @@ config.reject_spam_in_mempool = true; // Enable spam rejection at mempool entry
 // Optional: Customize spam filter configuration
 #[cfg(feature = "utxo-commitments")]
 {
-    use bllvm_consensus::utxo_commitments::config::SpamFilterConfigSerializable;
+    use blvm_consensus::utxo_commitments::config::SpamFilterConfigSerializable;
     config.spam_filter_config = Some(SpamFilterConfigSerializable {
         filter_ordinals: true,
         filter_dust: true,
@@ -275,7 +275,7 @@ spam_ban_duration_seconds = 3600  # 1 hour
 
 Spam filtering is used in UTXO commitment processing to reduce bandwidth during sync:
 
-- **Location**: `bllvm-consensus/src/utxo_commitments/initial_sync.rs`
+- **Location**: `blvm-consensus/src/utxo_commitments/initial_sync.rs`
 - **Usage**: Filters outputs when processing blocks for UTXO commitments
 - **Benefit**: 40-60% bandwidth reduction during ongoing sync
 
@@ -283,7 +283,7 @@ Spam filtering is used in UTXO commitment processing to reduce bandwidth during 
 
 Spam filtering is used in protocol extensions for filtered block generation:
 
-- **Location**: `bllvm-node/src/network/protocol_extensions.rs`
+- **Location**: `blvm-node/src/network/protocol_extensions.rs`
 - **Usage**: Generates filtered blocks for network peers
 - **Benefit**: Reduces bandwidth for filtered block relay
 
@@ -291,7 +291,7 @@ Spam filtering is used in protocol extensions for filtered block generation:
 
 Spam filtering can be applied at mempool entry to reject spam transactions:
 
-- **Location**: `bllvm-consensus/src/mempool.rs::accept_to_memory_pool_with_config()`
+- **Location**: `blvm-consensus/src/mempool.rs::accept_to_memory_pool_with_config()`
 - **Usage**: Optional spam check before accepting transactions to mempool
 - **Benefit**: Prevents spam from entering mempool, reducing memory usage
 - **Status**: Opt-in (default: disabled) to maintain backward compatibility

@@ -62,7 +62,7 @@ These optimization passes are similar to LLVM's optimization infrastructure, tra
 
 ## Mathematical Protections
 
-{{#include ../../../modules/bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md}}
+{{#include ../../../modules/blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md}}
 
 ## Spec Maintenance Workflow
 

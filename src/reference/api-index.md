@@ -6,14 +6,14 @@ Quick reference and cross-references to all BLVM APIs across the ecosystem.
 
 For detailed Rust API documentation with full type signatures, examples, and implementation details:
 
-- **[bllvm-consensus](https://docs.rs/bllvm-consensus)** - Consensus layer APIs (transaction validation, block validation, script execution)
-- **[bllvm-protocol](https://docs.rs/bllvm-protocol)** - Protocol abstraction layer APIs (network variants, message handling)
-- **[bllvm-node](https://docs.rs/bllvm-node)** - Node implementation APIs (storage, networking, RPC, modules)
-- **[bllvm-sdk](https://docs.rs/bllvm-sdk)** - Developer SDK APIs (governance primitives, composition framework)
+- **[blvm-consensus](https://docs.rs/blvm-consensus)** - Consensus layer APIs (transaction validation, block validation, script execution)
+- **[blvm-protocol](https://docs.rs/blvm-protocol)** - Protocol abstraction layer APIs (network variants, message handling)
+- **[blvm-node](https://docs.rs/blvm-node)** - Node implementation APIs (storage, networking, RPC, modules)
+- **[blvm-sdk](https://docs.rs/blvm-sdk)** - Developer SDK APIs (governance primitives, composition framework)
 
 ## Quick Reference by Component
 
-### Consensus Layer (bllvm-consensus)
+### Consensus Layer (blvm-consensus)
 
 **Core Functions:**
 - `CheckTransaction` - Validate transaction structure and signatures
@@ -29,7 +29,7 @@ For detailed Rust API documentation with full type signatures, examples, and imp
 
 **Documentation:** See [Consensus Overview](../consensus/overview.md), [Consensus Architecture](../consensus/architecture.md), and [Formal Verification](../consensus/formal-verification.md).
 
-### Protocol Layer (bllvm-protocol)
+### Protocol Layer (blvm-protocol)
 
 **Core Abstractions:**
 - `BitcoinProtocolEngine` - Protocol engine for network variants
@@ -43,7 +43,7 @@ For detailed Rust API documentation with full type signatures, examples, and imp
 
 **Documentation:** See [Protocol Overview](../protocol/overview.md), [Network Protocol](../protocol/network-protocol.md), and [Protocol Architecture](../protocol/architecture.md).
 
-### Node Implementation (bllvm-node)
+### Node Implementation (blvm-node)
 
 #### Node API
 
@@ -122,7 +122,7 @@ pub struct ModuleContext {
 
 **Documentation:** See [Storage Backends](../node/storage-backends.md) and [Node Configuration](../node/configuration.md#storage-backends).
 
-### Developer SDK (bllvm-sdk)
+### Developer SDK (blvm-sdk)
 
 #### Governance Primitives
 
@@ -154,7 +154,7 @@ pub struct ModuleContext {
 ### Consensus Validation
 
 ```rust
-use bllvm_consensus::{CheckTransaction, ConnectBlock, Transaction, Block};
+use blvm_consensus::{CheckTransaction, ConnectBlock, Transaction, Block};
 
 // Validate transaction
 let result = CheckTransaction::validate(&tx, &utxo_set)?;
@@ -166,7 +166,7 @@ let result = ConnectBlock::validate_and_connect(&block, &chain_state)?;
 ### Protocol Abstraction
 
 ```rust
-use bllvm_protocol::{BitcoinProtocolEngine, ProtocolVersion};
+use blvm_protocol::{BitcoinProtocolEngine, ProtocolVersion};
 
 // Create protocol engine for testnet
 let engine = BitcoinProtocolEngine::new(ProtocolVersion::Testnet3)?;
@@ -175,7 +175,7 @@ let engine = BitcoinProtocolEngine::new(ProtocolVersion::Testnet3)?;
 ### Module Development
 
 ```rust
-use bllvm_node::module::traits::NodeAPI;
+use blvm_node::module::traits::NodeAPI;
 
 // In module code, use NodeAPI trait through IPC
 let block = node_api.get_block(&hash).await?;
@@ -185,7 +185,7 @@ let tip = node_api.get_chain_tip().await?;
 ### Governance Operations
 
 ```rust
-use bllvm_sdk::{GovernanceKeypair, GovernanceMessage, Multisig};
+use blvm_sdk::{GovernanceKeypair, GovernanceMessage, Multisig};
 
 // Generate keypair and sign message
 let keypair = GovernanceKeypair::generate()?;
@@ -196,8 +196,8 @@ let signature = sign_message(&keypair.secret_key_bytes(), &message.to_signing_by
 ## API Stability
 
 **Stable APIs:**
-- Consensus layer (`bllvm-consensus`) - Stable, formally verified
-- Protocol layer (`bllvm-protocol`) - Stable, Bitcoin-compatible
+- Consensus layer (`blvm-consensus`) - Stable, formally verified
+- Protocol layer (`blvm-protocol`) - Stable, Bitcoin-compatible
 - Node storage APIs - Stable
 
 **Development APIs:**
@@ -208,10 +208,10 @@ let signature = sign_message(&keypair.secret_key_bytes(), &message.to_signing_by
 ## Error Handling
 
 All APIs use consistent error types:
-- `bllvm_consensus::ConsensusError` - Consensus validation errors
-- `bllvm_protocol::ProtocolError` - Protocol layer errors
-- `bllvm_node::module::ModuleError` - Module system errors
-- `bllvm_sdk::GovernanceError` - Governance operation errors
+- `blvm_consensus::ConsensusError` - Consensus validation errors
+- `blvm_protocol::ProtocolError` - Protocol layer errors
+- `blvm_node::module::ModuleError` - Module system errors
+- `blvm_sdk::GovernanceError` - Governance operation errors
 
 ## See Also
 

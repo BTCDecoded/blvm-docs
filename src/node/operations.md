@@ -8,19 +8,19 @@ Operational guide for running and maintaining a BLVM node.
 
 ```bash
 # Regtest mode (default, safe for development)
-bllvm
+blvm
 
 # Testnet mode
-bllvm --network testnet
+blvm --network testnet
 
 # Mainnet mode (use with caution)
-bllvm --network mainnet
+blvm --network mainnet
 ```
 
 ### With Configuration
 
 ```bash
-bllvm --config bllvm.toml
+blvm --config blvm.toml
 ```
 
 ## Node Lifecycle
@@ -45,7 +45,7 @@ Initial → Headers → Blocks → Synced
 4. **Synced**: Fully synchronized, normal operation
 5. **Error**: Error state (can transition from any state)
 
-**Code**: ```124:132:bllvm-node/src/node/sync.rs```
+**Code**: ```124:132:blvm-node/src/node/sync.rs```
 
 ### State Transitions
 
@@ -56,7 +56,7 @@ State transitions are managed by the `SyncStateMachine`:
 - **Blocks → Synced**: When blocks are complete (60% progress)
 - **Any → Error**: On error conditions
 
-**Code**: ```63:121:bllvm-node/src/node/sync.rs```
+**Code**: ```63:121:blvm-node/src/node/sync.rs```
 
 ### Initial Sync
 
@@ -69,20 +69,20 @@ When starting for the first time, the node will:
 5. **Build UTXO Set**: Construct UTXO set from validated blocks
 6. **Sync to Current Height**: Continue until caught up with network
 
-**Code**: ```161:171:bllvm-node/src/node/sync.rs```
+**Code**: ```161:171:blvm-node/src/node/sync.rs```
 
 ### Running State
 
 Once synced, the node maintains:
 
 - **Peer Connections**: Active P2P connections
-- **Block Validation**: Validates and relays new blocks (via [bllvm-consensus](../consensus/overview.md))
+- **Block Validation**: Validates and relays new blocks (via [blvm-consensus](../consensus/overview.md))
 - **Transaction Processing**: Validates and relays transactions
 - **Chain State Updates**: Updates chain tip and height
 - **RPC Requests**: Serves [JSON-RPC API](rpc-api.md) requests
 - **Health Monitoring**: Periodic health checks
 
-**Code**: ```1000:1102:bllvm-node/src/node/mod.rs```
+**Code**: ```1000:1102:blvm-node/src/node/mod.rs```
 
 ### Health States
 
@@ -93,7 +93,7 @@ The node tracks health status for each component:
 - **Unhealthy**: Component not functioning correctly
 - **Down**: Component not responding
 
-**Code**: ```8:19:bllvm-node/src/node/health.rs```
+**Code**: ```8:19:blvm-node/src/node/health.rs```
 
 ### Error Recovery
 
@@ -104,7 +104,7 @@ The node implements graceful error recovery:
 - **Validation Errors**: Logged and reported, node continues operation
 - **Disk Space**: Periodic checks with warnings
 
-**Code**: ```1114:1140:bllvm-node/src/node/mod.rs```
+**Code**: ```1114:1140:blvm-node/src/node/mod.rs```
 
 ## Monitoring
 
@@ -126,13 +126,13 @@ The node uses structured logging. Set log level via environment variable:
 
 ```bash
 # Set log level
-RUST_LOG=info bllvm
+RUST_LOG=info blvm
 
 # Debug mode
-RUST_LOG=debug bllvm
+RUST_LOG=debug blvm
 
 # Trace all operations
-RUST_LOG=trace bllvm
+RUST_LOG=trace blvm
 ```
 
 ## Maintenance
@@ -147,7 +147,7 @@ Regular backups recommended:
 
 ```bash
 # Backup data directory
-tar -czf bllvm-backup-$(date +%Y%m%d).tar.gz /var/lib/bllvm
+tar -czf blvm-backup-$(date +%Y%m%d).tar.gz /var/lib/blvm
 ```
 
 ### Updates

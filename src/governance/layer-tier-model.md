@@ -10,11 +10,11 @@ The layer system maps repository architecture to governance requirements:
 
 | Layer | Repository | Purpose | Signatures | Review Period |
 |-------|------------|---------|------------|---------------|
-| 1 | bllvm-spec | Constitutional | 6-of-7 | 180 days |
-| 2 | bllvm-consensus | Constitutional | 6-of-7 | 180 days |
-| 3 | bllvm-protocol | Implementation | 4-of-5 | 90 days |
-| 4 | bllvm-node / bllvm | Application | 3-of-5 | 60 days |
-| 5 | bllvm-sdk | Extension | 2-of-3 | 14 days |
+| 1 | blvm-spec | Constitutional | 6-of-7 | 180 days |
+| 2 | blvm-consensus | Constitutional | 6-of-7 | 180 days |
+| 3 | blvm-protocol | Implementation | 4-of-5 | 90 days |
+| 4 | blvm-node / blvm | Application | 3-of-5 | 60 days |
+| 5 | blvm-sdk | Extension | 2-of-3 | 14 days |
 
 **Note:** For consensus rule changes, Layer 1-2 require 365 days review period.
 
@@ -66,10 +66,10 @@ When both Layer and Tier requirements apply, the system takes the **most restric
 
 | Example | Layer | Tier | Result | Source |
 |---------|-------|------|--------|--------|
-| Bug fix in bllvm-protocol | 3 (4-of-5, 90d) | 1 (3-of-5, 7d) | 4-of-5, 90d | Layer 3 |
-| New feature in bllvm-sdk | 5 (2-of-3, 14d) | 2 (4-of-5, 30d) | 4-of-5, 30d | Tier 2 |
-| Consensus change in bllvm-spec | 1 (6-of-7, 180d) | 3 (5-of-5, 90d) | 6-of-7, 180d | Layer 1 |
-| Emergency fix in bllvm-node | 4 (3-of-5, 60d) | 4 (4-of-5, 0d) | 4-of-5, 0d | Tier 4 |
+| Bug fix in blvm-protocol | 3 (4-of-5, 90d) | 1 (3-of-5, 7d) | 4-of-5, 90d | Layer 3 |
+| New feature in blvm-sdk | 5 (2-of-3, 14d) | 2 (4-of-5, 30d) | 4-of-5, 30d | Tier 2 |
+| Consensus change in blvm-spec | 1 (6-of-7, 180d) | 3 (5-of-5, 90d) | 6-of-7, 180d | Layer 1 |
+| Emergency fix in blvm-node | 4 (3-of-5, 60d) | 4 (4-of-5, 0d) | 4-of-5, 0d | Tier 4 |
 
 ## Economic Veto Requirements
 
@@ -77,7 +77,7 @@ Economic node vetoes required for **Tier 3+** (any layer). Thresholds: Tier 3 (3
 
 ## Implementation
 
-**Code**: ```63:125:bllvm-commons/src/validation/threshold.rs```
+**Code**: ```63:125:blvm-commons/src/validation/threshold.rs```
 
 ```rust
 pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {
@@ -90,7 +90,7 @@ pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {
 }
 ```
 
-**Test**: `cd bllvm-commons && cargo test threshold`
+**Test**: `cd blvm-commons && cargo test threshold`
 
 ## Configuration
 

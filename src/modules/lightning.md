@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Lightning Network module (`bllvm-lightning`) handles Lightning Network payment processing for bllvm-node: invoice verification, payment routing, channel management, and payment state tracking. For information on developing custom modules, see [Module Development](../sdk/module-development.md). For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Lightning Network module (`blvm-lightning`) handles Lightning Network payment processing for blvm-node: invoice verification, payment routing, channel management, and payment state tracking. For information on developing custom modules, see [Module Development](../sdk/module-development.md). For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
@@ -16,14 +16,14 @@ The Lightning Network module (`bllvm-lightning`) handles Lightning Network payme
 ### Via Cargo
 
 ```bash
-cargo install bllvm-lightning
+cargo install blvm-lightning
 ```
 
 ### Via Module Installer
 
 ```bash
-cargo install cargo-bllvm-module
-cargo bllvm-module install bllvm-lightning
+cargo install cargo-blvm-module
+cargo blvm-module install blvm-lightning
 ```
 
 ### Manual Installation
@@ -31,7 +31,7 @@ cargo bllvm-module install bllvm-lightning
 1. Clone the repository:
    ```bash
    git clone https://github.com/BTCDecoded/blvm-lightning.git
-   cd bllvm-lightning
+   cd blvm-lightning
    ```
 
 2. Build the module:
@@ -41,8 +41,8 @@ cargo bllvm-module install bllvm-lightning
 
 3. Install to node modules directory:
    ```bash
-   mkdir -p /path/to/node/modules/bllvm-lightning/target/release
-   cp target/release/bllvm-lightning /path/to/node/modules/bllvm-lightning/target/release/
+   mkdir -p /path/to/node/modules/blvm-lightning/target/release
+   cp target/release/blvm-lightning /path/to/node/modules/blvm-lightning/target/release/
    ```
 
 ## Configuration
@@ -92,11 +92,11 @@ provider = "stub"
 The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
-name = "bllvm-lightning"
+name = "blvm-lightning"
 version = "0.1.0"
 description = "Lightning Network payment processor"
 author = "Bitcoin Commons Team"
-entry_point = "bllvm-lightning"
+entry_point = "blvm-lightning"
 
 capabilities = [
     "read_blockchain",

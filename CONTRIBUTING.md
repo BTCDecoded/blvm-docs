@@ -1,14 +1,14 @@
-# Contributing to BLLVM Documentation
+# Contributing to BLVM Documentation
 
-Thank you for your interest in improving BLLVM documentation!
+Thank you for your interest in improving BLVM documentation!
 
 ## Documentation Philosophy
 
-Documentation is maintained in **source repositories** alongside code. This repository (`bllvm-docs`) aggregates that documentation into a unified site. 
+Documentation is maintained in **source repositories** alongside code. This repository (`blvm-docs`) aggregates that documentation into a unified site. 
 
 **Where to contribute:**
-- Component-specific documentation → Edit in the source repository (e.g., `bllvm-consensus/docs/`)
-- Cross-cutting documentation → Edit in this repository (e.g., `bllvm-docs/src/architecture/`)
+- Component-specific documentation → Edit in the source repository (e.g., `blvm-consensus/docs/`)
+- Cross-cutting documentation → Edit in this repository (e.g., `blvm-docs/src/architecture/`)
 - Navigation structure → Edit `SUMMARY.md` in this repository
 
 ## Documentation Standards
@@ -47,15 +47,15 @@ repository-root/
 
 ### For Source Repository Documentation
 
-1. Fork the source repository (e.g., `bllvm-consensus`)
+1. Fork the source repository (e.g., `blvm-consensus`)
 2. Make documentation improvements
 3. Submit a pull request to the source repository
-4. After merge, the `bllvm-docs` submodule will be updated (manually or automatically)
+4. After merge, the `blvm-docs` submodule will be updated (manually or automatically)
 5. Changes will appear in the unified documentation site
 
 ### For Cross-Cutting Documentation
 
-1. Fork this repository (`bllvm-docs`)
+1. Fork this repository (`blvm-docs`)
 2. Edit files in `src/` directory (not in submodules)
 3. Submit a pull request
 4. After merge, GitHub Actions will automatically rebuild and deploy
@@ -72,7 +72,7 @@ Before submitting changes:
 
 1. Clone with submodules:
    ```bash
-   git clone --recursive https://github.com/BTCDecoded/bllvm-docs.git
+   git clone --recursive https://github.com/BTCDecoded/blvm-docs.git
    ```
 
 2. Serve locally:
@@ -99,5 +99,5 @@ Before submitting changes:
 - Ask in GitHub Discussions for general questions
 - Contact maintainers for repository-specific questions
 
-Thank you for helping improve BLLVM documentation!
+Thank you for helping improve BLVM documentation!
 

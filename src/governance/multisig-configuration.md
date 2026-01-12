@@ -6,18 +6,18 @@ Bitcoin Commons uses multisig thresholds for governance decisions, with differen
 
 ### Constitutional Layers (Layer 1-2)
 - **Orange Paper** (Layer 1): 6-of-7 maintainers, 180 days (365 for consensus changes)
-- **bllvm-consensus** (Layer 2): 6-of-7 maintainers, 180 days (365 for consensus changes)
+- **blvm-consensus** (Layer 2): 6-of-7 maintainers, 180 days (365 for consensus changes)
 
 ### Implementation Layer (Layer 3)
-- **bllvm-protocol**: 4-of-5 maintainers, 90 days
+- **blvm-protocol**: 4-of-5 maintainers, 90 days
 
 ### Application Layer (Layer 4)
-- **bllvm-node**: 3-of-5 maintainers, 60 days
+- **blvm-node**: 3-of-5 maintainers, 60 days
 
 ### Extension Layer (Layer 5)
-- **bllvm-sdk**: 2-of-3 maintainers, 14 days
+- **blvm-sdk**: 2-of-3 maintainers, 14 days
 - **governance**: 2-of-3 maintainers, 14 days
-- **bllvm-commons**: 2-of-3 maintainers, 14 days
+- **blvm-commons**: 2-of-3 maintainers, 14 days
 
 ## Tier-Based Thresholds
 

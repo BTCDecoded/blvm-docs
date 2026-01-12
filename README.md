@@ -1,10 +1,10 @@
-# BLLVM Documentation
+# BLVM Documentation
 
-Unified documentation site for the Bitcoin Commons BLLVM ecosystem, built with [mdBook](https://rust-lang.github.io/mdBook/) and hosted on GitHub Pages.
+Unified documentation site for the Bitcoin Commons BLVM ecosystem, built with [mdBook](https://rust-lang.github.io/mdBook/) and hosted on GitHub Pages.
 
 ## Overview
 
-This repository aggregates documentation from all BLLVM source repositories into a single, navigable documentation site. Documentation is maintained in source repositories alongside code, and this repository serves as the orchestration layer that combines everything into a unified book.
+This repository aggregates documentation from all BLVM source repositories into a single, navigable documentation site. Documentation is maintained in source repositories alongside code, and this repository serves as the orchestration layer that combines everything into a unified book.
 
 **Live Site:** [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org)
 
@@ -26,7 +26,7 @@ This repository aggregates documentation from all BLLVM source repositories into
 
 1. Clone this repository with submodules:
    ```bash
-   git clone --recursive https://github.com/BTCDecoded/bllvm-docs.git
+   git clone --recursive https://github.com/BTCDecoded/blvm-docs.git
    ```
 
 2. If you already cloned without submodules:
@@ -60,13 +60,13 @@ git submodule update --remote
 
 Documentation is aggregated from these source repositories:
 
-- `modules/bllvm-spec/` - Orange Paper and specifications
-- `modules/bllvm-consensus/` - Consensus layer documentation
-- `modules/bllvm-protocol/` - Protocol layer documentation
-- `modules/bllvm-node/` - Node implementation documentation
-- `modules/bllvm-sdk/` - SDK documentation
+- `modules/blvm-spec/` - Orange Paper and specifications
+- `modules/blvm-consensus/` - Consensus layer documentation
+- `modules/blvm-protocol/` - Protocol layer documentation
+- `modules/blvm-node/` - Node implementation documentation
+- `modules/blvm-sdk/` - SDK documentation
 - `modules/governance/` - Governance documentation
-- `modules/bllvm/` - Build system and CLI documentation
+- `modules/blvm/` - Build system and CLI documentation
 
 ## Contributing
 

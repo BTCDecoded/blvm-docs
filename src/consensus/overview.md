@@ -1,6 +1,6 @@
 # Consensus Layer Overview
 
-The consensus layer (`bllvm-consensus`) provides a pure mathematical implementation of Bitcoin consensus rules from the [Orange Paper](../reference/orange-paper.md). All functions are deterministic, side-effect-free, and directly implement the mathematical specifications without interpretation.
+The consensus layer (`blvm-consensus`) provides a pure mathematical implementation of Bitcoin consensus rules from the [Orange Paper](../reference/orange-paper.md). All functions are deterministic, side-effect-free, and directly implement the mathematical specifications without interpretation.
 
 ## Architecture Position
 
@@ -8,11 +8,11 @@ Tier 2 of the 6-tier Bitcoin Commons architecture:
 
 ```
 1. Orange Paper (mathematical foundation)
-2. bllvm-consensus (pure math implementation) ← THIS LAYER
-3. bllvm-protocol (Bitcoin abstraction)
-4. bllvm-node (full node implementation)
-5. bllvm-sdk (developer toolkit)
-6. bllvm-commons (governance enforcement)
+2. blvm-consensus (pure math implementation) ← THIS LAYER
+3. blvm-protocol (Bitcoin abstraction)
+4. blvm-node (full node implementation)
+5. blvm-sdk (developer toolkit)
+6. blvm-commons (governance enforcement)
 ```
 
 ## Core Functions
@@ -25,7 +25,7 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 - `EvalScript`: Script execution engine
 - `VerifyScript`: Script verification with witness data
 
-**Code**: ```1:200:bllvm-consensus/src/transaction.rs```
+**Code**: ```1:200:blvm-consensus/src/transaction.rs```
 
 ### Block Validation
 - `ConnectBlock`: Block connection and validation
@@ -33,34 +33,34 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 - `CheckProofOfWork`: Proof of work verification
 - `ShouldReorganize`: Chain reorganization logic
 
-**Code**: ```1:300:bllvm-consensus/src/block.rs```
+**Code**: ```1:300:blvm-consensus/src/block.rs```
 
 ### Economic Model
 - `GetBlockSubsidy`: Block reward calculation with halving
 - `TotalSupply`: Total supply computation
 - `GetNextWorkRequired`: Difficulty adjustment calculation
 
-**Code**: ```1:200:bllvm-consensus/src/economic.rs```
+**Code**: ```1:200:blvm-consensus/src/economic.rs```
 
 ### Mempool Protocol
 - `AcceptToMemoryPool`: Transaction mempool validation
 - `IsStandardTx`: Standard transaction checks
 - `ReplacementChecks`: RBF (Replace-By-Fee) logic
 
-**Code**: ```1:200:bllvm-consensus/src/mempool.rs```
+**Code**: ```1:200:blvm-consensus/src/mempool.rs```
 
 ### Mining Protocol
 - `CreateNewBlock`: Block creation from mempool
 - `MineBlock`: Block mining and nonce finding
 - `GetBlockTemplate`: Block template generation
 
-**Code**: ```1:200:bllvm-consensus/src/mining.rs```
+**Code**: ```1:200:blvm-consensus/src/mining.rs```
 
 ### Advanced Features
 - **SegWit**: Witness data validation and weight calculation
 - **Taproot**: P2TR output validation and key aggregation
 
-**Code**: ```1:200:bllvm-consensus/src/segwit.rs```
+**Code**: ```1:200:blvm-consensus/src/segwit.rs```
 
 ## Design Principles
 
@@ -77,12 +77,17 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 Implements mathematical verification of Bitcoin consensus rules:
 
 ### Verification Statistics
-- **201 [Kani Proofs](formal-verification.md)**: Verify all critical consensus functions (201 in `src/`, 9 in `tests/`)
+- **219 [Kani Proofs](formal-verification.md)**: Verify all critical consensus functions with tiered execution system
 - **35 [Property Tests](../development/property-based-testing.md)**: Verify mathematical invariants
 - **913 Runtime Assertions**: Catch edge cases (814 `assert!` + 99 `debug_assert!`)
 - **19 [Fuzz Targets](../development/fuzzing.md)**: Discover vulnerabilities
 
-**Code**: ```1:412:bllvm-consensus/src/block.rs```
+### Recent Improvements
+- **Strong Tier System**: Critical proofs prioritized with AWS spot instance integration
+- **Spam Filtering**: Always available (removed feature gate dependency)
+- **Parallel Proof Execution**: Tiered scheduling for efficient verification
+
+**Code**: ```1:412:blvm-consensus/src/block.rs```
 
 ### Verification Coverage
 
@@ -92,7 +97,7 @@ Implements mathematical verification of Bitcoin consensus rules:
 **Transaction Validation**: `check_transaction` structure rules verified  
 **Block Connection**: `connect_block` UTXO consistency verified  
 
-**Code**: ```1:100:bllvm-consensus/docs/VERIFICATION.md```
+**Code**: ```1:100:blvm-consensus/docs/VERIFICATION.md```
 
 ## BIP Implementation
 
@@ -104,7 +109,7 @@ Critical Bitcoin Improvement Proposals (BIPs) implemented:
 - **BIP90**: Block version enforcement (integrated in `connect_block()`)
 - **BIP147**: NULLDUMMY enforcement (enforced via script verification)
 
-**Code**: ```1:200:bllvm-consensus/src/block.rs```
+**Code**: ```1:200:blvm-consensus/src/block.rs```
 
 ## Performance Optimizations
 
@@ -128,7 +133,7 @@ LLVM-like optimization passes transform Orange Paper specifications:
 - **Bounds Check Optimization**: Eliminate unnecessary checks
 - **Dead Code Elimination**: Remove unused code paths
 
-**Code**: ```1:100:bllvm-consensus/src/optimizations/mod.rs```
+**Code**: ```1:100:blvm-consensus/src/optimizations/mod.rs```
 
 ## Mathematical Lock
 
@@ -153,7 +158,7 @@ ripemd = "=0.1.3"
 bitcoin_hashes = "=0.11.0"
 ```
 
-**Code**: ```1:163:bllvm-consensus/Cargo.toml```
+**Code**: ```1:163:blvm-consensus/Cargo.toml```
 
 ## See Also
 

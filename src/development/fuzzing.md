@@ -34,14 +34,14 @@ Bitcoin Commons implements fuzzing infrastructure using libFuzzer for automated 
 18. **transaction_output_validation** - Transaction output validation
 19. **reorganization** - Chain reorganization handling
 
-**Location**: `bllvm-consensus/fuzz/fuzz_targets/`
+**Location**: `blvm-consensus/fuzz/fuzz_targets/`
 
 ## Quick Start
 
 ### Initialize Corpus
 
 ```bash
-cd bllvm-consensus/fuzz
+cd blvm-consensus/fuzz
 ./init_corpus.sh
 ```
 
@@ -104,7 +104,7 @@ fuzz_target!(|data: &[u8]| {
 });
 ```
 
-**Location**: `bllvm-consensus/fuzz/fuzz_targets/`
+**Location**: `blvm-consensus/fuzz/fuzz_targets/`
 
 ## Sanitizer Support
 
@@ -173,7 +173,7 @@ The `init_corpus.sh` script:
 - Adds basic seed inputs
 - Sets up corpus structure
 
-**Code**: `bllvm-consensus/fuzz/init_corpus.sh`
+**Code**: `blvm-consensus/fuzz/init_corpus.sh`
 
 ### Corpus Growth
 
@@ -199,7 +199,7 @@ The `test_runner.py` script provides:
 python3 test_runner.py fuzz/corpus/ --parallel
 ```
 
-**Code**: `bllvm-consensus/fuzz/test_runner.py`
+**Code**: `blvm-consensus/fuzz/test_runner.py`
 
 ### Sequential Execution
 
@@ -220,7 +220,7 @@ Differential fuzzing verifies internal consistency without relying on Bitcoin Co
 - Invariant checking
 - Cross-component validation
 
-**Code**: `bllvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs`
+**Code**: `blvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs`
 
 ## CI Integration
 
@@ -254,7 +254,7 @@ Fuzzing runs in CI via GitHub Actions:
 cargo +nightly fuzz run transaction_validation -- -max_total_time=3600
 ```
 
-**Code**: `bllvm-consensus/fuzz/run_campaigns.sh`
+**Code**: `blvm-consensus/fuzz/run_campaigns.sh`
 
 ## Crash Reproduction
 
@@ -328,7 +328,7 @@ The fuzzing infrastructure includes:
 - Differential fuzzing
 - CI integration
 
-**Location**: `bllvm-consensus/fuzz/`
+**Location**: `blvm-consensus/fuzz/`
 
 ## See Also
 

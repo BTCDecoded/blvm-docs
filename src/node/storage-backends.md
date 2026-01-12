@@ -16,7 +16,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 - **Performance**: Optimized for read-heavy workloads
 - **Storage**: Efficient key-value storage
 
-**Code**: ```1:170:bllvm-node/src/storage/database.rs```
+**Code**: ```1:170:blvm-node/src/storage/database.rs```
 
 ### sled (Fallback)
 
@@ -27,7 +27,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 - **Performance**: Good for development and testing
 - **Storage**: Key-value storage with B-tree indexing
 
-**Code**: ```131:200:bllvm-node/src/storage/database.rs```
+**Code**: ```131:200:blvm-node/src/storage/database.rs```
 
 ## Backend Selection
 
@@ -37,7 +37,7 @@ The system automatically selects the best available backend:
 2. **Falls back to sled** if redb fails and sled is available
 3. **Returns error** if no backend is available
 
-**Code**: ```80:129:bllvm-node/src/storage/database.rs```
+**Code**: ```80:129:blvm-node/src/storage/database.rs```
 
 ### Automatic Fallback
 
@@ -46,7 +46,7 @@ The system automatically selects the best available backend:
 let storage = Storage::new(data_dir)?;
 ```
 
-**Code**: ```46:73:bllvm-node/src/storage/mod.rs```
+**Code**: ```46:73:blvm-node/src/storage/mod.rs```
 
 ## Database Abstraction
 
@@ -61,7 +61,7 @@ pub trait Database: Send + Sync {
 }
 ```
 
-**Code**: ```13:19:bllvm-node/src/storage/database.rs```
+**Code**: ```13:19:blvm-node/src/storage/database.rs```
 
 ### Tree Trait
 
@@ -76,7 +76,7 @@ pub trait Tree: Send + Sync {
 }
 ```
 
-**Code**: ```21:50:bllvm-node/src/storage/database.rs```
+**Code**: ```21:50:blvm-node/src/storage/database.rs```
 
 ## Storage Components
 
@@ -88,7 +88,7 @@ Stores blocks by hash:
 - **Value**: Serialized block data
 - **Indexing**: Hash-based lookup
 
-**Code**: ```1:200:bllvm-node/src/storage/blockstore.rs```
+**Code**: ```1:200:blvm-node/src/storage/blockstore.rs```
 
 ### UtxoStore
 
@@ -98,7 +98,7 @@ Manages UTXO set:
 - **Value**: UTXO data (script, amount)
 - **Operations**: Add, remove, query UTXOs
 
-**Code**: ```1:200:bllvm-node/src/storage/utxostore.rs```
+**Code**: ```1:200:blvm-node/src/storage/utxostore.rs```
 
 ### ChainState
 
@@ -109,7 +109,7 @@ Tracks chain metadata:
 - **Chain Work**: Cumulative proof-of-work
 - **UTXO Stats**: Cached UTXO set statistics
 
-**Code**: ```1:121:bllvm-node/src/storage/chainstate.rs```
+**Code**: ```1:121:blvm-node/src/storage/chainstate.rs```
 
 ### TxIndex
 
@@ -119,7 +119,7 @@ Transaction indexing:
 - **Value**: Transaction data and metadata
 - **Lookup**: Fast transaction retrieval
 
-**Code**: ```1:200:bllvm-node/src/storage/txindex.rs```
+**Code**: ```1:200:blvm-node/src/storage/txindex.rs```
 
 ## Configuration
 
@@ -127,7 +127,7 @@ Transaction indexing:
 
 ```toml
 [storage]
-data_dir = "/var/lib/bllvm"
+data_dir = "/var/lib/blvm"
 backend = "auto"  # or "redb", "sled"
 ```
 
@@ -136,7 +136,7 @@ backend = "auto"  # or "redb", "sled"
 - `"redb"`: Force redb backend
 - `"sled"`: Force sled backend
 
-**Code**: ```1:100:bllvm-node/src/config/mod.rs```
+**Code**: ```1:100:blvm-node/src/config/mod.rs```
 
 ### Cache Configuration
 
@@ -152,7 +152,7 @@ header_cache_mb = 10
 - **UTXO Cache**: Default 50 MB, caches frequently accessed UTXOs
 - **Header Cache**: Default 10 MB, caches block headers
 
-**Code**: ```1:100:bllvm-node/src/config/mod.rs```
+**Code**: ```1:100:blvm-node/src/config/mod.rs```
 
 ## Performance Characteristics
 
@@ -199,7 +199,7 @@ keep_blocks = 288  # Keep last 288 blocks (2 days)
 - **Light Client**: Keep last N blocks (configurable)
 - **Full Pruning**: Remove all blocks, keep only UTXO set (planned)
 
-**Code**: ```1:200:bllvm-node/src/storage/pruning.rs```
+**Code**: ```1:200:blvm-node/src/storage/pruning.rs```
 
 ## Error Handling
 
@@ -210,7 +210,7 @@ The storage layer handles backend failures gracefully:
 - **Data Integrity**: Verifies data integrity on startup
 - **Corruption Detection**: Detects and reports database corruption
 
-**Code**: ```46:73:bllvm-node/src/storage/mod.rs```
+**Code**: ```46:73:blvm-node/src/storage/mod.rs```
 
 ## See Also
 

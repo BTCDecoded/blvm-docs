@@ -11,14 +11,14 @@ Bitcoin Commons optionally supports JSON-RPC over QUIC using Quinn, providing im
 - **Better Performance**: Lower latency, better congestion control
 - **Backward Compatible**: TCP RPC server always available
 
-**Code**: ```1:13:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```1:13:blvm-node/docs/QUIC_RPC.md```
 
 ## Usage
 
 ### Basic (TCP Only - Default)
 
 ```rust
-use bllvm_node::rpc::RpcManager;
+use blvm_node::rpc::RpcManager;
 use std::net::SocketAddr;
 
 let tcp_addr: SocketAddr = "127.0.0.1:8332".parse().unwrap();
@@ -26,12 +26,12 @@ let mut rpc_manager = RpcManager::new(tcp_addr);
 rpc_manager.start().await?;
 ```
 
-**Code**: ```16:25:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```16:25:blvm-node/docs/QUIC_RPC.md```
 
 ### With QUIC Support
 
 ```rust
-use bllvm_node::rpc::RpcManager;
+use blvm_node::rpc::RpcManager;
 use std::net::SocketAddr;
 
 let tcp_addr: SocketAddr = "127.0.0.1:8332".parse().unwrap();
@@ -49,7 +49,7 @@ rpc_manager.enable_quinn(quinn_addr);
 rpc_manager.start().await?;
 ```
 
-**Code**: ```27:46:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```27:46:blvm-node/docs/QUIC_RPC.md```
 
 ## Configuration
 
@@ -59,10 +59,10 @@ QUIC RPC requires the `quinn` feature flag:
 
 ```toml
 [dependencies]
-bllvm-node = { path = "../bllvm-node", features = ["quinn"] }
+blvm-node = { path = "../blvm-node", features = ["quinn"] }
 ```
 
-**Code**: ```48:55:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```48:55:blvm-node/docs/QUIC_RPC.md```
 
 ### Build with QUIC
 
@@ -70,7 +70,7 @@ bllvm-node = { path = "../bllvm-node", features = ["quinn"] }
 cargo build --features quinn
 ```
 
-**Code**: ```57:61:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```57:61:blvm-node/docs/QUIC_RPC.md```
 
 ## QUIC RPC Server
 
@@ -83,7 +83,7 @@ The `QuinnRpcServer` provides JSON-RPC over QUIC:
 - **Stream Management**: Manages bidirectional streams
 - **Request Processing**: Processes JSON-RPC requests
 
-**Code**: ```1:50:bllvm-node/src/rpc/quinn_server.rs```
+**Code**: ```1:50:blvm-node/src/rpc/quinn_server.rs```
 
 ### Certificate Management
 
@@ -93,7 +93,7 @@ QUIC uses TLS certificates:
 - **Production**: Should use proper certificate management
 - **Certificate Generation**: Automatic certificate generation
 
-**Code**: ```31:44:bllvm-node/src/rpc/quinn_server.rs```
+**Code**: ```31:44:blvm-node/src/rpc/quinn_server.rs```
 
 ## Client Usage
 
@@ -123,7 +123,7 @@ recv.read_to_end(&mut response).await?;
 let response_str = String::from_utf8(response)?;
 ```
 
-**Code**: ```70:94:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```70:94:blvm-node/docs/QUIC_RPC.md```
 
 ## Benefits Over TCP
 
@@ -133,7 +133,7 @@ let response_str = String::from_utf8(response)?;
 4. **Lower Latency**: Better congestion control
 5. **Stream-Based**: Natural fit for request/response patterns
 
-**Code**: ```96:103:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```96:103:blvm-node/docs/QUIC_RPC.md```
 
 ## Limitations
 
@@ -142,7 +142,7 @@ let response_str = String::from_utf8(response)?;
 - **Certificate Management**: Self-signed certs need proper handling for production
 - **Network Requirements**: Some networks may block UDP/QUIC
 
-**Code**: ```104:110:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```104:110:blvm-node/docs/QUIC_RPC.md```
 
 ## Security Notes
 
@@ -150,7 +150,7 @@ let response_str = String::from_utf8(response)?;
 - **Authentication**: QUIC provides transport encryption but not application-level auth
 - **Same Security Boundaries**: QUIC RPC has same security boundaries as TCP RPC (no wallet access)
 
-**Code**: ```63:69:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```63:69:blvm-node/docs/QUIC_RPC.md```
 
 ## When to Use
 
@@ -159,7 +159,7 @@ let response_str = String::from_utf8(response)?;
 - **Enhanced Security**: When you want built-in encryption without extra TLS layer
 - **Internal Services**: When you control both client and server
 
-**Code**: ```111:117:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```111:117:blvm-node/docs/QUIC_RPC.md```
 
 ## When Not to Use
 
@@ -167,7 +167,7 @@ let response_str = String::from_utf8(response)?;
 - **Legacy Clients**: Clients that only support TCP/HTTP
 - **Simple Use Cases**: TCP RPC is simpler and sufficient for most cases
 
-**Code**: ```118:122:bllvm-node/docs/QUIC_RPC.md```
+**Code**: ```118:122:blvm-node/docs/QUIC_RPC.md```
 
 ## Components
 
@@ -178,5 +178,5 @@ The QUIC RPC system includes:
 - JSON-RPC protocol over QUIC
 - Client support examples
 
-**Location**: `bllvm-node/src/rpc/quinn_server.rs`, `bllvm-node/docs/QUIC_RPC.md`
+**Location**: `blvm-node/src/rpc/quinn_server.rs`, `blvm-node/docs/QUIC_RPC.md`
 

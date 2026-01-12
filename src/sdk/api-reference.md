@@ -8,7 +8,7 @@ The BLVM SDK provides two main API categories:
 - **Governance Primitives**: Cryptographic operations for governance (keys, signatures, multisig)
 - **Composition Framework**: Module registry and node composition APIs
 
-For detailed Rust API documentation, see [bllvm-sdk on docs.rs](https://docs.rs/bllvm-sdk).
+For detailed Rust API documentation, see [blvm-sdk on docs.rs](https://docs.rs/blvm-sdk).
 
 ## Governance Primitives
 
@@ -33,7 +33,7 @@ pub struct GovernanceKeypair {
 
 **Example:**
 ```rust
-use bllvm_sdk::GovernanceKeypair;
+use blvm_sdk::GovernanceKeypair;
 
 let keypair = GovernanceKeypair::generate()?;
 let pubkey = keypair.public_key();
@@ -116,7 +116,7 @@ pub struct Multisig {
 
 **Example:**
 ```rust
-use bllvm_sdk::{Multisig, PublicKey};
+use blvm_sdk::{Multisig, PublicKey};
 
 let multisig = Multisig::new(3, 5, public_keys)?;
 let valid = multisig.verify(&message_bytes, &signatures)?;
@@ -211,7 +211,7 @@ pub struct ModuleRegistry {
 
 **Example:**
 ```rust
-use bllvm_sdk::ModuleRegistry;
+use blvm_sdk::ModuleRegistry;
 
 let mut registry = ModuleRegistry::new("modules");
 let modules = registry.discover_modules()?;
@@ -332,12 +332,12 @@ pub struct ModuleHealth {
 
 ## CLI Tools
 
-### `bllvm-keygen`
+### `blvm-keygen`
 
 Generate governance keypairs.
 
 ```bash
-bllvm-keygen [OPTIONS]
+blvm-keygen [OPTIONS]
 
 Options:
     -o, --output <OUTPUT>    Output file [default: governance.key]
@@ -346,12 +346,12 @@ Options:
     --show-private          Show private key in output
 ```
 
-### `bllvm-sign`
+### `blvm-sign`
 
 Sign governance messages.
 
 ```bash
-bllvm-sign [OPTIONS] <COMMAND>
+blvm-sign [OPTIONS] <COMMAND>
 
 Options:
     -o, --output <OUTPUT>    Output file [default: signature.txt]
@@ -364,12 +364,12 @@ Commands:
     budget                  Sign a budget decision message
 ```
 
-### `bllvm-verify`
+### `blvm-verify`
 
 Verify governance signatures and multisig thresholds.
 
 ```bash
-bllvm-verify [OPTIONS] <COMMAND>
+blvm-verify [OPTIONS] <COMMAND>
 
 Options:
     -f, --format <FORMAT>    Output format (text, json) [default: text]
@@ -388,7 +388,7 @@ Commands:
 ### Basic Governance Operations
 
 ```rust
-use bllvm_sdk::{GovernanceKeypair, GovernanceMessage, sign_message, verify_signature};
+use blvm_sdk::{GovernanceKeypair, GovernanceMessage, sign_message, verify_signature};
 
 // Generate keypair
 let keypair = GovernanceKeypair::generate()?;
@@ -411,7 +411,7 @@ assert!(verified);
 ### Multisig Operations
 
 ```rust
-use bllvm_sdk::{GovernanceKeypair, GovernanceMessage, Multisig, sign_message};
+use blvm_sdk::{GovernanceKeypair, GovernanceMessage, Multisig, sign_message};
 
 // Generate 5 keypairs for 3-of-5 multisig
 let keypairs: Vec<_> = (0..5)
@@ -445,7 +445,7 @@ assert!(verified);
 ### Module Registry Usage
 
 ```rust
-use bllvm_sdk::ModuleRegistry;
+use blvm_sdk::ModuleRegistry;
 
 // Create registry
 let mut registry = ModuleRegistry::new("modules");
@@ -467,4 +467,4 @@ let deps = registry.resolve_dependencies(&["lightning-module".to_string()])?;
 - [Module Development](../sdk/module-development.md) - Building modules that use these APIs
 - [SDK Examples](../sdk/examples.md) - More usage examples
 - [API Index](../reference/api-index.md) - Cross-reference to all APIs
-- [docs.rs/bllvm-sdk](https://docs.rs/bllvm-sdk) - Complete Rust API documentation
+- [docs.rs/blvm-sdk](https://docs.rs/blvm-sdk) - Complete Rust API documentation

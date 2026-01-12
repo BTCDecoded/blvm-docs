@@ -21,7 +21,7 @@ pub struct TransactionPackage {
 }
 ```
 
-**Code**: ```34:45:bllvm-node/src/network/package_relay.rs```
+**Code**: ```34:45:blvm-node/src/network/package_relay.rs```
 
 ### Package ID
 
@@ -41,7 +41,7 @@ pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
 }
 ```
 
-**Code**: ```107:134:bllvm-node/src/network/package_relay.rs```
+**Code**: ```107:134:blvm-node/src/network/package_relay.rs```
 
 ## Validation Rules
 
@@ -51,7 +51,7 @@ pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
 - **Maximum Weight**: 404,000 WU (~101,000 vB)
 - **Minimum Fee Rate**: Configurable (default: 1 sat/vB)
 
-**Code**: ```86:105:bllvm-node/src/network/package_relay.rs```
+**Code**: ```86:105:blvm-node/src/network/package_relay.rs```
 
 ### Ordering Requirements
 
@@ -60,7 +60,7 @@ Transactions must be ordered with parents before children:
 - Each transaction's inputs that reference in-package parents must reference earlier transactions
 - Invalid ordering results in `InvalidOrder` rejection
 
-**Code**: ```206:250:bllvm-node/src/network/package_relay.rs```
+**Code**: ```206:250:blvm-node/src/network/package_relay.rs```
 
 ### Fee Calculation
 
@@ -76,7 +76,7 @@ Fee rate is calculated as:
 fee_rate = combined_fee / combined_weight
 ```
 
-**Code**: ```142:204:bllvm-node/src/network/package_relay.rs```
+**Code**: ```142:204:blvm-node/src/network/package_relay.rs```
 
 ## Use Cases
 
@@ -110,7 +110,7 @@ Package:
   - TX2 (depends on TX1)
 ```
 
-**Code**: ```1:15:bllvm-node/src/network/package_relay.rs```
+**Code**: ```1:15:blvm-node/src/network/package_relay.rs```
 
 ## Package Manager
 
@@ -123,7 +123,7 @@ The `PackageRelay` manager handles:
 - Package acceptance/rejection
 - Package relay to peers
 
-**Code**: ```22:28:bllvm-node/src/network/package_relay.rs```
+**Code**: ```22:28:blvm-node/src/network/package_relay.rs```
 
 ### Package States
 
@@ -135,7 +135,7 @@ pub enum PackageStatus {
 }
 ```
 
-**Code**: ```58:67:bllvm-node/src/network/package_relay.rs```
+**Code**: ```58:67:blvm-node/src/network/package_relay.rs```
 
 ### Rejection Reasons
 
@@ -150,7 +150,7 @@ pub enum PackageRejectReason {
 }
 ```
 
-**Code**: ```69:84:bllvm-node/src/network/package_relay.rs```
+**Code**: ```69:84:blvm-node/src/network/package_relay.rs```
 
 ## Validation Process
 
@@ -162,7 +162,7 @@ pub enum PackageRejectReason {
 6. **Fee Rate Check**: Verify fee rate ≥ minimum
 7. **Structure Check**: Verify valid package structure
 
-**Code**: ```250:400:bllvm-node/src/network/package_relay.rs```
+**Code**: ```250:400:blvm-node/src/network/package_relay.rs```
 
 ## Network Integration
 
@@ -172,7 +172,7 @@ pub enum PackageRejectReason {
 - `PackageAccept`: Package accepted by peer
 - `PackageReject`: Package rejected with reason
 
-**Code**: ```1:200:bllvm-node/src/network/package_relay_handler.rs```
+**Code**: ```1:200:blvm-node/src/network/package_relay_handler.rs```
 
 ### Handler Integration
 
@@ -183,7 +183,7 @@ The `PackageRelayHandler` processes incoming package messages:
 - Accepts or rejects packages
 - Relays accepted packages to other peers
 
-**Code**: ```1:200:bllvm-node/src/network/package_relay_handler.rs```
+**Code**: ```1:200:blvm-node/src/network/package_relay_handler.rs```
 
 ## Configuration
 
@@ -195,7 +195,7 @@ max_package_weight = 404000  # 404k WU
 min_fee_rate = 1000  # 1 sat/vB
 ```
 
-**Code**: ```86:105:bllvm-node/src/network/package_relay.rs```
+**Code**: ```86:105:blvm-node/src/network/package_relay.rs```
 
 ## Benefits
 
@@ -215,5 +215,5 @@ The Package Relay system includes:
 - Package manager
 - Network message handling
 
-**Location**: `bllvm-node/src/network/package_relay.rs`, `bllvm-node/src/network/package_relay_handler.rs`
+**Location**: `blvm-node/src/network/package_relay.rs`, `blvm-node/src/network/package_relay_handler.rs`
 

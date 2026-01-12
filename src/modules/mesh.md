@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Commons Mesh module (`bllvm-mesh`) implements payment-gated mesh networking for bllvm-node. It implements the Commons Mesh routing protocol with fee distribution, traffic classification, and anti-monopoly protection. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Commons Mesh module (`blvm-mesh`) implements payment-gated mesh networking for blvm-node. It implements the Commons Mesh routing protocol with fee distribution, traffic classification, and anti-monopoly protection. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
@@ -17,14 +17,14 @@ The Commons Mesh module (`bllvm-mesh`) implements payment-gated mesh networking 
 ### Via Cargo
 
 ```bash
-cargo install bllvm-mesh
+cargo install blvm-mesh
 ```
 
 ### Via Module Installer
 
 ```bash
-cargo install cargo-bllvm-module
-cargo bllvm-module install bllvm-mesh
+cargo install cargo-blvm-module
+cargo blvm-module install blvm-mesh
 ```
 
 ### Manual Installation
@@ -32,7 +32,7 @@ cargo bllvm-module install bllvm-mesh
 1. Clone the repository:
    ```bash
    git clone https://github.com/BTCDecoded/blvm-mesh.git
-   cd bllvm-mesh
+   cd blvm-mesh
    ```
 
 2. Build the module:
@@ -42,8 +42,8 @@ cargo bllvm-module install bllvm-mesh
 
 3. Install to node modules directory:
    ```bash
-   mkdir -p /path/to/node/modules/bllvm-mesh/target/release
-   cp target/release/bllvm-mesh /path/to/node/modules/bllvm-mesh/target/release/
+   mkdir -p /path/to/node/modules/blvm-mesh/target/release
+   cp target/release/blvm-mesh /path/to/node/modules/blvm-mesh/target/release/
    ```
 
 ## Configuration
@@ -77,11 +77,11 @@ listen_addr = "0.0.0.0:8334"
 The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
-name = "bllvm-mesh"
+name = "blvm-mesh"
 version = "0.1.0"
 description = "Commons Mesh networking module"
 author = "Bitcoin Commons Team"
-entry_point = "bllvm-mesh"
+entry_point = "blvm-mesh"
 
 capabilities = [
     "read_blockchain",

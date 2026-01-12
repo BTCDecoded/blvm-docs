@@ -8,7 +8,7 @@ The Module IPC (Inter-Process Communication) protocol enables secure communicati
 
 ```
 ┌─────────────────────────────────────┐
-│         bllvm-node Process          │
+│         blvm-node Process          │
 │  ┌───────────────────────────────┐ │
 │  │    Module IPC Server          │ │
 │  │    (Unix Domain Socket)       │ │
@@ -39,7 +39,7 @@ Messages use length-delimited binary encoding:
 - **Length**: 4-byte little-endian integer (message size)
 - **Payload**: Binary-encoded message (bincode serialization)
 
-**Code**: ```1:56:bllvm-node/src/module/ipc/mod.rs```
+**Code**: ```1:56:blvm-node/src/module/ipc/mod.rs```
 
 ### Message Types
 
@@ -50,7 +50,7 @@ The protocol supports four message types:
 3. **Event**: Node → Module (event notifications)
 4. **Log**: Module → Node (logging)
 
-**Code**: ```16:49:bllvm-node/src/module/ipc/protocol.rs```
+**Code**: ```16:49:blvm-node/src/module/ipc/protocol.rs```
 
 ## Message Structure
 
@@ -77,7 +77,7 @@ pub struct RequestMessage {
 - `GetNetworkPeers` - Get connected peers
 - `GetChainInfo` - Get chain information
 
-**Code**: ```51:150:bllvm-node/src/module/ipc/protocol.rs```
+**Code**: ```51:150:blvm-node/src/module/ipc/protocol.rs```
 
 ### Response Message
 
@@ -93,7 +93,7 @@ pub struct ResponseMessage {
 - `Error` - Request failed with error details
 - `NotFound` - Resource not found
 
-**Code**: ```152:207:bllvm-node/src/module/ipc/protocol.rs```
+**Code**: ```152:207:blvm-node/src/module/ipc/protocol.rs```
 
 ### Event Message
 
@@ -110,7 +110,7 @@ pub struct EventMessage {
 - Chain events: `NewBlock`, `ChainTipUpdated`, `BlockDisconnected`
 - Mempool events: `MempoolTransactionAdded`, `FeeRateChanged`, `MempoolTransactionRemoved`
 
-**Code**: ```209:234:bllvm-node/src/module/ipc/protocol.rs```
+**Code**: ```209:234:blvm-node/src/module/ipc/protocol.rs```
 
 ### Log Message
 
@@ -124,7 +124,7 @@ pub struct LogMessage {
 
 **Log Levels**: `Error`, `Warn`, `Info`, `Debug`, `Trace`
 
-**Code**: ```236:250:bllvm-node/src/module/ipc/protocol.rs```
+**Code**: ```236:250:blvm-node/src/module/ipc/protocol.rs```
 
 ## Communication Flow
 
@@ -135,7 +135,7 @@ pub struct LogMessage {
 3. **Node sends Response**: Node sends response with matching correlation ID
 4. **Module receives Response**: Module matches response to request using correlation ID
 
-**Code**: ```138:200:bllvm-node/src/module/ipc/server.rs```
+**Code**: ```138:200:blvm-node/src/module/ipc/server.rs```
 
 ### Event Subscription Pattern
 
@@ -144,7 +144,7 @@ pub struct LogMessage {
 3. **Node publishes Events**: Node sends event messages as they occur
 4. **Module receives Events**: Module processes events asynchronously
 
-**Code**: ```200:300:bllvm-node/src/module/ipc/server.rs```
+**Code**: ```200:300:blvm-node/src/module/ipc/server.rs```
 
 ## Connection Management
 
@@ -160,7 +160,7 @@ pub struct HandshakeMessage {
 }
 ```
 
-**Code**: ```148:200:bllvm-node/src/module/ipc/server.rs```
+**Code**: ```148:200:blvm-node/src/module/ipc/server.rs```
 
 ### Connection Lifecycle
 
@@ -169,7 +169,7 @@ pub struct HandshakeMessage {
 3. **Active**: Connection active, ready for requests/events
 4. **Disconnect**: Connection closed (graceful or error)
 
-**Code**: ```139:200:bllvm-node/src/module/ipc/server.rs```
+**Code**: ```139:200:blvm-node/src/module/ipc/server.rs```
 
 ## Security
 
@@ -179,7 +179,7 @@ pub struct HandshakeMessage {
 - No shared memory between node and modules
 - Module crashes don't affect the base node
 
-**Code**: ```1:132:bllvm-node/src/module/process/spawner.rs```
+**Code**: ```1:132:blvm-node/src/module/process/spawner.rs```
 
 ### Permission System
 
@@ -191,7 +191,7 @@ Modules request capabilities that are validated before API access:
 - `SubscribeEvents` - Subscribe to node events
 - `SendTransactions` - Submit transactions to mempool
 
-**Code**: ```1:100:bllvm-node/src/module/security/permissions.rs```
+**Code**: ```1:100:blvm-node/src/module/security/permissions.rs```
 
 ### Sandboxing
 
@@ -202,7 +202,7 @@ Modules run in sandboxed environments with:
 - Network restrictions (modules cannot open network connections)
 - Permission-based API access
 
-**Code**: ```1:200:bllvm-node/src/module/sandbox/mod.rs```
+**Code**: ```1:200:blvm-node/src/module/sandbox/mod.rs```
 
 ## Error Handling
 
@@ -218,7 +218,7 @@ pub enum ModuleError {
 }
 ```
 
-**Code**: ```1:100:bllvm-node/src/module/traits.rs```
+**Code**: ```1:100:blvm-node/src/module/traits.rs```
 
 ### Error Recovery
 
@@ -227,7 +227,7 @@ pub enum ModuleError {
 - **Permission Errors**: Detailed error messages, request rejection
 - **Timeout Errors**: Request timeout, connection remains active
 
-**Code**: ```1:200:bllvm-node/src/module/ipc/client.rs```
+**Code**: ```1:200:blvm-node/src/module/ipc/client.rs```
 
 ## Performance
 
@@ -237,7 +237,7 @@ pub enum ModuleError {
 - **Size**: Compact binary representation
 - **Speed**: Fast serialization/deserialization
 
-**Code**: ```1:56:bllvm-node/src/module/ipc/protocol.rs```
+**Code**: ```1:56:blvm-node/src/module/ipc/protocol.rs```
 
 ### Connection Pooling
 
@@ -245,7 +245,7 @@ pub enum ModuleError {
 - **Concurrent Requests**: Multiple requests can be in-flight simultaneously
 - **Correlation IDs**: Match responses to requests asynchronously
 
-**Code**: ```1:200:bllvm-node/src/module/ipc/client.rs```
+**Code**: ```1:200:blvm-node/src/module/ipc/client.rs```
 
 ## Implementation Details
 
@@ -258,7 +258,7 @@ The node-side IPC server:
 - Routes requests to NodeAPI implementation
 - Publishes events to subscribed modules
 
-**Code**: ```1:151:bllvm-node/src/module/ipc/server.rs```
+**Code**: ```1:151:blvm-node/src/module/ipc/server.rs```
 
 ### IPC Client
 
@@ -269,7 +269,7 @@ The module-side IPC client:
 - Subscribes to events
 - Handles connection errors
 
-**Code**: ```1:200:bllvm-node/src/module/ipc/client.rs```
+**Code**: ```1:200:blvm-node/src/module/ipc/client.rs```
 
 ## See Also
 

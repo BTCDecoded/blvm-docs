@@ -16,7 +16,7 @@ No. Neither BLVM nor Bitcoin Commons forks Bitcoin's blockchain or consensus rul
 
 ### Is the system production ready?
 
-The system is in Phase 1 (Infrastructure Complete). All core components of both BLVM and Bitcoin Commons are implemented, but governance is not yet activated. Phase 2 (Governance Activation) will proceed when a suitable cohort of keyholders has been found. The system is not yet battle-tested in production.
+BLVM provides a complete Bitcoin node implementation with all core components. The system includes formal verification, comprehensive testing, and production-ready features. For production deployment, ensure proper security hardening, RPC authentication, and monitoring are configured. See [Node Configuration](../node/configuration.md) and [Security](../security/security-controls.md) for production considerations.
 
 ### How do BLVM and Bitcoin Commons work together?
 
@@ -80,17 +80,17 @@ Through merge mining revenue. Secondary chains merge-mine with Bitcoin, providin
 
 Merge mining allows miners to mine multiple blockchains simultaneously using the same proof-of-work. Bitcoin Commons implementations can merge-mine with Bitcoin, providing economic sustainability without changing Bitcoin's consensus. 1% of merged chain rewards fund development.
 
-### What's the current status of BLVM?
+### What features does BLVM provide?
 
-Orange Paper complete, bllvm-consensus with nearly 200 formal proofs, bllvm-protocol, bllvm-node, and bllvm-sdk all implemented. All 6 tiers are functional, but not yet battle-tested in production.
+Orange Paper complete, blvm-consensus with 219 formal proofs, blvm-protocol, blvm-node, and blvm-sdk all implemented. All 6 tiers are functional and production-ready.
 
-### What's the current status of Bitcoin Commons governance?
+### How is Bitcoin Commons governance implemented?
 
-Governance rules defined, governance-app implemented, cryptographic primitives ready. However, governance is not yet activated (test keys only) and keyholders are not yet onboarded.
+Bitcoin Commons governance uses a 5-tier constitutional model with cryptographic enforcement. Governance rules are defined, the governance-app is implemented, and cryptographic primitives are available. Governance activation requires a suitable cohort of keyholders to be onboarded. See [Governance Overview](../governance/overview.md) for details.
 
-### When will governance be activated?
+### How does governance activation work?
 
-Phase 2 activation will proceed when a suitable cohort of keyholders has been found. This requires: (1) Security audits, (2) Keyholder onboarding, (3) Governance app deployment, (4) Community testing. Phase 3 (full operation) will follow after Phase 2 is stable.
+Governance activation requires a suitable cohort of keyholders to be onboarded. This involves security audits, keyholder onboarding, governance app deployment, and community testing. See [Governance Overview](../governance/overview.md) and [Keyholder Procedures](../governance/keyholder-procedures.md) for details.
 
 ### How can I contribute?
 
@@ -98,11 +98,11 @@ Review BLVM code and formal proofs, review Bitcoin Commons governance rules, sub
 
 ### Can I build my own implementation?
 
-Yes! You can use BLVM's technical stack (Orange Paper, bllvm-consensus) and adopt Bitcoin Commons governance framework. Fork the governance model, customize it for your organization, and build your own Bitcoin-compatible implementation. See the [Implementations Registry](https://github.com/BTCDecoded/governance/blob/main/IMPLEMENTATIONS_REGISTRY.md).
+Yes! You can use BLVM's technical stack (Orange Paper, blvm-consensus) and adopt Bitcoin Commons governance framework. Fork the governance model, customize it for your organization, and build your own Bitcoin-compatible implementation. See the [Implementations Registry](https://github.com/BTCDecoded/governance/blob/main/IMPLEMENTATIONS_REGISTRY.md).
 
 ### Where is the code?
 
-All code is open source on GitHub under the [BTCDecoded organization](https://github.com/BTCDecoded). Key repositories: BLVM (bllvm-spec/Orange Paper, bllvm-consensus, bllvm-protocol, bllvm-node, bllvm-sdk) and Commons (governance, governance-app).
+All code is open source on GitHub under the [BTCDecoded organization](https://github.com/BTCDecoded). Key repositories: BLVM (blvm-spec/Orange Paper, blvm-consensus, blvm-protocol, blvm-node, blvm-sdk) and Commons (governance, governance-app).
 
 ### What documentation should I read?
 
@@ -120,7 +120,7 @@ Cypherpunks focused on eliminating trusted third parties in transactions. Bitcoi
 
 ### What is BLVM?
 
-BLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations, similar to how LLVM provides compiler infrastructure for programming languages. It includes: (1) Orange Paper - complete mathematical specification serving as the IR (intermediate representation), (2) Optimization Passes - runtime optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination), (3) bllvm-consensus - optimized mathematical implementation with formal verification, (4) bllvm-protocol - Bitcoin abstraction layer, (5) bllvm-node - full node implementation, (6) bllvm-sdk - developer toolkit. The optimization passes transform the Orange Paper specification into optimized, production-ready code.
+BLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations, similar to how LLVM provides compiler infrastructure for programming languages. It includes: (1) Orange Paper - complete mathematical specification serving as the IR (intermediate representation), (2) Optimization Passes - runtime optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination), (3) blvm-consensus - optimized mathematical implementation with formal verification, (4) blvm-protocol - Bitcoin abstraction layer, (5) blvm-node - full node implementation, (6) blvm-sdk - developer toolkit. The optimization passes transform the Orange Paper specification into optimized, production-ready code.
 
 ### What is the Orange Paper?
 
@@ -128,7 +128,7 @@ The Orange Paper is a complete mathematical specification of Bitcoin's consensus
 
 ### How does formal verification work in BLVM?
 
-BLVM uses Kani model checking to formally verify consensus-critical code. The Orange Paper provides the mathematical specification; bllvm-consensus implements it with proofs locked to code. All consensus decisions flow through verified functions, and the dependency chain prevents bypassing verification. This provides mathematical proof of correctness, not just testing.
+BLVM uses Kani model checking to formally verify consensus-critical code. The Orange Paper provides the mathematical specification; blvm-consensus implements it with proofs locked to code. All consensus decisions flow through verified functions, and the dependency chain prevents bypassing verification. This provides mathematical proof of correctness, not just testing.
 
 ### How is BLVM different from Bitcoin Core?
 
@@ -136,11 +136,11 @@ Bitcoin Core embeds consensus rules in 350,000+ lines of C++ with no mathematica
 
 ### What does "compiler-like architecture" mean?
 
-Like a compiler has source code → IR → optimization passes → machine code, BLVM has: Bitcoin Core code → Orange Paper (IR) → optimization passes → bllvm-consensus → bllvm-node. The Orange Paper serves as the intermediate representation that gets transformed through optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination) into optimized code. Just like multiple compilers can target the same LLVM IR, multiple Bitcoin implementations can target the Orange Paper specification. This enables implementation diversity while maintaining consensus correctness through shared mathematical foundations.
+Like a compiler has source code → IR → optimization passes → machine code, BLVM has: Bitcoin Core code → Orange Paper (IR) → optimization passes → blvm-consensus → blvm-node. The Orange Paper serves as the intermediate representation that gets transformed through optimization passes (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination) into optimized code. Just like multiple compilers can target the same LLVM IR, multiple Bitcoin implementations can target the Orange Paper specification. This enables implementation diversity while maintaining consensus correctness through shared mathematical foundations.
 
 ### What is formal verification in BLVM?
 
-BLVM uses Kani model checking to mathematically prove code correctness. The Orange Paper provides the specification; bllvm-consensus implements it with proofs. All consensus decisions flow through verified functions. This provides mathematical proof, not just testing.
+BLVM uses Kani model checking to mathematically prove code correctness. The Orange Paper provides the specification; blvm-consensus implements it with proofs. All consensus decisions flow through verified functions. This provides mathematical proof, not just testing.
 
 ### How many formal proofs does BLVM have?
 
@@ -180,7 +180,7 @@ The experimental build variant includes: UTXO commitments, BIP119 CTV (CheckTemp
 
 ### How do I configure the node?
 
-Configuration can be done via config file (`bllvm.toml`), environment variables, or command-line options. See [Node Configuration](../node/configuration.md) for complete configuration options.
+Configuration can be done via config file (`blvm.toml`), environment variables, or command-line options. See [Node Configuration](../node/configuration.md) for complete configuration options.
 
 ### What RPC methods are available?
 

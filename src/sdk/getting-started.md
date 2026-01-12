@@ -1,13 +1,13 @@
 # SDK Getting Started
 
-The developer SDK (`bllvm-sdk`) provides governance infrastructure and cryptographic primitives for Bitcoin governance operations.
+The developer SDK (`blvm-sdk`) provides governance infrastructure and cryptographic primitives for Bitcoin governance operations.
 
 ## Quick Start
 
 ### As a Library
 
 ```rust
-use bllvm_sdk::governance::{
+use blvm_sdk::governance::{
     GovernanceKeypair, GovernanceMessage, Multisig
 };
 
@@ -32,17 +32,17 @@ let valid = multisig.verify(&message.to_signing_bytes(), &[signature])?;
 
 ```bash
 # Generate a keypair
-bllvm-keygen --output alice.key --format pem
+blvm-keygen --output alice.key --format pem
 
 # Sign a release
-bllvm-sign release \
+blvm-sign release \
   --version v1.0.0 \
   --commit abc123 \
   --key alice.key \
   --output signature.txt
 
 # Verify signatures
-bllvm-verify release \
+blvm-verify release \
   --version v1.0.0 \
   --commit abc123 \
   --signatures sig1.txt,sig2.txt,sig3.txt,sig4.txt,sig5.txt,sig6.txt \
@@ -50,7 +50,7 @@ bllvm-verify release \
   --pubkeys keys.json
 ```
 
-For more details, see the [bllvm-sdk README](../../modules/bllvm-sdk/README.md).
+For more details, see the [blvm-sdk README](../../modules/blvm-sdk/README.md).
 
 ## See Also
 

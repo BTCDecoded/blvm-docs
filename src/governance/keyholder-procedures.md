@@ -14,7 +14,7 @@ Maintainers are responsible for:
 ## Signing Process
 
 1. **Review PR**: Understand the change and its impact
-2. **Generate Signature**: Use `bllvm-sign` from bllvm-sdk
+2. **Generate Signature**: Use `blvm-sign` from blvm-sdk
 3. **Post Signature**: Comment `/governance-sign <signature>` on PR
 4. **Governance App Verifies**: Cryptographically verifies signature
 5. **Status Check Updates**: Shows signature count progress
@@ -24,7 +24,7 @@ Maintainers are responsible for:
 ### Key Generation
 
 ```bash
-bllvm-keygen --output maintainer.key --format pem
+blvm-keygen --output maintainer.key --format pem
 ```
 
 ### Key Storage

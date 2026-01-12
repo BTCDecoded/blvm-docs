@@ -1,6 +1,6 @@
 # Protocol Layer Overview
 
-The protocol layer (`bllvm-protocol`) abstracts Bitcoin protocol for multiple variants and protocol evolution. It sits between the pure mathematical consensus rules ([bllvm-consensus](../consensus/overview.md)) and the Bitcoin node implementation ([bllvm-node](../node/overview.md)), supporting mainnet, testnet, regtest, and future protocol variants.
+The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple variants and protocol evolution. It sits between the pure mathematical consensus rules ([blvm-consensus](../consensus/overview.md)) and the Bitcoin node implementation ([blvm-node](../node/overview.md)), supporting mainnet, testnet, regtest, and future protocol variants.
 
 ## Architecture Position
 
@@ -8,11 +8,11 @@ Tier 3 of the 6-tier Bitcoin Commons architecture:
 
 ```
 1. Orange Paper (mathematical foundation)
-2. bllvm-consensus (pure math implementation)
-3. bllvm-protocol (Bitcoin abstraction) ← THIS LAYER
-4. bllvm-node (full node implementation)
-5. bllvm-sdk (developer toolkit)
-6. bllvm-commons (governance enforcement)
+2. blvm-consensus (pure math implementation)
+3. blvm-protocol (Bitcoin abstraction) ← THIS LAYER
+4. blvm-node (full node implementation)
+5. blvm-sdk (developer toolkit)
+6. blvm-commons (governance enforcement)
 ```
 
 ## Protocol Variants
@@ -35,7 +35,7 @@ Each variant has specific network parameters:
 - **Halving Intervals**: Block subsidy halving schedule (210,000 blocks)
 - **Feature Activation**: [SegWit](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki), [Taproot](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki) activation heights
 
-**Code**: ```1:100:bllvm-protocol/src/network_params.rs```
+**Code**: ```1:100:blvm-protocol/src/network_params.rs```
 
 ## Core Components
 
@@ -57,7 +57,7 @@ pub struct BitcoinProtocolEngine {
 - Feature flag management
 - Validation rule enforcement
 
-**Code**: ```1:200:bllvm-protocol/src/lib.rs```
+**Code**: ```1:200:blvm-protocol/src/lib.rs```
 
 ### Network Messages
 
@@ -77,12 +77,22 @@ Supports Bitcoin P2P protocol messages:
 - `CmpctBlock` - Compact block transmission
 - `GetBlockTxn`, `BlockTxn` - Transaction reconstruction
 
+**FIBRE Protocol**:
+- `FIBREPacket` - High-performance relay protocol
+- Packet format and serialization
+- Performance optimizations
+
+**Governance Messages**:
+- Economic node governance messages via P2P protocol
+- Message format and routing
+- Integration with governance system
+
 **Commons Extensions**:
 - `GetUTXOSet`, `UTXOSet` - [UTXO commitment protocol](../consensus/utxo-commitments.md)
 - `GetFilteredBlock`, `FilteredBlock` - Spam-filtered blocks
 - `GetBanList`, `BanList` - Distributed ban list sharing
 
-**Code**: ```1:500:bllvm-protocol/src/network/messages.rs```
+**Code**: ```1:500:blvm-protocol/src/network/messages.rs```
 
 ### Service Flags
 
@@ -101,7 +111,7 @@ Service flags indicate node capabilities:
 - `NODE_DANDELION` - Dandelion++ privacy relay
 - `NODE_PACKAGE_RELAY` - BIP331 package relay
 
-**Code**: ```1:200:bllvm-protocol/src/service_flags/mod.rs```
+**Code**: ```1:200:blvm-protocol/src/service_flags/mod.rs```
 
 ### Validation Rules
 
@@ -112,7 +122,7 @@ Protocol-specific validation rules:
 - **Fee Rules**: Minimum and maximum fee rates
 - **DoS Protection**: Message size limits, address count limits
 
-**Code**: ```1:300:bllvm-protocol/src/validation/mod.rs```
+**Code**: ```1:300:blvm-protocol/src/validation/mod.rs```
 
 ## Commons-Specific Extensions
 
@@ -123,7 +133,7 @@ Protocol messages for [UTXO set synchronization](../consensus/utxo-commitments.m
 - `GetUTXOSet` - Request UTXO set at specific height
 - `UTXOSet` - UTXO set response with merkle proof
 
-**Code**: ```1:200:bllvm-protocol/src/commons/utxo_commitments.rs```
+**Code**: ```1:200:blvm-protocol/src/commons/utxo_commitments.rs```
 
 ### Filtered Blocks
 
@@ -132,7 +142,7 @@ Spam-filtered block relay for efficient syncing:
 - `GetFilteredBlock` - Request filtered block
 - `FilteredBlock` - Filtered block with spam transactions removed
 
-**Code**: ```1:200:bllvm-protocol/src/commons/filtered_blocks.rs```
+**Code**: ```1:200:blvm-protocol/src/commons/filtered_blocks.rs```
 
 ### Ban List Sharing
 
@@ -141,7 +151,7 @@ Distributed ban list management:
 - `GetBanList` - Request ban list
 - `BanList` - Ban list response with signatures
 
-**Code**: ```1:200:bllvm-protocol/src/commons/ban_list.rs```
+**Code**: ```1:200:blvm-protocol/src/commons/ban_list.rs```
 
 ## BIP Support
 
@@ -153,7 +163,7 @@ Implemented Bitcoin Improvement Proposals:
 - **BIP173/350/351**: Bech32/Bech32m Address Encoding
 - **BIP70**: Payment Protocol
 
-**Code**: ```1:200:bllvm-protocol/src/bip157/mod.rs```
+**Code**: ```1:200:blvm-protocol/src/bip157/mod.rs```
 
 ## Protocol Evolution
 
@@ -167,7 +177,7 @@ The protocol layer supports protocol evolution:
 ## Usage Example
 
 ```rust
-use bllvm_protocol::{BitcoinProtocolEngine, ProtocolVersion};
+use blvm_protocol::{BitcoinProtocolEngine, ProtocolVersion};
 
 // Create a mainnet protocol engine
 let engine = BitcoinProtocolEngine::new(ProtocolVersion::BitcoinV1)?;

@@ -2,7 +2,7 @@
 
 Migration guides for upgrading between BLVM versions are documented here.
 
-**Current Status**: No migration guides available yet. The system is in Phase 1 (Infrastructure Building) and has not yet reached production release status requiring migration documentation.
+Migration guides are provided as needed for version upgrades. When available, they cover configuration changes, database migrations, API compatibility, and upgrade procedures.
 
 When migration guides are needed, they will cover:
 - Configuration changes between versions

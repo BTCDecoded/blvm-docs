@@ -13,7 +13,7 @@ Snapshot testing serves to:
 - **Document Behavior**: Snapshots serve as documentation of expected behavior
 - **Review Changes**: Interactive review of snapshot changes
 
-**Code**: ```1:5:bllvm-commons/tests/snapshot/mod.rs```
+**Code**: ```1:5:blvm-commons/tests/snapshot/mod.rs```
 
 ## Architecture
 
@@ -26,7 +26,7 @@ Bitcoin Commons uses `insta` for snapshot testing:
 - **Interactive Review**: Review changes before accepting
 - **Format Support**: Text, JSON, YAML, and custom formats
 
-**Code**: ```98:129:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```98:129:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ## Usage
 
@@ -42,7 +42,7 @@ fn test_example() {
 }
 ```
 
-**Code**: ```100:110:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```100:110:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ### Snapshot Examples
 
@@ -59,7 +59,7 @@ fn test_content_hash_snapshot() {
 }
 ```
 
-**Code**: ```10:18:bllvm-commons/tests/snapshot/validation_snapshot_tests.rs```
+**Code**: ```10:18:blvm-commons/tests/snapshot/validation_snapshot_tests.rs```
 
 #### Directory Hash Snapshot
 
@@ -84,7 +84,7 @@ fn test_directory_hash_snapshot() {
 }
 ```
 
-**Code**: ```19:37:bllvm-commons/tests/snapshot/validation_snapshot_tests.rs```
+**Code**: ```19:37:blvm-commons/tests/snapshot/validation_snapshot_tests.rs```
 
 #### Version Format Snapshot
 
@@ -102,7 +102,7 @@ fn test_version_format_snapshot() {
 }
 ```
 
-**Code**: ```39:49:bllvm-commons/tests/snapshot/validation_snapshot_tests.rs```
+**Code**: ```39:49:blvm-commons/tests/snapshot/validation_snapshot_tests.rs```
 
 ## Running Snapshot Tests
 
@@ -118,7 +118,7 @@ Or using Makefile:
 make test-snapshot
 ```
 
-**Code**: ```44:48:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```44:48:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ## Updating Snapshots
 
@@ -135,7 +135,7 @@ This opens an interactive review where you can:
 - Reject changes
 - See diffs
 
-**Code**: ```112:123:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```112:123:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ### Update Command
 
@@ -143,7 +143,7 @@ This opens an interactive review where you can:
 make update-snapshots
 ```
 
-**Code**: ```47:47:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```47:47:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ## Snapshot Files
 
@@ -153,7 +153,7 @@ make update-snapshots
 - **Format**: `.snap` files
 - **Version Controlled**: Yes
 
-**Code**: ```124:129:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```124:129:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ### File Structure
 
@@ -177,7 +177,7 @@ tests/snapshots/
 - Review snapshot changes in PRs
 - Don't ignore snapshot files
 
-**Code**: ```203:206:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```203:206:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ### 2. Review Changes
 
@@ -185,7 +185,7 @@ tests/snapshots/
 - Understand why snapshots changed
 - Verify changes are expected
 
-**Code**: ```159:165:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```159:165:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ### 3. Use Descriptive Names
 
@@ -209,7 +209,7 @@ If snapshots fail unexpectedly:
 2. If changes are expected, accept them
 3. If changes are unexpected, investigate
 
-**Code**: ```159:165:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```159:165:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ### Snapshot Not Found
 
@@ -236,7 +236,7 @@ Snapshot tests run in CI:
 make test-snapshot
 ```
 
-**Code**: ```144:155:bllvm-commons/docs/testing/TESTING_SETUP.md```
+**Code**: ```144:155:blvm-commons/docs/testing/TESTING_SETUP.md```
 
 ## Configuration
 
@@ -249,7 +249,7 @@ Configuration file: `.insta.yml`
 snapshot_path: tests/snapshots
 ```
 
-**Code**: ```1:15:bllvm-commons/.insta.yml```
+**Code**: ```1:15:blvm-commons/.insta.yml```
 
 ## Test Suites
 
@@ -262,7 +262,7 @@ Tests for validation functions:
 - Version format generation
 - Version parsing
 
-**Code**: ```1:53:bllvm-commons/tests/snapshot/validation_snapshot_tests.rs```
+**Code**: ```1:53:blvm-commons/tests/snapshot/validation_snapshot_tests.rs```
 
 ### GitHub Snapshots
 
@@ -272,7 +272,7 @@ Tests for GitHub integration:
 - Status check formatting
 - Webhook processing
 
-**Code**: ```1:51:bllvm-commons/tests/snapshot/github_snapshot_tests.rs```
+**Code**: ```1:51:blvm-commons/tests/snapshot/github_snapshot_tests.rs```
 
 ## See Also
 
@@ -298,5 +298,5 @@ The snapshot testing system includes:
 - Interactive review tools
 - CI integration
 
-**Location**: `bllvm-commons/tests/snapshot/`, `bllvm-commons/docs/testing/TESTING_SETUP.md`
+**Location**: `blvm-commons/tests/snapshot/`, `blvm-commons/docs/testing/TESTING_SETUP.md`
 

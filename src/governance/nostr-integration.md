@@ -23,7 +23,7 @@ The system uses multiple bot identities for different purposes:
 - **research**: Educational content (optional)
 - **network**: Network metrics and statistics (optional)
 
-**Code**: ```1:60:bllvm-commons/src/nostr/bot_manager.rs```
+**Code**: ```1:60:blvm-commons/src/nostr/bot_manager.rs```
 
 ### Bot Configuration
 
@@ -39,7 +39,7 @@ about = "Bitcoin Commons Governance Bot"
 picture = "https://bitcoincommons.org/logo.png"
 ```
 
-**Code**: ```38:51:bllvm-commons/src/config.rs```
+**Code**: ```38:51:blvm-commons/src/config.rs```
 
 ## Nostr Client
 
@@ -52,7 +52,7 @@ The `NostrClient` manages connections to multiple Nostr relays:
 - **Error Handling**: Handles relay failures gracefully
 - **Retry Logic**: Automatic retry for failed publishes
 
-**Code**: ```1:200:bllvm-commons/src/nostr/client.rs```
+**Code**: ```1:200:blvm-commons/src/nostr/client.rs```
 
 ### Relay Management
 
@@ -61,7 +61,7 @@ let client = NostrClient::new(nsec, relay_urls).await?;
 client.publish_event(event).await?;
 ```
 
-**Code**: ```24:52:bllvm-commons/src/nostr/client.rs```
+**Code**: ```24:52:blvm-commons/src/nostr/client.rs```
 
 ## Event Types
 
@@ -73,7 +73,7 @@ Published hourly by each authorized server:
 - Audit log status
 - Tagged with `d:governance-status`
 
-**Code**: ```1:200:bllvm-commons/src/nostr/events.rs```
+**Code**: ```1:200:blvm-commons/src/nostr/events.rs```
 
 ### Server Health Events (Kind 30079)
 
@@ -83,7 +83,7 @@ Published when server status changes:
 - Operational status
 - Tagged with `d:server-health`
 
-**Code**: ```1:200:bllvm-commons/src/nostr/events.rs```
+**Code**: ```1:200:blvm-commons/src/nostr/events.rs```
 
 ### Audit Log Head Events (Kind 30080)
 
@@ -92,7 +92,7 @@ Published when audit log head changes:
 - Entry count
 - Tagged with `d:audit-head`
 
-**Code**: ```1:200:bllvm-commons/src/nostr/events.rs```
+**Code**: ```1:200:blvm-commons/src/nostr/events.rs```
 
 ### Governance Action Events
 
@@ -102,7 +102,7 @@ Published for governance actions:
 - Keyholder announcements
 - Economic node registrations
 
-**Code**: ```1:200:bllvm-commons/src/nostr/governance_publisher.rs```
+**Code**: ```1:200:blvm-commons/src/nostr/governance_publisher.rs```
 
 ## Governance Publisher
 
@@ -115,7 +115,7 @@ The `StatusPublisher` publishes governance status:
 - **Multi-Relay**: Published to multiple relays
 - **Error Recovery**: Handles relay failures
 
-**Code**: ```1:200:bllvm-commons/src/nostr/publisher.rs```
+**Code**: ```1:200:blvm-commons/src/nostr/publisher.rs```
 
 ### Action Publishing
 
@@ -126,7 +126,7 @@ The `GovernanceActionPublisher` publishes governance actions:
 - **Economic Node Events**: Registration and veto events
 - **Fork Events**: Governance fork decisions
 
-**Code**: ```1:200:bllvm-commons/src/nostr/governance_publisher.rs```
+**Code**: ```1:200:blvm-commons/src/nostr/governance_publisher.rs```
 
 ## Zap Tracking
 
@@ -139,7 +139,7 @@ Zaps are tracked for contribution-based voting:
 - **Vote Conversion**: Converts zaps to votes
 - **Real-Time Processing**: Processes zaps as received
 
-**Code**: ```1:281:bllvm-commons/src/nostr/zap_tracker.rs```
+**Code**: ```1:281:blvm-commons/src/nostr/zap_tracker.rs```
 
 ### Zap-to-Vote
 
@@ -150,7 +150,7 @@ Zaps to governance events become votes:
 - **Vote Type**: Extracted from zap message
 - **Database Storage**: Stored in proposal_zap_votes table
 
-**Code**: ```1:293:bllvm-commons/src/nostr/zap_voting.rs```
+**Code**: ```1:293:blvm-commons/src/nostr/zap_voting.rs```
 
 ## Configuration
 
@@ -170,7 +170,7 @@ npub = "npub1..."
 lightning_address = "gov@bitcoincommons.org"
 ```
 
-**Code**: ```25:51:bllvm-commons/src/config.rs```
+**Code**: ```25:51:blvm-commons/src/config.rs```
 
 ## Real-Time Transparency
 
@@ -210,5 +210,5 @@ The Nostr integration includes:
 - Status publisher
 - Zap tracker and voting processor
 
-**Location**: `bllvm-commons/src/nostr/`
+**Location**: `blvm-commons/src/nostr/`
 

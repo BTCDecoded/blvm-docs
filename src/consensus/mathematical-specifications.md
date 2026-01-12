@@ -13,7 +13,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - **Invariants**: Properties that must always hold
 - **Constraints**: Bounds and limits
 
-**Code**: ```26:54:bllvm-consensus/docs/VERIFICATION.md```
+**Code**: ```26:54:blvm-consensus/docs/VERIFICATION.md```
 
 ## Core Specifications
 
@@ -35,7 +35,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - `calculate_chain_work`: Verifies cumulative work calculation
 - `expand_target`: Handles difficulty target edge cases
 
-**Code**: ```28:45:bllvm-consensus/docs/VERIFICATION.md```
+**Code**: ```28:45:blvm-consensus/docs/VERIFICATION.md```
 
 ### Block Subsidy
 
@@ -50,7 +50,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - Subsidy decreases monotonically
 - Total supply converges to 21 million BTC
 
-**Code**: ```46:54:bllvm-consensus/docs/VERIFICATION.md```
+**Code**: ```46:54:blvm-consensus/docs/VERIFICATION.md```
 
 ### Total Supply
 
@@ -64,7 +64,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - Total supply is bounded (≤ 21 * 10^6 * 10^8 satoshis)
 - Total supply converges to 21 million BTC
 
-**Code**: ```89:94:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: ```89:94:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ### Difficulty Adjustment
 
@@ -79,7 +79,7 @@ timespan_clamped = clamp(timespan, expected/4, expected*4)
 - Timespan is clamped to [expected/4, expected*4]
 - Difficulty adjustment is deterministic
 
-**Code**: ```236:246:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```236:246:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ### Consensus Threshold
 
@@ -94,7 +94,7 @@ consensus_met ⟺ agreement_count >= required_agreement_count
 - `agreement_count >= required` ⟺ `ratio >= threshold`
 - Integer comparison is deterministic
 
-**Code**: ```102:108:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```102:108:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ### Median Calculation
 
@@ -111,7 +111,7 @@ median(tips) = {
 - Median is deterministic
 - Checkpoint = max(0, median - safety_margin)
 
-**Code**: ```114:124:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```114:124:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ## Specification Coverage
 
@@ -129,7 +129,7 @@ median(tips) = {
 - Consensus threshold (`find_consensus`)
 - Median calculation (`determine_checkpoint_height`)
 
-**Code**: ```172:175:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: ```172:175:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ## Mathematical Protections
 
@@ -145,7 +145,7 @@ if agreement_count >= required_agreement_count {
 }
 ```
 
-**Code**: ```9:31:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```9:31:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ### Runtime Assertions
 
@@ -156,7 +156,7 @@ Runtime assertions verify mathematical invariants:
 - Median calculation bounds
 - Checkpoint bounds
 
-**Code**: ```32:53:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```32:53:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ### Checked Arithmetic
 
@@ -174,7 +174,7 @@ let median_tip = if sorted_tips.len() % 2 == 0 {
 };
 ```
 
-**Code**: ```80:96:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```80:96:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ## Formal Verification
 
@@ -187,7 +187,7 @@ Kani proofs verify mathematical specifications:
 - **Consensus Result**: Verifies consensus result invariants
 - **Economic Rules**: Verifies subsidy and supply calculations
 
-**Code**: ```54:79:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```54:79:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ### Property-Based Tests
 
@@ -198,7 +198,7 @@ Property-based tests verify invariants:
 - Discover edge cases
 - Test mathematical correctness
 
-**Code**: ```169:172:bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
+**Code**: ```169:172:blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md```
 
 ## Documentation
 
@@ -211,7 +211,7 @@ Mathematical specifications are documented in:
 - **MATHEMATICAL_PROTECTIONS.md**: Protection mechanisms
 - **PROTECTION_COVERAGE.md**: Coverage statistics
 
-**Code**: ```1:20:bllvm-consensus/docs/README.md```
+**Code**: ```1:20:blvm-consensus/docs/README.md```
 
 ## Components
 
@@ -224,7 +224,7 @@ The mathematical specifications system includes:
 - Kani proofs (formal verification)
 - Property-based tests (invariant verification)
 
-**Location**: `bllvm-consensus/docs/VERIFICATION.md`, `bllvm-consensus/docs/MATHEMATICAL_SPECIFICATIONS_COMPLETE.md`, `bllvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md`
+**Location**: `blvm-consensus/docs/VERIFICATION.md`, `blvm-consensus/docs/MATHEMATICAL_SPECIFICATIONS_COMPLETE.md`, `blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md`
 
 ## See Also
 

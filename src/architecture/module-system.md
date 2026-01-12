@@ -6,7 +6,7 @@ The module system supports optional features ([Lightning Network](../modules/lig
 
 ## Available Modules
 
-The following modules are available for bllvm-node:
+The following modules are available for blvm-node:
 
 - **[Lightning Network Module](../modules/lightning.md)** - Lightning Network payment processing, invoice verification, payment routing, and channel management
 - **[Commons Mesh Module](../modules/mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection
@@ -21,34 +21,48 @@ For detailed documentation on each module, see the [Modules](../modules/overview
 
 Each module runs in a separate process with isolated memory. The base node consensus state is protected and read-only to modules.
 
-```
-┌─────────────────────────────────────┐
-│         bllvm-node Process          │
-│  ┌───────────────────────────────┐ │
-│  │    Consensus State             │ │
-│  │    (Protected, Read-Only)      │ │
-│  └───────────────────────────────┘ │
-│  ┌───────────────────────────────┐ │
-│  │    Module Manager             │ │
-│  │    (Orchestration)            │ │
-│  └───────────────────────────────┘ │
-└─────────────────────────────────────┘
-              │ IPC (Unix Sockets)
-              │
-┌─────────────┴─────────────────────┐
-│      Module Process (Isolated)     │
-│  ┌───────────────────────────────┐ │
-│  │    Module State               │ │
-│  │    (Separate Memory Space)    │ │
-│  └───────────────────────────────┘ │
-│  ┌───────────────────────────────┐ │
-│  │    Sandbox                    │ │
-│  │    (Resource Limits)          │ │
-│  └───────────────────────────────┘ │
-└─────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph "blvm-node Process"
+        CS[Consensus State<br/>Protected, Read-Only]
+        MM[Module Manager<br/>Orchestration]
+        NM[Network Manager]
+        SM[Storage Manager]
+        RM[RPC Manager]
+    end
+    
+    subgraph "Module Process 1<br/>blvm-lightning"
+        LS[Lightning State<br/>Isolated Memory]
+        SB1[Sandbox<br/>Resource Limits]
+    end
+    
+    subgraph "Module Process 2<br/>blvm-mesh"
+        MS[Mesh State<br/>Isolated Memory]
+        SB2[Sandbox<br/>Resource Limits]
+    end
+    
+    subgraph "Module Process 3<br/>blvm-governance"
+        GS[Governance State<br/>Isolated Memory]
+        SB3[Sandbox<br/>Resource Limits]
+    end
+    
+    MM -->|IPC Unix Sockets| LS
+    MM -->|IPC Unix Sockets| MS
+    MM -->|IPC Unix Sockets| GS
+    
+    CS -.->|Read-Only Access| MM
+    NM --> MM
+    SM --> MM
+    RM --> MM
+    
+    style CS fill:#fbb,stroke:#333,stroke-width:3px
+    style MM fill:#bbf,stroke:#333,stroke-width:2px
+    style LS fill:#bfb,stroke:#333,stroke-width:2px
+    style MS fill:#bfb,stroke:#333,stroke-width:2px
+    style GS fill:#bfb,stroke:#333,stroke-width:2px
 ```
 
-**Code**: ```1:37:bllvm-node/src/module/mod.rs```
+**Code**: ```1:37:blvm-node/src/module/mod.rs```
 
 ## Core Components
 
@@ -64,7 +78,7 @@ Orchestrates all modules, handling lifecycle, runtime loading/unloading/reloadin
 - Dependency resolution
 - Registry integration
 
-**Code**: ```1:520:bllvm-node/src/module/manager.rs```
+**Code**: ```1:520:blvm-node/src/module/manager.rs```
 
 ### Process Isolation
 
@@ -75,7 +89,7 @@ Modules run in separate processes via `ModuleProcessSpawner`:
 - Resource limits enforced
 - Crash containment
 
-**Code**: ```1:132:bllvm-node/src/module/process/spawner.rs```
+**Code**: ```1:132:blvm-node/src/module/process/spawner.rs```
 
 ### IPC Communication
 
@@ -86,7 +100,7 @@ Modules communicate with the base node via Unix domain sockets (Unix) or named p
 - Correlation IDs for async operations
 - Type-safe message serialization
 
-**Code**: ```1:234:bllvm-node/src/module/ipc/protocol.rs```
+**Code**: ```1:234:blvm-node/src/module/ipc/protocol.rs```
 
 ### Security Sandbox
 
@@ -97,7 +111,7 @@ Modules run in sandboxed environments with:
 - Network restrictions
 - Permission-based API access
 
-**Code**: ```1:60:bllvm-node/src/module/sandbox/network.rs```
+**Code**: ```1:60:blvm-node/src/module/sandbox/network.rs```
 
 ### Permission System
 
@@ -109,7 +123,7 @@ Modules request capabilities that are validated before API access:
 - `SubscribeEvents` - Subscribe to node events
 - `SendTransactions` - Submit transactions to mempool
 
-**Code**: ```1:184:bllvm-node/src/module/security/permissions.rs```
+**Code**: ```1:184:blvm-node/src/module/security/permissions.rs```
 
 ## Module Lifecycle
 
@@ -128,7 +142,7 @@ Modules discovered through:
 - Module registry (REST API)
 - Manual installation
 
-**Code**: ```1:200:bllvm-node/src/module/registry/discovery.rs```
+**Code**: ```1:200:blvm-node/src/module/registry/discovery.rs```
 
 ### Verification
 
@@ -138,7 +152,7 @@ Each module verified through:
 - Permission checking (capability validation)
 - Compatibility checking (version requirements)
 
-**Code**: ```1:200:bllvm-node/src/module/validation/manifest_validator.rs```
+**Code**: ```1:200:blvm-node/src/module/validation/manifest_validator.rs```
 
 ### Loading
 
@@ -147,7 +161,7 @@ Module loaded into isolated process:
 - IPC connection establishment
 - API subscription setup
 
-**Code**: ```159:235:bllvm-node/src/module/manager.rs```
+**Code**: ```159:235:blvm-node/src/module/manager.rs```
 
 ### Execution
 
@@ -165,7 +179,7 @@ Module health monitored:
 - Error tracking
 - Crash isolation
 
-**Code**: ```1:100:bllvm-node/src/module/process/monitor.rs```
+**Code**: ```1:100:blvm-node/src/module/process/monitor.rs```
 
 ## Security Model
 
@@ -184,7 +198,7 @@ Modules cannot:
 
 Module crashes are isolated and do not affect the base node. The `ModuleProcessMonitor` detects crashes and automatically removes failed modules.
 
-**Code**: ```144:153:bllvm-node/src/module/manager.rs```
+**Code**: ```144:153:blvm-node/src/module/manager.rs```
 
 ### Security Flow
 
@@ -234,7 +248,7 @@ download_url = "https://registry.bitcoincommons.org/modules/lightning-network/1.
 
 # Dependencies
 [dependencies]
-"bllvm-node" = ">=1.0.0"
+"blvm-node" = ">=1.0.0"
 "another-module" = ">=0.5.0"
 
 # Compatibility
@@ -251,7 +265,7 @@ capabilities = [
 ]
 ```
 
-**Code**: ```1:200:bllvm-node/src/module/registry/manifest.rs```
+**Code**: ```1:200:blvm-node/src/module/registry/manifest.rs```
 
 ## API Hub
 
@@ -261,18 +275,130 @@ The `ModuleApiHub` routes API requests from modules to the appropriate handlers:
 - Governance API (proposals, votes)
 - Communication API (P2P messaging)
 
-**Code**: ```1:200:bllvm-node/src/module/api/hub.rs```
+**Code**: ```1:200:blvm-node/src/module/api/hub.rs```
 
 ## Event System
 
-Modules can subscribe to node events:
+The module event system provides a comprehensive, consistent, and reliable way for modules to receive notifications about node state changes, blockchain events, and system lifecycle events.
 
-- Block connected/disconnected
-- Transaction added/removed
-- Chain reorganization
-- Governance events
+### Event Subscription
 
-**Code**: ```1:200:bllvm-node/src/module/api/events.rs```
+Modules subscribe to events they need during initialization:
+
+```rust
+let event_types = vec![
+    EventType::NewBlock,
+    EventType::NewTransaction,
+    EventType::ModuleLoaded,
+    EventType::ConfigLoaded,
+    EventType::EconomicNodeRegistered,
+];
+client.subscribe_events(event_types).await?;
+```
+
+### Event Categories
+
+**Core Blockchain Events:**
+- `NewBlock` - Block connected to chain
+- `NewTransaction` - Transaction in mempool
+- `BlockDisconnected` - Block disconnected (reorg)
+- `ChainReorg` - Chain reorganization
+
+**Module Lifecycle Events:**
+- `ModuleLoaded` - Module loaded (published after subscription)
+- `ModuleUnloaded` - Module unloaded
+- `ModuleCrashed` - Module crashed
+
+**Configuration Events:**
+- `ConfigLoaded` - Node configuration loaded/changed
+
+**Node Lifecycle Events:**
+- `NodeStartupCompleted` - Node fully operational
+- `NodeShutdown` - Node shutting down
+- `NodeShutdownCompleted` - Shutdown complete
+
+**Maintenance Events:**
+- `DataMaintenance` - Unified cleanup/flush event (replaces StorageFlush + DataCleanup)
+- `MaintenanceStarted` - Maintenance started
+- `MaintenanceCompleted` - Maintenance completed
+- `HealthCheck` - Health check performed
+
+**Resource Management Events:**
+- `DiskSpaceLow` - Disk space low
+- `ResourceLimitWarning` - Resource limit warning
+
+**Governance Events:**
+- `EconomicNodeRegistered` - Economic node registered
+- `EconomicNodeStatus` - Status query/response
+- `EconomicNodeForkDecision` - Fork decision made
+- `EconomicNodeVeto` - Veto signal sent
+- `GovernanceProposalCreated` - Proposal created
+- `GovernanceProposalVoted` - Vote cast
+- `GovernanceProposalMerged` - Proposal merged
+
+**Network Events:**
+- `PeerConnected` - Peer connected
+- `PeerDisconnected` - Peer disconnected
+- `MessageReceived` - Network message received
+- `BroadcastStarted` - Broadcast started
+- `BroadcastCompleted` - Broadcast completed
+
+### Event Delivery Guarantees
+
+**At-Most-Once Delivery:**
+- Events are delivered at most once per subscriber
+- If channel is full, event is dropped (not retried)
+- If channel is closed, module is removed from subscriptions
+
+**Best-Effort Delivery:**
+- Events are delivered on a best-effort basis
+- No guaranteed delivery (modules can be slow/dead)
+- Statistics track delivery success/failure rates
+
+**Ordering Guarantees:**
+- Events are delivered in order per module (single channel)
+- No cross-module ordering guarantees
+- ModuleLoaded events are ordered: subscription → ModuleLoaded
+
+### Event Timing and Consistency
+
+**ModuleLoaded Event Timing:**
+- `ModuleLoaded` events are **only published AFTER a module has subscribed** (after startup is complete)
+- This ensures modules are fully ready before receiving ModuleLoaded events
+- Hotloaded modules automatically receive all already-loaded modules when subscribing
+
+**Event Flow:**
+1. Module process is spawned
+2. Module connects via IPC and sends Handshake
+3. Module sends `SubscribeEvents` request
+4. **At subscription time**:
+   - Module receives `ModuleLoaded` events for all already-loaded modules (hotloaded modules get existing modules)
+   - `ModuleLoaded` is published for the newly subscribing module (if it's loaded)
+5. Module is now fully operational
+
+### Event Delivery Reliability
+
+**Channel Buffering:**
+- 100-event buffer per module (prevents unbounded memory growth)
+- Non-blocking delivery (publisher never blocks)
+- Channel full events are tracked in statistics
+
+**Error Handling:**
+- **Channel Full**: Event dropped with warning, module subscription NOT removed (module is slow, not dead)
+- **Channel Closed**: Module subscription removed, statistics track failed delivery
+- **Serialization Errors**: Event dropped with warning, module subscription NOT removed
+
+**Delivery Statistics:**
+- Track success/failure/channel-full counts per module
+- Available via `EventManager::get_delivery_stats()`
+- Useful for monitoring and debugging
+
+**Code**: ```1:274:blvm-node/src/module/api/events.rs```
+
+For detailed event system documentation, see:
+- [Event System Integration](event-system-integration.md) - Complete integration guide
+- [Event Consistency](event-consistency.md) - Event timing and consistency guarantees
+- [Janitorial Events](janitorial-events.md) - Maintenance and lifecycle events
 
 ## Module Registry
 
@@ -283,14 +409,14 @@ Modules can be discovered and installed from a module registry:
 - Dependency resolution
 - Signature verification
 
-**Code**: ```1:200:bllvm-node/src/module/registry/client.rs```
+**Code**: ```1:200:blvm-node/src/module/registry/client.rs```
 
 ## Usage
 
 ### Loading a Module
 
 ```rust
-use bllvm_node::module::{ModuleManager, ModuleMetadata};
+use blvm_node::module::{ModuleManager, ModuleMetadata};
 
 let mut manager = ModuleManager::new(
     modules_dir,
@@ -315,7 +441,7 @@ manager.load_module(
 manager.auto_load_modules().await?;
 ```
 
-**Code**: ```306:391:bllvm-node/src/module/manager.rs```
+**Code**: ```306:391:blvm-node/src/module/manager.rs```
 
 ## Benefits
 
@@ -345,7 +471,7 @@ The module system includes:
 - Event system
 - API hub
 
-**Location**: `bllvm-node/src/module/`
+**Location**: `blvm-node/src/module/`
 
 ## IPC Communication
 

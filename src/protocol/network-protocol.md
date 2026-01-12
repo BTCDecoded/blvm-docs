@@ -4,7 +4,7 @@ The protocol layer abstracts Bitcoin's P2P network protocol, supporting multiple
 
 ## Protocol Abstraction
 
-The bllvm-protocol abstracts P2P message formats (standard Bitcoin wire protocol), connection management, peer discovery, block synchronization, and transaction relay. See [Protocol Architecture](architecture.md) for details.
+The blvm-protocol abstracts P2P message formats (standard Bitcoin wire protocol), connection management, peer discovery, block synchronization, and transaction relay. See [Protocol Architecture](architecture.md) for details.
 
 ## Network Variants
 
@@ -25,7 +25,7 @@ The bllvm-protocol abstracts P2P message formats (standard Bitcoin wire protocol
 - Isolated from other networks
 - Fast block generation for testing
 
-For implementation details, see the [bllvm-protocol README](../../modules/bllvm-protocol/README.md).
+For implementation details, see the [blvm-protocol README](../../modules/blvm-protocol/README.md).
 
 ## Transport Abstraction Layer
 

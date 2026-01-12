@@ -1,6 +1,6 @@
 # Developer SDK Overview
 
-The developer SDK (`bllvm-sdk`) provides governance infrastructure and a composition framework for Bitcoin. It includes reusable governance primitives and a composition framework for building alternative Bitcoin implementations.
+The developer SDK (`blvm-sdk`) provides governance infrastructure and a composition framework for Bitcoin. It includes reusable governance primitives and a composition framework for building alternative Bitcoin implementations.
 
 ## Architecture Position
 
@@ -8,11 +8,11 @@ Tier 5 of the 6-tier Bitcoin Commons architecture:
 
 ```
 1. Orange Paper (mathematical foundation)
-2. bllvm-consensus (pure math implementation)
-3. bllvm-protocol (Bitcoin abstraction)
-4. bllvm-node (full node implementation)
-5. bllvm-sdk (governance + composition) ← THIS LAYER
-6. bllvm-commons (governance enforcement)
+2. blvm-consensus (pure math implementation)
+3. blvm-protocol (Bitcoin abstraction)
+4. blvm-node (full node implementation)
+5. blvm-sdk (governance + composition) ← THIS LAYER
+6. blvm-commons (governance enforcement)
 ```
 
 ## Core Components
@@ -25,23 +25,24 @@ Cryptographic primitives for governance operations:
 - **Signature Creation**: Sign governance messages using [Bitcoin-compatible standards](api-reference.md#bitcoin-compatible-signing)
 - **Signature Verification**: Verify signatures and [multisig thresholds](../governance/multisig-configuration.md)
 - **Multisig Logic**: Threshold-based collective decision making
+- **Nested Multisig**: Team-based governance with hierarchical multisig support
 - **Message Formats**: Structured messages for releases, approvals, decisions
 
-**Code**: ```1:200:bllvm-sdk/src/governance/signatures.rs```
+**Code**: ```1:200:blvm-sdk/src/governance/signatures.rs```
 
 ### CLI Tools
 
 Command-line tools for governance operations:
 
-- **`bllvm-keygen`**: Generate governance keypairs (PEM, JSON formats)
-- **`bllvm-sign`**: Sign governance messages (releases, approvals)
-- **`bllvm-verify`**: Verify signatures and multisig thresholds
-- **`bllvm-compose`**: Declarative node composition from modules
-- **`bllvm-sign-binary`**: Sign binary files for release verification
-- **`bllvm-verify-binary`**: Verify binary file signatures
-- **`bllvm-aggregate-signatures`**: Aggregate multiple signatures
+- **`blvm-keygen`**: Generate governance keypairs (PEM, JSON formats)
+- **`blvm-sign`**: Sign governance messages (releases, approvals)
+- **`blvm-verify`**: Verify signatures and multisig thresholds
+- **`blvm-compose`**: Declarative node composition from modules
+- **`blvm-sign-binary`**: Sign binary files for release verification
+- **`blvm-verify-binary`**: Verify binary file signatures
+- **`blvm-aggregate-signatures`**: Aggregate multiple signatures
 
-**Code**: ```1:100:bllvm-sdk/src/bin/bllvm-keygen.rs```
+**Code**: ```1:100:blvm-sdk/src/bin/blvm-keygen.rs```
 
 ### Composition Framework
 
@@ -52,14 +53,14 @@ Declarative node composition from modules:
 - **Economic Integration**: Merge mining revenue distribution
 - **Dependency Resolution**: Automatic module dependency handling
 
-**Code**: ```1:200:bllvm-sdk/src/composition/mod.rs```
+**Code**: ```1:200:blvm-sdk/src/composition/mod.rs```
 
 ## Key Features
 
 ### Governance Primitives
 
 ```rust
-use bllvm_sdk::governance::{
+use blvm_sdk::governance::{
     GovernanceKeypair, GovernanceMessage, Multisig
 };
 
@@ -89,7 +90,7 @@ Threshold-based signature verification:
 - **Signature Aggregation**: Combine multiple signatures
 - **Verification**: Cryptographic verification of threshold satisfaction
 
-**Code**: ```1:200:bllvm-sdk/src/governance/multisig.rs```
+**Code**: ```1:200:blvm-sdk/src/governance/multisig.rs```
 
 ### Bitcoin-Compatible Signing
 
@@ -100,7 +101,7 @@ Uses Bitcoin message signing standards:
 - **Hash Function**: Double SHA256
 - **Compatibility**: Compatible with Bitcoin Core signing
 
-**Code**: ```1:200:bllvm-sdk/src/governance/signatures.rs```
+**Code**: ```1:200:blvm-sdk/src/governance/signatures.rs```
 
 ## Design Principles
 
@@ -113,7 +114,7 @@ Uses Bitcoin message signing standards:
 ## What This Is NOT
 
 - NOT a general-purpose Bitcoin library
-- NOT the GitHub enforcement engine (that's [bllvm-commons](../governance/overview.md))
+- NOT the GitHub enforcement engine (that's [blvm-commons](../governance/overview.md))
 - NOT handling wallet keys or user funds
 - NOT competing with rust-bitcoin or BDK
 
@@ -123,17 +124,17 @@ Uses Bitcoin message signing standards:
 
 ```bash
 # Generate a keypair
-bllvm-keygen --output alice.key --format pem
+blvm-keygen --output alice.key --format pem
 
 # Sign a release
-bllvm-sign release \
+blvm-sign release \
   --version v1.0.0 \
   --commit abc123 \
   --key alice.key \
   --output signature.txt
 
 # Verify signatures
-bllvm-verify release \
+blvm-verify release \
   --version v1.0.0 \
   --commit abc123 \
   --signatures sig1.txt,sig2.txt,sig3.txt,sig4.txt,sig5.txt,sig6.txt \
@@ -144,7 +145,7 @@ bllvm-verify release \
 ### Library Usage
 
 ```rust
-use bllvm_sdk::governance::{GovernanceKeypair, GovernanceMessage};
+use blvm_sdk::governance::{GovernanceKeypair, GovernanceMessage};
 
 // Generate keypair
 let keypair = GovernanceKeypair::generate()?;

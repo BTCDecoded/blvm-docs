@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Stratum V2 module (`bllvm-stratum-v2`) implements [Stratum V2 mining protocol](../node/mining-stratum-v2.md) support for bllvm-node: Stratum V2 server implementation, mining pool management, merge mining coordination, and mining job distribution. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Stratum V2 module (`blvm-stratum-v2`) implements [Stratum V2 mining protocol](../node/mining-stratum-v2.md) support for blvm-node: Stratum V2 server implementation, mining pool management, merge mining coordination, and mining job distribution. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
@@ -17,14 +17,14 @@ The Stratum V2 module (`bllvm-stratum-v2`) implements [Stratum V2 mining protoco
 ### Via Cargo
 
 ```bash
-cargo install bllvm-stratum-v2
+cargo install blvm-stratum-v2
 ```
 
 ### Via Module Installer
 
 ```bash
-cargo install cargo-bllvm-module
-cargo bllvm-module install bllvm-stratum-v2
+cargo install cargo-blvm-module
+cargo blvm-module install blvm-stratum-v2
 ```
 
 ### Manual Installation
@@ -32,7 +32,7 @@ cargo bllvm-module install bllvm-stratum-v2
 1. Clone the repository:
    ```bash
    git clone https://github.com/BTCDecoded/blvm-stratum-v2.git
-   cd bllvm-stratum-v2
+   cd blvm-stratum-v2
    ```
 
 2. Build the module:
@@ -42,8 +42,8 @@ cargo bllvm-module install bllvm-stratum-v2
 
 3. Install to node modules directory:
    ```bash
-   mkdir -p /path/to/node/modules/bllvm-stratum-v2/target/release
-   cp target/release/bllvm-stratum-v2 /path/to/node/modules/bllvm-stratum-v2/target/release/
+   mkdir -p /path/to/node/modules/blvm-stratum-v2/target/release
+   cp target/release/blvm-stratum-v2 /path/to/node/modules/blvm-stratum-v2/target/release/
    ```
 
 ## Configuration
@@ -73,11 +73,11 @@ pool_url = "stratum+tcp://pool.example.com:3333"
 The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
-name = "bllvm-stratum-v2"
+name = "blvm-stratum-v2"
 version = "0.1.0"
 description = "Stratum V2 mining protocol module"
 author = "Bitcoin Commons Team"
-entry_point = "bllvm-stratum-v2"
+entry_point = "blvm-stratum-v2"
 
 capabilities = [
     "read_blockchain",

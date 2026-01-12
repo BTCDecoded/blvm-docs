@@ -23,7 +23,7 @@ The governance system maintains tamper-evident audit logs that record:
 Audit logs can be verified using:
 
 ```bash
-bllvm-commons verify-audit-log --log-path audit.log
+blvm-commons verify-audit-log --log-path audit.log
 ```
 
 ## Three-Layer Verification Architecture
@@ -54,5 +54,5 @@ The system uses OpenTimestamps to anchor audit logs to the Bitcoin blockchain:
 - **Immutable Proof**: Proof of existence at specific time
 - **Public Verification**: Anyone can verify timestamps
 
-For detailed audit log documentation, see [AUDIT_LOG_SYSTEM.md](../../modules/bllvm-commons/docs/AUDIT_LOG_SYSTEM.md).
+For detailed audit log documentation, see [AUDIT_LOG_SYSTEM.md](../../modules/blvm-commons/docs/AUDIT_LOG_SYSTEM.md).
 

@@ -15,7 +15,7 @@ Security controls are defined in a YAML configuration file that maps file patter
 - **Priority Levels**: P0 (Critical), P1 (High), P2 (Medium), P3 (Low)
 - **Categories**: Control categories (consensus_integrity, cryptographic, etc.)
 
-**Code**: ```12:35:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```12:35:blvm-commons/src/validation/security_controls.rs```
 
 ### Security Control Structure
 
@@ -27,7 +27,7 @@ security_controls:
     priority: "P0"
     description: "Proper genesis blocks"
     files:
-      - "bllvm-protocol/**/*.rs"
+      - "blvm-protocol/**/*.rs"
     required_signatures: "7-of-7"
     review_period_days: 180
     requires_security_audit: true
@@ -36,7 +36,7 @@ security_controls:
     economic_node_veto_enabled: true
 ```
 
-**Code**: ```20:35:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```20:35:blvm-commons/src/validation/security_controls.rs```
 
 ## Priority Levels
 
@@ -49,7 +49,7 @@ Highest priority security controls:
 - **Governance Tier**: `security_critical`
 - **Examples**: Genesis block implementation, cryptographic primitives
 
-**Code**: ```62:69:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```62:69:blvm-commons/src/validation/security_controls.rs```
 
 ### P1 (High)
 
@@ -60,7 +60,7 @@ High priority security controls:
 - **Governance Tier**: `cryptographic` or `security_enhancement`
 - **Examples**: Signature verification, key management
 
-**Code**: ```62:69:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```62:69:blvm-commons/src/validation/security_controls.rs```
 
 ### P2 (Medium)
 
@@ -71,7 +71,7 @@ Medium priority security controls:
 - **Governance Tier**: `security_enhancement`
 - **Examples**: Access control, rate limiting
 
-**Code**: ```62:69:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```62:69:blvm-commons/src/validation/security_controls.rs```
 
 ### P3 (Low)
 
@@ -82,7 +82,7 @@ Low priority security controls:
 - **Governance Tier**: None (standard process)
 - **Examples**: Logging, monitoring
 
-**Code**: ```62:69:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```62:69:blvm-commons/src/validation/security_controls.rs```
 
 ## Control Categories
 
@@ -130,7 +130,7 @@ The `SecurityControlValidator` analyzes security impact of changed files:
 4. **Tier Determination**: Determines required governance tier
 5. **Requirement Collection**: Collects additional requirements
 
-**Code**: ```107:185:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```107:185:blvm-commons/src/validation/security_controls.rs```
 
 ### Impact Levels
 
@@ -144,7 +144,7 @@ pub enum ImpactLevel {
 }
 ```
 
-**Code**: ```62:69:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```62:69:blvm-commons/src/validation/security_controls.rs```
 
 ### Governance Tier Mapping
 
@@ -156,7 +156,7 @@ Impact levels map to governance tiers:
 - **Low**: `security_enhancement` tier
 - **None**: Standard tier
 
-**Code**: ```342:374:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```342:374:blvm-commons/src/validation/security_controls.rs```
 
 ## Placeholder Detection
 
@@ -174,7 +174,7 @@ The validator detects placeholder implementations in security-critical files:
 - `return vec![] as a placeholder`
 - `This is a placeholder`
 
-**Code**: ```412:473:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```412:473:blvm-commons/src/validation/security_controls.rs```
 
 ### Placeholder Violations
 
@@ -184,7 +184,7 @@ Placeholder violations block PRs affecting P0 controls:
 - **Blocking**: Blocks production deployment
 - **Reporting**: Detailed violation reports
 
-**Code**: ```412:429:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```412:429:blvm-commons/src/validation/security_controls.rs```
 
 ## Security Gate CLI
 
@@ -197,7 +197,7 @@ security-gate status
 security-gate status --detailed
 ```
 
-**Code**: ```25:210:bllvm-commons/src/bin/security-gate.rs```
+**Code**: ```25:210:blvm-commons/src/bin/security-gate.rs```
 
 ### PR Impact Analysis
 
@@ -208,7 +208,7 @@ security-gate check-pr 123
 security-gate check-pr 123 --format json
 ```
 
-**Code**: ```212:298:bllvm-commons/src/bin/security-gate.rs```
+**Code**: ```212:298:blvm-commons/src/bin/security-gate.rs```
 
 ### Placeholder Check
 
@@ -219,7 +219,7 @@ security-gate check-placeholders
 security-gate check-placeholders --fail-on-placeholder
 ```
 
-**Code**: ```300:338:bllvm-commons/src/bin/security-gate.rs```
+**Code**: ```300:338:blvm-commons/src/bin/security-gate.rs```
 
 ### Production Readiness
 
@@ -230,7 +230,7 @@ security-gate verify-production-readiness
 security-gate verify-production-readiness --format json
 ```
 
-**Code**: ```340:397:bllvm-commons/src/bin/security-gate.rs```
+**Code**: ```340:397:blvm-commons/src/bin/security-gate.rs```
 
 ## Integration with Governance
 
@@ -243,7 +243,7 @@ Security controls automatically classify PRs:
 - **Tier Assignment**: Assigns governance tier
 - **Requirement Collection**: Collects requirements
 
-**Code**: ```1:5:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```1:5:blvm-commons/src/validation/security_controls.rs```
 
 ### PR Comments
 
@@ -255,7 +255,7 @@ The validator generates PR comments with security impact:
 - **Additional Requirements**: List of requirements
 - **Blocking Status**: Production/audit blocking status
 
-**Code**: ```475:545:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```475:545:blvm-commons/src/validation/security_controls.rs```
 
 ## Control Requirements
 
@@ -269,7 +269,7 @@ Requirements for `security_critical` tier:
 - Security audit report attached to PR
 - Cryptographer approval required
 
-**Code**: ```379:385:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```379:385:blvm-commons/src/validation/security_controls.rs```
 
 ### Cryptographic Tier
 
@@ -280,7 +280,7 @@ Requirements for `cryptographic` tier:
 - Side-channel analysis performed
 - Formal verification proofs passing
 
-**Code**: ```386:391:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```386:391:blvm-commons/src/validation/security_controls.rs```
 
 ### Security Enhancement Tier
 
@@ -290,7 +290,7 @@ Requirements for `security_enhancement` tier:
 - Comprehensive test coverage
 - No placeholder implementations
 
-**Code**: ```392:396:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```392:396:blvm-commons/src/validation/security_controls.rs```
 
 ## Production Blocking
 
@@ -302,7 +302,7 @@ P0 controls block production deployment:
 - **Blocks Audit**: Cannot proceed with security audit
 - **Requires Certification**: Must be certified before merge
 
-**Code**: ```148:152:bllvm-commons/src/validation/security_controls.rs```
+**Code**: ```148:152:blvm-commons/src/validation/security_controls.rs```
 
 ## Components
 
@@ -314,7 +314,7 @@ The security controls system includes:
 - Governance tier integration
 - PR comment generation
 
-**Location**: `bllvm-commons/src/validation/security_controls.rs`, `bllvm-commons/src/bin/security-gate.rs`
+**Location**: `blvm-commons/src/validation/security_controls.rs`, `blvm-commons/src/bin/security-gate.rs`
 
 ## See Also
 

@@ -8,7 +8,7 @@ The node supports multiple Bitcoin protocol variants: **Regtest** (default, regr
 
 ## Configuration File
 
-Create a `bllvm.toml` configuration file:
+Create a `blvm.toml` configuration file:
 
 ```toml
 [network]
@@ -16,7 +16,7 @@ protocol = "regtest"  # or "testnet" or "mainnet"
 port = 18444          # P2P port (regtest default)
 
 [storage]
-data_dir = "/var/lib/bllvm"
+data_dir = "/var/lib/blvm"
 backend = "sled"      # Storage backend
 
 [rpc]
@@ -34,7 +34,7 @@ You can also configure via environment variables:
 
 ```bash
 export BLVM_NETWORK=testnet
-export BLVM_DATA_DIR=/var/lib/bllvm
+export BLVM_DATA_DIR=/var/lib/blvm
 export BLVM_RPC_PORT=8332
 ```
 
@@ -42,13 +42,13 @@ export BLVM_RPC_PORT=8332
 
 ```bash
 # Start with specific network
-bllvm --network testnet
+blvm --network testnet
 
 # Use custom config file
-bllvm --config /path/to/config.toml
+blvm --config /path/to/config.toml
 
 # Override data directory
-bllvm --data-dir /custom/path
+blvm --data-dir /custom/path
 ```
 
 ## Storage Backends
@@ -65,7 +65,7 @@ The node uses multiple [storage backends](storage-backends.md) with automatic fa
 
 ```toml
 [storage]
-data_dir = "/var/lib/bllvm"
+data_dir = "/var/lib/blvm"
 backend = "auto"  # or "redb", "sled"
 
 [storage.cache]
@@ -119,6 +119,73 @@ Configure transport selection (see [Transport Abstraction](transport-abstraction
 [network]
 transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
 ```
+
+## RBF Configuration
+
+Configure Replace-By-Fee (RBF) behavior with 4 modes: Disabled, Conservative, Standard (default), and Aggressive.
+
+### RBF Modes
+
+**Disabled**: No RBF replacements allowed
+```toml
+[rbf]
+mode = "disabled"
+```
+
+**Conservative**: Strict rules with higher fee requirements
+```toml
+[rbf]
+mode = "conservative"
+min_fee_rate_multiplier = 2.0
+min_fee_bump_satoshis = 5000
+min_confirmations = 1
+max_replacements_per_tx = 3
+cooldown_seconds = 300
+```
+
+**Standard** (default): BIP125-compliant RBF
+```toml
+[rbf]
+mode = "standard"
+min_fee_rate_multiplier = 1.1
+min_fee_bump_satoshis = 1000
+```
+
+**Aggressive**: Relaxed rules for miners
+```toml
+[rbf]
+mode = "aggressive"
+min_fee_rate_multiplier = 1.05
+min_fee_bump_satoshis = 500
+allow_package_replacements = true
+```
+
+See [RBF and Mempool Policies](rbf-mempool-policies.md) for complete configuration guide.
+
+## Advanced Indexing
+
+Enable address and value range indexing for efficient queries:
+
+```toml
+[storage.indexing]
+enable_address_index = true
+enable_value_index = true
+strategy = "eager"  # or "lazy"
+max_indexed_addresses = 1000000
+```
+
+## Module Configuration
+
+Configure process-isolated modules:
+
+```toml
+[modules]
+enabled = true
+modules_dir = "modules"
+enabled_modules = ["blvm-lightning", "blvm-mesh"]
+```
+
+See [Module System](../architecture/module-system.md) for module configuration details.
 
 ## See Also
 

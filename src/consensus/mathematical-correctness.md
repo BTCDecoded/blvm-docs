@@ -31,7 +31,7 @@ Our verification approach follows: **"Rust + Tests + Math Specs = Source of Trut
 
 ## Protection Coverage
 
-{{#include ../../../modules/bllvm-consensus/docs/PROTECTION_COVERAGE.md}}
+{{#include ../../../modules/blvm-consensus/docs/PROTECTION_COVERAGE.md}}
 
 ## See Also
 

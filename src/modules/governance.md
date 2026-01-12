@@ -2,11 +2,11 @@
 
 ## Overview
 
-The Governance module (`bllvm-governance`) integrates governance functionality for bllvm-node: webhook notifications to [bllvm-commons](../governance/overview.md), [economic node tracking](../governance/economic-nodes.md), [veto system integration](../governance/economic-nodes.md#veto-mechanism), and governance proposal monitoring. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Governance module (`blvm-governance`) integrates governance functionality for blvm-node: webhook notifications to [blvm-commons](../governance/overview.md), [economic node tracking](../governance/economic-nodes.md), [veto system integration](../governance/economic-nodes.md#veto-mechanism), and governance proposal monitoring. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
-- **Webhook Notifications**: Sends governance events to bllvm-commons via webhooks
+- **Webhook Notifications**: Sends governance events to blvm-commons via webhooks
 - **Economic Node Tracking**: Tracks economic node status and contributions
 - **Veto System Integration**: Monitors and reports veto threshold status
 - **Governance Proposal Monitoring**: Tracks governance proposals from creation to merge
@@ -16,14 +16,14 @@ The Governance module (`bllvm-governance`) integrates governance functionality f
 ### Via Cargo
 
 ```bash
-cargo install bllvm-governance
+cargo install blvm-governance
 ```
 
 ### Via Module Installer
 
 ```bash
-cargo install cargo-bllvm-module
-cargo bllvm-module install bllvm-governance
+cargo install cargo-blvm-module
+cargo blvm-module install blvm-governance
 ```
 
 ### Manual Installation
@@ -31,7 +31,7 @@ cargo bllvm-module install bllvm-governance
 1. Clone the repository:
    ```bash
    git clone https://github.com/BTCDecoded/blvm-governance.git
-   cd bllvm-governance
+   cd blvm-governance
    ```
 
 2. Build the module:
@@ -41,8 +41,8 @@ cargo bllvm-module install bllvm-governance
 
 3. Install to node modules directory:
    ```bash
-   mkdir -p /path/to/node/modules/bllvm-governance/target/release
-   cp target/release/bllvm-governance /path/to/node/modules/bllvm-governance/target/release/
+   mkdir -p /path/to/node/modules/blvm-governance/target/release
+   cp target/release/blvm-governance /path/to/node/modules/blvm-governance/target/release/
    ```
 
 ## Configuration
@@ -51,7 +51,7 @@ Create a `config.toml` file in the module directory:
 
 ```toml
 [governance]
-# Webhook URL for bllvm-commons integration
+# Webhook URL for blvm-commons integration
 webhook_url = "https://governance.example.com/webhook"
 
 # Node identifier for governance tracking
@@ -63,7 +63,7 @@ enabled = true
 
 ### Configuration Options
 
-- `webhook_url` (required): URL for sending webhook notifications to bllvm-commons
+- `webhook_url` (required): URL for sending webhook notifications to blvm-commons
 - `node_id` (required): Unique identifier for this node in the governance system
 - `enabled` (default: `true`): Enable or disable the module
 
@@ -72,11 +72,11 @@ enabled = true
 The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
 
 ```toml
-name = "bllvm-governance"
+name = "blvm-governance"
 version = "0.1.0"
 description = "Governance webhook and economic node tracking module"
 author = "Bitcoin Commons Team"
-entry_point = "bllvm-governance"
+entry_point = "blvm-governance"
 
 capabilities = [
     "read_blockchain",
@@ -101,14 +101,14 @@ The module subscribes to the following node events:
 
 The module publishes the following events:
 
-- `WebhookSent` - Webhook notification successfully sent to bllvm-commons
+- `WebhookSent` - Webhook notification successfully sent to blvm-commons
 - `WebhookFailed` - Webhook delivery failed (with error details)
 - `VetoThresholdReached` - Economic node veto threshold reached
 - `GovernanceForkDetected` - Governance fork detected
 
 ## Webhook Integration
 
-The module sends webhook notifications to bllvm-commons for:
+The module sends webhook notifications to blvm-commons for:
 
 - Governance proposal lifecycle events
 - Economic node registration and status changes
@@ -145,7 +145,7 @@ Once installed and configured, the module automatically:
 1. Subscribes to governance-related events from the node
 2. Tracks economic node status and contributions
 3. Monitors governance proposals and votes
-4. Sends webhook notifications to bllvm-commons
+4. Sends webhook notifications to blvm-commons
 5. Publishes governance events for other modules
 
 ## API Integration
@@ -168,7 +168,7 @@ The module integrates with the node via the Node API IPC protocol:
 ### Webhook Delivery Failing
 
 - Verify webhook URL is correct and accessible
-- Check network connectivity to bllvm-commons
+- Check network connectivity to blvm-commons
 - Verify node_id is correctly configured
 - Check node logs for webhook delivery errors
 

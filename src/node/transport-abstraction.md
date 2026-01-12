@@ -32,7 +32,7 @@ NetworkManager
 | **Default** | ✅ Yes | ❌ No | ❌ No |
 | **Feature Flag** | Always enabled | `quinn` | `iroh` |
 
-**Code**: ```89:100:bllvm-node/src/network/transport.rs```
+**Code**: ```89:100:blvm-node/src/network/transport.rs```
 
 ### TCP Transport
 
@@ -44,7 +44,7 @@ Traditional TCP transport for Bitcoin P2P protocol compatibility:
 - No built-in encryption (TLS optional)
 - No connection multiplexing
 
-**Code**: ```1:200:bllvm-node/src/network/tcp_transport.rs```
+**Code**: ```1:200:blvm-node/src/network/tcp_transport.rs```
 
 ### Quinn QUIC Transport
 
@@ -56,7 +56,7 @@ Direct QUIC transport using the Quinn library:
 - Stream multiplexing over single connection
 - Optional feature flag: `quinn`
 
-**Code**: ```1:200:bllvm-node/src/network/quinn_transport.rs```
+**Code**: ```1:200:blvm-node/src/network/quinn_transport.rs```
 
 ### Iroh Transport
 
@@ -68,7 +68,7 @@ QUIC-based transport using Iroh for P2P networking:
 - Connection migration support
 - Optional feature flag: `iroh`
 
-**Code**: ```1:200:bllvm-node/src/network/iroh_transport.rs```
+**Code**: ```1:200:blvm-node/src/network/iroh_transport.rs```
 
 ### Performance Characteristics
 
@@ -90,7 +90,7 @@ QUIC-based transport using Iroh for P2P networking:
 - **Connection Overhead**: Higher (DERP relay overhead)
 - **Use Case**: NAT traversal, decentralized networking
 
-**Code**: ```1:247:bllvm-node/src/network/transport.rs```
+**Code**: ```1:247:blvm-node/src/network/transport.rs```
 
 ## Transport Abstraction
 
@@ -106,7 +106,7 @@ pub trait Transport: Send + Sync {
 }
 ```
 
-**Code**: ```1:262:bllvm-node/src/network/transport.rs```
+**Code**: ```1:262:blvm-node/src/network/transport.rs```
 
 ### TransportAddr
 
@@ -120,7 +120,7 @@ pub enum TransportAddr {
 }
 ```
 
-**Code**: ```11:69:bllvm-node/src/network/transport.rs```
+**Code**: ```11:69:blvm-node/src/network/transport.rs```
 
 ### TransportType
 
@@ -134,7 +134,7 @@ pub enum TransportType {
 }
 ```
 
-**Code**: ```89:100:bllvm-node/src/network/transport.rs```
+**Code**: ```89:100:blvm-node/src/network/transport.rs```
 
 ## Transport Selection
 
@@ -146,7 +146,7 @@ Runtime preference for transport selection:
 - **IrohOnly**: Use only Iroh transport
 - **Hybrid**: Prefer Iroh if available, fallback to TCP
 
-**Code**: ```100:162:bllvm-node/src/network/transport.rs```
+**Code**: ```100:162:blvm-node/src/network/transport.rs```
 
 ### Feature Negotiation
 
@@ -155,7 +155,7 @@ Peers negotiate transport capabilities during connection:
 - Automatic fallback if preferred transport unavailable
 - Transport-aware message routing
 
-**Code**: ```1:200:bllvm-node/src/network/protocol.rs```
+**Code**: ```1:200:blvm-node/src/network/protocol.rs```
 
 ## Protocol Adapter
 
@@ -163,7 +163,7 @@ The `ProtocolAdapter` handles message serialization between:
 - Consensus-proof `NetworkMessage` types
 - Transport-specific wire formats (TCP Bitcoin P2P vs Iroh message format)
 
-**Code**: ```1:200:bllvm-node/src/network/protocol_adapter.rs```
+**Code**: ```1:200:blvm-node/src/network/protocol_adapter.rs```
 
 ## Message Bridge
 
@@ -172,7 +172,7 @@ The `MessageBridge` bridges blvm-consensus message processing with transport lay
 - Processes incoming messages
 - Generates responses
 
-**Code**: ```1:200:bllvm-node/src/network/message_bridge.rs```
+**Code**: ```1:200:blvm-node/src/network/message_bridge.rs```
 
 ## Network Manager Integration
 
@@ -182,7 +182,7 @@ The `NetworkManager` supports multiple transports:
 - Unified message routing
 - Automatic transport fallback
 
-**Code**: ```1:200:bllvm-node/src/network/mod.rs```
+**Code**: ```1:200:blvm-node/src/network/mod.rs```
 
 ## Benefits
 
@@ -213,7 +213,7 @@ node_id = "..."
 ### Code Example
 
 ```rust
-use bllvm_node::network::{NetworkManager, TransportAddr, TransportType};
+use blvm_node::network::{NetworkManager, TransportAddr, TransportType};
 
 let network_manager = NetworkManager::new(config);
 
@@ -237,5 +237,5 @@ The transport abstraction includes:
 - Message bridge for unified routing
 - Network manager integration
 
-**Location**: `bllvm-node/src/network/transport.rs`, `bllvm-node/src/network/tcp_transport.rs`, `bllvm-node/src/network/quinn_transport.rs`, `bllvm-node/src/network/iroh_transport.rs`
+**Location**: `blvm-node/src/network/transport.rs`, `blvm-node/src/network/tcp_transport.rs`, `blvm-node/src/network/quinn_transport.rs`, `blvm-node/src/network/iroh_transport.rs`
 

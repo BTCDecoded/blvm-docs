@@ -11,6 +11,9 @@ Bitcoin Commons maintains a comprehensive benchmarking infrastructure to measure
 The benchmarking infrastructure is maintained in a separate repository (`blvm-bench`) that:
 
 - Runs performance benchmarks across all BLVM components
+- Parallel benchmark execution for efficient testing
+- Differential testing infrastructure (comparing against Bitcoin Core)
+- FIBRE protocol performance benchmarks
 - Generates benchmark reports and visualizations
 - Publishes results to `benchmarks.thebitcoincommons.org`
 - Tracks performance over time
@@ -77,7 +80,7 @@ cargo build --release --benches
 ### Run All Benchmarks
 
 ```bash
-cd bllvm-consensus
+cd blvm-consensus
 cargo bench
 ```
 

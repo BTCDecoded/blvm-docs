@@ -33,7 +33,7 @@ The `ConfigRegistry` stores all governance-controlled configuration parameters i
 - Complete audit trail of all changes
 - Automatic sync from YAML on startup
 
-**Code**: ```1:100:bllvm-commons/src/governance/config_registry.rs```
+**Code**: ```1:100:blvm-commons/src/governance/config_registry.rs```
 
 ### 3. ConfigReader (Unified Interface)
 
@@ -45,7 +45,7 @@ The `ConfigReader` provides a type-safe interface for reading configuration valu
 - Automatic cache invalidation on changes
 - Fallback chain support
 
-**Code**: ```1:100:bllvm-commons/src/governance/config_reader.rs```
+**Code**: ```1:100:blvm-commons/src/governance/config_reader.rs```
 
 ## Fallback Chain
 
@@ -61,7 +61,7 @@ The system uses a four-tier fallback chain for configuration values:
 4. Hardcoded Defaults (safety fallback)
 ```
 
-**Implementation**: ```76:110:bllvm-commons/src/governance/config_reader.rs```
+**Implementation**: ```76:110:blvm-commons/src/governance/config_reader.rs```
 
 ## Sync Mechanisms
 
@@ -79,13 +79,13 @@ This process:
 3. Compares with database values
 4. Updates database if no governance history exists (preserves governance-approved changes)
 
-**Code**: ```120:200:bllvm-commons/src/governance/config_registry.rs```
+**Code**: ```120:200:blvm-commons/src/governance/config_registry.rs```
 
 ### sync_to_yaml()
 
 When governance-approved changes are activated, the system can write changes back to YAML files. Full bidirectional sync is planned.
 
-**Code**: ```250:280:bllvm-commons/src/governance/config_registry.rs```
+**Code**: ```250:280:blvm-commons/src/governance/config_registry.rs```
 
 ## Configuration Categories
 
@@ -119,7 +119,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 
 **Total**: 87+ variables
 
-**Code**: ```1:1055:bllvm-commons/src/governance/config_defaults.rs```
+**Code**: ```1:1055:blvm-commons/src/governance/config_defaults.rs```
 
 ### Action Tier Thresholds (15 variables)
 
@@ -141,7 +141,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `tier_5_signatures_total` | 5 | Tier 5: Total signatures available |
 | `tier_5_review_period_days` | 180 | Tier 5: Review period (days) |
 
-**Code**: ```216:357:bllvm-commons/src/governance/config_defaults.rs```
+**Code**: ```216:357:blvm-commons/src/governance/config_defaults.rs```
 
 ### Economic Node Veto Thresholds (7 variables)
 
@@ -155,7 +155,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Mining hashpower for support (%) |
 | `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Economic activity for support (%) |
 
-**Code**: ```360:399:bllvm-commons/src/governance/config_defaults.rs```
+**Code**: ```360:399:blvm-commons/src/governance/config_defaults.rs```
 
 ### Commons Contributor Thresholds (8 variables)
 
@@ -170,7 +170,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `commons_contributor_weight_formula` | "linear" | Weight calculation formula |
 | `commons_contributor_weight_cap` | 0.10 | Maximum weight per contributor (10%) |
 
-**Code**: ```400:500:bllvm-commons/src/governance/config_defaults.rs```
+**Code**: ```400:500:blvm-commons/src/governance/config_defaults.rs```
 
 ### Governance Phase Thresholds (11 variables)
 
@@ -189,7 +189,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `phase_mature_min_nodes` | 30 | Mature phase: Minimum economic nodes |
 | `phase_mature_min_contributors` | 100 | Mature phase: Minimum contributors |
 
-**Code**: ```500:600:bllvm-commons/src/governance/config_defaults.rs```
+**Code**: ```500:600:blvm-commons/src/governance/config_defaults.rs```
 
 ### Repository Layer Thresholds (9 variables)
 
@@ -208,14 +208,14 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `layer_5_signatures_total` | 5 | Layer 5: Total signatures |
 | `layer_5_review_period_days` | 180 | Layer 5: Review period (days) |
 
-**Code**: ```600:700:bllvm-commons/src/governance/config_defaults.rs```
+**Code**: ```600:700:blvm-commons/src/governance/config_defaults.rs```
 
 ### Complete Reference
 
 For the complete list of all 87+ variables with descriptions and default values, see:
 - **YAML Source**: `governance/config/FORKABLE_VARIABLES.md`
 - **Default Values**: `governance/config/DEFAULT_VALUES_REFERENCE.md`
-- **Implementation**: `bllvm-commons/src/governance/config_defaults.rs`
+- **Implementation**: `blvm-commons/src/governance/config_defaults.rs`
 
 ## Governance Change Workflow
 
@@ -228,7 +228,7 @@ Changing a configuration parameter requires Tier 5 governance approval:
 5. **Activation**: Change activated in database via `activate_change()`
 6. **Sync**: Change optionally synced back to YAML files
 
-**Code**: ```400:500:bllvm-commons/src/governance/config_registry.rs```
+**Code**: ```400:500:blvm-commons/src/governance/config_registry.rs```
 
 ## Usage Examples
 
@@ -284,7 +284,7 @@ let (req, total) = validator.get_tier_threshold(3).await?;
   - Manual via `clear_cache()` or `invalidate_key()`
 - **Cache Storage**: In-memory `HashMap<String, serde_json::Value>`
 
-**Code**: ```76:120:bllvm-commons/src/governance/config_reader.rs```
+**Code**: ```76:120:blvm-commons/src/governance/config_reader.rs```
 
 ## YAML Structure
 
@@ -308,7 +308,7 @@ tiers:
 
 The `YamlConfigLoader` extracts values from these files into a flat key-value structure for the registry.
 
-**Code**: ```1:200:bllvm-commons/src/governance/yaml_loader.rs```
+**Code**: ```1:200:blvm-commons/src/governance/yaml_loader.rs```
 
 ## Initialization
 
@@ -319,7 +319,7 @@ On system startup:
 3. **Initialize Defaults**: `initialize_governance_defaults()` registers any missing configs
 4. **Create ConfigReader**: ConfigReader created with YAML loader for fallback access
 
-**Code**: ```365:410:bllvm-commons/src/main.rs```
+**Code**: ```365:410:blvm-commons/src/main.rs```
 
 ## Configuration Key Reference
 

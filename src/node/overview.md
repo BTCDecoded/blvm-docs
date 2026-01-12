@@ -1,26 +1,50 @@
 # Node Implementation Overview
 
-The node implementation (`bllvm-node`) is a minimal, production-ready Bitcoin node that adds only non-consensus infrastructure to the consensus and protocol layers. Consensus logic comes from [bllvm-consensus](../consensus/overview.md), and protocol abstraction from [bllvm-protocol](../protocol/overview.md).
+The node implementation (`blvm-node`) is a minimal, production-ready Bitcoin node that adds only non-consensus infrastructure to the consensus and protocol layers. Consensus logic comes from [blvm-consensus](../consensus/overview.md), and protocol abstraction from [blvm-protocol](../protocol/overview.md).
 
 ## Architecture
 
 The node follows a layered architecture:
 
-```
-┌─────────────────────────────────────┐
-│         bllvm-node                  │
-│  ┌───────────────────────────────┐ │
-│  │  Network Manager              │ │  ← P2P networking, peer management
-│  │  Storage Layer                │ │  ← Block/UTXO storage (redb/sled)
-│  │  RPC Server                   │ │  ← JSON-RPC 2.0 API
-│  │  Module Manager               │ │  ← Process-isolated modules
-│  │  Mempool Manager              │ │  ← Transaction mempool
-│  │  Mining Coordinator           │ │  ← Block template generation
-│  └───────────────────────────────┘ │
-└─────────────────────────────────────┘
-              │
-              ├─→ bllvm-protocol (protocol abstraction)
-              └─→ bllvm-consensus (consensus validation)
+```mermaid
+graph TB
+    subgraph "blvm-node"
+        NM[Network Manager<br/>P2P networking, peer management]
+        SL[Storage Layer<br/>Block/UTXO storage]
+        RS[RPC Server<br/>JSON-RPC 2.0 API]
+        MM[Module Manager<br/>Process-isolated modules]
+        MP[Mempool Manager<br/>Transaction mempool]
+        MC[Mining Coordinator<br/>Block template generation]
+        PP[Payment Processor<br/>CTV support]
+    end
+    
+    PROTO[blvm-protocol<br/>Protocol abstraction]
+    CONS[blvm-consensus<br/>Consensus validation]
+    
+    NM --> PROTO
+    SL --> PROTO
+    MP --> PROTO
+    MC --> PROTO
+    PP --> PROTO
+    
+    PROTO --> CONS
+    
+    MM --> NM
+    MM --> SL
+    MM --> MP
+    
+    RS --> SL
+    RS --> MP
+    RS --> MC
+    
+    style NM fill:#bbf,stroke:#333,stroke-width:2px
+    style SL fill:#bfb,stroke:#333,stroke-width:2px
+    style RS fill:#fbf,stroke:#333,stroke-width:2px
+    style MM fill:#ffb,stroke:#333,stroke-width:2px
+    style MP fill:#fbb,stroke:#333,stroke-width:2px
+    style MC fill:#bbf,stroke:#333,stroke-width:2px
+    style PROTO fill:#bfb,stroke:#333,stroke-width:3px
+    style CONS fill:#fbb,stroke:#333,stroke-width:3px
 ```
 
 ## Key Components
@@ -33,7 +57,7 @@ The node follows a layered architecture:
 - Privacy protocols (Dandelion++, Fibre)
 - Package relay (BIP331)
 
-**Code**: ```1:2680:bllvm-node/src/network/mod.rs```
+**Code**: ```1:2680:blvm-node/src/network/mod.rs```
 
 ### Storage Layer
 - Database abstraction with multiple backends (see [Storage Backends](storage-backends.md))
@@ -44,7 +68,7 @@ The node follows a layered architecture:
 - Transaction indexing
 - Pruning support
 
-**Code**: ```1:89:bllvm-node/src/storage/mod.rs```
+**Code**: ```1:89:blvm-node/src/storage/mod.rs```
 
 ### RPC Server
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
@@ -53,7 +77,7 @@ The node follows a layered architecture:
 - Authentication and rate limiting
 - Method coverage
 
-**Code**: ```1:47:bllvm-node/src/rpc/mod.rs```
+**Code**: ```1:47:blvm-node/src/rpc/mod.rs```
 
 ### Module System
 - Process-isolated modules (see [Module System Architecture](../architecture/module-system.md))
@@ -62,16 +86,17 @@ The node follows a layered architecture:
 - Permission-based API access
 - Hot reload support
 
-**Code**: ```1:520:bllvm-node/src/module/manager.rs```
+**Code**: ```1:520:blvm-node/src/module/manager.rs```
 
 ### Mempool Manager
 - Transaction validation and storage
 - Fee-based transaction selection
-- RBF (Replace-By-Fee) support
-- Mempool policies and limits
+- RBF (Replace-By-Fee) support with 4 configurable modes (Disabled, Conservative, Standard, Aggressive)
+- Comprehensive mempool policies and limits
 - Transaction expiry
+- Advanced indexing (address and value range indexing)
 
-**Code**: ```1:200:bllvm-node/src/node/mempool.rs```
+**Code**: ```1:200:blvm-node/src/node/mempool.rs```
 
 ### Mining Coordinator
 - Block template generation
@@ -79,27 +104,29 @@ The node follows a layered architecture:
 - Merge mining coordination
 - Mining job distribution
 
-**Code**: ```1:531:bllvm-node/src/node/miner.rs```
+**Code**: ```1:531:blvm-node/src/node/miner.rs```
 
 ### Payment Processing
+- CTV (CheckTemplateVerify) support
 - Lightning Network integration
 - Payment vaults
 - Covenant support
 - Payment state management
 
-**Code**: ```1:10:bllvm-node/src/payment/mod.rs```
+**Code**: ```1:10:blvm-node/src/payment/mod.rs```
 
 ### Governance Integration
+- P2P governance message relay
 - Webhook handlers for governance events
 - User signaling support
 - Economic node integration
 
-**Code**: ```1:3:bllvm-node/src/governance/mod.rs```
+**Code**: ```1:3:blvm-node/src/governance/mod.rs```
 
 ## Design Principles
 
-1. **Zero Consensus Re-implementation**: All consensus logic delegated to [bllvm-consensus](../consensus/overview.md)
-2. **Protocol Abstraction**: Uses [bllvm-protocol](../protocol/overview.md) for variant support (mainnet, testnet, regtest)
+1. **Zero Consensus Re-implementation**: All consensus logic delegated to [blvm-consensus](../consensus/overview.md)
+2. **Protocol Abstraction**: Uses [blvm-protocol](../protocol/overview.md) for variant support (mainnet, testnet, regtest)
 3. **Pure Infrastructure**: Adds storage, networking, RPC, orchestration only
 4. **Production Ready**: Full Bitcoin node functionality with [performance optimizations](performance.md)
 
@@ -152,7 +179,7 @@ The node follows a layered architecture:
 4. **Running**: Validate blocks/transactions, relay messages, serve RPC requests
 5. **Shutdown**: Graceful shutdown of all components
 
-**Code**: ```76:1094:bllvm-node/src/node/mod.rs```
+**Code**: ```76:1094:blvm-node/src/node/mod.rs```
 
 ## Metrics and Monitoring
 
@@ -164,7 +191,7 @@ The node includes metrics collection:
 - **Performance Metrics**: Block validation time, transaction processing time
 - **System Metrics**: CPU usage, memory usage, disk I/O
 
-**Code**: ```1:71:bllvm-node/src/node/metrics.rs```
+**Code**: ```1:71:blvm-node/src/node/metrics.rs```
 
 ## See Also
 

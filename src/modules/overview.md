@@ -6,14 +6,14 @@ BLVM node uses a modular architecture where optional features run as separate, p
 
 ## Available Modules
 
-The following modules are available for bllvm-node:
+The following modules are available for blvm-node:
 
 ### Core Modules
 
-- **[Lightning Network Module](lightning.md)** - Lightning Network payment processing, invoice verification, payment routing, and channel management
+- **[Lightning Network Module](lightning.md)** - Lightning Network payment processing with LDK fully implemented, invoice verification, payment routing, and channel management
 - **[Commons Mesh Module](mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection
 - **[Governance Module](governance.md)** - Governance webhook integration, economic node tracking, and veto system integration
-- **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support, mining pool management, and merge mining coordination
+- **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support with network integration complete, mining pool management, and merge mining coordination
 
 ## Module System Architecture
 
@@ -33,20 +33,20 @@ Modules can be installed in several ways:
 ### Via Cargo
 
 ```bash
-cargo install bllvm-lightning
-cargo install bllvm-mesh
-cargo install bllvm-governance
-cargo install bllvm-stratum-v2
+cargo install blvm-lightning
+cargo install blvm-mesh
+cargo install blvm-governance
+cargo install blvm-stratum-v2
 ```
 
 ### Via Module Installer
 
 ```bash
-cargo install cargo-bllvm-module
-cargo bllvm-module install bllvm-lightning
-cargo bllvm-module install bllvm-mesh
-cargo bllvm-module install bllvm-governance
-cargo bllvm-module install bllvm-stratum-v2
+cargo install cargo-blvm-module
+cargo blvm-module install blvm-lightning
+cargo blvm-module install blvm-mesh
+cargo blvm-module install blvm-governance
+cargo blvm-module install blvm-stratum-v2
 ```
 
 ### Manual Installation

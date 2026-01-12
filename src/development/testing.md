@@ -18,7 +18,7 @@ The testing strategy uses multiple complementary techniques:
 6. **Runtime Assertions**: Catches violations during execution
 7. **MIRI Integration**: Detects undefined behavior
 
-**Code**: ```1:196:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: ```1:196:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ## Test Types
 
@@ -30,7 +30,7 @@ Unit tests verify individual functions in isolation:
 - **Coverage**: Public functions
 - **Examples**: Transaction validation, block validation, script execution
 
-**Code**: ```52:94:bllvm-consensus/estimate_test_coverage.py```
+**Code**: ```52:94:blvm-consensus/estimate_test_coverage.py```
 
 ### Property-Based Tests
 
@@ -41,7 +41,7 @@ Property-based tests verify mathematical invariants:
 - **Coverage**: Mathematical invariants
 - **Tool**: Proptest
 
-**Code**: ```1:2025:bllvm-consensus/tests/consensus_property_tests.rs```
+**Code**: ```1:2025:blvm-consensus/tests/consensus_property_tests.rs```
 
 ### Integration Tests
 
@@ -51,7 +51,7 @@ Integration tests verify end-to-end correctness:
 - **Coverage**: Multi-component scenarios
 - **Examples**: BIP compliance, historical replay, mempool mining
 
-**Code**: ```1:35:bllvm-consensus/tests/integration/mod.rs```
+**Code**: ```1:35:blvm-consensus/tests/integration/mod.rs```
 
 ### Fuzz Tests
 
@@ -62,18 +62,18 @@ Fuzz tests discover edge cases through random generation:
 - **Tool**: libFuzzer
 - **Coverage**: Critical consensus functions
 
-**Code**: ```1:269:bllvm-consensus/fuzz/README.md```
+**Code**: ```1:269:blvm-consensus/fuzz/README.md```
 
 ### Formal Verification (Kani)
 
 [Kani proofs](../consensus/formal-verification.md) verify correctness for all inputs:
 
 - **Location**: `src/` and `tests/` directories
-- **Count**: 201 proofs in `src/`, 9 in `tests/` (210 total)
+- **Count**: 219 proofs with tiered execution system
 - **Coverage**: Critical consensus functions
 - **Tool**: Kani model checker
 
-**Code**: ```1:412:bllvm-docs/src/consensus/formal-verification.md```
+**Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
 
 ### Runtime Assertions
 
@@ -83,7 +83,7 @@ Runtime assertions catch violations during execution:
 - **Coverage**: Critical paths
 - **Production**: Available via feature flag
 
-**Code**: ```156:160:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: ```156:160:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ### MIRI Integration
 
@@ -93,7 +93,7 @@ MIRI detects undefined behavior:
 - **Coverage**: Property tests and critical unit tests
 - **Tool**: MIRI interpreter
 
-**Code**: ```167:170:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: ```167:170:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ## Coverage Statistics
 
@@ -101,14 +101,14 @@ MIRI detects undefined behavior:
 
 | Verification Technique | Count | Status |
 |----------------------|-------|--------|
-| **Kani Formal Proofs** | **201** (210 total) | ✅ Critical functions |
+| **Kani Formal Proofs** | **219** | ✅ Critical functions |
 | **Property Tests** | **35** (141 functions) | ✅ All mathematical invariants |
 | **Runtime Assertions** | **913** | ✅ All critical paths |
 | **Fuzz Targets** | **19** | ✅ Edge case discovery |
 | **MIRI Integration** | ✅ | ✅ Undefined behavior detection |
 | **Mathematical Specs** | **15+** | ✅ Complete formal documentation |
 
-**Code**: ```10:21:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: ```10:21:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ### Coverage by Consensus Area
 
@@ -125,14 +125,14 @@ MIRI detects undefined behavior:
 | SegWit | 13 | - | 42 | 1 |
 | Serialization | 4 | - | 30 | 1 |
 
-**Code**: ```271:283:bllvm-consensus/docs/EXACT_VERIFICATION_COUNTS.md```
+**Code**: ```271:283:blvm-consensus/docs/EXACT_VERIFICATION_COUNTS.md```
 
 ## Running Tests
 
 ### Run All Tests
 
 ```bash
-cd bllvm-consensus
+cd blvm-consensus
 cargo test
 ```
 
@@ -164,7 +164,7 @@ cargo +nightly miri test
 cargo kani
 ```
 
-**Code**: ```1:412:bllvm-docs/src/consensus/formal-verification.md```
+**Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
 
 ## Coverage Goals
 
@@ -179,20 +179,20 @@ cargo kani
 ### Current Status
 
 All coverage goals met:
-- ✅ 201 Kani proofs covering all critical functions
+- ✅ 219 Kani proofs covering all critical functions
 - ✅ 141 property test functions covering all invariants
 - ✅ 19 fuzz targets covering all critical paths
 - ✅ 913 runtime assertions in all critical paths
 - ✅ Comprehensive integration test suite
 
-**Code**: ```179:196:bllvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: ```179:196:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ## Test Organization
 
 ### Directory Structure
 
 ```
-bllvm-consensus/
+blvm-consensus/
 ├── src/                    # Source code with Kani proofs
 ├── tests/
 │   ├── consensus_property_tests.rs  # Main property tests
@@ -204,7 +204,7 @@ bllvm-consensus/
     └── fuzz_targets/        # Fuzz targets
 ```
 
-**Code**: ```1:200:bllvm-consensus/tests/```
+**Code**: ```1:200:blvm-consensus/tests/```
 
 ## Edge Case Coverage
 
@@ -217,7 +217,7 @@ Edge cases beyond Kani proof bounds are covered by:
 3. **Integration Tests**: Realistic scenarios
 4. **Fuzz Testing**: Random generation
 
-**Code**: ```101:140:bllvm-consensus/docs/PROOF_LIMITATIONS.md```
+**Code**: ```101:140:blvm-consensus/docs/PROOF_LIMITATIONS.md```
 
 ## Differential Testing
 
@@ -229,7 +229,7 @@ Differential tests compare behavior with Bitcoin Core:
 - **Purpose**: Verify consistency with Bitcoin Core
 - **Coverage**: Critical consensus functions
 
-**Code**: ```1:200:bllvm-consensus/tests/integration/differential_tests.rs```
+**Code**: ```1:200:blvm-consensus/tests/integration/differential_tests.rs```
 
 ## CI Integration
 
@@ -244,19 +244,19 @@ All tests run in CI:
 - **Kani Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
-**Code**: ```1:412:bllvm-docs/src/consensus/formal-verification.md```
+**Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
 
 ## Test Metrics
 
 ### Verification Counts
 
-- **Kani Proofs**: 201 in `src/`, 9 in `tests/` (210 total)
+- **Kani Proofs**: 219 proofs with tiered execution system
 - **Property Test Blocks**: 125 across all files
 - **Property Test Functions**: 141 across all files
 - **Runtime Assertions**: 913 total (814 `assert!` + 99 `debug_assert!`)
 - **Fuzz Targets**: 13
 
-**Code**: ```253:265:bllvm-consensus/docs/EXACT_VERIFICATION_COUNTS.md```
+**Code**: ```253:265:blvm-consensus/docs/EXACT_VERIFICATION_COUNTS.md```
 
 ## Components
 
@@ -270,7 +270,7 @@ The testing infrastructure includes:
 - MIRI integration for undefined behavior detection
 - Differential tests for Bitcoin Core comparison
 
-**Location**: `bllvm-consensus/tests/`, `bllvm-consensus/fuzz/`, `bllvm-consensus/src/`
+**Location**: `blvm-consensus/tests/`, `blvm-consensus/fuzz/`, `blvm-consensus/src/`
 
 ## See Also
 
