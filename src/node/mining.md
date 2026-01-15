@@ -102,7 +102,7 @@ The `MiningCoordinator` manages mining operations:
 - **Template Generation**: Creates block templates from mempool
 - **Mining Loop**: Continuously generates and mines blocks
 - **Stratum V2 Integration**: Coordinates with Stratum V2 protocol
-- **Merge Mining**: Supports merge mining coordination
+- **Merge Mining**: Available via optional `blvm-merge-mining` module (paid plugin)
 
 **Code**: ```1:615:blvm-node/src/node/miner.rs```
 

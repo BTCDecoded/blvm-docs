@@ -83,7 +83,7 @@ Supports Bitcoin P2P protocol messages:
 - Performance optimizations
 
 **Governance Messages**:
-- Economic node governance messages via P2P protocol
+- Governance messages via P2P protocol
 - Message format and routing
 - Integration with governance system
 

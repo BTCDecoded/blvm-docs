@@ -34,7 +34,6 @@ Bitcoin Commons uses multisig thresholds for governance decisions, with differen
 ### Tier 3: Consensus-Adjacent
 - **Signatures**: 5-of-5 maintainers
 - **Review Period**: 90 days
-- **Economic Node Veto**: 30%+ hashpower or 40%+ economic activity
 - **Scope**: Changes affecting consensus validation code
 
 ### Tier 4: Emergency Actions
@@ -45,7 +44,6 @@ Bitcoin Commons uses multisig thresholds for governance decisions, with differen
 ### Tier 5: Governance Changes
 - **Signatures**: 5-of-5 maintainers (special process)
 - **Review Period**: 180 days
-- **Economic Node Signaling**: 50%+ hashpower, 60%+ economic activity
 - **Scope**: Changes to governance rules themselves
 
 ## Combined Model

@@ -2,13 +2,14 @@
 
 ## Overview
 
-The Stratum V2 module (`blvm-stratum-v2`) implements [Stratum V2 mining protocol](../node/mining-stratum-v2.md) support for blvm-node: Stratum V2 server implementation, mining pool management, merge mining coordination, and mining job distribution. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Stratum V2 module (`blvm-stratum-v2`) implements [Stratum V2 mining protocol](../node/mining-stratum-v2.md) support for blvm-node: Stratum V2 server implementation, mining pool management, and mining job distribution. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+
+**Note**: Merge mining is available as a separate paid plugin module (`blvm-merge-mining`) that integrates with the Stratum V2 module. It is not built into the Stratum V2 module itself.
 
 ## Features
 
 - **Stratum V2 Server**: Full Stratum V2 protocol server implementation
 - **Mining Pool Management**: Manages connections to mining pools
-- **Merge Mining Coordination**: Coordinates merge mining across multiple chains
 - **Mining Job Distribution**: Distributes mining jobs to connected miners
 - **Network Integration**: Fully integrated with node network layer (messages routed automatically)
 
@@ -102,7 +103,6 @@ The module publishes the following events:
 
 - `MiningJobCreated` - New mining job created
 - `ShareSubmitted` - Mining share submitted
-- `MergeMiningReward` - Merge mining reward received
 - `MiningPoolConnected` - Connected to mining pool
 - `MiningPoolDisconnected` - Disconnected from mining pool
 
@@ -116,16 +116,15 @@ The module implements the Stratum V2 protocol specification, providing:
 - **Template Distribution**: Efficient block template distribution
 - **Share Submission**: Optimized share submission protocol
 
-For detailed information about the Stratum V2 protocol, see [Stratum V2 + Merge Mining](../node/mining-stratum-v2.md).
+For detailed information about the Stratum V2 protocol, see [Stratum V2 Mining Protocol](../node/mining-stratum-v2.md).
 
-## Merge Mining
+## Merge Mining (Separate Plugin)
 
-The module supports merge mining coordination, enabling simultaneous mining of Bitcoin and secondary chains (e.g., RSK, Namecoin) using the same proof-of-work.
+**Merge mining is NOT part of the Stratum V2 module.** It is available as a separate paid plugin module (`blvm-merge-mining`) that integrates with the Stratum V2 module.
 
-Merge mining features:
-- Multiple chain support via multiplexed channels
-- Revenue tracking and distribution
-- Automatic chain coordination
+For merge mining functionality, see:
+- [blvm-merge-mining README](../../blvm-merge-mining/README.md) - Merge mining module documentation
+- [Stratum V2 + Merge Mining](../node/mining-stratum-v2.md) - How merge mining integrates with Stratum V2
 
 ## Usage
 

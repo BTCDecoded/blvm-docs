@@ -171,8 +171,7 @@ Before submitting your PR, ensure:
 3. **Maintainers review** - Code review by project maintainers
 4. **Signatures required** - Maintainers must cryptographically sign approval (see [PR Process](pr-process.md))
 5. **Review period** - Tier-specific review period must elapse (see [PR Process](pr-process.md) for details)
-6. **Economic node veto** - For Tier 3+ changes, [economic nodes](../governance/economic-nodes.md) can veto during review period
-7. **Merge** - Once all requirements are met, your PR is merged
+6. **Merge** - Once all requirements are met, your PR is merged
 
 ### Review Criteria
 
@@ -198,7 +197,7 @@ Your PR will be automatically classified into a governance tier based on the cha
 
 - **Tier 1: Routine Maintenance** - Bug fixes, documentation, performance optimizations (7 day review, see [Layer-Tier Model](../governance/layer-tier-model.md))
 - **Tier 2: Feature Changes** - New RPC methods, P2P changes, wallet features (30 day review)
-- **Tier 3: Consensus-Adjacent** - Changes affecting consensus validation code (90 day review, [economic node veto](../governance/economic-nodes.md))
+- **Tier 3: Consensus-Adjacent** - Changes affecting consensus validation code (90 day review)
 - **Tier 4: Emergency Actions** - Critical security patches (0 day review)
 - **Tier 5: Governance Changes** - Changes to governance rules (180 day review)
 

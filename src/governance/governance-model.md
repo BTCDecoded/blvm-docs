@@ -24,6 +24,5 @@ Bitcoin Commons implements a constitutional governance model that makes Bitcoin 
 - [PR Process](../development/pr-process.md) - How governance applies to pull requests
 - [Layer-Tier Model](layer-tier-model.md) - Layer and tier combination rules
 - [Multisig Configuration](multisig-configuration.md) - Signature threshold configuration
-- [Economic Nodes](economic-nodes.md) - Economic node veto system
 - [Governance Overview](overview.md) - Governance system introduction
 - [Keyholder Procedures](keyholder-procedures.md) - Maintainer responsibilities

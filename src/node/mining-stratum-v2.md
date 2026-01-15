@@ -1,8 +1,8 @@
-# Stratum V2 + Merge Mining
+# Stratum V2 Mining Protocol
 
 ## Overview
 
-Bitcoin Commons implements the Stratum V2 mining protocol with merge mining support, enabling efficient mining coordination and revenue generation through auxiliary chain mining. The system uses QUIC-based multiplexed channels for simultaneous mining of Bitcoin and secondary chains.
+Bitcoin Commons implements the Stratum V2 mining protocol, enabling efficient mining coordination. **Merge mining is available as a separate paid plugin module** (`blvm-merge-mining`) that integrates with Stratum V2.
 
 ## Stratum V2 Protocol
 
@@ -36,110 +36,34 @@ Stratum V2 works with both TCP and QUIC transports via the transport abstraction
 
 **Code**: ```712:768:blvm-node/src/config/mod.rs```
 
-## Merge Mining
+## Merge Mining (Optional Plugin)
 
 ### Overview
 
-Merge mining enables simultaneous mining of Bitcoin and secondary chains (e.g., RSK, Namecoin) using the same proof-of-work. The system uses Stratum V2 multiplexed channels to coordinate mining across multiple chains.
+**Merge mining is NOT built into the core node.** It is available as a **separate, optional paid plugin module** (`blvm-merge-mining`) that integrates with the Stratum V2 module.
 
-### Architecture
+### Key Points
 
-```
-┌─────────────────────────────────────┐
-│      Stratum V2 Server              │
-│  ┌───────────────────────────────┐ │
-│  │  Merge Mining Coordinator     │ │
-│  │  ┌──────────┐  ┌──────────┐  │ │
-│  │  │ Bitcoin  │  │   RSK    │  │ │
-│  │  │ Channel  │  │ Channel  │  │ │
-│  │  └──────────┘  └──────────┘  │ │
-│  └───────────────────────────────┘ │
-└─────────────────────────────────────┘
-              │ QUIC Multiplexed
-              │
-┌─────────────┴─────────────────────┐
-│         Miner Client              │
-│  Simultaneous Mining              │
-└───────────────────────────────────┘
-```
+- **Separate Module**: `blvm-merge-mining` is not part of the core node
+- **Requires Stratum V2**: The merge mining module depends on `blvm-stratum-v2` module
+- **One-Time Activation Fee**: 100,000 sats (0.001 BTC) required to activate
+- **Revenue Model**: Module developer receives a fixed percentage (default 5%) of merge mining rewards
+- **Not a Commons Funding Model**: Merge mining revenue goes to the module developer, not to Commons infrastructure
 
-### Merge Mining Coordinator
+### Installation
 
-The `MergeMiningCoordinator` manages merge mining operations:
+To use merge mining:
 
-- Tracks secondary chains (RSK, Namecoin, etc.)
-- Manages merge mining channels per chain
-- Records rewards and shares per chain
-- Calculates revenue distribution
+1. **Install Stratum V2 module** (required dependency)
+2. **Install merge mining module**: `blvm-merge-mining`
+3. **Pay activation fee**: 100,000 sats one-time payment
+4. **Configure**: Set up secondary chains and revenue share
 
-**Code**: ```1:308:blvm-node/src/network/stratum_v2/merge_mining.rs```
+### Documentation
 
-### Secondary Chain Configuration
-
-```rust
-pub struct SecondaryChain {
-    pub chain_id: String,      // e.g., "rsk", "namecoin"
-    pub chain_name: String,
-    pub enabled: bool,
-}
-```
-
-**Code**: ```13:23:blvm-node/src/network/stratum_v2/merge_mining.rs```
-
-### Merge Mining Channels
-
-Each secondary chain uses a separate Stratum V2 channel:
-
-```rust
-pub struct MergeMiningChannel {
-    pub chain_id: String,
-    pub channel_id: u32,
-    pub current_job_id: Option<u32>,
-    pub total_rewards: u64,
-    pub shares_submitted: u64,
-}
-```
-
-**Code**: ```24:37:blvm-node/src/network/stratum_v2/merge_mining.rs```
-
-## Revenue Distribution
-
-### Distribution Model
-
-Revenue from merge mining is distributed according to the whitepaper allocation:
-
-- **60% Core Development**: Core Bitcoin Commons development
-- **25% Grants**: Community grants and funding
-- **10% Audits**: Security audits and formal verification
-- **5% Operations**: Infrastructure and operations
-
-**Code**: ```244:252:blvm-node/src/network/stratum_v2/merge_mining.rs```
-
-### Revenue Tracking
-
-The system tracks:
-- Total revenue across all chains
-- Revenue per individual chain
-- Shares submitted per chain
-- Fee collection (if enabled)
-
-**Code**: ```192:227:blvm-node/src/network/stratum_v2/merge_mining.rs```
-
-### Fee Configuration
-
-Optional fee collection for merge mining revenue:
-
-```rust
-pub struct MergeMiningFeeConfig {
-    pub enabled: bool,
-    pub fee_percentage: u8,        // Default: 1%
-    pub commons_address: Option<String>,
-    pub contributor_id: Option<String>,
-    pub auto_distribute: bool,
-}
-```
-
-**Code**: ```738:759:blvm-node/src/config/mod.rs```
+For complete merge mining documentation, see:
+- [blvm-merge-mining README](../../blvm-merge-mining/README.md) - Module documentation
+- [Module System](../modules/overview.md) - How modules work
 
 ## Server Implementation
 
@@ -174,7 +98,6 @@ The miner client connects to pools and submits shares:
 - Connection management
 - Job reception
 - Share submission
-- Merge mining coordination
 
 **Code**: ```1:200:blvm-node/src/network/stratum_v2/miner.rs```
 
@@ -198,16 +121,9 @@ The client handles protocol communication:
 enabled = true
 pool_url = "tcp://pool.example.com:3333"  # or "iroh://<nodeid>"
 listen_addr = "0.0.0.0:3333"  # Server mode
-merge_mining_enabled = true
-secondary_chains = ["rsk", "namecoin"]
-
-[stratum_v2.merge_mining_fee]
-enabled = true
-fee_percentage = 1
-commons_address = "bc1q..."
-contributor_id = "contributor-123"
-auto_distribute = false
 ```
+
+**Note**: Merge mining configuration is handled by the `blvm-merge-mining` module, not in Stratum V2 config.
 
 **Code**: ```712:768:blvm-node/src/config/mod.rs```
 
@@ -242,19 +158,18 @@ miner.start_mining().await?;
 1. **Bandwidth Efficiency**: 50-66% bandwidth savings vs Stratum V1
 2. **Security**: Encrypted communication via TLS/QUIC
 3. **Efficiency**: Multiplexed channels for simultaneous mining
-4. **Revenue Generation**: Merge mining enables sustainable funding
-5. **Flexibility**: Support for multiple secondary chains
-6. **Transport Choice**: Works with TCP or QUIC
+4. **Flexibility**: Support for multiple mining streams
+5. **Transport Choice**: Works with TCP or QUIC
 
 ## Components
 
 The Stratum V2 system includes:
 - Protocol encoding/decoding
 - Server and client implementations
-- Merge mining coordination
-- Revenue distribution tracking
 - QUIC multiplexed channels
 - Transport abstraction support
 
 **Location**: `blvm-node/src/network/stratum_v2/`
+
+**Note**: Merge mining functionality is provided by the separate `blvm-merge-mining` module, not by the core Stratum V2 implementation.
 

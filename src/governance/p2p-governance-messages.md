@@ -9,7 +9,7 @@ Bitcoin Commons nodes relay governance messages through the P2P network, enablin
 ### Message Flow
 
 ```
-Economic Node
+Node
     │
     ├─→ P2P Network (Bitcoin Protocol)
     │   │
@@ -30,43 +30,6 @@ Economic Node
 
 ## Governance Message Types
 
-### EconomicNodeRegistration
-
-Economic node registration messages:
-
-- **Purpose**: Register economic nodes on the network
-- **Fields**: Node type, entity name, message ID
-- **Relay**: Gossiped to peers, optionally forwarded to governance app
-
-**Code**: ```731:803:blvm-node/src/network/mod.rs```
-
-### EconomicNodeVeto
-
-Economic node veto messages:
-
-- **Purpose**: Signal veto for Tier 3+ proposals
-- **Fields**: PR ID, signal type, message ID
-- **Relay**: Gossiped to peers, optionally forwarded to governance app
-
-**Code**: ```850:950:blvm-node/src/network/mod.rs```
-
-### EconomicNodeStatus
-
-Economic node status query messages:
-
-- **Purpose**: Query economic node status
-- **Fields**: Request ID, query parameters
-- **Relay**: Forwarded to governance app, response sent back to peer
-
-**Code**: ```950:1047:blvm-node/src/network/mod.rs```
-
-### EconomicNodeForkDecision
-
-Governance fork decision messages:
-
-- **Purpose**: Signal fork decision (ruleset choice)
-- **Fields**: Chosen ruleset, message ID
-- **Relay**: Gossiped to peers, optionally forwarded to governance app
 
 **Code**: ```1049:1100:blvm-node/src/network/mod.rs```
 

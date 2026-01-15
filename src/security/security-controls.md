@@ -33,7 +33,6 @@ security_controls:
     requires_security_audit: true
     requires_formal_verification: true
     requires_cryptography_expert: false
-    economic_node_veto_enabled: true
 ```
 
 **Code**: ```20:35:blvm-commons/src/validation/security_controls.rs```

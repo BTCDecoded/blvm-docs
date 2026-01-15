@@ -100,7 +100,6 @@ Published for governance actions:
 - PR merges
 - Review period notifications
 - Keyholder announcements
-- Economic node registrations
 
 **Code**: ```1:200:blvm-commons/src/nostr/governance_publisher.rs```
 
@@ -123,7 +122,6 @@ The `GovernanceActionPublisher` publishes governance actions:
 
 - **PR Events**: Merge and review events
 - **Keyholder Events**: Signature announcements
-- **Economic Node Events**: Registration and veto events
 - **Fork Events**: Governance fork decisions
 
 **Code**: ```1:200:blvm-commons/src/nostr/governance_publisher.rs```

@@ -80,7 +80,6 @@
 - [Layer-Tier Model](governance/layer-tier-model.md)
 - [Configuration System](governance/configuration-system.md)
 - [Governance Fork System](governance/governance-fork.md)
-- [Economic Node Veto System](governance/economic-nodes.md)
 - [P2P Governance Messages](governance/p2p-governance-messages.md)
 - [Privacy-Preserving Voting](governance/privacy-preserving-voting.md)
 - [OpenTimestamps Integration](governance/opentimestamps-integration.md)

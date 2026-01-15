@@ -37,7 +37,6 @@ BLVM is built on core principles that guide all design decisions.
 - Users control what software they run
 - No forced network upgrades
 - Forkable governance model
-- [Economic node](../governance/economic-nodes.md) veto power
 
 ## Design Decisions
 
@@ -71,7 +70,7 @@ Cryptographic governance provides:
 - **Transparency**: All decisions are cryptographically verifiable
 - **Accountability**: Clear audit trail of all actions
 - **Resistance to Capture**: Multi-signature requirements make capture expensive
-- **User Protection**: Economic nodes can veto harmful changes
+- **User Protection**: Forkable governance allows users to exit if they disagree
 
 ## Trade-offs
 

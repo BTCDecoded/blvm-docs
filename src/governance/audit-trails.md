@@ -9,7 +9,6 @@ The governance system maintains tamper-evident audit logs that record:
 - **All Governance Decisions**: Every PR merge, signature, and veto
 - **Maintainer Actions**: Key generation, rotation, and usage
 - **Emergency Activations**: Emergency mode activations and deactivations
-- **Economic Node Signals**: Veto signals and economic activity
 
 ## Cryptographic Properties
 

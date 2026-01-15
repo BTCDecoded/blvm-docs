@@ -279,7 +279,6 @@ PRs require all status checks to pass before merging:
 **Note**: Even if all checks pass, PRs still require:
 - Maintainer signatures (see [PR Process](pr-process.md))
 - Review period to elapse
-- No economic node veto (for Tier 3+)
 
 ## Best Practices
 

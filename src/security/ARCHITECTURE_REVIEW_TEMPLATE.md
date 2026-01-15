@@ -180,7 +180,6 @@ Use this template when conducting security architecture reviews for new features
 - [ ] Security audit required (P0 controls)
 - [ ] Formal verification required (consensus-critical)
 - [ ] Cryptography expert review required
-- [ ] Economic node consideration required (Tier 3+)
 
 ## Testing & Validation
 
@@ -220,7 +219,6 @@ Use this template when conducting security architecture reviews for new features
 - [ ] Appropriate governance tier is selected
 - [ ] Required signatures are identified
 - [ ] Review period is appropriate
-- [ ] Economic node veto is considered (if Tier 3+)
 
 ## Risk Assessment
 

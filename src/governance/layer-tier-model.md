@@ -22,13 +22,13 @@ The layer system maps repository architecture to governance requirements:
 
 The tier system classifies changes by action type:
 
-| Tier | Type | Signatures | Review Period | Economic Veto |
-|------|------|------------|---------------|---------------|
-| 1 | Routine Maintenance | 3-of-5 | 7 days | No |
-| 2 | Feature Changes | 4-of-5 | 30 days | No |
-| 3 | Consensus-Adjacent | 5-of-5 | 90 days | Yes |
-| 4 | Emergency Actions | 4-of-5 | 0 days | No |
-| 5 | Governance Changes | 5-of-5 | 180 days | Yes |
+| Tier | Type | Signatures | Review Period |
+|------|------|------------|---------------|
+| 1 | Routine Maintenance | 3-of-5 | 7 days |
+| 2 | Feature Changes | 4-of-5 | 30 days |
+| 3 | Consensus-Adjacent | 5-of-5 | 90 days |
+| 4 | Emergency Actions | 4-of-5 | 0 days |
+| 5 | Governance Changes | 5-of-5 | 180 days |
 
 ## Combination Rules
 
@@ -71,10 +71,6 @@ When both Layer and Tier requirements apply, the system takes the **most restric
 | Consensus change in blvm-spec | 1 (6-of-7, 180d) | 3 (5-of-5, 90d) | 6-of-7, 180d | Layer 1 |
 | Emergency fix in blvm-node | 4 (3-of-5, 60d) | 4 (4-of-5, 0d) | 4-of-5, 0d | Tier 4 |
 
-## Economic Veto Requirements
-
-Economic node vetoes required for **Tier 3+** (any layer). Thresholds: Tier 3 (30%+ hashpower AND 40%+ economic), Tier 4 (25%+ AND 35%+), Tier 5 (50%+ AND 60%+).
-
 ## Implementation
 
 **Code**: ```63:125:blvm-commons/src/validation/threshold.rs```
@@ -103,5 +99,4 @@ pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {
 - [PR Process](../development/pr-process.md) - How governance tiers apply to pull requests
 - [Governance Model](governance-model.md) - Governance system
 - [Multisig Configuration](multisig-configuration.md) - Signature threshold configuration
-- [Economic Nodes](economic-nodes.md) - Economic node veto system
 - [Governance Overview](overview.md) - Governance system introduction

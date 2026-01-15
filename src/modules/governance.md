@@ -2,13 +2,11 @@
 
 ## Overview
 
-The Governance module (`blvm-governance`) integrates governance functionality for blvm-node: webhook notifications to [blvm-commons](../governance/overview.md), [economic node tracking](../governance/economic-nodes.md), [veto system integration](../governance/economic-nodes.md#veto-mechanism), and governance proposal monitoring. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Governance module (`blvm-governance`) integrates governance functionality for blvm-node: webhook notifications to [blvm-commons](../governance/overview.md) and governance proposal monitoring. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
 - **Webhook Notifications**: Sends governance events to blvm-commons via webhooks
-- **Economic Node Tracking**: Tracks economic node status and contributions
-- **Veto System Integration**: Monitors and reports veto threshold status
 - **Governance Proposal Monitoring**: Tracks governance proposals from creation to merge
 
 ## Installation
@@ -74,7 +72,7 @@ The module includes a `module.toml` manifest (see [Module Development](../sdk/mo
 ```toml
 name = "blvm-governance"
 version = "0.1.0"
-description = "Governance webhook and economic node tracking module"
+description = "Governance webhook and proposal monitoring module"
 author = "Bitcoin Commons Team"
 entry_point = "blvm-governance"
 
@@ -93,8 +91,6 @@ The module subscribes to the following node events:
 - `GovernanceProposalCreated` - New governance proposal created
 - `GovernanceProposalVoted` - Vote cast on governance proposal
 - `GovernanceProposalMerged` - Governance proposal merged
-- `EconomicNodeRegistered` - Economic node registered in governance system
-- `EconomicNodeVeto` - Economic node veto signal received
 - `ChainTipUpdated` - Chain tip updated (for tracking block height)
 
 ### Published Events
@@ -103,7 +99,6 @@ The module publishes the following events:
 
 - `WebhookSent` - Webhook notification successfully sent to blvm-commons
 - `WebhookFailed` - Webhook delivery failed (with error details)
-- `VetoThresholdReached` - Economic node veto threshold reached
 - `GovernanceForkDetected` - Governance fork detected
 
 ## Webhook Integration
@@ -111,8 +106,6 @@ The module publishes the following events:
 The module sends webhook notifications to blvm-commons for:
 
 - Governance proposal lifecycle events
-- Economic node registration and status changes
-- Veto threshold status
 - Governance fork detection
 
 Webhook payloads include:
@@ -121,32 +114,14 @@ Webhook payloads include:
 - Event-specific data (proposal details, node status, etc.)
 - Cryptographic signatures for verification
 
-## Economic Node Tracking
-
-The module tracks economic node status including:
-
-- Node registration status
-- Contribution tracking (merge mining, fee forwarding, zaps, marketplace)
-- Veto eligibility and status
-- Governance participation metrics
-
-## Veto System Integration
-
-The module monitors veto signals from economic nodes and:
-
-- Tracks veto threshold status
-- Publishes events when veto threshold is reached
-- Sends webhook notifications for veto events
-
 ## Usage
 
 Once installed and configured, the module automatically:
 
 1. Subscribes to governance-related events from the node
-2. Tracks economic node status and contributions
-3. Monitors governance proposals and votes
-4. Sends webhook notifications to blvm-commons
-5. Publishes governance events for other modules
+2. Monitors governance proposals and votes
+3. Sends webhook notifications to blvm-commons
+4. Publishes governance events for other modules
 
 ## API Integration
 
@@ -172,12 +147,6 @@ The module integrates with the node via the Node API IPC protocol:
 - Verify node_id is correctly configured
 - Check node logs for webhook delivery errors
 
-### Economic Node Tracking Not Working
-
-- Verify node has `read_blockchain` capability
-- Check that governance events are being published by the node
-- Verify node_id matches governance system records
-- Check node logs for tracking errors
 
 ## See Also
 
@@ -186,7 +155,6 @@ The module integrates with the node via the Node API IPC protocol:
 - [Module Development](../sdk/module-development.md) - Guide for developing custom modules
 - [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
 - [Governance Overview](../governance/overview.md) - Governance system documentation
-- [Economic Nodes](../governance/economic-nodes.md) - Economic node system documentation
 - [PR Process](../development/pr-process.md) - Governance tiers and PR review process
 
 

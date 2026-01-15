@@ -216,7 +216,6 @@ fn test_invalid_signature() {
 
 ### Category C: Governance
 - Tier classification logic
-- Economic node veto system
 - Database query implementation
 - Cross-layer file verification
 

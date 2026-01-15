@@ -10,8 +10,9 @@ The following modules are available for blvm-node:
 
 - **[Lightning Network Module](../modules/lightning.md)** - Lightning Network payment processing, invoice verification, payment routing, and channel management
 - **[Commons Mesh Module](../modules/mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection
-- **[Governance Module](../modules/governance.md)** - Governance webhook integration, economic node tracking, and veto system integration
-- **[Stratum V2 Module](../modules/stratum-v2.md)** - Stratum V2 mining protocol support, mining pool management, and merge mining coordination
+- **[Governance Module](../modules/governance.md)** - Governance webhook integration and proposal monitoring
+- **[Stratum V2 Module](../modules/stratum-v2.md)** - Stratum V2 mining protocol support and mining pool management
+- **[Merge Mining Module](../modules/stratum-v2.md)** - Merge mining available as separate paid plugin (`blvm-merge-mining`)
 
 For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
 
@@ -291,7 +292,6 @@ let event_types = vec![
     EventType::NewTransaction,
     EventType::ModuleLoaded,
     EventType::ConfigLoaded,
-    EventType::EconomicNodeRegistered,
 ];
 client.subscribe_events(event_types).await?;
 ```
@@ -328,10 +328,6 @@ client.subscribe_events(event_types).await?;
 - `ResourceLimitWarning` - Resource limit warning
 
 **Governance Events:**
-- `EconomicNodeRegistered` - Economic node registered
-- `EconomicNodeStatus` - Status query/response
-- `EconomicNodeForkDecision` - Fork decision made
-- `EconomicNodeVeto` - Veto signal sent
 - `GovernanceProposalCreated` - Proposal created
 - `GovernanceProposalVoted` - Vote cast
 - `GovernanceProposalMerged` - Proposal merged

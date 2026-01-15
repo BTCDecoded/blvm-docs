@@ -58,7 +58,7 @@ BLVM solves the technical problem (mathematical rigor, safe alternative implemen
 
 ### How does the modular architecture combine both innovations?
 
-The modular architecture has three layers: (1) Mandatory Consensus (BLVM ensures correctness), (2) Optional Modules (Commons enables competition), (3) Economic Coordination (merge mining funds both). BLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. The architecture is where both meet.
+The modular architecture has three layers: (1) Mandatory Consensus (BLVM ensures correctness), (2) Optional Modules (Commons enables competition), (3) Economic Coordination (module marketplace funds infrastructure). BLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. The architecture is where both meet.
 
 ### Can you use BLVM without Bitcoin Commons governance?
 
@@ -74,11 +74,11 @@ Forkable governance means users can fork to a better governance model. This crea
 
 ### How does economic alignment work?
 
-Through merge mining revenue. Secondary chains merge-mine with Bitcoin, providing revenue that flows to development priorities through governance decisions. Miners have economic incentives to support well-governed implementations because they benefit from network health.
+Through the module marketplace. Module authors receive 75% of sales, Commons receives 15% for infrastructure, and node operators receive 10%. This creates sustainable funding while incentivizing quality module development.
 
 ### What is merge mining?
 
-Merge mining allows miners to mine multiple blockchains simultaneously using the same proof-of-work. Bitcoin Commons implementations can merge-mine with Bitcoin, providing economic sustainability without changing Bitcoin's consensus. 1% of merged chain rewards fund development.
+Merge mining is available as a separate paid plugin module (`blvm-merge-mining`). It allows miners to mine multiple blockchains simultaneously using the same proof-of-work. However, merge mining is not a Commons funding model - revenue goes to the module developer, not to Commons infrastructure.
 
 ### What features does BLVM provide?
 

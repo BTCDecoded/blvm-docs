@@ -15,7 +15,6 @@ YAML configuration files in the `governance/config/` directory serve as the auth
 **Key Files:**
 - `action-tiers.yml` - Tier definitions and signature requirements
 - `repository-layers.yml` - Layer definitions and requirements
-- `economic-nodes.yml` - Economic node configuration
 - `emergency-tiers.yml` - Emergency tier definitions
 - `commons-contributor-thresholds.yml` - Commons contributor thresholds
 - `governance-fork.yml` - Governance fork configuration
@@ -108,7 +107,6 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | Category | Variables | Description |
 |----------|-----------|-------------|
 | **Action Tier Thresholds** | 15 | Signature requirements and review periods for each tier |
-| **Economic Node Veto Thresholds** | 7 | Veto thresholds for Tier 3, 4, and Tier 5 signaling |
 | **Commons Contributor Thresholds** | 8 | Qualification thresholds and weight calculation |
 | **Governance Phase Thresholds** | 11 | Phase boundaries (Early, Growth, Mature) |
 | **Repository Layer Thresholds** | 9 | Signature requirements per repository layer |
@@ -143,15 +141,6 @@ The system manages 87+ governance-controlled configuration variables, organized 
 
 **Code**: ```216:357:blvm-commons/src/governance/config_defaults.rs```
 
-### Economic Node Veto Thresholds (7 variables)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `veto_tier_3_mining_percent` | 30.0 | Tier 3: Mining hashpower threshold (%) |
-| `veto_tier_3_economic_percent` | 40.0 | Tier 3: Economic activity threshold (%) |
-| `veto_tier_4_mining_percent` | 25.0 | Tier 4: Mining hashpower threshold (%) |
-| `veto_tier_4_economic_percent` | 35.0 | Tier 4: Economic activity threshold (%) |
-| `veto_tier_4_window_hours` | 24 | Tier 4: Veto window (hours) |
 | `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Mining hashpower for support (%) |
 | `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Economic activity for support (%) |
 
@@ -161,8 +150,6 @@ The system manages 87+ governance-controlled configuration variables, organized 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `commons_contributor_min_merge_mining_btc` | 0.01 | Minimum merge mining contribution (BTC) |
-| `commons_contributor_min_fee_forwarding_btc` | 0.1 | Minimum fee forwarding contribution (BTC) |
 | `commons_contributor_min_zaps_btc` | 0.01 | Minimum zap contribution (BTC) |
 | `commons_contributor_min_marketplace_btc` | 0.01 | Minimum marketplace contribution (BTC) |
 | `commons_contributor_measurement_period_days` | 90 | Measurement period (days) |
@@ -177,16 +164,12 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `phase_early_max_blocks` | 50000 | Early phase: Maximum blocks |
-| `phase_early_max_nodes` | 10 | Early phase: Maximum economic nodes |
 | `phase_early_max_contributors` | 10 | Early phase: Maximum contributors |
 | `phase_growth_min_blocks` | 50000 | Growth phase: Minimum blocks |
 | `phase_growth_max_blocks` | 200000 | Growth phase: Maximum blocks |
-| `phase_growth_min_nodes` | 10 | Growth phase: Minimum economic nodes |
-| `phase_growth_max_nodes` | 30 | Growth phase: Maximum economic nodes |
 | `phase_growth_min_contributors` | 10 | Growth phase: Minimum contributors |
 | `phase_growth_max_contributors` | 100 | Growth phase: Maximum contributors |
 | `phase_mature_min_blocks` | 200000 | Mature phase: Minimum blocks |
-| `phase_mature_min_nodes` | 30 | Mature phase: Minimum economic nodes |
 | `phase_mature_min_contributors` | 100 | Mature phase: Minimum contributors |
 
 **Code**: ```500:600:blvm-commons/src/governance/config_defaults.rs```
@@ -224,7 +207,6 @@ Changing a configuration parameter requires Tier 5 governance approval:
 1. **Proposal**: Create a configuration change proposal via PR
 2. **Review**: 5-of-5 maintainer signatures required
 3. **Review Period**: 180 days review period
-4. **Economic Node Signaling**: 50%+ hashpower, 60%+ economic activity
 5. **Activation**: Change activated in database via `activate_change()`
 6. **Sync**: Change optionally synced back to YAML files
 
@@ -259,11 +241,8 @@ let enabled = config.get_bool("feature_governance_enforcement", false).await?;
 // Get tier signatures
 let (required, total) = config.get_tier_signatures(3).await?;
 
-// Get veto thresholds
-let (mining, economic) = config.get_veto_thresholds(3).await?;
-
 // Get Commons contributor threshold (with YAML fallback)
-let threshold = config.get_commons_contributor_threshold("merge_mining").await?;
+let threshold = config.get_commons_contributor_threshold("zaps").await?;
 ```
 
 ### Integration with Validators
@@ -297,13 +276,11 @@ tiers:
     signatures_required: 3
     signatures_total: 5
     review_period_days: 7
-    economic_veto: false
   - tier: 3
     name: "Consensus-Adjacent"
     signatures_required: 5
     signatures_total: 5
     review_period_days: 90
-    economic_veto: true
 ```
 
 The `YamlConfigLoader` extracts values from these files into a flat key-value structure for the registry.
@@ -329,7 +306,6 @@ All configuration keys follow a naming convention:
 - Layer configs: `layer_{n}_{property}`
 - Veto configs: `veto_tier_{n}_{type}_percent`
 - Commons contributor: `commons_contributor_threshold_{type}`
-- Economic node: `economic_node_{type}_{property}`
 
 **Complete Reference**: See `governance/config/DEFAULT_VALUES_REFERENCE.md` for all keys and default values.
 

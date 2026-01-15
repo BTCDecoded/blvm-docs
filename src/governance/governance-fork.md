@@ -25,7 +25,6 @@ governance_rules:
   action_tiers: { /* tier definitions */ }
   repository_layers: { /* layer definitions */ }
   maintainers: { /* maintainer registry */ }
-  economic_nodes: { /* economic node registry */ }
   emergency_procedures: { /* emergency protocols */ }
 cryptographic_proofs:
   maintainer_signatures: [ /* signed by maintainers */ ]
@@ -62,7 +61,7 @@ compatibility:
 
 Track ruleset adoption through: node count, hash rate, user count, exchange support.
 
-**Public Dashboard**: Current distribution, adoption trends, geographic distribution, economic node support, exchange listings.
+**Public Dashboard**: Current distribution, adoption trends, geographic distribution, exchange listings.
 
 ## Fork Decision Process
 

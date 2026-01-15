@@ -73,7 +73,7 @@ if let Some((_, _, channel_full_count)) = stats {
 
 **Solution**:
 - **Complete Coverage**: All EventType variants have corresponding EventPayload variants
-- **Governance Events**: All governance events (EconomicNodeRegistered, EconomicNodeStatus, EconomicNodeForkDecision, EconomicNodeVeto) are published
+- **Governance Events**: All governance events are published
 - **Network Events**: All network events are published
 - **Lifecycle Events**: All lifecycle events are published
 
@@ -86,14 +86,9 @@ if let Some((_, _, channel_full_count)) = stats {
 - `ChainReorg`: Chain reorganization
 
 ### Governance Events
-- `EconomicNodeRegistered`: Economic node registered
-- `EconomicNodeStatus`: Status query/response
-- `EconomicNodeForkDecision`: Fork decision made
-- `EconomicNodeVeto`: Veto signal sent
 - `GovernanceProposalCreated`: Proposal created
 - `GovernanceProposalVoted`: Vote cast
 - `GovernanceProposalMerged`: Proposal merged
-- `VetoThresholdReached`: Veto threshold reached
 - `GovernanceForkDetected`: Fork detected
 
 ### Network Events
@@ -227,7 +222,7 @@ let subscribers = event_manager.get_subscribers(EventType::NewBlock).await;
 5. Statistics track failed delivery count
 
 ### Scenario 5: Governance Event Flow
-1. Network receives EconomicNodeRegistration
+1. Network receives governance event
 2. Event published to governance module
 3. Governance module processes event
 4. Governance module may publish additional events

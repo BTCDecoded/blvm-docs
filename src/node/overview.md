@@ -101,7 +101,6 @@ graph TB
 ### Mining Coordinator
 - Block template generation
 - Stratum V2 protocol support
-- Merge mining coordination
 - Mining job distribution
 
 **Code**: ```1:531:blvm-node/src/node/miner.rs```
@@ -119,7 +118,6 @@ graph TB
 - P2P governance message relay
 - Webhook handlers for governance events
 - User signaling support
-- Economic node integration
 
 **Code**: ```1:3:blvm-node/src/governance/mod.rs```
 

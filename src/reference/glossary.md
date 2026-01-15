@@ -28,7 +28,6 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Cryptographic Enforcement** - All governance actions require cryptographic signatures from maintainers, making power visible and accountable. See [Keyholder Procedures](../governance/keyholder-procedures.md).
 
-**Economic Node Veto** - Tier 3 consensus-adjacent changes can be vetoed by [economic nodes](../governance/economic-nodes.md) representing 30%+ hashpower or 40%+ economic activity.
 
 ## Technical Concepts
 

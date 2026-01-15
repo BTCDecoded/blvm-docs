@@ -12,8 +12,8 @@ The following modules are available for blvm-node:
 
 - **[Lightning Network Module](lightning.md)** - Lightning Network payment processing with LDK fully implemented, invoice verification, payment routing, and channel management
 - **[Commons Mesh Module](mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection
-- **[Governance Module](governance.md)** - Governance webhook integration, economic node tracking, and veto system integration
-- **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support with network integration complete, mining pool management, and merge mining coordination
+- **[Governance Module](governance.md)** - Governance webhook integration and proposal monitoring
+- **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support with network integration complete and mining pool management
 
 ## Module System Architecture
 

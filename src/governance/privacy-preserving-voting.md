@@ -10,10 +10,7 @@ Bitcoin Commons implements privacy-preserving voting through contribution-based 
 
 Contributors receive voting weight based on their contributions:
 
-- **Merge Mining**: Revenue contributions from merge mining
-- **Fee Forwarding**: Transaction fee contributions
-- **Zaps**: Lightning Network zap contributions
-- **BIP70 Payments**: Payment protocol contributions
+- **Zaps**: Lightning Network zap contributions (tracked for transparency, don't affect governance)
 
 **Code**: ```1:200:blvm-commons/src/governance/contributions.rs```
 
@@ -45,7 +42,7 @@ vote_weight = sqrt(zap_amount_btc)
 Base participation weight from contributions:
 
 - **90-Day Window**: Contributions within 90 days
-- **Contribution Types**: Merge mining, fee forwarding, zaps, BIP70
+- **Contribution Types**: Zaps (tracked for transparency only)
 - **Cooling-Off Period**: New contributions have reduced weight
 
 **Code**: ```65:90:blvm-commons/src/governance/weight_calculator.rs```
@@ -197,15 +194,6 @@ Zap votes can veto proposals:
 
 **Code**: ```67:73:blvm-commons/src/governance/vote_aggregator.rs```
 
-### Economic Node Veto
-
-Economic nodes can also veto (separate mechanism):
-
-- **Threshold**: 30% hashpower OR 40% economic activity
-- **Tier 3+**: Only for Tier 3+ proposals
-- **Combined**: Works alongside zap veto
-
-**Code**: ```57:75:blvm-commons/src/governance/vote_aggregator.rs```
 
 ## Database Schema
 
@@ -264,7 +252,7 @@ The privacy-preserving voting system includes:
 - Vote aggregator
 - Participation weight calculation
 - Cooling-off period enforcement
-- Veto mechanisms (zap and economic node)
+- Zap tracking (for transparency, governance is maintainer-only multisig)
 
 **Location**: `blvm-commons/src/nostr/zap_voting.rs`, `blvm-commons/src/governance/weight_calculator.rs`, `blvm-commons/src/governance/vote_aggregator.rs`
 

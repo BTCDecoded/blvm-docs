@@ -38,21 +38,11 @@ Each tier has a specific review period that must elapse:
 
 The review period starts when the PR is opened and all required signatures are collected.
 
-### 4. Economic Node Veto Period (Tier 3+ Only)
-
-For Tier 3+ changes, economic nodes can veto during the review period:
-
-- **Hashpower threshold**: 30%+ of network hashpower
-- **Economic activity threshold**: 40%+ of economic activity
-- **Veto process**: Economic nodes register and signal veto
-- **Enforcement**: Veto blocks merge until resolved
-
-### 5. Requirements Met → Merge Enabled
+### 4. Requirements Met → Merge Enabled
 
 Once all requirements are met:
 - ✅ Required signatures collected
 - ✅ Review period elapsed
-- ✅ No economic node veto (if applicable)
 - ✅ All CI checks pass
 
 The PR can be merged.
@@ -96,7 +86,6 @@ The PR can be merged.
 **Requirements**:
 - **Signatures**: 5-of-5 maintainers
 - **Review Period**: 90 days
-- **Economic Node Veto**: 30%+ hashpower or 40%+ economic activity
 - **Requirement**: Formal verification (Kani) required
 
 **Examples**:
@@ -113,7 +102,7 @@ The PR can be merged.
 **Requirements**:
 - **Signatures**: 4-of-5 maintainers
 - **Review Period**: 0 days (immediate)
-- **Requirement**: Real-time economic node oversight, post-mortem required
+- **Requirement**: Post-mortem required
 
 **Sub-tiers**:
 - **Critical Emergency**: Network-threatening (7 day maximum duration)
@@ -132,7 +121,6 @@ The PR can be merged.
 **Requirements**:
 - **Signatures**: Special process (5-of-7 maintainers + 2-of-3 emergency keyholders)
 - **Review Period**: 180 days
-- **Economic Node Signaling**: 50%+ hashpower, 60%+ economic activity
 
 **Examples**:
 - Changing signature requirements
@@ -191,26 +179,6 @@ The Governance App cryptographically verifies each signature:
 - Verifies signature matches maintainer's public key
 - Ensures signature is for the correct PR
 - Prevents signature reuse
-
-## Economic Node Veto System
-
-For Tier 3+ changes, economic nodes can veto during the review period.
-
-### Veto Thresholds
-
-- **Hashpower threshold**: 30%+ of network hashpower
-- **Economic activity threshold**: 40%+ of economic activity
-
-### Veto Process
-
-1. **Economic nodes register** - Nodes that meet threshold requirements
-2. **Signal veto** - During review period, nodes can signal veto
-3. **Veto blocks merge** - PR cannot be merged while veto is active
-4. **Resolution** - Veto must be resolved before merge
-
-### Why Economic Node Veto?
-
-Economic nodes (miners, exchanges, large holders) have significant stake in the network. For consensus-adjacent changes, they need a way to signal concerns before changes are merged.
 
 ## Emergency Procedures
 
@@ -278,7 +246,6 @@ Your PR will show status indicators:
 - **Signature progress**: `3/5 signatures collected`
 - **Review period**: `5 days remaining`
 - **CI status**: All checks passing/failing
-- **Veto status**: No veto / Veto active
 
 ## Common Questions
 
@@ -297,13 +264,6 @@ No. Review periods are fixed by tier to ensure adequate scrutiny. However, you c
 
 Contact maintainers. There's a temporary manual override available for tier classification.
 
-### What happens if economic nodes veto my PR?
-
-The veto blocks merge. You'll need to:
-- Address concerns raised by economic nodes
-- Update PR to address issues
-- Wait for veto to be lifted
-
 ### Can I merge my own PR?
 
 No. All PRs require maintainer signatures and review period to elapse, regardless of who opened it.
@@ -313,5 +273,4 @@ No. All PRs require maintainer signatures and review period to elapse, regardles
 - [Contributing Guide](contributing.md) - Complete developer workflow
 - [Governance Model](../governance/governance-model.md) - Detailed governance documentation
 - [Layer-Tier Model](../governance/layer-tier-model.md) - Complete decision matrix
-- [Economic Nodes](../governance/economic-nodes.md) - Economic node system details
 
