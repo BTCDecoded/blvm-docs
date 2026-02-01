@@ -242,7 +242,7 @@ min_fee_rate = 1  # sat/vB
 
 ## Formal Verification
 
-The UTXO Commitments module includes 11 Kani proofs verifying:
+The UTXO Commitments module includes 11 blvm_spec_lock proofs verifying:
 
 - Merkle tree operations (insert, remove, root calculation)
 - Commitment generation
@@ -299,7 +299,7 @@ update_commitments_after_block(
 3. **Efficiency**: Incremental updates, no full set download
 4. **Flexibility**: Multiple sync modes and verification levels
 5. **Transport Agnostic**: Works with TCP or QUIC
-6. **Formal Verification**: 11 Kani proofs ensure correctness
+6. **Formal Verification**: 11 blvm_spec_lock proofs ensure correctness
 
 ## Components
 
@@ -310,7 +310,7 @@ The UTXO Commitments system includes:
 - Commitment verification
 - Network integration (TCP and Iroh)
 - Fast sync protocol
-- 11 Kani proofs
+- 11 blvm_spec_lock proofs
 
 **Location**: `blvm-consensus/src/utxo_commitments/`, `blvm-node/src/network/utxo_commitments_client.rs`
 

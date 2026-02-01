@@ -138,11 +138,15 @@ graph TB
 - [UTXO commitments](../consensus/utxo-commitments.md) support
 
 ### Storage Features
-- [Multiple database backends](storage-backends.md) with abstraction layer
+- [Multiple database backends](storage-backends.md) with abstraction layer (redb, sled, rocksdb)
+- [Bitcoin Core compatibility](storage-backends.md#rocksdb-optional-bitcoin-core-compatible) via RocksDB backend
 - Automatic backend fallback on failure
 - Pruning support
-- Transaction indexing
+- [Advanced transaction indexing](transaction-indexing.md) (address and value range indexes)
 - UTXO set management
+
+### Security Features
+- [IBD bandwidth protection](ibd-protection.md) (per-peer/IP/subnet limits, reputation scoring)
 
 ### Module Features
 - [Process isolation](../architecture/module-system.md#process-isolation)

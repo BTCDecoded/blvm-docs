@@ -17,7 +17,7 @@ Like a compiler transforms source code → IR → optimized machine code, BLVM t
    - **Pass 2**: Constant Folding (pre-computed constants, constant propagation)
    - **Pass 3**: Memory Layout Optimization (cache-aligned structures, compact frames)
    - **Pass 5**: SIMD Vectorization (batch operations, parallel processing)
-   - Bounds Check Optimization (using [Kani](consensus/formal-verification.md)-proven bounds)
+   - Bounds Check Optimization (using proven bounds)
    - Dead Code Elimination
    - Inlining Hints for hot functions
 3. **[blvm-consensus](consensus/overview.md)** - Optimized implementation with [formal verification](consensus/formal-verification.md)
@@ -57,7 +57,7 @@ Report bugs or request features on GitHub Issues, ask questions in GitHub Discus
 
 ### Core Components
 
-- **[blvm-consensus](consensus/overview.md)** - Pure mathematical implementation with 219 Kani proofs, BIP integration (BIP30, BIP34, BIP66, BIP90, BIP147)
+- **[blvm-consensus](consensus/overview.md)** - Pure mathematical implementation with formal verification, BIP integration (BIP30, BIP34, BIP66, BIP90, BIP147)
 - **[blvm-protocol](protocol/overview.md)** - Protocol variants (mainnet, testnet, regtest) and network messages
 - **[blvm-node](node/overview.md)** - Full Bitcoin node with RPC, storage, and [module system](architecture/module-system.md)
 - **[blvm-sdk](sdk/overview.md)** - Governance primitives and CLI tools (blvm-keygen, blvm-sign, blvm-verify)
@@ -72,17 +72,17 @@ BLVM includes a process-isolated module system enabling optional features:
 - **[blvm-governance](modules/governance.md)** - Governance integration module
 - **[blvm-stratum-v2](modules/stratum-v2.md)** - Stratum V2 mining module
 
-### Recent Enhancements
+### Key Capabilities
 
-- **Module System Overhaul**: Enhanced security and process isolation
-- **RBF and Mempool Policies**: Configurable replacement-by-fee modes
-- **Payment Processing**: CTV (CheckTemplateVerify) support
-- **Advanced Indexing**: Address and value range indexing
-- **Kani Proof Tiering**: Strong/medium/slow tiers for critical proofs
+BLVM includes comprehensive Bitcoin node functionality:
+
+- **Module System**: Process-isolated modules with enhanced security and process isolation
+- **RBF and Mempool Policies**: Configurable replacement-by-fee modes with 5 eviction strategies
+- **Payment Processing**: CTV (CheckTemplateVerify) support for advanced payment flows
+- **Advanced Indexing**: Address and value range indexing for efficient queries
+- **Formal Verification**: Formal verification for critical proofs
 - **Differential Testing**: Infrastructure for comparing against Bitcoin Core
 - **FIBRE Protocol**: High-performance relay protocol support
-
-See [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) for complete implementation details.
 
 ## License
 

@@ -49,6 +49,8 @@
 - [Operations](node/operations.md)
 - [RPC API Reference](node/rpc-api.md)
 - [Storage Backends](node/storage-backends.md)
+- [Transaction Indexing](node/transaction-indexing.md)
+- [IBD Bandwidth Protection](node/ibd-protection.md)
 - [Mining Integration](node/mining.md)
 - [Stratum V2 + Merge Mining](node/mining-stratum-v2.md)
 - [Multi-Transport Architecture](node/transport-abstraction.md)

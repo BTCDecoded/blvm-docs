@@ -135,7 +135,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 **Mitigations**:
 - Input validation and sanitization
 - Fuzzing (19 fuzz targets)
-- Formal verification (219 Kani proofs)
+- Formal verification
 - Property-based testing (141 property tests)
 - Network protocol validation
 
@@ -159,7 +159,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 
 **Mitigations**:
 - Checked arithmetic
-- Formal verification (Kani proofs)
+- Formal verification (blvm_spec_lock proofs)
 - Property-based testing
 - Runtime assertions
 
@@ -181,26 +181,26 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 
 ### Phase 1: Pre-Production (Current)
 
-- ✅ Fix signature verification with real transaction hashes
-- ✅ Implement proper Bitcoin double SHA256 hashing
-- ✅ Pin all dependencies to exact versions
-- ✅ Add network protocol input validation
-- ✅ Replace sled with redb (production-ready database)
-- ✅ Add DoS protection mechanisms
-- ✅ Add RPC authentication
-- ✅ Implement rate limiting
-- ✅ Add comprehensive fuzzing
-- ✅ Add eclipse attack prevention
-- ✅ Add storage bounds checking
+- Fix signature verification with real transaction hashes
+- Implement proper Bitcoin double SHA256 hashing
+- Pin all dependencies to exact versions
+- Add network protocol input validation
+- Replace sled with redb (production-ready database)
+- Add DoS protection mechanisms
+- Add RPC authentication
+- Implement rate limiting
+- Add comprehensive fuzzing
+- Add eclipse attack prevention
+- Add storage bounds checking
 
 **Code**: ```142:158:blvm-node/SECURITY.md```
 
 ### Phase 2: Production Readiness
 
-- ✅ All Phase 1 items completed
-- ⏳ Professional security audit (external, requires security firm)
-- ✅ Formal verification of critical paths
-- ✅ Advanced peer management
+- All Phase 1 items completed
+- Professional security audit (external, requires security firm)
+- Formal verification of critical paths
+- Advanced peer management
 
 **Code**: ```159:162:blvm-node/SECURITY.md```
 

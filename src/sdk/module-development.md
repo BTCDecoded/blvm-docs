@@ -218,8 +218,7 @@ Modules operate with **whitelist-only access control**. Each module declares req
 - `read_blockchain`: Access to blockchain data
 - `read_utxo`: Query UTXO set (read-only)
 - `read_chain_state`: Query chain state (height, tip)
-- `subscribe_events`: Receive node events
-- `send_transactions`: Submit transactions to mempool (planned)
+- `subscribe_events`: Receive node events (planned)
 
 ### Sandboxing
 
@@ -243,7 +242,7 @@ All module API requests are validated:
 
 **Event Types**: `NewBlock`, `NewTransaction`, `BlockDisconnected`, `ChainReorg`
 
-**Permissions**: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `send_transactions` (planned)
+**Permissions**: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`
 
 For detailed API reference, see `blvm-node/src/module/` (traits, IPC protocol, Node API, security).
 

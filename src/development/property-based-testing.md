@@ -291,9 +291,9 @@ proptest! {
 
 ## Integration with Formal Verification
 
-Property tests complement Kani proofs:
+Property tests complement blvm_spec_lock proofs:
 
-- **Kani**: Proves correctness for all inputs (bounded)
+- **blvm_spec_lock**: Proves correctness for all inputs (bounded)
 - **Property Tests**: Verifies invariants with random inputs (unbounded)
 - **Combined**: Comprehensive verification coverage
 
@@ -315,5 +315,5 @@ The property-based testing system includes:
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques
 - [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
 - [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
-- [Formal Verification](../consensus/formal-verification.md) - Kani model checking
+- [Formal Verification](../consensus/formal-verification.md) - blvm_spec_lock model checking
 - [Contributing](contributing.md) - Testing requirements for contributions

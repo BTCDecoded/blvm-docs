@@ -41,9 +41,9 @@ The review period starts when the PR is opened and all required signatures are c
 ### 4. Requirements Met → Merge Enabled
 
 Once all requirements are met:
-- ✅ Required signatures collected
-- ✅ Review period elapsed
-- ✅ All CI checks pass
+- Required signatures collected
+- Review period elapsed
+- All CI checks pass
 
 The PR can be merged.
 
@@ -86,7 +86,7 @@ The PR can be merged.
 **Requirements**:
 - **Signatures**: 5-of-5 maintainers
 - **Review Period**: 90 days
-- **Requirement**: Formal verification (Kani) required
+- **Requirement**: Formal verification (blvm_spec_lock) required
 
 **Examples**:
 - Changes to consensus validation logic
@@ -207,10 +207,10 @@ The system includes a three-tiered emergency response system:
 
 ### 1. Ensure PR is Ready
 
-- ✅ All CI checks pass
-- ✅ Code is well-documented
-- ✅ Tests are included
-- ✅ PR description is clear
+- All CI checks pass
+- Code is well-documented
+- Tests are included
+- PR description is clear
 
 ### 2. Be Patient
 

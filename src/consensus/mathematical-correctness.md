@@ -12,7 +12,7 @@ Our verification approach follows: **"Rust + Tests + Math Specs = Source of Trut
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification (Required, Must Pass)
-- **[Kani model checking](formal-verification.md)**: Bounded symbolic verification with mathematical invariants
+- **[blvm_spec_lock model checking](formal-verification.md)**: Bounded symbolic verification with mathematical invariants
 - **Mathematical specifications**: Formal documentation of consensus rules
 - **State space exploration**: Verification of all possible execution paths
 

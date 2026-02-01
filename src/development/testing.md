@@ -10,7 +10,7 @@ Bitcoin Commons uses a multi-layered testing strategy combining [formal verifica
 
 The testing strategy uses multiple complementary techniques:
 
-1. **[Formal Verification](../consensus/formal-verification.md) (Kani)**: Proves correctness for all inputs (bounded)
+1. **[Formal Verification](../consensus/formal-verification.md)**: Proves correctness for all inputs (bounded)
 2. **[Property-Based Testing](property-based-testing.md) (Proptest)**: Verifies invariants with random inputs (unbounded)
 3. **[Fuzzing](fuzzing.md) (libFuzzer)**: Discovers edge cases through random generation
 4. **Integration Tests**: Verifies end-to-end correctness
@@ -64,14 +64,14 @@ Fuzz tests discover edge cases through random generation:
 
 **Code**: ```1:269:blvm-consensus/fuzz/README.md```
 
-### Formal Verification (Kani)
+### Formal Verification
 
-[Kani proofs](../consensus/formal-verification.md) verify correctness for all inputs:
+[Formal verification](../consensus/formal-verification.md) verifies correctness for all inputs:
 
 - **Location**: `src/` and `tests/` directories
-- **Count**: 219 proofs with tiered execution system
+- **Count**: PLACEHOLDER_NUMBER proofs with tiered execution system
 - **Coverage**: Critical consensus functions
-- **Tool**: Kani model checker
+- **Tool**: Formal verification tooling
 
 **Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
 
@@ -101,7 +101,7 @@ MIRI detects undefined behavior:
 
 | Verification Technique | Count | Status |
 |----------------------|-------|--------|
-| **Kani Formal Proofs** | **219** | ✅ Critical functions |
+| **Formal Proofs** | **PLACEHOLDER_NUMBER** | ✅ Critical functions |
 | **Property Tests** | **35** (141 functions) | ✅ All mathematical invariants |
 | **Runtime Assertions** | **913** | ✅ All critical paths |
 | **Fuzz Targets** | **19** | ✅ Edge case discovery |
@@ -112,7 +112,7 @@ MIRI detects undefined behavior:
 
 ### Coverage by Consensus Area
 
-| Area | Kani Proofs | Property Tests | Runtime Assertions | Fuzz Targets |
+| Area | Formal Proofs | Property Tests | Runtime Assertions | Fuzz Targets |
 |------|-------------|----------------|-------------------|--------------|
 | Economic Rules | 8 | 3 | 53 | 1 |
 | Proof of Work | 11 | 2 | 69 | 1 |
@@ -158,10 +158,10 @@ cargo +nightly fuzz run transaction_validation
 cargo +nightly miri test
 ```
 
-### Run Kani Proofs
+### Run blvm_spec_lock Proofs
 
 ```bash
-cargo kani
+cargo blvm_spec_lock
 ```
 
 **Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
@@ -170,7 +170,7 @@ cargo kani
 
 ### Target Coverage
 
-- **Kani Proofs**: All critical consensus functions
+- **blvm_spec_lock Proofs**: All critical consensus functions
 - **Property Tests**: All mathematical invariants
 - **Fuzz Targets**: All critical validation paths
 - **Runtime Assertions**: All critical code paths
@@ -179,7 +179,7 @@ cargo kani
 ### Current Status
 
 All coverage goals met:
-- ✅ 219 Kani proofs covering all critical functions
+- ✅ PLACEHOLDER_NUMBER proofs covering all critical functions
 - ✅ 141 property test functions covering all invariants
 - ✅ 19 fuzz targets covering all critical paths
 - ✅ 913 runtime assertions in all critical paths
@@ -193,7 +193,7 @@ All coverage goals met:
 
 ```
 blvm-consensus/
-├── src/                    # Source code with Kani proofs
+├── src/                    # Source code with blvm_spec_lock proofs
 ├── tests/
 │   ├── consensus_property_tests.rs  # Main property tests
 │   ├── integration/         # Integration tests
@@ -210,7 +210,7 @@ blvm-consensus/
 
 ### Beyond Proof Bounds
 
-Edge cases beyond Kani proof bounds are covered by:
+Edge cases beyond blvm_spec_lock proof bounds are covered by:
 
 1. **Property-Based Testing**: Random inputs of various sizes
 2. **Mainnet Block Tests**: Real Bitcoin mainnet blocks
@@ -241,7 +241,7 @@ All tests run in CI:
 - **Property Tests**: Required for merge
 - **Integration Tests**: Required for merge
 - **Fuzz Tests**: Run on schedule
-- **Kani Proofs**: Run separately, not blocking
+- **blvm_spec_lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
 **Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
@@ -250,7 +250,7 @@ All tests run in CI:
 
 ### Verification Counts
 
-- **Kani Proofs**: 219 proofs with tiered execution system
+- **blvm_spec_lock Proofs**: PLACEHOLDER_NUMBER proofs with tiered execution system
 - **Property Test Blocks**: 125 across all files
 - **Property Test Functions**: 141 across all files
 - **Runtime Assertions**: 913 total (814 `assert!` + 99 `debug_assert!`)
@@ -265,7 +265,7 @@ The testing infrastructure includes:
 - Property-based tests for mathematical invariants
 - Integration tests for end-to-end scenarios
 - Fuzz tests for edge case discovery
-- Kani proofs for formal verification
+- blvm_spec_lock proofs for formal verification
 - Runtime assertions for execution-time checks
 - MIRI integration for undefined behavior detection
 - Differential tests for Bitcoin Core comparison
@@ -279,5 +279,5 @@ The testing infrastructure includes:
 - [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification
-- [Formal Verification](../consensus/formal-verification.md) - Kani model checking
+- [Formal Verification](../consensus/formal-verification.md) - blvm_spec_lock model checking
 - [Contributing](contributing.md) - Testing requirements for contributions

@@ -29,15 +29,39 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 **Code**: ```131:200:blvm-node/src/storage/database.rs```
 
+### rocksdb (Optional, Bitcoin Core Compatible)
+
+**rocksdb** is an optional high-performance backend with Bitcoin Core compatibility:
+
+- **Bitcoin Core Compatibility**: Can read Bitcoin Core LevelDB databases directly
+- **Automatic Detection**: Automatically detects and uses Bitcoin Core data if present
+- **Block File Access**: Direct access to Bitcoin Core block files (`blk*.dat`)
+- **Format Parsing**: Parses Bitcoin Core's internal data formats
+- **High Performance**: Optimized for large-scale blockchain data
+- **System Dependency**: Requires `libclang` for build
+- **Feature Flag**: `rocksdb` (optional, not enabled by default)
+
+**Bitcoin Core Integration**:
+- Automatically detects Bitcoin Core data directories
+- Reads LevelDB chainstate databases via RocksDB's LevelDB compatibility
+- Accesses block files (`blk*.dat`) with lazy indexing
+- Supports mainnet, testnet, regtest, and signet networks
+
+**Code**: ```78:84:blvm-node/src/storage/database.rs```, ```1:105:blvm-node/src/storage/bitcoin_core_storage.rs```
+
+**Note**: RocksDB and erlay features are mutually exclusive due to dependency conflicts.
+
 ## Backend Selection
 
 The system automatically selects the best available backend:
 
-1. **Attempts redb** (default, preferred)
-2. **Falls back to sled** if redb fails and sled is available
-3. **Returns error** if no backend is available
+1. **Checks for Bitcoin Core data** (if RocksDB feature enabled) - uses RocksDB if detected
+2. **Attempts redb** (default, preferred)
+3. **Falls back to sled** if redb fails and sled is available
+4. **Falls back to RocksDB** if available and other backends fail
+5. **Returns error** if no backend is available
 
-**Code**: ```80:129:blvm-node/src/storage/database.rs```
+**Code**: ```80:129:blvm-node/src/storage/database.rs```, ```59:100:blvm-node/src/storage/mod.rs```
 
 ### Automatic Fallback
 
@@ -132,11 +156,34 @@ backend = "auto"  # or "redb", "sled"
 ```
 
 **Options**:
-- `"auto"`: Auto-select based on availability (prefers redb, falls back to sled)
+- `"auto"`: Auto-select based on availability (checks Bitcoin Core data, prefers redb, falls back to sled/rocksdb)
 - `"redb"`: Force redb backend
 - `"sled"`: Force sled backend
+- `"rocksdb"`: Force rocksdb backend (requires `rocksdb` feature)
 
-**Code**: ```1:100:blvm-node/src/config/mod.rs```
+**Code**: ```1116:1130:blvm-node/src/config/mod.rs```
+
+### RocksDB Configuration
+
+Enable RocksDB with the `rocksdb` feature:
+
+```bash
+cargo build --features rocksdb
+```
+
+**System Requirements**:
+- `libclang` must be installed (required for RocksDB FFI bindings)
+- On Ubuntu/Debian: `sudo apt-get install libclang-dev`
+- On Arch: `sudo pacman -S clang`
+- On macOS: `brew install llvm`
+
+**Bitcoin Core Detection**:
+The system automatically detects Bitcoin Core data directories:
+- Mainnet: `~/.bitcoin/` or `~/Library/Application Support/Bitcoin/`
+- Testnet: `~/.bitcoin/testnet3/` or `~/Library/Application Support/Bitcoin/testnet3/`
+- Regtest: `~/.bitcoin/regtest/` or `~/Library/Application Support/Bitcoin/regtest/`
+
+**Code**: ```1:219:blvm-node/src/storage/bitcoin_core_detection.rs```
 
 ### Cache Configuration
 
@@ -162,7 +209,7 @@ header_cache_mb = 10
 - **Write Performance**: Good for batch writes
 - **Storage Efficiency**: Efficient key-value storage
 - **Memory Usage**: Moderate memory footprint
-- **Production Ready**: ✅ Recommended for production
+- **Production Ready**: Recommended for production
 
 ### sled Backend
 
@@ -170,19 +217,19 @@ header_cache_mb = 10
 - **Write Performance**: Good for batch writes
 - **Storage Efficiency**: Efficient with B-tree indexing
 - **Memory Usage**: Higher memory footprint
-- **Production Ready**: ⚠️ Beta quality, not recommended for production
+- **Production Ready**: Beta quality, not recommended for production
 
 ## Migration
 
 ### Backend Migration
 
-The system supports migrating between backends:
+To migrate between backends:
 
 1. **Export Data**: Export all data from current backend
 2. **Import Data**: Import data into new backend
 3. **Verify**: Verify data integrity
 
-**Note**: Automatic migration is planned but not yet implemented.
+**Note**: Manual migration is supported. Export data from the current backend and import into the new backend.
 
 ## Pruning Support
 
@@ -195,9 +242,10 @@ keep_blocks = 288  # Keep last 288 blocks (2 days)
 ```
 
 **Pruning Modes**:
-- **Disabled** (default): Keep all blocks
-- **Light Client**: Keep last N blocks (configurable)
-- **Full Pruning**: Remove all blocks, keep only UTXO set (planned)
+- **Disabled**: Keep all blocks (archival node)
+- **Normal**: Conservative pruning (keep recent blocks)
+- **Aggressive**: Prune with UTXO commitments (requires utxo-commitments feature)
+- **Custom**: Fine-grained control over what to keep
 
 **Code**: ```1:200:blvm-node/src/storage/pruning.rs```
 

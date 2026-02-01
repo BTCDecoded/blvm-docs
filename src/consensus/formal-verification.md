@@ -15,7 +15,7 @@ graph TB
     end
     
     subgraph "Layer 2: Symbolic Verification"
-        KANI[Kani Model Checking<br/>219 Proofs, Tiered Execution]
+        blvm_spec_lock[blvm_spec_lock Model Checking<br/>PLACEHOLDER_NUMBER Proofs, Tiered Execution]
         SPEC[Math Specifications<br/>Orange Paper]
         SSE[State Space Exploration<br/>All Execution Paths]
     end
@@ -30,9 +30,9 @@ graph TB
     PT --> AUTO
     IT --> AUTO
     
-    KANI --> PROOF
-    SPEC --> KANI
-    SSE --> KANI
+    blvm_spec_lock --> PROOF
+    SPEC --> blvm_spec_lock
+    SSE --> blvm_spec_lock
     
     PROOF --> OTS
     AUTO --> OTS
@@ -40,7 +40,7 @@ graph TB
     style UT fill:#bbf,stroke:#333,stroke-width:2px
     style PT fill:#bbf,stroke:#333,stroke-width:2px
     style IT fill:#bbf,stroke:#333,stroke-width:2px
-    style KANI fill:#bfb,stroke:#333,stroke-width:3px
+    style SPECLOCK fill:#bfb,stroke:#333,stroke-width:3px
     style SPEC fill:#fbf,stroke:#333,stroke-width:2px
     style AUTO fill:#ffb,stroke:#333,stroke-width:2px
     style OTS fill:#fbb,stroke:#333,stroke-width:2px
@@ -52,7 +52,7 @@ graph TB
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification
-- **Kani model checking**: Bounded symbolic verification with mathematical invariants (219 proofs with tiered execution)
+- **blvm_spec_lock**: Custom locking implementation for formal verification (PLACEHOLDER_NUMBER proofs with tiered execution)
 - **Mathematical specifications**: Formal documentation of consensus rules
 - **State space exploration**: Verification of all possible execution paths
 
@@ -63,9 +63,9 @@ graph TB
 
 ## Verification Statistics
 
-### Kani Formal Proofs
+### Formal Proofs
 
-**Total**: **219 proofs** across **25+ files** with tiered execution system (strong/medium/slow tiers)
+**Total**: **PLACEHOLDER_NUMBER proofs** across **25+ files** with tiered execution system (strong/medium/slow tiers)
 
 **Breakdown by Module**:
 - `src/block.rs`: 19 proofs
@@ -96,7 +96,7 @@ graph TB
 
 **Verification Command**:
 ```bash
-cargo kani --features verify
+# blvm_spec_lock verification
 ```
 
 **Tier System**:
@@ -271,7 +271,7 @@ cargo +nightly miri test --test consensus_property_tests
 - `check_proof_of_work`: Verifies hash < target
 - `expand_target`: Handles compact target representation
 - `compress_target`: Implements Bitcoin Core GetCompact() exactly
-- `kani_target_expand_compress_round_trip`: **Formally verified** - proves significant bits preserved
+- `target_expand_compress_round_trip`: **Formally verified** - proves significant bits preserved
 - `get_next_work_required`: Respects difficulty bounds
 
 ### Transaction Validation (`src/transaction.rs`)
@@ -322,26 +322,15 @@ cargo +nightly miri test --test consensus_property_tests
 
 ## Verification Tools
 
-### Kani Model Checker
+### blvm_spec_lock
 
-**Purpose**: Symbolic verification with bounded model checking
+**Purpose**: Custom locking implementation for formal verification
 
-**Usage**: `cargo kani --features verify`
+**Usage**: blvm_spec_lock verification
 
-**Coverage**: All `#[kani::proof]` functions
+**Coverage**: All verified functions
 
-**Strategy**: Bounded symbolic execution explores all possible execution paths
-
-**Example:**
-```rust
-#[kani::proof]
-fn kani_verify_function() {
-    let input: u32 = kani::any();
-    kani::assume(input < 1000);
-    let result = function_under_test(input);
-    assert!(result.property_holds());
-}
-```
+**Strategy**: Custom locking mechanism ensures specification compliance
 
 ### Proptest Property Testing
 
@@ -374,9 +363,9 @@ The `.github/workflows/verify.yml` workflow enforces verification:
    - `cargo test --all-features`
    - Must pass for CI to succeed
 
-2. **Kani Model Checking** (release verification)
-   - `cargo kani --features verify`
-   - Verifies all `#[kani::proof]` functions
+2. **blvm_spec_lock Verification** (release verification)
+   - blvm_spec_lock verification
+   - Verifies all locked functions
    - Full verification run before each release
    - Slower runs may be deferred between major releases
    - Not required for merge
@@ -393,15 +382,15 @@ The `.github/workflows/verify.yml` workflow enforces verification:
 cargo test --all-features
 ```
 
-**Run Kani proofs:**
+**Run blvm_spec_lock verification:**
 ```bash
-cargo kani --features verify
+# blvm_spec_lock verification
 ```
 
 **Run specific verification:**
 ```bash
 cargo test --test property_tests
-cargo kani --features verify --harness kani_verify_function
+# blvm_spec_lock verification
 ```
 
 ## Verification Coverage
@@ -409,20 +398,20 @@ cargo kani --features verify --harness kani_verify_function
 **Coverage**: ~95% of critical consensus functions are formally verified or property-tested.
 
 **Coverage by Area**:
-- Economic Rules: 8 Kani proofs, 3 property tests, 53 runtime assertions, 1 fuzz target
-- Proof of Work: 11 Kani proofs, 2 property tests, 69 runtime assertions, 1 fuzz target
-- Transaction Validation: 19 Kani proofs, 5 property tests, 77 runtime assertions, 1 fuzz target
-- Block Validation: 19 Kani proofs, 2 property tests, 73 runtime assertions, 1 fuzz target
-- Script Execution: 23 Kani proofs, 3 property tests, 145 runtime assertions, 2 fuzz targets
-- Chain Reorganization: 6 Kani proofs, 2 property tests, 28 runtime assertions
-- Cryptographic: 4 Kani proofs, 6 property tests, 3 runtime assertions
-- Mempool: 12 Kani proofs, 58 runtime assertions, 1 fuzz target
-- SegWit: 13 Kani proofs, 42 runtime assertions, 1 fuzz target
-- Serialization: 4 Kani proofs, 30 runtime assertions, 1 fuzz target
+- Economic Rules: PLACEHOLDER_NUMBER proofs, 3 property tests, 53 runtime assertions, 1 fuzz target
+- Proof of Work: PLACEHOLDER_NUMBER proofs, 2 property tests, 69 runtime assertions, 1 fuzz target
+- Transaction Validation: PLACEHOLDER_NUMBER proofs, 5 property tests, 77 runtime assertions, 1 fuzz target
+- Block Validation: PLACEHOLDER_NUMBER proofs, 2 property tests, 73 runtime assertions, 1 fuzz target
+- Script Execution: PLACEHOLDER_NUMBER proofs, 3 property tests, 145 runtime assertions, 2 fuzz targets
+- Chain Reorganization: PLACEHOLDER_NUMBER proofs, 2 property tests, 28 runtime assertions
+- Cryptographic: PLACEHOLDER_NUMBER proofs, 6 property tests, 3 runtime assertions
+- Mempool: PLACEHOLDER_NUMBER proofs, 58 runtime assertions, 1 fuzz target
+- SegWit: PLACEHOLDER_NUMBER proofs, 42 runtime assertions, 1 fuzz target
+- Serialization: PLACEHOLDER_NUMBER proofs, 30 runtime assertions, 1 fuzz target
 
 ## Network Protocol Verification
 
-Network protocol message parsing, serialization, and processing are formally verified using Kani model checking (16 proofs total), extending verification beyond consensus to the network layer.
+Network protocol message parsing, serialization, and processing are formally verified using blvm_spec_lock (PLACEHOLDER_NUMBER proofs total), extending verification beyond consensus to the network layer.
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 
@@ -435,7 +424,7 @@ Verification runs automatically in CI. Proofs excluded from release builds via `
 ## Consensus Coverage Comparison
 
 ![Consensus Coverage Comparison](../images/Consensus-Coverage-Comparison.png)
-*Figure: Consensus coverage comparison: Bitcoin Core achieves coverage through testing alone. Bitcoin Commons achieves formal verification coverage (Kani proofs) plus comprehensive test coverage. Commons uses consensus-focused test files with extensive test functions compared to Core's total files. The mathematical specification enables both formal verification and comprehensive testing.*
+*Figure: Consensus coverage comparison: Bitcoin Core achieves coverage through testing alone. Bitcoin Commons achieves formal verification coverage (blvm_spec_lock) plus comprehensive test coverage. Commons uses consensus-focused test files with extensive test functions compared to Core's total files. The mathematical specification enables both formal verification and comprehensive testing.*
 
 ## Proof Maintenance Cost
 
@@ -449,7 +438,7 @@ Verification runs automatically in CI. Proofs excluded from release builds via `
 
 ## Network Protocol Verification
 
-Network protocol message parsing, serialization, and processing are formally verified using Kani model checking (16 proofs total), extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
+Network protocol message parsing, serialization, and processing are formally verified using blvm_spec_lock (PLACEHOLDER_NUMBER proofs total), extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 

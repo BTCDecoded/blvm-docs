@@ -10,7 +10,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Optimization Passes** - Runtime optimization passes in [blvm-consensus](../consensus/overview.md) that transform the [Orange Paper](orange-paper.md) specification into optimized code: Pass 2 (Constant Folding), Pass 3 (Memory Layout Optimization), Pass 5 (SIMD Vectorization), plus bounds check optimization, dead code elimination, and inlining hints. See [Optimization Passes](../consensus/architecture.md#optimization-passes).
 
-**blvm-consensus** - Optimized mathematical implementation of Bitcoin consensus rules with [formal verification](../consensus/formal-verification.md) ([Kani proofs](../consensus/formal-verification.md)). Includes [optimization passes](../consensus/architecture.md#optimization-passes) that transform the [Orange Paper](orange-paper.md) specification into production-ready code. Foundation layer with no dependencies. See [Consensus Overview](../consensus/overview.md).
+**blvm-consensus** - Optimized mathematical implementation of Bitcoin consensus rules with [formal verification](../consensus/formal-verification.md). Includes [optimization passes](../consensus/architecture.md#optimization-passes) that transform the [Orange Paper](orange-paper.md) specification into production-ready code. Foundation layer with no dependencies. See [Consensus Overview](../consensus/overview.md).
 
 **blvm-protocol** - Protocol abstraction layer for multiple Bitcoin variants (mainnet, testnet, regtest) while maintaining consensus compatibility. See [Protocol Overview](../protocol/overview.md).
 
@@ -31,7 +31,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## Technical Concepts
 
-**Formal Verification** - Mathematical proof of code correctness using [Kani model checking](../consensus/formal-verification.md). BLVM has [219 formal proofs](../consensus/formal-verification.md) embedded in the codebase.
+**Formal Verification** - Mathematical proof of code correctness. BLVM uses formal verification for critical consensus paths.
 
 **Proofs Locked to Code** - [Formal verification](../consensus/formal-verification.md) proofs are embedded in the code itself, ensuring correctness is maintained as code changes.
 
