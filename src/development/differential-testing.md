@@ -275,5 +275,5 @@ The differential testing system includes:
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques
 - [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
 - [Property-Based Testing](property-based-testing.md) - Verify invariants with random inputs
-- [Formal Verification](../consensus/formal-verification.md) - blvm_spec_lock model checking
+- [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking
 - [Contributing](contributing.md) - Testing requirements for contributions

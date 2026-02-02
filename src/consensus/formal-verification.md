@@ -15,7 +15,7 @@ graph TB
     end
     
     subgraph "Layer 2: Symbolic Verification"
-        blvm_spec_lock[blvm_spec_lock Model Checking<br/>PLACEHOLDER_NUMBER Proofs, Tiered Execution]
+        blvm-spec-lock[blvm-spec-lock Model Checking<br/>Tiered Execution]
         SPEC[Math Specifications<br/>Orange Paper]
         SSE[State Space Exploration<br/>All Execution Paths]
     end
@@ -30,9 +30,9 @@ graph TB
     PT --> AUTO
     IT --> AUTO
     
-    blvm_spec_lock --> PROOF
-    SPEC --> blvm_spec_lock
-    SSE --> blvm_spec_lock
+    blvm-spec-lock --> PROOF
+    SPEC --> blvm-spec-lock
+    SSE --> blvm-spec-lock
     
     PROOF --> OTS
     AUTO --> OTS
@@ -52,7 +52,7 @@ graph TB
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification
-- **blvm_spec_lock**: Custom locking implementation for formal verification (PLACEHOLDER_NUMBER proofs with tiered execution)
+- **blvm-spec-lock**: Custom locking implementation for formal verification with tiered execution
 - **Mathematical specifications**: Formal documentation of consensus rules
 - **State space exploration**: Verification of all possible execution paths
 
@@ -65,38 +65,11 @@ graph TB
 
 ### Formal Proofs
 
-**Total**: **PLACEHOLDER_NUMBER proofs** across **25+ files** with tiered execution system (strong/medium/slow tiers)
-
-**Breakdown by Module**:
-- `src/block.rs`: 19 proofs
-- `src/script.rs`: 23 proofs
-- `src/transaction.rs`: 19 proofs
-- `src/mempool.rs`: 12 proofs
-- `src/segwit.rs`: 13 proofs
-- `src/pow.rs`: 11 proofs
-- `src/mining.rs`: 10 proofs
-- `src/integration_proofs.rs`: 9 proofs
-- `src/taproot.rs`: 9 proofs
-- `src/economic.rs`: 8 proofs
-- `src/reorganization.rs`: 6 proofs
-- `src/bip113.rs`: 6 proofs
-- `src/utxo_commitments/peer_consensus.rs`: 5 proofs
-- `src/utxo_commitments/merkle_tree.rs`: 4 proofs
-- `src/serialization/varint.rs`: 4 proofs
-- `src/transaction_hash.rs`: 3 proofs
-- `src/witness.rs`: 3 proofs
-- `src/utxo_commitments/verification.rs`: 3 proofs
-- `src/sequence_locks.rs`: 3 proofs
-- `src/locktime.rs`: 5 proofs
-- `src/serialization/block.rs`: 2 proofs
-- `src/serialization/transaction.rs`: 2 proofs
-- `src/sigop.rs`: 2 proofs
-- `src/utxo_commitments/data_structures.rs`: 2 proofs
-- `src/script_k256.rs`: 1 proof
+All critical consensus functions are verified across multiple files with tiered execution system (strong/medium/slow tiers).
 
 **Verification Command**:
 ```bash
-# blvm_spec_lock verification
+# blvm-spec-lock verification
 ```
 
 **Tier System**:
@@ -111,22 +84,7 @@ graph TB
 
 ### Property-Based Tests
 
-**Total**: **35 tests** in `tests/consensus_property_tests.rs`
-
-**Categories**:
-- Economic Rules (3 tests)
-- Proof of Work (2 tests)
-- Transaction Validation (5 tests)
-- Script Execution (3 tests)
-- Performance (6 tests)
-- Deterministic Execution (5 tests)
-- Integer Overflow Safety (3 tests)
-- Temporal/State Transition (3 tests)
-- Compositional Verification (2 tests)
-- SHA256 Correctness (6 tests)
-
-**Total Property Test Blocks**: **125 proptest! blocks** across all test files  
-**Total Property Test Functions**: **141 prop_* functions** across all test files
+Property-based tests in `tests/consensus_property_tests.rs` cover economic rules, proof of work, transaction validation, script execution, performance, deterministic execution, integer overflow safety, temporal/state transitions, compositional verification, and SHA256 correctness.
 
 **Verification Command**:
 ```bash
@@ -135,19 +93,17 @@ cargo test --test consensus_property_tests
 
 ### Runtime Assertions
 
-**Total**: **913 total assertions** (99 debug_assert! + 814 assert!)
+Runtime assertions provide invariant checking during execution.
 
 **Runtime Invariant Feature Flag**:
-- **1 location** with `#[cfg(any(debug_assertions, feature = "runtime-invariants"))]`
+- `#[cfg(any(debug_assertions, feature = "runtime-invariants"))]` enables assertions
 - `src/block.rs`: Supply invariant checks in `connect_block`
 
 **Verification**: Runtime assertions execute during debug builds and can be enabled in production with `--features runtime-invariants`.
 
 ### Fuzz Targets (libFuzzer)
 
-**Total**: **19 fuzz targets**
-
-**Targets**:
+Fuzz targets include:
 1. `block_validation.rs`
 2. `compact_block_reconstruction.rs`
 3. `differential_fuzzing.rs`
@@ -187,7 +143,7 @@ cargo +nightly miri test --test consensus_property_tests
 
 ### Mathematical Specifications
 
-**Total**: **15+ functions** with complete formal documentation
+Multiple functions have complete formal documentation
 
 **Location**: `docs/MATHEMATICAL_SPECIFICATIONS_COMPLETE.md`
 
@@ -322,11 +278,11 @@ cargo +nightly miri test --test consensus_property_tests
 
 ## Verification Tools
 
-### blvm_spec_lock
+### blvm-spec-lock
 
 **Purpose**: Custom locking implementation for formal verification
 
-**Usage**: blvm_spec_lock verification
+**Usage**: blvm-spec-lock verification
 
 **Coverage**: All verified functions
 
@@ -363,8 +319,8 @@ The `.github/workflows/verify.yml` workflow enforces verification:
    - `cargo test --all-features`
    - Must pass for CI to succeed
 
-2. **blvm_spec_lock Verification** (release verification)
-   - blvm_spec_lock verification
+2. **blvm-spec-lock Verification** (release verification)
+   - blvm-spec-lock verification
    - Verifies all locked functions
    - Full verification run before each release
    - Slower runs may be deferred between major releases
@@ -382,40 +338,28 @@ The `.github/workflows/verify.yml` workflow enforces verification:
 cargo test --all-features
 ```
 
-**Run blvm_spec_lock verification:**
+**Run blvm-spec-lock verification:**
 ```bash
-# blvm_spec_lock verification
+# blvm-spec-lock verification
 ```
 
 **Run specific verification:**
 ```bash
 cargo test --test property_tests
-# blvm_spec_lock verification
+# blvm-spec-lock verification
 ```
 
 ## Verification Coverage
 
-**Coverage**: ~95% of critical consensus functions are formally verified or property-tested.
-
-**Coverage by Area**:
-- Economic Rules: PLACEHOLDER_NUMBER proofs, 3 property tests, 53 runtime assertions, 1 fuzz target
-- Proof of Work: PLACEHOLDER_NUMBER proofs, 2 property tests, 69 runtime assertions, 1 fuzz target
-- Transaction Validation: PLACEHOLDER_NUMBER proofs, 5 property tests, 77 runtime assertions, 1 fuzz target
-- Block Validation: PLACEHOLDER_NUMBER proofs, 2 property tests, 73 runtime assertions, 1 fuzz target
-- Script Execution: PLACEHOLDER_NUMBER proofs, 3 property tests, 145 runtime assertions, 2 fuzz targets
-- Chain Reorganization: PLACEHOLDER_NUMBER proofs, 2 property tests, 28 runtime assertions
-- Cryptographic: PLACEHOLDER_NUMBER proofs, 6 property tests, 3 runtime assertions
-- Mempool: PLACEHOLDER_NUMBER proofs, 58 runtime assertions, 1 fuzz target
-- SegWit: PLACEHOLDER_NUMBER proofs, 42 runtime assertions, 1 fuzz target
-- Serialization: PLACEHOLDER_NUMBER proofs, 30 runtime assertions, 1 fuzz target
+Critical consensus functions are formally verified or property-tested across economic rules, proof of work, transaction validation, block validation, script execution, chain reorganization, cryptographic operations, mempool, SegWit, and serialization, using formal proofs, property tests, runtime assertions, and fuzz targets.
 
 ## Network Protocol Verification
 
-Network protocol message parsing, serialization, and processing are formally verified using blvm_spec_lock (PLACEHOLDER_NUMBER proofs total), extending verification beyond consensus to the network layer.
+Network protocol message parsing, serialization, and processing are formally verified using blvm-spec-lock, extending verification beyond consensus to the network layer.
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 
-**Verified Messages**: Phase 1 (8 proofs): Version, VerAck, Ping, Pong. Phase 2 (8 proofs): Transaction, Block, Headers, Inv, GetData, GetHeaders.
+**Verified Messages**: Phase 1: Version, VerAck, Ping, Pong. Phase 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
 
 **Mathematical Specifications**: Round-trip property `∀ msg: parse(serialize(msg)) = msg`, checksum validation rejects invalid checksums, size limits enforced for all messages.
 
@@ -424,7 +368,7 @@ Verification runs automatically in CI. Proofs excluded from release builds via `
 ## Consensus Coverage Comparison
 
 ![Consensus Coverage Comparison](../images/Consensus-Coverage-Comparison.png)
-*Figure: Consensus coverage comparison: Bitcoin Core achieves coverage through testing alone. Bitcoin Commons achieves formal verification coverage (blvm_spec_lock) plus comprehensive test coverage. Commons uses consensus-focused test files with extensive test functions compared to Core's total files. The mathematical specification enables both formal verification and comprehensive testing.*
+*Figure: Consensus coverage comparison: Bitcoin Core achieves coverage through testing alone. Bitcoin Commons achieves formal verification coverage (blvm-spec-lock) plus comprehensive test coverage. Commons uses consensus-focused test files with extensive test functions compared to Core's total files. The mathematical specification enables both formal verification and comprehensive testing.*
 
 ## Proof Maintenance Cost
 
@@ -438,11 +382,11 @@ Verification runs automatically in CI. Proofs excluded from release builds via `
 
 ## Network Protocol Verification
 
-Network protocol message parsing, serialization, and processing are formally verified using blvm_spec_lock (PLACEHOLDER_NUMBER proofs total), extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
+Network protocol message parsing, serialization, and processing are formally verified using blvm-spec-lock, extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 
-**Verified Messages**: Phase 1 (8 proofs): Version, VerAck, Ping, Pong. Phase 2 (8 proofs): Transaction, Block, Headers, Inv, GetData, GetHeaders.
+**Verified Messages**: Phase 1: Version, VerAck, Ping, Pong. Phase 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
 
 **Mathematical Specifications**: Round-trip property `∀ msg: parse(serialize(msg)) = msg`, checksum validation rejects invalid checksums, size limits enforced for all messages.
 

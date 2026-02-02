@@ -50,7 +50,7 @@ blvm-verify release \
   --pubkeys keys.json
 ```
 
-For more details, see the [blvm-sdk README](../../modules/blvm-sdk/README.md).
+For more details, see the [blvm-sdk README](../../blvm-sdk/README.md).
 
 ## See Also
 

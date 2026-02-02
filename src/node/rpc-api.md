@@ -60,9 +60,9 @@ curl -X POST http://localhost:8332 \
 
 ## Available Methods
 
-**Total Methods Implemented: 28**
+**Methods Implemented**: Multiple RPC methods
 
-### Blockchain Methods (8 methods)
+### Blockchain Methods
 - `getblockchaininfo` - Get blockchain information
 - `getblock` - Get block by hash
 - `getblockhash` - Get block hash by height
@@ -73,7 +73,7 @@ curl -X POST http://localhost:8332 \
 - `gettxoutsetinfo` - Get UTXO set statistics
 - `verifychain` - Verify blockchain database
 
-### Raw Transaction Methods (7 methods)
+### Raw Transaction Methods
 - `getrawtransaction` - Get transaction by txid
 - `sendrawtransaction` - Submit transaction to mempool
 - `testmempoolaccept` - Test if transaction would be accepted
@@ -82,12 +82,12 @@ curl -X POST http://localhost:8332 \
 - `gettxoutproof` - Get merkle proof for transaction
 - `verifytxoutproof` - Verify merkle proof
 
-### Mempool Methods (3 methods)
+### Mempool Methods
 - `getmempoolinfo` - Get mempool statistics
 - `getrawmempool` - List transactions in mempool
 - `savemempool` - Persist mempool to disk
 
-### Network Methods (9 methods)
+### Network Methods
 - `getnetworkinfo` - Get network information
 - `getpeerinfo` - Get connected peers
 - `getconnectioncount` - Get number of connections
@@ -99,7 +99,7 @@ curl -X POST http://localhost:8332 \
 - `setban` - Ban/unban a subnet
 - `listbanned` - List banned nodes
 
-### Mining Methods (4 methods)
+### Mining Methods
 - `getmininginfo` - Get mining information
 - `getblocktemplate` - Get block template for mining
 - `submitblock` - Submit a mined block
@@ -241,7 +241,7 @@ Responses are returned in the same order as requests.
 
 ## Implementation Status
 
-{{#include ../../../modules/blvm-node/docs/status/RPC_IMPLEMENTATION_STATUS.md}}
+{{#include ../../../blvm-node/docs/status/RPC_IMPLEMENTATION_STATUS.md}}
 
 ## See Also
 

@@ -50,8 +50,7 @@ repository-root/
 1. Fork the source repository (e.g., `blvm-consensus`)
 2. Make documentation improvements
 3. Submit a pull request to the source repository
-4. After merge, the `blvm-docs` submodule will be updated (manually or automatically)
-5. Changes will appear in the unified documentation site
+4. After merge, changes will appear in the unified documentation site (via `{{#include}}` directives)
 
 ### For Cross-Cutting Documentation
 
@@ -70,9 +69,9 @@ repository-root/
 
 Before submitting changes:
 
-1. Clone with submodules:
+1. Clone the repository:
    ```bash
-   git clone --recursive https://github.com/BTCDecoded/blvm-docs.git
+   git clone https://github.com/BTCDecoded/blvm-docs.git
    ```
 
 2. Serve locally:

@@ -37,7 +37,6 @@ Unit tests verify individual functions in isolation:
 Property-based tests verify mathematical invariants:
 
 - **Location**: `tests/consensus_property_tests.rs` and other property test files
-- **Count**: 35 property tests in main file, 141 property test functions total
 - **Coverage**: Mathematical invariants
 - **Tool**: Proptest
 
@@ -58,7 +57,6 @@ Integration tests verify end-to-end correctness:
 Fuzz tests discover edge cases through random generation:
 
 - **Location**: `fuzz/fuzz_targets/` directory
-- **Count**: 19 fuzz targets
 - **Tool**: libFuzzer
 - **Coverage**: Critical consensus functions
 
@@ -69,7 +67,7 @@ Fuzz tests discover edge cases through random generation:
 [Formal verification](../consensus/formal-verification.md) verifies correctness for all inputs:
 
 - **Location**: `src/` and `tests/` directories
-- **Count**: PLACEHOLDER_NUMBER proofs with tiered execution system
+- **Formal Verification**: Proofs with tiered execution system
 - **Coverage**: Critical consensus functions
 - **Tool**: Formal verification tooling
 
@@ -79,8 +77,7 @@ Fuzz tests discover edge cases through random generation:
 
 Runtime assertions catch violations during execution:
 
-- **Count**: 913 total assertions (99 `debug_assert!` + 814 `assert!`)
-- **Coverage**: Critical paths
+- **Coverage**: Critical paths with runtime assertions
 - **Production**: Available via feature flag
 
 **Code**: ```156:160:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
@@ -99,31 +96,31 @@ MIRI detects undefined behavior:
 
 ### Overall Coverage
 
-| Verification Technique | Count | Status |
-|----------------------|-------|--------|
-| **Formal Proofs** | **PLACEHOLDER_NUMBER** | ✅ Critical functions |
-| **Property Tests** | **35** (141 functions) | ✅ All mathematical invariants |
-| **Runtime Assertions** | **913** | ✅ All critical paths |
-| **Fuzz Targets** | **19** | ✅ Edge case discovery |
-| **MIRI Integration** | ✅ | ✅ Undefined behavior detection |
-| **Mathematical Specs** | **15+** | ✅ Complete formal documentation |
+| Verification Technique | Status |
+|----------------------|--------|
+| **Formal Proofs** | ✅ Critical functions |
+| **Property Tests** | ✅ All mathematical invariants |
+| **Runtime Assertions** | ✅ All critical paths |
+| **Fuzz Targets** | ✅ Edge case discovery |
+| **MIRI Integration** | ✅ Undefined behavior detection |
+| **Mathematical Specs** | ✅ Complete formal documentation |
 
 **Code**: ```10:21:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
 ### Coverage by Consensus Area
 
-| Area | Formal Proofs | Property Tests | Runtime Assertions | Fuzz Targets |
-|------|-------------|----------------|-------------------|--------------|
-| Economic Rules | 8 | 3 | 53 | 1 |
-| Proof of Work | 11 | 2 | 69 | 1 |
-| Transaction Validation | 19 | 5 | 77 | 1 |
-| Block Validation | 19 | 2 | 73 | 1 |
-| Script Execution | 23 | 3 | 145 | 2 |
-| Chain Reorganization | 6 | 2 | 28 | - |
-| Cryptographic | 4 | 6 | 3 | - |
-| Mempool | 12 | - | 58 | 1 |
-| SegWit | 13 | - | 42 | 1 |
-| Serialization | 4 | - | 30 | 1 |
+Verification coverage includes all major consensus areas:
+
+- **Economic Rules**: Formal proofs, property tests, runtime assertions, and fuzz targets
+- **Proof of Work**: Formal proofs, property tests, runtime assertions, and fuzz targets
+- **Transaction Validation**: Formal proofs, property tests, runtime assertions, and fuzz targets
+- **Block Validation**: Formal proofs, property tests, runtime assertions, and fuzz targets
+- **Script Execution**: Formal proofs, property tests, runtime assertions, and fuzz targets
+- **Chain Reorganization**: Formal proofs, property tests, and runtime assertions
+- **Cryptographic**: Formal proofs, property tests, and runtime assertions
+- **Mempool**: Formal proofs, runtime assertions, and fuzz targets
+- **SegWit**: Formal proofs, runtime assertions, and fuzz targets
+- **Serialization**: Formal proofs, runtime assertions, and fuzz targets
 
 **Code**: ```271:283:blvm-consensus/docs/EXACT_VERIFICATION_COUNTS.md```
 
@@ -158,10 +155,10 @@ cargo +nightly fuzz run transaction_validation
 cargo +nightly miri test
 ```
 
-### Run blvm_spec_lock Proofs
+### Run blvm-spec-lock Proofs
 
 ```bash
-cargo blvm_spec_lock
+cargo blvm-spec-lock
 ```
 
 **Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
@@ -170,7 +167,7 @@ cargo blvm_spec_lock
 
 ### Target Coverage
 
-- **blvm_spec_lock Proofs**: All critical consensus functions
+- **blvm-spec-lock Proofs**: All critical consensus functions
 - **Property Tests**: All mathematical invariants
 - **Fuzz Targets**: All critical validation paths
 - **Runtime Assertions**: All critical code paths
@@ -179,10 +176,10 @@ cargo blvm_spec_lock
 ### Current Status
 
 All coverage goals met:
-- ✅ PLACEHOLDER_NUMBER proofs covering all critical functions
-- ✅ 141 property test functions covering all invariants
-- ✅ 19 fuzz targets covering all critical paths
-- ✅ 913 runtime assertions in all critical paths
+- ✅ Formal proofs covering all critical functions
+- ✅ Property test functions covering all invariants
+- ✅ Fuzz targets covering all critical paths
+- ✅ Runtime assertions in all critical paths
 - ✅ Comprehensive integration test suite
 
 **Code**: ```179:196:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
@@ -193,7 +190,7 @@ All coverage goals met:
 
 ```
 blvm-consensus/
-├── src/                    # Source code with blvm_spec_lock proofs
+├── src/                    # Source code with blvm-spec-lock proofs
 ├── tests/
 │   ├── consensus_property_tests.rs  # Main property tests
 │   ├── integration/         # Integration tests
@@ -210,7 +207,7 @@ blvm-consensus/
 
 ### Beyond Proof Bounds
 
-Edge cases beyond blvm_spec_lock proof bounds are covered by:
+Edge cases beyond blvm-spec-lock proof bounds are covered by:
 
 1. **Property-Based Testing**: Random inputs of various sizes
 2. **Mainnet Block Tests**: Real Bitcoin mainnet blocks
@@ -241,20 +238,16 @@ All tests run in CI:
 - **Property Tests**: Required for merge
 - **Integration Tests**: Required for merge
 - **Fuzz Tests**: Run on schedule
-- **blvm_spec_lock Proofs**: Run separately, not blocking
+- **blvm-spec-lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
 **Code**: ```1:412:blvm-docs/src/consensus/formal-verification.md```
 
 ## Test Metrics
 
-### Verification Counts
-
-- **blvm_spec_lock Proofs**: PLACEHOLDER_NUMBER proofs with tiered execution system
-- **Property Test Blocks**: 125 across all files
-- **Property Test Functions**: 141 across all files
-- **Runtime Assertions**: 913 total (814 `assert!` + 99 `debug_assert!`)
-- **Fuzz Targets**: 13
+- **Property Test Functions**: Multiple functions across all files
+- **Runtime Assertions**: Multiple assertions (`assert!` and `debug_assert!`)
+- **Fuzz Targets**: Multiple fuzz targets
 
 **Code**: ```253:265:blvm-consensus/docs/EXACT_VERIFICATION_COUNTS.md```
 
@@ -265,7 +258,7 @@ The testing infrastructure includes:
 - Property-based tests for mathematical invariants
 - Integration tests for end-to-end scenarios
 - Fuzz tests for edge case discovery
-- blvm_spec_lock proofs for formal verification
+- blvm-spec-lock proofs for formal verification
 - Runtime assertions for execution-time checks
 - MIRI integration for undefined behavior detection
 - Differential tests for Bitcoin Core comparison
@@ -279,5 +272,5 @@ The testing infrastructure includes:
 - [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification
-- [Formal Verification](../consensus/formal-verification.md) - blvm_spec_lock model checking
+- [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking
 - [Contributing](contributing.md) - Testing requirements for contributions

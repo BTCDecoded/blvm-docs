@@ -3,18 +3,18 @@
 ## Initial Deployment Test
 
 ### 1. Check GitHub Actions Workflow
-- Go to: https://github.com/BTCDecoded/bllvm-docs/actions
+- Go to: https://github.com/BTCDecoded/blvm-docs/actions
 - Verify "Deploy Documentation" workflow is running or completed
 - Check for any errors in the workflow logs
 
 ### 2. Verify GitHub Pages Status
-- Go to: https://github.com/BTCDecoded/bllvm-docs/settings/pages
+- Go to: https://github.com/BTCDecoded/blvm-docs/settings/pages
 - Should show: "Your site is live at https://docs.thebitcoincommons.org"
 - Source should be: "GitHub Actions"
 
 ### 3. Test Site Access
 - **Primary URL**: https://docs.thebitcoincommons.org
-- **GitHub Pages URL**: https://btcdecoded.github.io/bllvm-docs/ (fallback)
+- **GitHub Pages URL**: https://btcdecoded.github.io/blvm-docs/ (fallback)
 - Check that the mdBook site loads correctly
 - Verify navigation works
 
@@ -28,7 +28,7 @@ dig docs.thebitcoincommons.org CNAME
 ```
 
 ### 5. Test Content Inclusion
-- Check that included content from submodules renders:
+- Check that included content from source repositories renders:
   - Orange Paper (reference/orange-paper.md)
   - Consensus overview (consensus/overview.md)
   - Governance model (governance/governance-model.md)
@@ -75,9 +75,9 @@ dig docs.thebitcoincommons.org CNAME
 - **Cause**: DNS not propagated or GitHub Pages not enabled
 - **Fix**: Wait for DNS propagation, verify GitHub Pages settings
 
-### Submodule content not showing
-- **Cause**: Submodules not initialized in GitHub Actions
-- **Fix**: Check workflow uses `submodules: recursive`
+### Included content not showing
+- **Cause**: `{{#include}}` directives pointing to incorrect paths
+- **Fix**: Verify include paths match actual file locations in source repositories
 
 ### Build fails
 - **Cause**: mdBook errors or missing files
@@ -90,8 +90,8 @@ dig docs.thebitcoincommons.org CNAME
 ## Next Steps After Testing
 
 1. **Fill in placeholder content** - Replace "Documentation will be aggregated..." with actual content
-2. **Add more includes** - Include more content from submodules
+2. **Add more includes** - Include more content from source repositories
 3. **Improve navigation** - Adjust SUMMARY.md based on what users need
 4. **Add cross-references** - Link related sections together
-5. **Update regularly** - Keep submodules updated as source docs change
+5. **Update regularly** - Documentation automatically reflects source repository changes
 

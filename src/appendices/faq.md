@@ -24,7 +24,7 @@ BLVM provides the mathematical foundation and compiler-like architecture (Orange
 
 ### What are the two innovations?
 
-**BLVM (Bitcoin Low-Level Virtual Machine)**: Technical innovation providing mathematical rigor through the [Orange Paper](../reference/orange-paper.md) (mathematical specification), [formal verification](../consensus/formal-verification.md) ([blvm_spec_lock proofs](../consensus/formal-verification.md)), proofs locked to code, and a compiler-like architecture. This ensures correctness. See [Introduction](../introduction.md) and [Consensus Overview](../consensus/overview.md) for details.
+**BLVM (Bitcoin Low-Level Virtual Machine)**: Technical innovation providing mathematical rigor through the [Orange Paper](../reference/orange-paper.md) (mathematical specification), [formal verification](../consensus/formal-verification.md) ([blvm-spec-lock proofs](../consensus/formal-verification.md)), proofs locked to code, and a compiler-like architecture. This ensures correctness. See [Introduction](../introduction.md) and [Consensus Overview](../consensus/overview.md) for details.
 
 **Bitcoin Commons (Cryptographic Commons)**: Governance innovation providing forkable governance through Ostrom's principles, cryptographic enforcement, [5-tier governance model](../governance/layer-tier-model.md), and [transparent audit trails](../governance/audit-trails.md). This ensures coordination. See [Governance Overview](../governance/overview.md) for details.
 
@@ -82,7 +82,7 @@ Merge mining is available as a separate paid plugin module (`blvm-merge-mining`)
 
 ### What features does BLVM provide?
 
-Orange Paper complete, blvm-consensus with PLACEHOLDER_NUMBER proofs, blvm-protocol, blvm-node, and blvm-sdk all implemented. All 6 tiers are functional and production-ready.
+Orange Paper complete, blvm-consensus with formal proofs, blvm-protocol, blvm-node, and blvm-sdk all implemented. All 6 tiers are functional and production-ready.
 
 ### How is Bitcoin Commons governance implemented?
 
@@ -128,11 +128,11 @@ The Orange Paper is a complete mathematical specification of Bitcoin's consensus
 
 ### How does formal verification work in BLVM?
 
-BLVM uses blvm_spec_lock model checking to formally verify consensus-critical code. The Orange Paper provides the mathematical specification; blvm-consensus implements it with proofs locked to code. All consensus decisions flow through verified functions, and the dependency chain prevents bypassing verification. This provides mathematical proof of correctness, not just testing.
+BLVM uses blvm-spec-lock model checking to formally verify consensus-critical code. The Orange Paper provides the mathematical specification; blvm-consensus implements it with proofs locked to code. All consensus decisions flow through verified functions, and the dependency chain prevents bypassing verification. This provides mathematical proof of correctness, not just testing.
 
 ### How is BLVM different from Bitcoin Core?
 
-Bitcoin Core embeds consensus rules in 350,000+ lines of C++ with no mathematical specification. BLVM provides: (1) Mathematical specification (Orange Paper), (2) Formal verification (blvm_spec_lock proofs), (3) Proofs locked to code, (4) Compiler-like architecture enabling safe alternative implementations. BLVM doesn't replace Bitcoin Core; it enables safe alternatives.
+Bitcoin Core embeds consensus rules in 350,000+ lines of C++ with no mathematical specification. BLVM provides: (1) Mathematical specification (Orange Paper), (2) Formal verification (blvm-spec-lock proofs), (3) Proofs locked to code, (4) Compiler-like architecture enabling safe alternative implementations. BLVM doesn't replace Bitcoin Core; it enables safe alternatives.
 
 ### What does "compiler-like architecture" mean?
 
@@ -140,11 +140,11 @@ Like a compiler has source code → IR → optimization passes → machine code,
 
 ### What is formal verification in BLVM?
 
-BLVM uses blvm_spec_lock model checking to mathematically prove code correctness. The Orange Paper provides the specification; blvm-consensus implements it with proofs. All consensus decisions flow through verified functions. This provides mathematical proof, not just testing.
+BLVM uses blvm-spec-lock model checking to mathematically prove code correctness. The Orange Paper provides the specification; blvm-consensus implements it with proofs. All consensus decisions flow through verified functions. This provides mathematical proof, not just testing.
 
 ### How many formal proofs does BLVM have?
 
-BLVM has nearly 200 formal proofs in the source code, providing comprehensive formal verification coverage of consensus-critical functions. The proofs are embedded directly in the codebase and verified continuously.
+BLVM has comprehensive formal proofs in the source code, providing formal verification coverage of consensus-critical functions. The proofs are embedded directly in the codebase and verified continuously.
 
 ### What does "proofs locked to code" mean?
 

@@ -136,7 +136,7 @@ Then open a Pull Request on GitHub. See the [PR Process](pr-process.md) for deta
 - **Exact Version Pinning**: All consensus-critical dependencies must be pinned to exact versions
 - **Pure Functions**: All functions must remain side-effect-free
 - **Testing**: All mathematical functions must be thoroughly tested (see [Testing Infrastructure](testing.md))
-- **Formal Verification**: Consensus-critical changes may require blvm_spec_lock proofs
+- **Formal Verification**: Consensus-critical changes may require blvm-spec-lock proofs
 
 ### blvm-protocol
 

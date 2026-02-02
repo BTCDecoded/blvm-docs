@@ -12,7 +12,7 @@ Our verification approach follows: **"Rust + Tests + Math Specs = Source of Trut
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification (Required, Must Pass)
-- **[blvm_spec_lock model checking](formal-verification.md)**: Bounded symbolic verification with mathematical invariants
+- **[blvm-spec-lock model checking](formal-verification.md)**: Bounded symbolic verification with mathematical invariants
 - **Mathematical specifications**: Formal documentation of consensus rules
 - **State space exploration**: Verification of all possible execution paths
 
@@ -31,7 +31,7 @@ Our verification approach follows: **"Rust + Tests + Math Specs = Source of Trut
 
 ## Protection Coverage
 
-{{#include ../../../modules/blvm-consensus/docs/PROTECTION_COVERAGE.md}}
+{{#include ../../../blvm-consensus/docs/PROTECTION_COVERAGE.md}}
 
 ## See Also
 

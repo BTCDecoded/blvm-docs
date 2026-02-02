@@ -10,7 +10,7 @@ The consensus layer is designed as a pure mathematical implementation with no si
 4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
 5. **Testing**: Test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
-7. **Formal Verification**: [blvm_spec_lock model checking](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
+7. **Formal Verification**: [blvm-spec-lock model checking](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
 
 ## Core Functions
 
@@ -54,7 +54,7 @@ BLVM includes LLVM-like optimization passes that transform the Orange Paper spec
 - **Pass 2: Constant Folding** - Pre-computed constants and constant propagation to avoid runtime computation in hot paths
 - **Pass 3: Memory Layout Optimization** - Cache-aligned structures (32-byte alignment) and compact stack frames for better cache performance
 - **Pass 5: SIMD Vectorization** - Batch hash operations (SHA256, double SHA256, RIPEMD160, HASH160) with parallel processing using Rayon
-- **Bounds Check Optimization** - Uses [blvm_spec_lock](formal-verification.md)-proven bounds to remove redundant runtime bounds checks
+- **Bounds Check Optimization** - Uses [blvm-spec-lock](formal-verification.md)-proven bounds to remove redundant runtime bounds checks
 - **Dead Code Elimination** - Markers for unused code paths that can be eliminated
 - **Inlining Hints** - `hot_inline!` macro for aggressive inlining of hot functions
 
@@ -62,7 +62,7 @@ These optimization passes are similar to LLVM's optimization infrastructure, tra
 
 ## Mathematical Protections
 
-{{#include ../../../modules/blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md}}
+{{#include ../../../blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md}}
 
 ## Spec Maintenance Workflow
 

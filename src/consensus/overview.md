@@ -70,17 +70,11 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
 5. **Comprehensive Testing**: Extensive test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
-7. **Formal Verification**: [blvm_spec_lock model checking](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
+7. **Formal Verification**: [blvm-spec-lock model checking](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
 
 ## Formal Verification
 
 Implements mathematical verification of Bitcoin consensus rules:
-
-### Verification Statistics
-- **PLACEHOLDER_NUMBER [blvm_spec_lock Proofs](formal-verification.md)**: Verify all critical consensus functions with tiered execution system
-- **35 [Property Tests](../development/property-based-testing.md)**: Verify mathematical invariants
-- **913 Runtime Assertions**: Catch edge cases (814 `assert!` + 99 `debug_assert!`)
-- **19 [Fuzz Targets](../development/fuzzing.md)**: Discover vulnerabilities
 
 ### Recent Improvements
 - **Strong Tier System**: Critical proofs prioritized with AWS spot instance integration
@@ -121,7 +115,7 @@ For maximum performance:
 ./scripts/pgo-build.sh
 ```
 
-**Expected gain**: 1.10-1.15x performance improvement
+**Expected gain**: Significant performance improvement
 
 ### Optimization Passes
 
@@ -141,10 +135,10 @@ Implementation is mathematically locked to the Orange Paper:
 
 **Chain of Trust**:
 ```
-Orange Paper (Math Spec) → blvm_spec_lock Proof → Implementation → Bitcoin Consensus
+Orange Paper (Math Spec) → blvm-spec-lock Proof → Implementation → Bitcoin Consensus
 ```
 
-Every function implements a mathematical specification, every critical function has a blvm_spec_lock proof, and all proofs reference Orange Paper sections.
+Every function implements a mathematical specification, every critical function has a blvm-spec-lock proof, and all proofs reference Orange Paper sections.
 
 ## Dependencies
 

@@ -2,22 +2,22 @@
 
 ## Overview
 
-Bitcoin Commons uses property-based testing with Proptest to verify mathematical invariants across thousands of random inputs. The system includes 35 property tests in the main test file and 141 property test functions across all test files.
+Bitcoin Commons uses property-based testing with Proptest to verify mathematical invariants across thousands of random inputs. The system includes property tests in the main test file and property test functions across all test files.
 
 ## Property Test Categories
 
-### Economic Rules (3 tests)
+### Economic Rules
 
 1. `prop_block_subsidy_halving_schedule` - Verifies subsidy halves every 210,000 blocks
 2. `prop_total_supply_monotonic_bounded` - Verifies supply increases monotonically and is bounded
 3. `prop_block_subsidy_non_negative_decreasing` - Verifies subsidy is non-negative and decreasing
 
-### Proof of Work (2 tests)
+### Proof of Work
 
 4. `prop_pow_target_expansion_valid_range` - Verifies target expansion within valid range
 5. `prop_target_expansion_deterministic` - Verifies target expansion is deterministic
 
-### Transaction Validation (5 tests)
+### Transaction Validation
 
 6. `prop_transaction_output_value_bounded` - Verifies output values are bounded
 7. `prop_transaction_non_empty_inputs_outputs` - Verifies transactions have inputs and outputs
@@ -25,13 +25,13 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 9. `prop_coinbase_script_sig_length` - Verifies coinbase script sig length limits
 10. `prop_transaction_validation_deterministic` - Verifies validation is deterministic
 
-### Script Execution (3 tests)
+### Script Execution
 
 11. `prop_script_execution_deterministic` - Verifies script execution is deterministic
 12. `prop_script_size_bounded` - Verifies script size is bounded
 13. `prop_script_execution_performance_bounded` - Verifies script execution performance
 
-### Performance (6 tests)
+### Performance
 
 14. `prop_sha256_performance_bounded` - Verifies SHA256 performance
 15. `prop_double_sha256_performance_bounded` - Verifies double SHA256 performance
@@ -40,7 +40,7 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 18. `prop_block_subsidy_constant_time` - Verifies block subsidy calculation is constant-time
 19. `prop_target_expansion_performance_bounded` - Verifies target expansion performance
 
-### Deterministic Execution (5 tests)
+### Deterministic Execution
 
 20. `prop_transaction_validation_deterministic` - Verifies transaction validation determinism
 21. `prop_block_subsidy_deterministic` - Verifies block subsidy determinism
@@ -48,24 +48,24 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 23. `prop_target_expansion_deterministic` - Verifies target expansion determinism
 24. `prop_fee_calculation_deterministic` - Verifies fee calculation determinism
 
-### Integer Overflow Safety (3 tests)
+### Integer Overflow Safety
 
 25. `prop_fee_calculation_overflow_safety` - Verifies fee calculation overflow safety
 26. `prop_output_value_overflow_safety` - Verifies output value overflow safety
 27. `prop_total_supply_overflow_safety` - Verifies total supply overflow safety
 
-### Temporal/State Transition (3 tests)
+### Temporal/State Transition
 
 28. `prop_supply_never_decreases_across_blocks` - Verifies supply never decreases
 29. `prop_reorganization_preserves_supply` - Verifies reorganization preserves supply
 30. `prop_supply_matches_expected_across_blocks` - Verifies supply matches expected values
 
-### Compositional Verification (2 tests)
+### Compositional Verification
 
 31. `prop_connect_block_composition` - Verifies block connection composition
 32. `prop_disconnect_connect_idempotency` - Verifies disconnect/connect idempotency
 
-### SHA256 Correctness (6 tests)
+### SHA256 Correctness
 
 33. `sha256_matches_reference` - Verifies SHA256 matches reference implementation
 34. `double_sha256_matches_reference` - Verifies double SHA256 matches reference
@@ -187,39 +187,38 @@ proptest! {
 ### Comprehensive Property Tests
 
 **Location**: `tests/unit/comprehensive_property_tests.rs`
-- **38 proptest! blocks** covering comprehensive scenarios
+- Multiple proptest! blocks covering comprehensive scenarios
 
 ### Script Opcode Property Tests
 
 **Location**: `tests/unit/script_opcode_property_tests.rs`
-- **34 proptest! blocks** for script opcode testing
+- Multiple proptest! blocks for script opcode testing
 
 ### SegWit/Taproot Property Tests
 
 **Location**: `tests/unit/segwit_taproot_property_tests.rs`
-- **24 proptest! blocks** for SegWit and Taproot
+- Multiple proptest! blocks for SegWit and Taproot
 
 ### Edge Case Property Tests
 
 Multiple files with edge case testing:
-- `tests/unit/block_edge_cases.rs`: 18 proptest! blocks
-- `tests/unit/economic_edge_cases.rs`: 18 proptest! blocks
-- `tests/unit/reorganization_edge_cases.rs`: 16 proptest! blocks
-- `tests/unit/transaction_edge_cases.rs`: 16 proptest! blocks
-- `tests/unit/utxo_edge_cases.rs`: 16 proptest! blocks
-- `tests/unit/difficulty_edge_cases.rs`: 16 proptest! blocks
-- `tests/unit/mempool_edge_cases.rs`: 16 proptest! blocks
+- `tests/unit/block_edge_cases.rs`: Multiple proptest! blocks
+- `tests/unit/economic_edge_cases.rs`: Multiple proptest! blocks
+- `tests/unit/reorganization_edge_cases.rs`: Multiple proptest! blocks
+- `tests/unit/transaction_edge_cases.rs`: Multiple proptest! blocks
+- `tests/unit/utxo_edge_cases.rs`: Multiple proptest! blocks
+- `tests/unit/difficulty_edge_cases.rs`: Multiple proptest! blocks
+- `tests/unit/mempool_edge_cases.rs`: Multiple proptest! blocks
 
 ### Cross-BIP Property Tests
 
 **Location**: `tests/cross_bip_property_tests.rs`
-- **12 proptest! blocks** for cross-BIP validation
+- Multiple proptest! blocks for cross-BIP validation
 
 ## Statistics
 
-- **Total Property Test Blocks**: 125 proptest! blocks across all test files
-- **Total Property Test Functions**: 141 prop_* functions across all test files
-- **Main Test File**: 35 property tests in `consensus_property_tests.rs`
+- **Property Test Blocks**: Multiple proptest! blocks across all test files
+- **Property Test Functions**: Multiple prop_* functions across all test files
 
 ## Running Property Tests
 
@@ -291,18 +290,18 @@ proptest! {
 
 ## Integration with Formal Verification
 
-Property tests complement blvm_spec_lock proofs:
+Property tests complement blvm-spec-lock proofs:
 
-- **blvm_spec_lock**: Proves correctness for all inputs (bounded)
+- **blvm-spec-lock**: Proves correctness for all inputs (bounded)
 - **Property Tests**: Verifies invariants with random inputs (unbounded)
 - **Combined**: Comprehensive verification coverage
 
 ## Components
 
 The property-based testing system includes:
-- 35 property tests in main test file
-- 125 property test blocks across all files
-- 141 property test functions
+- Property tests in main test file
+- Property test blocks across all files
+- Property test functions
 - Proptest integration
 - Strategy generation
 - Automatic shrinking
@@ -315,5 +314,5 @@ The property-based testing system includes:
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques
 - [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
 - [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
-- [Formal Verification](../consensus/formal-verification.md) - blvm_spec_lock model checking
+- [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking
 - [Contributing](contributing.md) - Testing requirements for contributions

@@ -30,7 +30,7 @@ graph TB
 ## BLVM Stack Architecture
 
 ![BLVM Stack Architecture](../images/stack.png)
-*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification paths (blvm_spec_lock proofs, spec drift detection, hash verification), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
+*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification paths (blvm-spec-lock proofs, spec drift detection, hash verification), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
 
 ## Tiered Architecture
 
@@ -46,7 +46,7 @@ graph TB
 
 ### Tier 2: [blvm-consensus](../consensus/overview.md) (Pure Math Implementation)
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) functions
-- [PLACEHOLDER_NUMBER proofs](../consensus/formal-verification.md) verify mathematical correctness
+- [Formal proofs](../consensus/formal-verification.md) verify mathematical correctness
 - Side-effect-free, deterministic functions
 - Consensus-critical dependencies pinned to exact versions
 
@@ -111,7 +111,7 @@ graph TB
 
 ### Mathematical Rigor
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
-- [Formal verification](../consensus/formal-verification.md) with [blvm_spec_lock model checking](../consensus/formal-verification.md)
+- [Formal verification](../consensus/formal-verification.md) with [blvm-spec-lock model checking](../consensus/formal-verification.md)
 - [Property-based testing](../development/property-based-testing.md) for mathematical invariants
 - [PLACEHOLDER_NUMBER proofs](../consensus/formal-verification.md) verify critical consensus functions
 

@@ -25,7 +25,7 @@ The blvm-protocol abstracts P2P message formats (standard Bitcoin wire protocol)
 - Isolated from other networks
 - Fast block generation for testing
 
-For implementation details, see the [blvm-protocol README](../../modules/blvm-protocol/README.md).
+For implementation details, see the [blvm-protocol README](../../blvm-protocol/README.md).
 
 ## Transport Abstraction Layer
 

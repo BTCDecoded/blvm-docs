@@ -13,18 +13,19 @@ BLVM (Bitcoin Low-Level Virtual Machine) is compiler-like infrastructure for Bit
 Like a compiler transforms source code → IR → optimized machine code, BLVM transforms:
 
 1. **[Orange Paper](reference/orange-paper.md)** - Mathematical specification (IR/intermediate representation)
-2. **[Optimization Passes](consensus/architecture.md#optimization-passes)** - Transform spec into optimized code:
+2. **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)** - Formal verification tooling linking code to Orange Paper specifications
+3. **[Optimization Passes](consensus/architecture.md#optimization-passes)** - Transform spec into optimized code:
    - **Pass 2**: Constant Folding (pre-computed constants, constant propagation)
    - **Pass 3**: Memory Layout Optimization (cache-aligned structures, compact frames)
    - **Pass 5**: SIMD Vectorization (batch operations, parallel processing)
    - Bounds Check Optimization (using proven bounds)
    - Dead Code Elimination
    - Inlining Hints for hot functions
-3. **[blvm-consensus](consensus/overview.md)** - Optimized implementation with [formal verification](consensus/formal-verification.md)
-4. **[blvm-protocol](protocol/overview.md)** - Protocol abstraction for mainnet, testnet, regtest
-5. **[blvm-node](node/overview.md)** - Full Bitcoin node with storage, networking, RPC
-6. **[blvm-sdk](sdk/overview.md)** - Developer toolkit and [module composition](architecture/module-system.md)
-7. **[Governance](governance/overview.md)** - Cryptographic governance enforcement
+4. **[blvm-consensus](consensus/overview.md)** - Optimized implementation with [formal verification](consensus/formal-verification.md)
+5. **[blvm-protocol](protocol/overview.md)** - Protocol abstraction for mainnet, testnet, regtest
+6. **[blvm-node](node/overview.md)** - Full Bitcoin node with storage, networking, RPC
+7. **[blvm-sdk](sdk/overview.md)** - Developer toolkit and [module composition](architecture/module-system.md)
+8. **[Governance](governance/overview.md)** - Cryptographic governance enforcement
 
 ### Why "LLVM"?
 

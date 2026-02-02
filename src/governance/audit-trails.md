@@ -53,5 +53,5 @@ The system uses OpenTimestamps to anchor audit logs to the Bitcoin blockchain:
 - **Immutable Proof**: Proof of existence at specific time
 - **Public Verification**: Anyone can verify timestamps
 
-For detailed audit log documentation, see [AUDIT_LOG_SYSTEM.md](../../modules/blvm-commons/docs/AUDIT_LOG_SYSTEM.md).
+For detailed audit log documentation, see the blvm-commons repository documentation.
 

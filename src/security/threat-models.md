@@ -149,7 +149,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Rust memory safety
 - MIRI integration (undefined behavior detection)
 - Fuzzing with sanitizers (ASAN, UBSAN, MSAN)
-- Runtime assertions (913 assertions)
+- Runtime assertions
 
 **Code**: ```167:170:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
 
@@ -159,7 +159,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 
 **Mitigations**:
 - Checked arithmetic
-- Formal verification (blvm_spec_lock proofs)
+- Formal verification (blvm-spec-lock proofs)
 - Property-based testing
 - Runtime assertions
 

@@ -57,7 +57,7 @@ The `commons-website` repository has been updated with links to the documentatio
 
 ## Current Setup
 
-- ✅ `bllvm-docs` repository configured with `CNAME` file
+- ✅ `blvm-docs` repository configured with `CNAME` file
 - ✅ GitHub Actions workflow ready for deployment
 - ✅ Links added to `commons-website`
 - ⏳ DNS configuration needed (manual step)
@@ -66,7 +66,7 @@ The `commons-website` repository has been updated with links to the documentatio
 ## Next Steps
 
 1. **Enable GitHub Pages**:
-   - Go to `bllvm-docs` repository Settings → Pages
+   - Go to `blvm-docs` repository Settings → Pages
    - Select "GitHub Actions" as source
 
 2. **Configure DNS**:
