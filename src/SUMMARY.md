@@ -110,6 +110,7 @@
 - [Benchmarking](development/benchmarking.md)
 - [Differential Testing](development/differential-testing.md)
 - [Snapshot Testing](development/snapshot-testing.md)
+- [Known Issues](development/known-issues.md)
 
 # Security
 

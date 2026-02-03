@@ -313,6 +313,62 @@ Workflows are configured in `.github/workflows/` in each repository:
 
 **Note**: Workflows in `blvm-commons` are reusable and called by other repositories via `workflow_call`.
 
+## Workflow Optimization
+
+### Caching Strategies
+
+For self-hosted runners, local caching can provide significant performance improvements:
+
+#### Local Caching System
+
+Using `/tmp/runner-cache` with rsync provides 10-100x faster cache operations than GitHub Actions cache:
+
+- **No API rate limits**: Local filesystem access
+- **Faster restore**: rsync is much faster than GitHub cache API
+- **Works offline**: Once cached, no network needed
+- **Preserves symlinks**: Better than GitHub cache for complex builds
+
+#### Shared Setup Jobs
+
+Use a single setup job that all other jobs depend on:
+
+- **Checkout dependencies once**: Avoid redundant checkouts
+- **Generate cache keys once**: Share keys via job outputs
+- **Parallel execution**: Other jobs can run in parallel after setup
+
+#### Cross-Repo Build Artifact Caching
+
+Cache `target/` directories for dependencies across workflow runs:
+
+- **Don't rebuild dependencies**: Cache blvm-consensus and blvm-protocol build artifacts
+- **Faster incremental builds**: Only rebuild what changed
+- **Shared across repos**: Same cache can be used by multiple repositories
+
+#### Cache Key Strategy
+
+Use deterministic cache keys based on:
+- `Cargo.lock` hash (for dependency changes)
+- Rust toolchain version (for toolchain changes)
+- Combined key: `${DEPS_KEY}-${TOOLCHAIN}`
+
+#### Disk Space Management
+
+For long-running runners, implement cache cleanup:
+
+- **Automatic cleanup**: Remove caches older than N days
+- **Keep recent caches**: Maintain last N cache entries
+- **Emergency cleanup**: Check disk space and clean if >80% full
+
+### Performance Improvements
+
+With proper caching optimization:
+- **Dependency checkout**: ~30s (once in setup job)
+- **Cache restore**: ~5s per job (local cache vs ~20s for GitHub cache)
+- **Dependency build**: ~30s (cached artifacts vs ~5min without cache)
+- **Total overhead**: ~2min vs ~35min without optimization
+
+**Estimated speedup**: ~17x faster for setup overhead
+
 ## Additional Resources
 
 - [Testing Infrastructure](testing.md) - Comprehensive testing documentation

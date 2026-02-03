@@ -29,7 +29,7 @@ graph TB
 
 ## BLVM Stack Architecture
 
-![BLVM Stack Architecture](../images/stack.png)
+![BLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
 *Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification paths (blvm-spec-lock proofs, spec drift detection, hash verification), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
 
 ## Tiered Architecture
