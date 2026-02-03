@@ -270,11 +270,20 @@ let commitment = sync.sync_from_checkpoint(
     diverse_peers,
 ).await?;
 
-// Complete sync forward
+// Complete sync forward with full validation
+// Note: checkpoint_utxo_set should be obtained from the verified commitment
+// For now, passing None starts with empty set (commitment verified at checkpoint)
 sync.complete_sync_from_checkpoint(
     &mut utxo_tree,
-    header_chain,
+    checkpoint_height,
+    current_tip,
     network_client,
+    get_block_hash_fn,
+    peer_id,
+    Network::Mainnet,
+    network_time,
+    Some(&header_chain),
+    None, // checkpoint_utxo_set - can be obtained separately if needed
 ).await?;
 ```
 
