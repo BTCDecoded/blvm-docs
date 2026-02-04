@@ -73,6 +73,27 @@ Fuzz tests discover edge cases through random generation:
 
 **Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
 
+### Kani Proof Verification
+
+Kani model checking provides formal verification of UTXO set operations:
+
+- **Location**: `blvm-node/src/storage/utxostore_proofs.rs`
+- **Coverage**: UTXO uniqueness, add/remove consistency, value conservation, round-trip storage
+- **Tool**: Kani model checker
+- **Mathematical Specifications**: Verifies compliance with Orange Paper theorems
+
+**Verified Properties**:
+- UTXO uniqueness (Orange Paper Theorem 5.3.1)
+- Add/remove consistency
+- Spent output tracking
+- Value conservation (Orange Paper Theorem 5.3.2)
+- Count accuracy
+- Round-trip storage (Orange Paper Theorem 5.3.3)
+
+**Code**: [utxostore_proofs.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L1-L229)
+
+**See Also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Proof verification workflow
+
 ### Runtime Assertions
 
 Runtime assertions catch violations during execution:
@@ -162,6 +183,18 @@ cargo blvm-spec-lock
 ```
 
 **Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
+
+### Run Kani Proofs
+
+```bash
+# Run Kani proofs (requires Kani toolchain)
+cargo kani --features kani
+
+# Verify specific proof
+cargo kani --features kani --proof verify_utxo_uniqueness
+```
+
+**Code**: [utxostore_proofs.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L1-L229)
 
 ## Coverage Goals
 
@@ -273,4 +306,5 @@ The testing infrastructure includes:
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification
 - [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking
+- [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Kani proof verification for UTXO operations
 - [Contributing](contributing.md) - Testing requirements for contributions

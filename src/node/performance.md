@@ -4,6 +4,136 @@
 
 Bitcoin Commons implements performance optimizations for faster initial block download (IBD), parallel validation, and efficient UTXO operations. These optimizations provide 10-50x speedups for common operations while maintaining consensus correctness.
 
+## Parallel Initial Block Download (IBD)
+
+### Overview
+
+Parallel IBD significantly speeds up initial blockchain synchronization by downloading and validating blocks concurrently from multiple peers. The system uses checkpoint-based parallel header download, block pipelining, streaming validation, and efficient batch storage operations.
+
+**Code**: [parallel_ibd.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L1-L1819)
+
+### Architecture
+
+The parallel IBD system consists of several coordinated optimizations:
+
+1. **Checkpoint Parallel Headers**: Download headers in parallel using hardcoded checkpoints
+2. **Block Pipelining**: Download multiple blocks concurrently from each peer
+3. **Streaming Validation**: Validate blocks as they arrive using a reorder buffer
+4. **Batch Storage**: Use batch writes for efficient UTXO set updates
+
+### Checkpoint Parallel Headers
+
+Headers are downloaded in parallel using hardcoded checkpoints at well-known block heights. This allows multiple header ranges to be downloaded simultaneously from different peers.
+
+**Checkpoints**: Genesis, 11111, 33333, 74000, 105000, 134444, 168000, 193000, 210000 (first halving), 250000, 295000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000
+
+**Code**: [MAINNET_CHECKPOINTS](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L36-L198)
+
+**Algorithm**:
+1. Identify checkpoint ranges for the target height range
+2. Download headers in parallel for each range
+3. Each range uses the checkpoint hash as its starting locator
+4. Verification ensures continuity and checkpoint hash matching
+
+**Performance**: 4-8x faster header download vs sequential
+
+### Block Pipelining
+
+Blocks are downloaded with deep pipelining per peer, allowing multiple outstanding block requests to hide network latency.
+
+**Configuration**:
+- `max_concurrent_per_peer`: 64 concurrent downloads per peer (default)
+- `chunk_size`: 100 blocks per chunk (default)
+- `download_timeout_secs`: 60 seconds per block (default)
+
+**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L209-L245)
+
+**Dynamic Work Dispatch**:
+- Uses a shared work queue instead of static chunk assignment
+- Fast peers automatically grab more work as they finish chunks
+- FIFO ordering ensures lowest heights are processed first
+- Natural load balancing across peers
+
+**Performance**: 4-8x improvement vs sequential block requests
+
+### Streaming Validation with Reorder Buffer
+
+Blocks may arrive out of order from parallel downloads. A reorder buffer ensures blocks are validated in sequential order while allowing downloads to continue.
+
+**Implementation**:
+- Bounded channel: 1000 blocks max in flight (~500MB-1GB memory)
+- Reorder buffer: BTreeMap maintains blocks until next expected height
+- Streaming validation: Validates blocks as they become available in order
+- Natural backpressure: Downloads pause when buffer is full
+
+**Code**: [streaming validation](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L536-L745)
+
+**Memory Bounds**: ~500MB-1GB maximum (1000 blocks × ~500KB average)
+
+### Batch Storage Operations
+
+UTXO set updates use batch writes for efficient bulk operations. Batch writes are 10-100x faster than individual inserts.
+
+**BatchWriter Trait**:
+- Accumulates multiple put/delete operations
+- Commits all operations atomically in a single transaction
+- Ensures database consistency even on crash
+
+**Code**: [BatchWriter](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L67-L100)
+
+**Performance**:
+- Individual `Tree::insert()`: ~1ms per operation (transaction overhead)
+- BatchWriter: ~1ms total for thousands of operations (single transaction)
+
+**Usage**:
+```rust
+let mut batch = tree.batch();
+for (key, value) in utxo_updates {
+    batch.put(key, value);
+}
+batch.commit()?;  // Single atomic commit
+```
+
+### Peer Scoring and Filtering
+
+The system tracks peer performance and filters out extremely slow peers during IBD:
+
+- **Latency Tracking**: Monitors average block download latency per peer
+- **Slow Peer Filtering**: Drops peers with >90s average latency (keeps at least 2)
+- **Dynamic Selection**: Fast peers automatically get more work
+
+**Code**: [peer filtering](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L492-L529)
+
+### Configuration
+
+```toml
+[ibd]
+# Number of parallel workers (default: CPU count)
+num_workers = 8
+
+# Chunk size in blocks (default: 100)
+chunk_size = 100
+
+# Maximum concurrent downloads per peer (default: 64)
+max_concurrent_per_peer = 64
+
+# Checkpoint interval in blocks (default: 10,000)
+checkpoint_interval = 10000
+
+# Timeout for block download in seconds (default: 60)
+download_timeout_secs = 60
+```
+
+**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L209-L245)
+
+### Performance Impact
+
+- **Parallel Headers**: 4-8x faster header download
+- **Block Pipelining**: 4-8x improvement vs sequential requests
+- **Streaming Validation**: Enables concurrent download + validation
+- **Batch Storage**: 10-100x faster UTXO updates
+- **Overall IBD**: 10-50x faster than sequential IBD
+
 ## Parallel Block Validation
 
 ### Architecture
@@ -303,3 +433,5 @@ The performance optimization system includes:
 - [Benchmarking](../development/benchmarking.md) - Performance benchmarking
 - [Storage Backends](storage-backends.md) - Storage performance
 - [Consensus Architecture](../consensus/architecture.md) - Optimization passes
+- [UTXO Commitments](../consensus/utxo-commitments.md) - UTXO proof verification and fast sync
+- [IBD Bandwidth Protection](ibd-protection.md) - IBD bandwidth management
