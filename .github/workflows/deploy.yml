@@ -38,6 +38,12 @@ jobs:
         
       - name: Add .nojekyll to deployment root
         run: touch book/.nojekyll
+      
+      - name: Copy CNAME file to deployment root
+        run: |
+          if [ -f CNAME ]; then
+            cp CNAME book/CNAME
+          fi
         
       - name: Copy and inject custom.css
         run: |
