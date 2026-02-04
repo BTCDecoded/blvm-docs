@@ -75,6 +75,68 @@ jobs:
                               f.write(content)
           EOF
           fi
+      
+      - name: Inject Mermaid.js for diagram rendering
+        run: |
+          echo "Injecting Mermaid.js into HTML files..."
+          python3 << 'EOF'
+          import os
+          import re
+          from html.parser import HTMLParser
+          
+          mermaid_script = '''<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+          <script>
+            mermaid.initialize({ startOnLoad: true, theme: 'default' });
+          </script>'''
+          
+          def process_html(content):
+              """Convert mermaid code blocks to mermaid divs"""
+              # Pattern to match <pre><code class="language-mermaid">...</code></pre>
+              # This handles mdBook's HTML output format
+              pattern = r'<pre><code class="language-mermaid">(.*?)</code></pre>'
+              
+              def replace_mermaid(match):
+                  diagram_content = match.group(1)
+                  # Unescape HTML entities
+                  diagram_content = diagram_content.replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&')
+                  # Remove leading/trailing whitespace
+                  diagram_content = diagram_content.strip()
+                  return f'<div class="mermaid">\n{diagram_content}\n</div>'
+              
+              content = re.sub(pattern, replace_mermaid, content, flags=re.DOTALL)
+              return content
+          
+          mermaid_injected = False
+          for root, dirs, files in os.walk('book'):
+              for file in files:
+                  if file.endswith('.html'):
+                      path = os.path.join(root, file)
+                      with open(path, 'r', encoding='utf-8') as f:
+                          content = f.read()
+                      
+                      # Check if file has mermaid diagrams
+                      has_mermaid = 'language-mermaid' in content or 'class="mermaid"' in content
+                      
+                      if has_mermaid:
+                          # Process mermaid code blocks
+                          content = process_html(content)
+                          
+                          # Inject Mermaid.js if not already present
+                          if 'mermaid.min.js' not in content:
+                              if '</body>' in content:
+                                  content = content.replace('</body>', mermaid_script + '\n</body>')
+                                  mermaid_injected = True
+                              elif '</head>' in content:
+                                  content = content.replace('</head>', mermaid_script + '\n</head>')
+                                  mermaid_injected = True
+                          
+                          with open(path, 'w', encoding='utf-8') as f:
+                              f.write(content)
+                          print(f"Updated: {path}")
+          
+          if mermaid_injected:
+              print("Mermaid.js injected successfully")
+          EOF
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
