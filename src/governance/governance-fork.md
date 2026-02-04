@@ -45,7 +45,7 @@ compatibility:
 5. Export generation (package for distribution)
 6. Publication (make available for download)
 
-**Code**: ```1:200:blvm-commons/src/fork/export.rs```
+**Code**: [export.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/fork/export.rs#L1-L200)
 
 ## Versioning System
 
@@ -81,7 +81,7 @@ Track ruleset adoption through: node count, hash rate, user count, exchange supp
 - Status reporting (report chosen ruleset)
 - Update mechanism (handle ruleset updates)
 
-**Code**: ```1:150:blvm-commons/src/fork/executor.rs```
+**Code**: [executor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/fork/executor.rs#L1-L150)
 
 ## Fork Resolution
 

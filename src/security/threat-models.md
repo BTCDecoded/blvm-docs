@@ -24,7 +24,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Cryptographic key generation (delegated to blvm-sdk or modules)
 - Governance enforcement (delegated to blvm-commons)
 
-**Code**: ```11:28:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L11-L28)
 
 ### Module System Security Boundaries
 
@@ -33,7 +33,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Node consensus state is protected and read-only to modules
 - Module crashes are isolated and do not affect the base node
 
-**Code**: ```115:142:blvm-node/docs/MODULE_SYSTEM.md```
+**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md#L115-L142)
 
 **What Modules Cannot Do**:
 - Modify consensus rules
@@ -42,7 +42,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Bypass security boundaries
 - Affect other modules
 
-**Code**: ```334:341:blvm-node/docs/MODULE_SYSTEM.md```
+**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md#L334-L341)
 
 ## Threat Model: Pre-Production Testing
 
@@ -59,7 +59,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Network partitioning attacks
 - Malicious peer injection
 
-**Code**: ```79:91:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L79-L91)
 
 ### Threats That Apply
 
@@ -69,7 +69,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - **Resource exhaustion** (DoS)
 - **Supply chain attacks** on dependencies
 
-**Code**: ```92:98:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L92-L98)
 
 ## Threat Model: Mainnet Deployment
 
@@ -87,7 +87,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - **Resource exhaustion** - memory/CPU DoS
 - **Protocol manipulation** - malformed messages
 
-**Code**: ```99:112:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L99-L112)
 
 ## Attack Vectors
 
@@ -101,7 +101,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Geographic diversity requirements
 - ASN diversity tracking
 
-**Code**: ```156:156:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L156-L156)
 
 ### Sybil Attacks
 
@@ -113,7 +113,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Peer reputation tracking
 - Ban list sharing
 
-**Code**: ```125:127:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L125-L127)
 
 ### Resource Exhaustion (DoS)
 
@@ -126,7 +126,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Resource monitoring
 - Per-user RPC rate limiting
 
-**Code**: ```125:127:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L125-L127)
 
 ### Protocol Manipulation
 
@@ -139,7 +139,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Property-based testing (141 property tests)
 - Network protocol validation
 
-**Code**: ```134:138:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L134-L138)
 
 ### Memory Corruption
 
@@ -151,7 +151,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Fuzzing with sanitizers (ASAN, UBSAN, MSAN)
 - Runtime assertions
 
-**Code**: ```167:170:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L167-L170)
 
 ### Integer Overflow
 
@@ -163,7 +163,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Property-based testing
 - Runtime assertions
 
-**Code**: ```156:160:blvm-consensus/docs/CONSENSUS_COVERAGE_ASSESSMENT.md```
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L156-L160)
 
 ### Supply Chain Attacks
 
@@ -175,7 +175,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Minimal dependency set
 - Trusted dependency sources
 
-**Code**: ```136:137:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L136-L137)
 
 ## Security Hardening
 
@@ -193,7 +193,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Add eclipse attack prevention
 - Add storage bounds checking
 
-**Code**: ```142:158:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L142-L158)
 
 ### Phase 2: Production Readiness
 
@@ -202,7 +202,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Formal verification of critical paths
 - Advanced peer management
 
-**Code**: ```159:162:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L159-L162)
 
 ## Module System Security
 
@@ -215,7 +215,7 @@ Modules run in separate processes:
 - **Crash Isolation**: Module crashes don't affect node
 - **Resource Limits**: CPU, memory, and network limits enforced
 
-**Code**: ```1:13:blvm-node/src/module/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs#L1-L13)
 
 ### Sandboxing
 
@@ -226,7 +226,7 @@ Modules are sandboxed:
 - **Process**: Resource limits enforced
 - **Capabilities**: Permission-based access control
 
-**Code**: ```1:12:blvm-node/src/module/sandbox/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs#L1-L12)
 
 ### Permission System
 
@@ -237,7 +237,7 @@ Modules require explicit permissions:
 - **Resource Limits**: Enforced resource limits
 - **Request Validation**: All requests validated
 
-**Code**: ```317:325:blvm-node/docs/MODULE_SYSTEM.md```
+**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md#L317-L325)
 
 ## RPC Security
 
@@ -249,7 +249,7 @@ RPC authentication implemented:
 - **Certificate-Based**: Certificate-based authentication
 - **Configurable**: Authentication method configurable
 
-**Code**: ```129:132:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L129-L132)
 
 ### Rate Limiting
 
@@ -259,7 +259,7 @@ RPC rate limiting implemented:
 - **Token Bucket**: Token bucket algorithm
 - **Configurable**: Rate limits configurable
 
-**Code**: ```130:130:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L130-L130)
 
 ### Input Validation
 
@@ -269,7 +269,7 @@ RPC input validation:
 - **Validation**: Input validation
 - **Access Control**: Access control via authentication
 
-**Code**: ```131:132:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L131-L132)
 
 ## Network Security
 
@@ -282,7 +282,7 @@ DoS protection mechanisms:
 - **Auto-Ban**: Automatic banning of abusive peers
 - **Resource Monitoring**: Resource usage monitoring
 
-**Code**: ```125:127:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L125-L127)
 
 ### Eclipse Attack Prevention
 
@@ -293,7 +293,7 @@ Eclipse attack prevention:
 - **Geographic Diversity**: Geographic diversity requirements
 - **ASN Diversity**: ASN diversity tracking
 
-**Code**: ```156:156:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L156-L156)
 
 ## Storage Security
 
@@ -306,7 +306,7 @@ Storage layer security:
 - **Database Abstraction**: Allows switching backends
 - **Storage Bounds**: Storage bounds checking
 
-**Code**: ```117:121:blvm-node/SECURITY.md```
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L117-L121)
 
 ## See Also
 

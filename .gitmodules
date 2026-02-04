@@ -1,39 +1,21 @@
-[submodule "modules/bllvm-spec"]
-	path = modules/bllvm-spec
+[submodule "modules/blvm-spec"]
+	path = modules/blvm-spec
 	url = https://github.com/BTCDecoded/blvm-spec.git
-[submodule "modules/bllvm-consensus"]
-	path = modules/bllvm-consensus
+[submodule "modules/blvm-consensus"]
+	path = modules/blvm-consensus
 	url = https://github.com/BTCDecoded/blvm-consensus.git
-[submodule "modules/bllvm-protocol"]
-	path = modules/bllvm-protocol
+[submodule "modules/blvm-protocol"]
+	path = modules/blvm-protocol
 	url = https://github.com/BTCDecoded/blvm-protocol.git
-[submodule "modules/bllvm-node"]
-	path = modules/bllvm-node
+[submodule "modules/blvm-node"]
+	path = modules/blvm-node
 	url = https://github.com/BTCDecoded/blvm-node.git
-[submodule "modules/bllvm-sdk"]
-	path = modules/bllvm-sdk
+[submodule "modules/blvm-sdk"]
+	path = modules/blvm-sdk
 	url = https://github.com/BTCDecoded/blvm-sdk.git
 [submodule "modules/governance"]
 	path = modules/governance
 	url = https://github.com/BTCDecoded/governance.git
-[submodule "modules/bllvm"]
-	path = modules/bllvm
-	url = https://github.com/BTCDecoded/blvm.git
 [submodule "modules/blvm"]
 	path = modules/blvm
 	url = https://github.com/BTCDecoded/blvm.git
-[submodule "modules/blvm-consensus"]
-	path = modules/blvm-consensus
-	url = https://github.com/BTCDecoded/blvm-consensus.git
-[submodule "modules/blvm-node"]
-	path = modules/blvm-node
-	url = https://github.com/BTCDecoded/blvm-node.git
-[submodule "modules/blvm-protocol"]
-	path = modules/blvm-protocol
-	url = https://github.com/BTCDecoded/blvm-protocol.git
-[submodule "modules/blvm-sdk"]
-	path = modules/blvm-sdk
-	url = https://github.com/BTCDecoded/blvm-sdk.git
-[submodule "modules/blvm-spec"]
-	path = modules/blvm-spec
-	url = https://github.com/BTCDecoded/blvm-spec.git

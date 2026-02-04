@@ -11,7 +11,7 @@ Bitcoin Commons optionally supports JSON-RPC over QUIC using Quinn, providing im
 - **Better Performance**: Lower latency, better congestion control
 - **Backward Compatible**: TCP RPC server always available
 
-**Code**: ```1:13:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L1-L13)
 
 ## Usage
 
@@ -26,7 +26,7 @@ let mut rpc_manager = RpcManager::new(tcp_addr);
 rpc_manager.start().await?;
 ```
 
-**Code**: ```16:25:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L16-L25)
 
 ### With QUIC Support
 
@@ -49,7 +49,7 @@ rpc_manager.enable_quinn(quinn_addr);
 rpc_manager.start().await?;
 ```
 
-**Code**: ```27:46:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L27-L46)
 
 ## Configuration
 
@@ -62,7 +62,7 @@ QUIC RPC requires the `quinn` feature flag:
 blvm-node = { path = "../blvm-node", features = ["quinn"] }
 ```
 
-**Code**: ```48:55:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L48-L55)
 
 ### Build with QUIC
 
@@ -70,7 +70,7 @@ blvm-node = { path = "../blvm-node", features = ["quinn"] }
 cargo build --features quinn
 ```
 
-**Code**: ```57:61:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L57-L61)
 
 ## QUIC RPC Server
 
@@ -83,7 +83,7 @@ The `QuinnRpcServer` provides JSON-RPC over QUIC:
 - **Stream Management**: Manages bidirectional streams
 - **Request Processing**: Processes JSON-RPC requests
 
-**Code**: ```1:50:blvm-node/src/rpc/quinn_server.rs```
+**Code**: [quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs#L1-L50)
 
 ### Certificate Management
 
@@ -93,7 +93,7 @@ QUIC uses TLS certificates:
 - **Production**: Should use proper certificate management
 - **Certificate Generation**: Automatic certificate generation
 
-**Code**: ```31:44:blvm-node/src/rpc/quinn_server.rs```
+**Code**: [quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs#L31-L44)
 
 ## Client Usage
 
@@ -123,7 +123,7 @@ recv.read_to_end(&mut response).await?;
 let response_str = String::from_utf8(response)?;
 ```
 
-**Code**: ```70:94:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L70-L94)
 
 ## Benefits Over TCP
 
@@ -133,7 +133,7 @@ let response_str = String::from_utf8(response)?;
 4. **Lower Latency**: Better congestion control
 5. **Stream-Based**: Natural fit for request/response patterns
 
-**Code**: ```96:103:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L96-L103)
 
 ## Limitations
 
@@ -142,7 +142,7 @@ let response_str = String::from_utf8(response)?;
 - **Certificate Management**: Self-signed certs need proper handling for production
 - **Network Requirements**: Some networks may block UDP/QUIC
 
-**Code**: ```104:110:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L104-L110)
 
 ## Security Notes
 
@@ -150,7 +150,7 @@ let response_str = String::from_utf8(response)?;
 - **Authentication**: QUIC provides transport encryption but not application-level auth
 - **Same Security Boundaries**: QUIC RPC has same security boundaries as TCP RPC (no wallet access)
 
-**Code**: ```63:69:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L63-L69)
 
 ## When to Use
 
@@ -159,7 +159,7 @@ let response_str = String::from_utf8(response)?;
 - **Enhanced Security**: When you want built-in encryption without extra TLS layer
 - **Internal Services**: When you control both client and server
 
-**Code**: ```111:117:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L111-L117)
 
 ## When Not to Use
 
@@ -167,7 +167,7 @@ let response_str = String::from_utf8(response)?;
 - **Legacy Clients**: Clients that only support TCP/HTTP
 - **Simple Use Cases**: TCP RPC is simpler and sufficient for most cases
 
-**Code**: ```118:122:blvm-node/docs/QUIC_RPC.md```
+**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md#L118-L122)
 
 ## Components
 

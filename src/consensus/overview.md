@@ -25,7 +25,7 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 - `EvalScript`: Script execution engine
 - `VerifyScript`: Script verification with witness data
 
-**Code**: ```1:200:blvm-consensus/src/transaction.rs```
+**Code**: [transaction.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/transaction.rs#L1-L200)
 
 ### Block Validation
 - `ConnectBlock`: Block connection and validation
@@ -33,34 +33,34 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 - `CheckProofOfWork`: Proof of work verification
 - `ShouldReorganize`: Chain reorganization logic
 
-**Code**: ```1:300:blvm-consensus/src/block.rs```
+**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L1-L300)
 
 ### Economic Model
 - `GetBlockSubsidy`: Block reward calculation with halving
 - `TotalSupply`: Total supply computation
 - `GetNextWorkRequired`: Difficulty adjustment calculation
 
-**Code**: ```1:200:blvm-consensus/src/economic.rs```
+**Code**: [economic.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/economic.rs#L1-L200)
 
 ### Mempool Protocol
 - `AcceptToMemoryPool`: Transaction mempool validation
 - `IsStandardTx`: Standard transaction checks
 - `ReplacementChecks`: RBF (Replace-By-Fee) logic
 
-**Code**: ```1:200:blvm-consensus/src/mempool.rs```
+**Code**: [mempool.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/mempool.rs#L1-L200)
 
 ### Mining Protocol
 - `CreateNewBlock`: Block creation from mempool
 - `MineBlock`: Block mining and nonce finding
 - `GetBlockTemplate`: Block template generation
 
-**Code**: ```1:200:blvm-consensus/src/mining.rs```
+**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/mining.rs#L1-L200)
 
 ### Advanced Features
 - **SegWit**: Witness data validation and weight calculation
 - **Taproot**: P2TR output validation and key aggregation
 
-**Code**: ```1:200:blvm-consensus/src/segwit.rs```
+**Code**: [segwit.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/segwit.rs#L1-L200)
 
 ## Design Principles
 
@@ -81,7 +81,7 @@ Implements mathematical verification of Bitcoin consensus rules:
 - **Spam Filtering**: Always available (removed feature gate dependency)
 - **Parallel Proof Execution**: Tiered scheduling for efficient verification
 
-**Code**: ```1:412:blvm-consensus/src/block.rs```
+**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L1-L412)
 
 ### Verification Coverage
 
@@ -91,7 +91,7 @@ Implements mathematical verification of Bitcoin consensus rules:
 **Transaction Validation**: `check_transaction` structure rules verified  
 **Block Connection**: `connect_block` UTXO consistency verified  
 
-**Code**: ```1:100:blvm-consensus/docs/VERIFICATION.md```
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md#L1-L100)
 
 ## BIP Implementation
 
@@ -103,7 +103,7 @@ Critical Bitcoin Improvement Proposals (BIPs) implemented:
 - **BIP90**: Block version enforcement (integrated in `connect_block()`)
 - **BIP147**: NULLDUMMY enforcement (enforced via script verification)
 
-**Code**: ```1:200:blvm-consensus/src/block.rs```
+**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L1-L200)
 
 ## Performance Optimizations
 
@@ -127,7 +127,7 @@ LLVM-like optimization passes transform Orange Paper specifications:
 - **Bounds Check Optimization**: Eliminate unnecessary checks
 - **Dead Code Elimination**: Remove unused code paths
 
-**Code**: ```1:100:blvm-consensus/src/optimizations/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations/mod.rs#L1-L100)
 
 ## Mathematical Lock
 
@@ -152,7 +152,7 @@ ripemd = "=0.1.3"
 bitcoin_hashes = "=0.11.0"
 ```
 
-**Code**: ```1:163:blvm-consensus/Cargo.toml```
+**Code**: [Cargo.toml](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml#L1-L163)
 
 ## See Also
 

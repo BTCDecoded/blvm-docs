@@ -12,7 +12,7 @@ Contributors receive voting weight based on their contributions:
 
 - **Zaps**: Lightning Network zap contributions (tracked for transparency, don't affect governance)
 
-**Code**: ```1:200:blvm-commons/src/governance/contributions.rs```
+**Code**: [contributions.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/contributions.rs#L1-L200)
 
 ### Zap-to-Vote
 
@@ -23,7 +23,7 @@ Zaps to governance events are converted into votes:
 - **Quadratic Weight**: Vote weight = sqrt(zap_amount_btc)
 - **Message Parsing**: Vote type extracted from zap message
 
-**Code**: ```1:293:blvm-commons/src/nostr/zap_voting.rs```
+**Code**: [zap_voting.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_voting.rs#L1-L293)
 
 ## Vote Weight Calculation
 
@@ -35,7 +35,7 @@ Vote weight uses quadratic formula to prevent vote buying:
 vote_weight = sqrt(zap_amount_btc)
 ```
 
-**Code**: ```60:63:blvm-commons/src/governance/weight_calculator.rs```
+**Code**: [weight_calculator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/weight_calculator.rs#L60-L63)
 
 ### Participation Weight
 
@@ -45,7 +45,7 @@ Base participation weight from contributions:
 - **Contribution Types**: Zaps (tracked for transparency only)
 - **Cooling-Off Period**: New contributions have reduced weight
 
-**Code**: ```65:90:blvm-commons/src/governance/weight_calculator.rs```
+**Code**: [weight_calculator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/weight_calculator.rs#L65-L90)
 
 ### Combined Weight
 
@@ -56,7 +56,7 @@ base_weight = max(zap_weight, participation_weight * 0.1)
 final_weight = apply_weight_cap(base_weight, total_system_weight)
 ```
 
-**Code**: ```65:90:blvm-commons/src/governance/weight_calculator.rs```
+**Code**: [weight_calculator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/weight_calculator.rs#L65-L90)
 
 ## Vote Types
 
@@ -76,7 +76,7 @@ Opposition vote:
 - **Threshold**: 40% of zap votes blocks proposal
 - **Independent**: Zap veto independent of participation votes
 
-**Code**: ```67:73:blvm-commons/src/governance/vote_aggregator.rs```
+**Code**: [vote_aggregator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/vote_aggregator.rs#L67-L73)
 
 ### Abstain
 
@@ -86,7 +86,7 @@ Neutral vote:
 - **Weight**: Counted but doesn't affect threshold
 - **Purpose**: Express neutrality without blocking
 
-**Code**: ```25:49:blvm-commons/src/nostr/zap_voting.rs```
+**Code**: [zap_voting.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_voting.rs#L25-L49)
 
 ## Vote Processing
 
@@ -99,7 +99,7 @@ Neutral vote:
 5. **Check Duplicate**: Prevent duplicate votes
 6. **Record Vote**: Store in database
 
-**Code**: ```62:154:blvm-commons/src/nostr/zap_voting.rs```
+**Code**: [zap_voting.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_voting.rs#L62-L154)
 
 ### Vote Aggregation
 
@@ -111,7 +111,7 @@ Votes are aggregated for proposals:
 4. **Check Threshold**: Verify threshold met
 5. **Check Veto**: Verify no veto blocking
 
-**Code**: ```32:95:blvm-commons/src/governance/vote_aggregator.rs```
+**Code**: [vote_aggregator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/vote_aggregator.rs#L32-L95)
 
 ## Privacy Features
 
@@ -131,7 +131,7 @@ Quadratic formula prevents vote buying:
 - **Diminishing Returns**: Large contributions have proportionally less weight
 - **Fairness**: Prevents wealthy contributors from dominating
 
-**Code**: ```61:63:blvm-commons/src/governance/weight_calculator.rs```
+**Code**: [weight_calculator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/weight_calculator.rs#L61-L63)
 
 ### Cooling-Off Period
 
@@ -141,7 +141,7 @@ New contributions have reduced weight:
 - **Reduced Weight**: New contributions use participation weight only
 - **Prevents Gaming**: Prevents last-minute contribution manipulation
 
-**Code**: ```73:80:blvm-commons/src/governance/weight_calculator.rs```
+**Code**: [weight_calculator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/weight_calculator.rs#L73-L80)
 
 ## Vote Aggregation
 
@@ -160,7 +160,7 @@ pub struct VoteTotals {
 }
 ```
 
-**Code**: ```281:292:blvm-commons/src/nostr/zap_voting.rs```
+**Code**: [zap_voting.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_voting.rs#L281-L292)
 
 ### Proposal Vote Result
 
@@ -180,7 +180,7 @@ pub struct ProposalVoteResult {
 }
 ```
 
-**Code**: ```32:95:blvm-commons/src/governance/vote_aggregator.rs```
+**Code**: [vote_aggregator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/vote_aggregator.rs#L32-L95)
 
 ## Veto Mechanisms
 
@@ -192,7 +192,7 @@ Zap votes can veto proposals:
 - **Independent**: Independent of participation votes
 - **Blocking**: Veto blocks proposal approval
 
-**Code**: ```67:73:blvm-commons/src/governance/vote_aggregator.rs```
+**Code**: [vote_aggregator.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/vote_aggregator.rs#L67-L73)
 
 
 ## Database Schema
@@ -214,7 +214,7 @@ CREATE TABLE proposal_zap_votes (
 );
 ```
 
-**Code**: ```77:93:blvm-commons/src/database/migrations/005_governance_contributions.sql```
+**Code**: [005_governance_contributions.sql](https://github.com/BTCDecoded/blvm-commons/blob/main/src/database/migrations/005_governance_contributions.sql#L77-L93)
 
 ## Integration with Nostr
 
@@ -226,7 +226,7 @@ Zaps are tracked via Nostr integration:
 - **Event Filtering**: Filters zaps to governance events
 - **Vote Conversion**: Converts zaps to votes
 
-**Code**: ```1:281:blvm-commons/src/nostr/zap_tracker.rs```
+**Code**: [zap_tracker.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_tracker.rs#L1-L281)
 
 ### Governance Events
 

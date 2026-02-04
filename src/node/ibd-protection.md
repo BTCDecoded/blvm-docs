@@ -15,7 +15,7 @@ Tracks bandwidth usage per peer with configurable daily and hourly limits:
 - **Automatic Throttling**: Blocks requests when limits are exceeded
 - **Legitimate Node Protection**: First request always allowed, reasonable limits for legitimate sync
 
-**Code**: ```265:350:blvm-node/src/network/ibd_protection.rs```
+**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs#L265-L350)
 
 ### Per-IP Bandwidth Limits
 
@@ -25,7 +25,7 @@ Tracks bandwidth usage per IP address to prevent single-IP attacks:
 - **Aggregate Limits**: Combined daily/hourly limits for all peers from an IP
 - **Attack Detection**: Identifies coordinated attacks from single IP
 
-**Code**: ```350:450:blvm-node/src/network/ibd_protection.rs```
+**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs#L350-L450)
 
 ### Per-Subnet Bandwidth Limits
 
@@ -36,7 +36,7 @@ Tracks bandwidth usage per subnet to prevent distributed attacks:
 - **Subnet Aggregation**: Combines bandwidth from all IPs in subnet
 - **Distributed Attack Mitigation**: Prevents coordinated attacks from subnet
 
-**Code**: ```450:550:blvm-node/src/network/ibd_protection.rs```
+**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs#L450-L550)
 
 ### Concurrent IBD Serving Limits
 
@@ -46,7 +46,7 @@ Limits how many peers can simultaneously request IBD:
 - **Queue Management**: Queues additional requests when limit reached
 - **Fair Serving**: Rotates serving to queued peers
 
-**Code**: ```550:600:blvm-node/src/network/ibd_protection.rs```
+**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs#L550-L600)
 
 ### Peer Reputation Scoring
 
@@ -57,7 +57,7 @@ Tracks peer behavior to identify malicious patterns:
 - **Cooldown Periods**: Enforces cooldown after suspicious activity
 - **Legitimate Node Protection**: First-time sync always allowed
 
-**Code**: ```600:650:blvm-node/src/network/ibd_protection.rs```
+**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs#L600-L650)
 
 ## Configuration
 
@@ -86,7 +86,7 @@ ibd_request_cooldown_seconds = 3600
 - **max_concurrent_ibd_serving**: Maximum concurrent IBD serving (default: 3)
 - **ibd_request_cooldown_seconds**: Cooldown period after suspicious activity (default: 3600 seconds)
 
-**Code**: ```209:264:blvm-node/src/network/ibd_protection.rs```
+**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs#L209-L264)
 
 ## Attack Mitigation
 
@@ -128,7 +128,7 @@ The IBD protection is automatically integrated into the network manager:
 - **Request Protection**: Protects GetHeaders and GetData requests
 - **Cleanup**: Automatically cleans up tracking on peer disconnect
 
-**Code**: ```604:650:blvm-node/src/network/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L604-L650)
 
 ## See Also
 

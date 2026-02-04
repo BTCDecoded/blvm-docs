@@ -28,7 +28,7 @@ Cryptographic primitives for governance operations:
 - **Nested Multisig**: Team-based governance with hierarchical multisig support
 - **Message Formats**: Structured messages for releases, approvals, decisions
 
-**Code**: ```1:200:blvm-sdk/src/governance/signatures.rs```
+**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs#L1-L200)
 
 ### CLI Tools
 
@@ -42,7 +42,7 @@ Command-line tools for governance operations:
 - **`blvm-verify-binary`**: Verify binary file signatures
 - **`blvm-aggregate-signatures`**: Aggregate multiple signatures
 
-**Code**: ```1:100:blvm-sdk/src/bin/blvm-keygen.rs```
+**Code**: [blvm-keygen.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/bin/blvm-keygen.rs#L1-L100)
 
 ### Composition Framework
 
@@ -53,7 +53,7 @@ Declarative node composition from modules:
 - **Economic Integration**: Merge mining revenue distribution
 - **Dependency Resolution**: Automatic module dependency handling
 
-**Code**: ```1:200:blvm-sdk/src/composition/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/composition/mod.rs#L1-L200)
 
 ## Key Features
 
@@ -90,7 +90,7 @@ Threshold-based signature verification:
 - **Signature Aggregation**: Combine multiple signatures
 - **Verification**: Cryptographic verification of threshold satisfaction
 
-**Code**: ```1:200:blvm-sdk/src/governance/multisig.rs```
+**Code**: [multisig.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/multisig.rs#L1-L200)
 
 ### Bitcoin-Compatible Signing
 
@@ -101,7 +101,7 @@ Uses Bitcoin message signing standards:
 - **Hash Function**: Double SHA256
 - **Compatibility**: Compatible with Bitcoin Core signing
 
-**Code**: ```1:200:blvm-sdk/src/governance/signatures.rs```
+**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs#L1-L200)
 
 ## Design Principles
 

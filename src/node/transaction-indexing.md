@@ -15,7 +15,7 @@ Basic transaction lookup by hash:
 - **Lookup**: O(1) hash-based lookup
 - **Always Enabled**: Core indexing functionality
 
-**Code**: ```49:706:blvm-node/src/storage/txindex.rs```
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L49-L706)
 
 ### Address Index (Optional)
 
@@ -27,7 +27,7 @@ Indexes transactions by output addresses:
 - **Lazy Indexing**: Built on-demand when first queried
 - **Configuration**: Enable with `storage.indexing.enable_address_index = true`
 
-**Code**: ```128:200:blvm-node/src/storage/txindex.rs```
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L128-L200)
 
 ### Value Range Index (Optional)
 
@@ -39,7 +39,7 @@ Indexes transactions by output value ranges:
 - **Lazy Indexing**: Built on-demand when first queried
 - **Configuration**: Enable with `storage.indexing.enable_value_index = true`
 
-**Code**: ```200:280:blvm-node/src/storage/txindex.rs```
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L200-L280)
 
 ## Indexing Strategy
 
@@ -52,7 +52,7 @@ Indexes are built on-demand to minimize impact on block processing:
 3. **Caching**: Indexed addresses are cached to avoid re-indexing
 4. **Batch Operations**: Multiple transactions indexed together for efficiency
 
-**Code**: ```109:126:blvm-node/src/storage/txindex.rs```
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L109-L126)
 
 ### Batch Indexing
 
@@ -63,7 +63,7 @@ Block-level indexing optimizations:
 - **Batching**: Groups updates per unique address/bucket to reduce DB I/O
 - **Conditional Writes**: Only writes to DB if updates were made
 
-**Code**: ```109:126:blvm-node/src/storage/txindex.rs```
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L109-L126)
 
 ## Configuration
 
@@ -88,7 +88,7 @@ println!("Indexed addresses: {}", stats.indexed_addresses);
 println!("Indexed value buckets: {}", stats.indexed_value_buckets);
 ```
 
-**Code**: ```28:36:blvm-node/src/storage/txindex.rs```
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L28-L36)
 
 ## Usage
 

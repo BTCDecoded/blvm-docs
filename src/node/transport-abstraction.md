@@ -32,7 +32,7 @@ NetworkManager
 | **Default** | ✅ Yes | ❌ No | ❌ No |
 | **Feature Flag** | Always enabled | `quinn` | `iroh` |
 
-**Code**: ```89:100:blvm-node/src/network/transport.rs```
+**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs#L89-L100)
 
 ### TCP Transport
 
@@ -44,7 +44,7 @@ Traditional TCP transport for Bitcoin P2P protocol compatibility:
 - No built-in encryption (TLS optional)
 - No connection multiplexing
 
-**Code**: ```1:200:blvm-node/src/network/tcp_transport.rs```
+**Code**: [tcp_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/tcp_transport.rs#L1-L200)
 
 ### Quinn QUIC Transport
 
@@ -56,7 +56,7 @@ Direct QUIC transport using the Quinn library:
 - Stream multiplexing over single connection
 - Optional feature flag: `quinn`
 
-**Code**: ```1:200:blvm-node/src/network/quinn_transport.rs```
+**Code**: [quinn_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/quinn_transport.rs#L1-L200)
 
 ### Iroh Transport
 
@@ -68,7 +68,7 @@ QUIC-based transport using Iroh for P2P networking:
 - Connection migration support
 - Optional feature flag: `iroh`
 
-**Code**: ```1:200:blvm-node/src/network/iroh_transport.rs```
+**Code**: [iroh_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/iroh_transport.rs#L1-L200)
 
 ### Performance Characteristics
 
@@ -90,7 +90,7 @@ QUIC-based transport using Iroh for P2P networking:
 - **Connection Overhead**: Higher (DERP relay overhead)
 - **Use Case**: NAT traversal, decentralized networking
 
-**Code**: ```1:247:blvm-node/src/network/transport.rs```
+**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs#L1-L247)
 
 ## Transport Abstraction
 
@@ -106,7 +106,7 @@ pub trait Transport: Send + Sync {
 }
 ```
 
-**Code**: ```1:262:blvm-node/src/network/transport.rs```
+**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs#L1-L262)
 
 ### TransportAddr
 
@@ -120,7 +120,7 @@ pub enum TransportAddr {
 }
 ```
 
-**Code**: ```11:69:blvm-node/src/network/transport.rs```
+**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs#L11-L69)
 
 ### TransportType
 
@@ -134,7 +134,7 @@ pub enum TransportType {
 }
 ```
 
-**Code**: ```89:100:blvm-node/src/network/transport.rs```
+**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs#L89-L100)
 
 ## Transport Selection
 
@@ -146,7 +146,7 @@ Runtime preference for transport selection:
 - **IrohOnly**: Use only Iroh transport
 - **Hybrid**: Prefer Iroh if available, fallback to TCP
 
-**Code**: ```100:162:blvm-node/src/network/transport.rs```
+**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs#L100-L162)
 
 ### Feature Negotiation
 
@@ -155,7 +155,7 @@ Peers negotiate transport capabilities during connection:
 - Automatic fallback if preferred transport unavailable
 - Transport-aware message routing
 
-**Code**: ```1:200:blvm-node/src/network/protocol.rs```
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs#L1-L200)
 
 ## Protocol Adapter
 
@@ -163,7 +163,7 @@ The `ProtocolAdapter` handles message serialization between:
 - Consensus-proof `NetworkMessage` types
 - Transport-specific wire formats (TCP Bitcoin P2P vs Iroh message format)
 
-**Code**: ```1:200:blvm-node/src/network/protocol_adapter.rs```
+**Code**: [protocol_adapter.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol_adapter.rs#L1-L200)
 
 ## Message Bridge
 
@@ -172,7 +172,7 @@ The `MessageBridge` bridges blvm-consensus message processing with transport lay
 - Processes incoming messages
 - Generates responses
 
-**Code**: ```1:200:blvm-node/src/network/message_bridge.rs```
+**Code**: [message_bridge.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/message_bridge.rs#L1-L200)
 
 ## Network Manager Integration
 
@@ -182,7 +182,7 @@ The `NetworkManager` supports multiple transports:
 - Unified message routing
 - Automatic transport fallback
 
-**Code**: ```1:200:blvm-node/src/network/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L1-L200)
 
 ## Benefits
 

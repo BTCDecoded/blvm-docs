@@ -131,7 +131,7 @@ The RPC API uses Bitcoin Core-compatible JSON-RPC 2.0 error codes:
 | -25 | Transaction rejected | Transaction rejected by consensus rules |
 | -27 | Transaction already in mempool | Transaction already in mempool |
 
-**Code**: ```9:78:blvm-node/src/rpc/errors.rs```
+**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs#L9-L78)
 
 ### Error Response Format
 
@@ -150,7 +150,7 @@ The RPC API uses Bitcoin Core-compatible JSON-RPC 2.0 error codes:
 }
 ```
 
-**Code**: ```432:450:blvm-node/src/rpc/errors.rs```
+**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs#L432-L450)
 
 ## Authentication
 
@@ -169,7 +169,7 @@ curl -X POST http://localhost:8332 \
 
 TLS client certificates can be used for authentication when QUIC transport is enabled.
 
-**Code**: ```1:100:blvm-node/src/rpc/auth.rs```
+**Code**: [auth.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/auth.rs#L1-L100)
 
 ## Rate Limiting
 
@@ -179,7 +179,7 @@ Rate limiting is enforced per IP, per user, and per method:
 - **Unauthenticated**: 50 burst, 5 req/sec
 - **Per-method limits**: May override defaults for specific methods
 
-**Code**: ```1:100:blvm-node/src/rpc/server.rs```
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/server.rs#L1-L100)
 
 ## Request/Response Format
 
@@ -223,7 +223,7 @@ Rate limiting is enforced per IP, per user, and per method:
 }
 ```
 
-**Code**: ```16:45:blvm-node/src/rpc/types.rs```
+**Code**: [types.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/types.rs#L16-L45)
 
 ## Batch Requests
 

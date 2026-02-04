@@ -50,7 +50,7 @@ graph TB
 - Side-effect-free, deterministic functions
 - Consensus-critical dependencies pinned to exact versions
 
-**Code**: ```1:260:blvm-consensus/README.md```
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/README.md#L1-L260)
 
 ### Tier 3: [blvm-protocol](../protocol/overview.md) (Protocol Abstraction)
 - Bitcoin protocol abstraction for multiple variants
@@ -58,7 +58,7 @@ graph TB
 - Commons-specific protocol extensions ([UTXO commitments](../consensus/utxo-commitments.md), ban list sharing)
 - BIP implementations (BIP152, BIP157, BIP158, BIP173/350/351)
 
-**Code**: ```1:344:blvm-protocol/README.md```
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md#L1-L344)
 
 ### Tier 4: [blvm-node](../node/overview.md) (Node Implementation)
 - Minimal, production-ready Bitcoin node
@@ -74,7 +74,7 @@ graph TB
 - Governance integration (webhooks, user signaling)
 - ZeroMQ notifications (optional)
 
-**Code**: ```1:178:blvm-node/README.md```
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-node/blob/main/README.md#L1-L178)
 
 ### Tier 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
 - Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
@@ -82,7 +82,7 @@ graph TB
 - [Composition framework](../architecture/module-system.md) (declarative node composition)
 - Bitcoin-compatible signing standards
 
-**Code**: ```1:130:blvm-sdk/README.md```
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-sdk/blob/main/README.md#L1-L130)
 
 ### Tier 6: blvm-commons (Governance Enforcement)
 - GitHub App for governance enforcement

@@ -26,7 +26,7 @@ Differential testing serves to:
 - BIP-specific differential tests
 - FIBRE performance benchmarks
 
-**Code**: ```1:8:blvm-consensus/tests/integration/differential_tests.rs``` (skeleton)
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L1-L8) (skeleton)
 
 ## Architecture
 
@@ -37,7 +37,7 @@ Differential testing serves to:
 3. **Result Comparison**: Compare local and Core results
 4. **Divergence Detection**: Report any divergences
 
-**Code**: ```31:78:blvm-consensus/tests/integration/differential_tests.rs```
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L31-L78)
 
 ### Bitcoin Core RPC Integration
 
@@ -47,7 +47,7 @@ Differential tests use Bitcoin Core RPC:
 - **submitblock**: Block validation
 - **JSON-RPC 2.0**: Standard RPC protocol
 
-**Code**: ```133:184:blvm-consensus/tests/integration/differential_tests.rs```
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L133-L184)
 
 ## Transaction Validation Comparison
 
@@ -67,7 +67,7 @@ pub async fn compare_transaction_validation(
 4. Compare validation results
 5. Report divergence if results differ
 
-**Code**: ```31:78:blvm-consensus/tests/integration/differential_tests.rs```
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L31-L78)
 
 ## Block Validation Comparison
 
@@ -87,7 +87,7 @@ pub async fn compare_block_validation(
 4. Compare validation results
 5. Report divergence if results differ
 
-**Code**: ```80:131:blvm-consensus/tests/integration/differential_tests.rs```
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L80-L131)
 
 ## Configuration
 
@@ -103,7 +103,7 @@ pub struct CoreRpcConfig {
 
 **Default**: `http://127.0.0.1:8332` (local Bitcoin Core)
 
-**Code**: ```13:29:blvm-consensus/tests/integration/differential_tests.rs```
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L13-L29)
 
 ## Differential Fuzzing
 
@@ -116,7 +116,7 @@ Differential fuzzing compares internal consistency:
 - **Calculation Idempotency**: Weight calculations, economic calculations are deterministic
 - **Cross-Validation**: Different code paths agree on validation results
 
-**Code**: ```1:20:blvm-consensus/fuzz/fuzz_targets/differential_fuzzing.rs```
+**Code**: [differential_fuzzing.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/fuzz_targets/differential_fuzzing.rs#L1-L20)
 
 ### Internal Consistency
 
@@ -127,7 +127,7 @@ Differential fuzzing tests internal consistency within blvm-consensus:
 - **Validation Consistency**: Validation consistency across code paths
 - **Calculation Determinism**: Deterministic calculations
 
-**Code**: ```227:239:blvm-consensus/fuzz/README.md```
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/README.md#L227-L239)
 
 ## Bitcoin Core Test Vectors
 
@@ -139,7 +139,7 @@ Bitcoin Core test vectors are integrated:
 - **Script Vectors**: `script_valid.json`, `script_invalid.json`
 - **Block Vectors**: `block_valid.json`, `block_invalid.json`
 
-**Code**: ```11:28:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md#L11-L28)
 
 ### Test Execution
 
@@ -150,7 +150,7 @@ Test vectors are executed:
 - **Pass/Fail Reporting**: Report test results
 - **Graceful Handling**: Handle missing test data gracefully
 
-**Code**: ```11:28:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md#L11-L28)
 
 ## Mainnet Block Tests
 
@@ -163,7 +163,7 @@ Real Bitcoin mainnet blocks are used:
 - **Taproot Activation**: Taproot activation block validation
 - **Historical Blocks**: Blocks from all consensus eras
 
-**Code**: ```43:49:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md#L43-L49)
 
 ## Historical Consensus Tests
 
@@ -178,7 +178,7 @@ Historical consensus validation tests:
 - **Halving Points**: Historical block subsidy calculations
 - **Difficulty Adjustment**: Historical difficulty adjustment tests
 
-**Code**: ```29:41:blvm-consensus/tests/BLINDSPOT_COVERAGE_REPORT.md```
+**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md#L29-L41)
 
 ## Usage
 
@@ -218,7 +218,7 @@ pub struct ComparisonResult {
 }
 ```
 
-**Code**: ```31:78:blvm-consensus/tests/integration/differential_tests.rs```
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L31-L78)
 
 ### Divergence Handling
 

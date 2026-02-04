@@ -16,7 +16,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 - **Performance**: Optimized for read-heavy workloads
 - **Storage**: Efficient key-value storage
 
-**Code**: ```1:170:blvm-node/src/storage/database.rs```
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L1-L170)
 
 ### sled (Fallback)
 
@@ -27,7 +27,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 - **Performance**: Good for development and testing
 - **Storage**: Key-value storage with B-tree indexing
 
-**Code**: ```131:200:blvm-node/src/storage/database.rs```
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L131-L200)
 
 ### rocksdb (Optional, Bitcoin Core Compatible)
 
@@ -47,7 +47,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 - Accesses block files (`blk*.dat`) with lazy indexing
 - Supports mainnet, testnet, regtest, and signet networks
 
-**Code**: ```78:84:blvm-node/src/storage/database.rs```, ```1:105:blvm-node/src/storage/bitcoin_core_storage.rs```
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L78-L84), ```1:105:blvm-node/src/storage/bitcoin_core_storage.rs```
 
 **Note**: RocksDB and erlay features are mutually exclusive due to dependency conflicts.
 
@@ -61,7 +61,7 @@ The system automatically selects the best available backend:
 4. **Falls back to RocksDB** if available and other backends fail
 5. **Returns error** if no backend is available
 
-**Code**: ```80:129:blvm-node/src/storage/database.rs```, ```59:100:blvm-node/src/storage/mod.rs```
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L80-L129), ```59:100:blvm-node/src/storage/mod.rs```
 
 ### Automatic Fallback
 
@@ -70,7 +70,7 @@ The system automatically selects the best available backend:
 let storage = Storage::new(data_dir)?;
 ```
 
-**Code**: ```46:73:blvm-node/src/storage/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs#L46-L73)
 
 ## Database Abstraction
 
@@ -85,7 +85,7 @@ pub trait Database: Send + Sync {
 }
 ```
 
-**Code**: ```13:19:blvm-node/src/storage/database.rs```
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L13-L19)
 
 ### Tree Trait
 
@@ -100,7 +100,7 @@ pub trait Tree: Send + Sync {
 }
 ```
 
-**Code**: ```21:50:blvm-node/src/storage/database.rs```
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L21-L50)
 
 ## Storage Components
 
@@ -112,7 +112,7 @@ Stores blocks by hash:
 - **Value**: Serialized block data
 - **Indexing**: Hash-based lookup
 
-**Code**: ```1:200:blvm-node/src/storage/blockstore.rs```
+**Code**: [blockstore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/blockstore.rs#L1-L200)
 
 ### UtxoStore
 
@@ -122,7 +122,7 @@ Manages UTXO set:
 - **Value**: UTXO data (script, amount)
 - **Operations**: Add, remove, query UTXOs
 
-**Code**: ```1:200:blvm-node/src/storage/utxostore.rs```
+**Code**: [utxostore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore.rs#L1-L200)
 
 ### ChainState
 
@@ -133,7 +133,7 @@ Tracks chain metadata:
 - **Chain Work**: Cumulative proof-of-work
 - **UTXO Stats**: Cached UTXO set statistics
 
-**Code**: ```1:121:blvm-node/src/storage/chainstate.rs```
+**Code**: [chainstate.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/chainstate.rs#L1-L121)
 
 ### TxIndex
 
@@ -143,7 +143,7 @@ Transaction indexing:
 - **Value**: Transaction data and metadata
 - **Lookup**: Fast transaction retrieval
 
-**Code**: ```1:200:blvm-node/src/storage/txindex.rs```
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L1-L200)
 
 ## Configuration
 
@@ -161,7 +161,7 @@ backend = "auto"  # or "redb", "sled"
 - `"sled"`: Force sled backend
 - `"rocksdb"`: Force rocksdb backend (requires `rocksdb` feature)
 
-**Code**: ```1116:1130:blvm-node/src/config/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs#L1116-L1130)
 
 ### RocksDB Configuration
 
@@ -183,7 +183,7 @@ The system automatically detects Bitcoin Core data directories:
 - Testnet: `~/.bitcoin/testnet3/` or `~/Library/Application Support/Bitcoin/testnet3/`
 - Regtest: `~/.bitcoin/regtest/` or `~/Library/Application Support/Bitcoin/regtest/`
 
-**Code**: ```1:219:blvm-node/src/storage/bitcoin_core_detection.rs```
+**Code**: [bitcoin_core_detection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_detection.rs#L1-L219)
 
 ### Cache Configuration
 
@@ -199,7 +199,7 @@ header_cache_mb = 10
 - **UTXO Cache**: Default 50 MB, caches frequently accessed UTXOs
 - **Header Cache**: Default 10 MB, caches block headers
 
-**Code**: ```1:100:blvm-node/src/config/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs#L1-L100)
 
 ## Performance Characteristics
 
@@ -247,7 +247,7 @@ keep_blocks = 288  # Keep last 288 blocks (2 days)
 - **Aggressive**: Prune with UTXO commitments (requires utxo-commitments feature)
 - **Custom**: Fine-grained control over what to keep
 
-**Code**: ```1:200:blvm-node/src/storage/pruning.rs```
+**Code**: [pruning.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/pruning.rs#L1-L200)
 
 ## Error Handling
 
@@ -258,7 +258,7 @@ The storage layer handles backend failures gracefully:
 - **Data Integrity**: Verifies data integrity on startup
 - **Corruption Detection**: Detects and reports database corruption
 
-**Code**: ```46:73:blvm-node/src/storage/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs#L46-L73)
 
 ## See Also
 

@@ -16,7 +16,7 @@ Block templates are created using a formally verified algorithm from `blvm-conse
 6. **Calculate Merkle Root**: Compute merkle root from transaction list
 7. **Build Template**: Construct block header with all components
 
-**Code**: ```183:228:blvm-node/src/rpc/mining.rs```
+**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs#L183-L228)
 
 ### Transaction Selection
 
@@ -27,7 +27,7 @@ Transactions are selected using a fee-based priority algorithm:
 3. **Minimum Fee**: Filter transactions below minimum fee rate (1 sat/vB default)
 4. **UTXO Validation**: Verify all transaction inputs exist in UTXO set
 
-**Code**: ```69:105:blvm-node/src/node/miner.rs```
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs#L69-L105)
 
 ### Fee Calculation
 
@@ -42,7 +42,7 @@ The coinbase transaction includes:
 - **Block Subsidy**: Calculated based on halving schedule
 - **Transaction Fees**: Sum of all fees from selected transactions
 
-**Code**: ```107:200:blvm-node/src/node/miner.rs```
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs#L107-L200)
 
 ### Block Template Structure
 
@@ -60,7 +60,7 @@ pub struct Block {
 }
 ```
 
-**Code**: ```594:604:blvm-node/src/node/miner.rs```
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs#L594-L604)
 
 ## Mining Process
 
@@ -72,7 +72,7 @@ The `getblocktemplate` RPC method generates a block template:
 2. Converts to JSON-RPC format (BIP 22/23)
 3. Returns template ready for mining
 
-**Code**: ```183:228:blvm-node/src/rpc/mining.rs```
+**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs#L183-L228)
 
 ### Proof of Work
 
@@ -83,7 +83,7 @@ Mining involves finding a nonce that satisfies the difficulty target:
 3. **Target Check**: Verify hash < difficulty target
 4. **Success**: Return mined block with valid nonce
 
-**Code**: ```240:272:blvm-node/src/node/miner.rs```
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs#L240-L272)
 
 ### Block Submission
 
@@ -93,7 +93,7 @@ Mined blocks are submitted via `submitblock` RPC method:
 2. **Connection**: Block connected to chain
 3. **Confirmation**: Block added to blockchain
 
-**Code**: ```1:100:blvm-node/src/rpc/mining.rs```
+**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs#L1-L100)
 
 ## Mining Coordinator
 
@@ -104,7 +104,7 @@ The `MiningCoordinator` manages mining operations:
 - **Stratum V2 Integration**: Coordinates with Stratum V2 protocol
 - **Merge Mining**: Available via optional `blvm-merge-mining` module (paid plugin)
 
-**Code**: ```1:615:blvm-node/src/node/miner.rs```
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs#L1-L615)
 
 ## Stratum V2 Support
 
@@ -115,7 +115,7 @@ Optional Stratum V2 protocol support provides:
 - **Multiplexed Channels**: QUIC stream multiplexing
 - **Merge Mining**: Simultaneous mining of multiple chains
 
-**Code**: ```1:200:blvm-node/src/network/stratum_v2/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/mod.rs#L1-L200)
 
 ## Configuration
 
@@ -135,7 +135,7 @@ enabled = true
 listen_addr = "0.0.0.0:3333"
 ```
 
-**Code**: ```1:100:blvm-node/src/config/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs#L1-L100)
 
 ## See Also
 

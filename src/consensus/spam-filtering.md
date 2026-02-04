@@ -4,7 +4,7 @@
 
 Spam filtering provides transaction-level filtering for bandwidth optimization and non-monetary transaction detection. The system filters spam transactions to achieve 40-60% bandwidth savings during ongoing sync while maintaining consensus correctness.
 
-**Code**: ```1:680:blvm-consensus/src/utxo_commitments/spam_filter.rs```
+**Code**: [spam_filter.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/spam_filter.rs#L1-L680)
 
 **Note**: While the implementation is located in the `utxo_commitments` module for organizational purposes, spam filtering is a general-purpose feature that can be used independently of UTXO commitments.
 

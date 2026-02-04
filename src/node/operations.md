@@ -45,7 +45,7 @@ Initial → Headers → Blocks → Synced
 4. **Synced**: Fully synchronized, normal operation
 5. **Error**: Error state (can transition from any state)
 
-**Code**: ```124:132:blvm-node/src/node/sync.rs```
+**Code**: [sync.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/sync.rs#L124-L132)
 
 ### State Transitions
 
@@ -56,7 +56,7 @@ State transitions are managed by the `SyncStateMachine`:
 - **Blocks → Synced**: When blocks are complete (60% progress)
 - **Any → Error**: On error conditions
 
-**Code**: ```63:121:blvm-node/src/node/sync.rs```
+**Code**: [sync.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/sync.rs#L63-L121)
 
 ### Initial Sync
 
@@ -69,7 +69,7 @@ When starting for the first time, the node will:
 5. **Build UTXO Set**: Construct UTXO set from validated blocks
 6. **Sync to Current Height**: Continue until caught up with network
 
-**Code**: ```161:171:blvm-node/src/node/sync.rs```
+**Code**: [sync.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/sync.rs#L161-L171)
 
 ### Running State
 
@@ -82,7 +82,7 @@ Once synced, the node maintains:
 - **RPC Requests**: Serves [JSON-RPC API](rpc-api.md) requests
 - **Health Monitoring**: Periodic health checks
 
-**Code**: ```1000:1102:blvm-node/src/node/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs#L1000-L1102)
 
 ### Health States
 
@@ -93,7 +93,7 @@ The node tracks health status for each component:
 - **Unhealthy**: Component not functioning correctly
 - **Down**: Component not responding
 
-**Code**: ```8:19:blvm-node/src/node/health.rs```
+**Code**: [health.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/health.rs#L8-L19)
 
 ### Error Recovery
 
@@ -104,7 +104,7 @@ The node implements graceful error recovery:
 - **Validation Errors**: Logged and reported, node continues operation
 - **Disk Space**: Periodic checks with warnings
 
-**Code**: ```1114:1140:blvm-node/src/node/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs#L1114-L1140)
 
 ## Monitoring
 

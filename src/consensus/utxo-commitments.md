@@ -14,7 +14,7 @@ UTXO Commitments enable fast synchronization of the Bitcoin UTXO set without req
 4. **Verification**: PoW-based commitment verification
 5. **Network Integration**: Works with TCP and Iroh transports
 
-**Code**: ```1:48:blvm-consensus/src/utxo_commitments/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/mod.rs#L1-L48)
 
 ## Merkle Tree Implementation
 
@@ -27,7 +27,7 @@ The system uses a sparse Merkle tree for efficient incremental updates:
 - **Root Calculation**: Efficient root hash calculation
 - **SHA256 Hashing**: Uses SHA256 for all hashing operations
 
-**Code**: ```1:603:blvm-consensus/src/utxo_commitments/merkle_tree.rs```
+**Code**: [merkle_tree.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/merkle_tree.rs#L1-L603)
 
 ### Usage
 
@@ -60,7 +60,7 @@ Peers are selected for diversity across:
 - **Subnet**: /16 subnet distribution
 - **Implementation**: Different Bitcoin implementations (Bitcoin Core, btcd, etc.)
 
-**Code**: ```20:45:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L20-L45)
 
 ### Consensus Configuration
 
@@ -74,7 +74,7 @@ pub struct ConsensusConfig {
 }
 ```
 
-**Code**: ```66:91:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L66-L91)
 
 ### Consensus Process
 
@@ -85,7 +85,7 @@ pub struct ConsensusConfig {
 5. **Verify Threshold**: Check if agreement meets consensus threshold (80%)
 6. **Verify Commitment**: Verify consensus commitment against block headers and PoW
 
-**Code**: ```241:350:blvm-consensus/src/utxo_commitments/peer_consensus.rs```
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L241-L350)
 
 ## Fast Sync Protocol
 
@@ -99,7 +99,7 @@ pub struct ConsensusConfig {
 6. **Sync Forward**: Download filtered blocks from checkpoint to tip
 7. **Update Incrementally**: Update UTXO set incrementally for each block
 
-**Code**: ```1:132:blvm-consensus/src/utxo_commitments/initial_sync.rs```
+**Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/initial_sync.rs#L1-L132)
 
 ### Bandwidth Savings
 
@@ -123,7 +123,7 @@ UTXO Commitments use spam filtering to reduce bandwidth during sync. Spam filter
 
 When processing blocks for UTXO commitments, spam filtering is applied:
 
-- **Location**: ```206:310:blvm-consensus/src/utxo_commitments/initial_sync.rs```
+- **Location**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/initial_sync.rs#L206-L310)
 - **Process**: All transactions are processed, but spam outputs are filtered out
 - **Benefit**: 40-60% bandwidth reduction during ongoing sync
 - **Critical Design**: INPUTS are always removed (maintains UTXO consistency), OUTPUTS are filtered (bandwidth savings)
@@ -168,7 +168,7 @@ The node implements BIP158 compact block filters for light client support. While
 
 BIP158 filters can be included in `FilteredBlockMessage` alongside spam-filtered transactions and UTXO commitments, enabling efficient light client synchronization.
 
-**Code**: ```1:200:blvm-node/src/bip158.rs```
+**Code**: [bip158.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/bip158.rs#L1-L200)
 
 ## Verification
 
@@ -178,7 +178,7 @@ BIP158 filters can be included in `FilteredBlockMessage` alongside spam-filtered
 2. **Standard**: Peer consensus + PoW + supply checks
 3. **Paranoid**: All checks + background genesis verification
 
-**Code**: ```26:35:blvm-consensus/src/utxo_commitments/config.rs```
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/config.rs#L26-L35)
 
 ### Verification Checks
 
@@ -187,7 +187,7 @@ BIP158 filters can be included in `FilteredBlockMessage` alongside spam-filtered
 - **Header Chain Verification**: Verify commitment height matches header chain
 - **Merkle Root Verification**: Verify Merkle root matches UTXO set
 
-**Code**: ```1:200:blvm-consensus/src/utxo_commitments/verification.rs```
+**Code**: [verification.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/verification.rs#L1-L200)
 
 ## Network Integration
 
@@ -198,7 +198,7 @@ UTXO Commitments work with both TCP and Iroh transports via the transport abstra
 - **TCP**: Bitcoin P2P compatible
 - **Iroh/QUIC**: QUIC with NAT traversal and DERP
 
-**Code**: ```1:520:blvm-node/src/network/utxo_commitments_client.rs```
+**Code**: [utxo_commitments_client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/utxo_commitments_client.rs#L1-L520)
 
 ### Network Messages
 
@@ -207,7 +207,7 @@ UTXO Commitments work with both TCP and Iroh transports via the transport abstra
 - `GetFilteredBlock`: Request filtered block (spam-filtered)
 - `FilteredBlock`: Response with filtered block
 
-**Code**: ```1:200:blvm-consensus/src/utxo_commitments/network_integration.rs```
+**Code**: [network_integration.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/network_integration.rs#L1-L200)
 
 ## Configuration
 
@@ -217,7 +217,7 @@ UTXO Commitments work with both TCP and Iroh transports via the transport abstra
 - **Genesis**: Sync from genesis (slow, but no trust required)
 - **Hybrid**: Use peer consensus but verify from genesis in background
 
-**Code**: ```15:24:blvm-consensus/src/utxo_commitments/config.rs```
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/config.rs#L15-L24)
 
 ### Configuration Example
 
@@ -238,7 +238,7 @@ min_value = 546  # dust threshold
 min_fee_rate = 1  # sat/vB
 ```
 
-**Code**: ```1:100:blvm-consensus/src/utxo_commitments/config.rs```
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/config.rs#L1-L100)
 
 ## Formal Verification
 
@@ -299,7 +299,7 @@ update_commitments_after_block(
 )?;
 ```
 
-**Code**: ```1:200:blvm-consensus/src/utxo_commitments/initial_sync.rs```
+**Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/initial_sync.rs#L1-L200)
 
 ## Benefits
 

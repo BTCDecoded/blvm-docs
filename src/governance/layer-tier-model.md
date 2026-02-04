@@ -73,7 +73,7 @@ When both Layer and Tier requirements apply, the system takes the **most restric
 
 ## Implementation
 
-**Code**: ```63:125:blvm-commons/src/validation/threshold.rs```
+**Code**: [threshold.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/threshold.rs#L63-L125)
 
 ```rust
 pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {

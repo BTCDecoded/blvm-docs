@@ -57,7 +57,7 @@ graph TB
 - Privacy protocols (Dandelion++, Fibre)
 - Package relay (BIP331)
 
-**Code**: ```1:2680:blvm-node/src/network/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L1-L2680)
 
 ### Storage Layer
 - Database abstraction with multiple backends (see [Storage Backends](storage-backends.md))
@@ -68,7 +68,7 @@ graph TB
 - Transaction indexing
 - Pruning support
 
-**Code**: ```1:89:blvm-node/src/storage/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs#L1-L89)
 
 ### RPC Server
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
@@ -77,7 +77,7 @@ graph TB
 - Authentication and rate limiting
 - Method coverage
 
-**Code**: ```1:47:blvm-node/src/rpc/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mod.rs#L1-L47)
 
 ### Module System
 - Process-isolated modules (see [Module System Architecture](../architecture/module-system.md))
@@ -86,7 +86,7 @@ graph TB
 - Permission-based API access
 - Hot reload support
 
-**Code**: ```1:520:blvm-node/src/module/manager.rs```
+**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs#L1-L520)
 
 ### Mempool Manager
 - Transaction validation and storage
@@ -96,14 +96,14 @@ graph TB
 - Transaction expiry
 - Advanced indexing (address and value range indexing)
 
-**Code**: ```1:200:blvm-node/src/node/mempool.rs```
+**Code**: [mempool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mempool.rs#L1-L200)
 
 ### Mining Coordinator
 - Block template generation
 - Stratum V2 protocol support
 - Mining job distribution
 
-**Code**: ```1:531:blvm-node/src/node/miner.rs```
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs#L1-L531)
 
 ### Payment Processing
 - CTV (CheckTemplateVerify) support
@@ -112,14 +112,14 @@ graph TB
 - Covenant support
 - Payment state management
 
-**Code**: ```1:10:blvm-node/src/payment/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/payment/mod.rs#L1-L10)
 
 ### Governance Integration
 - P2P governance message relay
 - Webhook handlers for governance events
 - User signaling support
 
-**Code**: ```1:3:blvm-node/src/governance/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/governance/mod.rs#L1-L3)
 
 ## Design Principles
 
@@ -181,7 +181,7 @@ graph TB
 4. **Running**: Validate blocks/transactions, relay messages, serve RPC requests
 5. **Shutdown**: Graceful shutdown of all components
 
-**Code**: ```76:1094:blvm-node/src/node/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs#L76-L1094)
 
 ## Metrics and Monitoring
 
@@ -193,7 +193,7 @@ The node includes metrics collection:
 - **Performance Metrics**: Block validation time, transaction processing time
 - **System Metrics**: CPU usage, memory usage, disk I/O
 
-**Code**: ```1:71:blvm-node/src/node/metrics.rs```
+**Code**: [metrics.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/metrics.rs#L1-L71)
 
 ## See Also
 

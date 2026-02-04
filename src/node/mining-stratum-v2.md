@@ -14,7 +14,7 @@ Bitcoin Commons implements the Stratum V2 mining protocol, enabling efficient mi
 - **Template Distribution**: Efficient block template distribution
 - **Share Submission**: Optimized share submission protocol
 
-**Code**: ```1:45:blvm-node/src/network/stratum_v2/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/mod.rs#L1-L45)
 
 ### Message Encoding
 
@@ -24,7 +24,7 @@ Stratum V2 uses Tag-Length-Value (TLV) encoding:
 [4-byte length][2-byte tag][4-byte length][payload]
 ```
 
-**Code**: ```1:189:blvm-node/src/network/stratum_v2/protocol.rs```
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/protocol.rs#L1-L189)
 
 ### Transport Support
 
@@ -34,7 +34,7 @@ Stratum V2 works with both TCP and QUIC transports via the transport abstraction
 - **Quinn QUIC**: Direct QUIC transport
 - **Iroh/QUIC**: QUIC with NAT traversal and DERP
 
-**Code**: ```712:768:blvm-node/src/config/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs#L712-L768)
 
 ## Merge Mining (Optional Plugin)
 
@@ -76,7 +76,7 @@ The server accepts miner connections and coordinates mining operations:
 - Validates share submissions
 - Coordinates merge mining channels
 
-**Code**: ```1:311:blvm-node/src/network/stratum_v2/server.rs```
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/server.rs#L1-L311)
 
 ### Pool Implementation
 
@@ -87,7 +87,7 @@ The `StratumV2Pool` manages mining pool operations:
 - Channel management
 - Connection pooling
 
-**Code**: ```1:200:blvm-node/src/network/stratum_v2/pool.rs```
+**Code**: [pool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/pool.rs#L1-L200)
 
 ## Client Implementation
 
@@ -99,7 +99,7 @@ The miner client connects to pools and submits shares:
 - Job reception
 - Share submission
 
-**Code**: ```1:200:blvm-node/src/network/stratum_v2/miner.rs```
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/miner.rs#L1-L200)
 
 ### StratumV2Client
 
@@ -110,7 +110,7 @@ The client handles protocol communication:
 - Channel management
 - Error handling
 
-**Code**: ```1:200:blvm-node/src/network/stratum_v2/client.rs```
+**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/client.rs#L1-L200)
 
 ## Configuration
 
@@ -125,7 +125,7 @@ listen_addr = "0.0.0.0:3333"  # Server mode
 
 **Note**: Merge mining configuration is handled by the `blvm-merge-mining` module, not in Stratum V2 config.
 
-**Code**: ```712:768:blvm-node/src/config/mod.rs```
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs#L712-L768)
 
 ## Usage
 
