@@ -27,7 +27,7 @@ Like a compiler transforms source code → IR → optimized machine code, BLVM t
 7. **[blvm-sdk](sdk/overview.md)** - Developer toolkit and [module composition](architecture/module-system.md)
 8. **[Governance](governance/overview.md)** - Cryptographic governance enforcement
 
-### Why "LLVM"?
+### Why "LVM"?
 
 Like LLVM's compiler infrastructure, BLVM provides Bitcoin implementation infrastructure with [optimization passes](consensus/architecture.md#optimization-passes). The [Orange Paper](reference/orange-paper.md) serves as the intermediate representation (IR) transformed into production-ready code, enabling safe alternative implementations while maintaining consensus correctness.
 
