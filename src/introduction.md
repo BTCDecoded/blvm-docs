@@ -14,13 +14,7 @@ Like a compiler transforms source code → IR → optimized machine code, BLVM t
 
 1. **[Orange Paper](reference/orange-paper.md)** - Mathematical specification (IR/intermediate representation)
 2. **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)** - Formal verification tooling linking code to Orange Paper specifications
-3. **[Optimization Passes](consensus/architecture.md#optimization-passes)** - Transform spec into optimized code:
-   - **Pass 2**: Constant Folding (pre-computed constants, constant propagation)
-   - **Pass 3**: Memory Layout Optimization (cache-aligned structures, compact frames)
-   - **Pass 5**: SIMD Vectorization (batch operations, parallel processing)
-   - Bounds Check Optimization (using proven bounds)
-   - Dead Code Elimination
-   - Inlining Hints for hot functions
+3. **[Optimization Passes](consensus/architecture.md#optimization-passes)** - Transform spec into optimized code
 4. **[blvm-consensus](consensus/overview.md)** - Optimized implementation with [formal verification](consensus/formal-verification.md)
 5. **[blvm-protocol](protocol/overview.md)** - Protocol abstraction for mainnet, testnet, regtest
 6. **[blvm-node](node/overview.md)** - Full Bitcoin node with storage, networking, RPC

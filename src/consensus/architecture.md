@@ -49,20 +49,18 @@ The consensus layer is designed as a pure mathematical implementation with no si
 
 ## Optimization Passes
 
-BLVM includes LLVM-like optimization passes that transform the Orange Paper specification into optimized, production-ready code:
+BLVM applies optimizations to transform the [Orange Paper](../reference/orange-paper.md) specification into optimized, production-ready code:
 
-- **Pass 2: Constant Folding** - Pre-computed constants and constant propagation to avoid runtime computation in hot paths
-- **Pass 3: Memory Layout Optimization** - Cache-aligned structures (32-byte alignment) and compact stack frames for better cache performance
-- **Pass 5: SIMD Vectorization** - Batch hash operations (SHA256, double SHA256, RIPEMD160, HASH160) with parallel processing using Rayon
-- **Bounds Check Optimization** - Uses [blvm-spec-lock](formal-verification.md)-proven bounds to remove redundant runtime bounds checks
-- **Dead Code Elimination** - Markers for unused code paths that can be eliminated
-- **Inlining Hints** - `hot_inline!` macro for aggressive inlining of hot functions
-
-These optimization passes are similar to LLVM's optimization infrastructure, transforming the mathematical specification ([Orange Paper](../reference/orange-paper.md)) into optimized code while maintaining correctness through [formal verification](formal-verification.md).
+- **Constant Folding** - Pre-computed constants and constant propagation
+- **Memory Layout Optimization** - Cache-aligned structures and compact stack frames
+- **SIMD Vectorization** - Batch hash operations with parallel processing
+- **Bounds Check Optimization** - Removes redundant runtime bounds checks using [blvm-spec-lock](formal-verification.md)-proven bounds
+- **Dead Code Elimination** - Removes unused code paths
+- **Inlining Hints** - Aggressive inlining of hot functions
 
 ## Mathematical Protections
 
-{{#include ../../../blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md}}
+Mathematical protection mechanisms ensure correctness through formal verification. See [Mathematical Specifications](mathematical-specifications.md) for details.
 
 ## Spec Maintenance Workflow
 
