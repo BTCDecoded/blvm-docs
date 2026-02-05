@@ -351,7 +351,7 @@ mesh_client
 
 Specialized modules can be built to use `blvm-mesh` for:
 
-- **Onion Routing**: Multi-layer encrypted packets with anonymous routing
+- **Onion Routing**: Multi-layer encrypted packets with anonymous routing (inspired by [Tor Project](https://www.torproject.org/))
 - **Mining Pool Coordination**: Decentralized mining pool operations via mesh
 - **P2P Messaging**: Payment-gated messaging over mesh network
 
@@ -415,6 +415,11 @@ The module integrates with the node via `ModuleIntegration`:
 - **GitHub**: [blvm-mesh](https://github.com/BTCDecoded/blvm-mesh)
 - **Version**: 0.1.0
 - **API Documentation**: [API.md](https://github.com/BTCDecoded/blvm-mesh/blob/main/API.md)
+
+## External Resources
+
+- **Tor Project**: [https://www.torproject.org/](https://www.torproject.org/) - Inspiration for onion routing concepts used in mesh submodules
+- **Tor Documentation**: [Tor Project Documentation](https://2019.www.torproject.org/docs/documentation.html.en) - Tor network documentation and technical details
 
 ## See Also
 

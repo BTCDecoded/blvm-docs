@@ -238,6 +238,11 @@ Ocean Pool ← blvm-datum (DATUM client) ← NodeAPI (block templates)
 - **Version**: 0.1.0
 - **Status**: 🚧 In Development
 
+## External Resources
+
+- **DATUM Gateway**: [Ocean DATUM Documentation](https://ocean.xyz/docs/datum) - Official DATUM Gateway protocol documentation
+- **Ocean Pool**: [Ocean.xyz](https://ocean.xyz/) - Mining pool that supports DATUM Gateway protocol
+
 ## See Also
 
 - [Module System Overview](overview.md) - Overview of all available modules

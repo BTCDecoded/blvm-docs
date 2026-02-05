@@ -269,6 +269,10 @@ For manual testing:
 - **Version**: 0.1.0
 - **Documentation**: [QUICKSTART.md](https://github.com/BTCDecoded/blvm-miningos/blob/main/QUICKSTART.md), [Integration Guide](https://github.com/BTCDecoded/blvm-miningos/blob/main/docs/INTEGRATION.md)
 
+## External Resources
+
+- **MiningOS**: [https://mos.tether.io/](https://mos.tether.io/) - The open-source, self-hosted OS for Bitcoin mining and energy orchestration that this module integrates with
+
 ## See Also
 
 - [Module System Overview](overview.md) - Overview of all available modules

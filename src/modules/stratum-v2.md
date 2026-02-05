@@ -197,6 +197,11 @@ The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 - **GitHub**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2)
 - **Version**: 0.1.0
 
+## External Resources
+
+- **Stratum V2 Specification**: [Stratum V2 Protocol Specification](https://stratumprotocol.org/) - Official Stratum V2 mining protocol specification
+- **Stratum V2 Documentation**: [Stratum V2 Docs](https://docs.stratumprotocol.org/) - Complete Stratum V2 protocol documentation
+
 ## See Also
 
 - [Module System Overview](overview.md) - Overview of all available modules
