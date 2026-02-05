@@ -113,16 +113,24 @@ The module publishes the following events:
 Mesh routing fees are distributed as follows:
 
 - **60%** to destination node
-- **30%** to routing nodes (distributed proportionally)
+- **30%** to routing nodes (distributed proportionally based on route length)
 - **10%** to Commons treasury
+
+Fee calculation is performed by the `RoutingTable::calculate_fee()` method, which takes into account:
+- Route length (number of hops)
+- Base routing cost
+- Payment amount (for percentage-based fees)
 
 ## Anti-Monopoly Protection
 
 The module implements anti-monopoly protections to prevent single entities from dominating routing:
 
-- Maximum routing share limits per entity
-- Diversification requirements for routing paths
-- Fee distribution mechanisms that favor decentralization
+- **Maximum routing share limits**: Per-entity limits on routing market share
+- **Diversification requirements**: Routing paths must include multiple entities
+- **Fee distribution mechanisms**: Fee distribution favors decentralized routing paths
+- **Route quality scoring**: Routes are scored based on decentralization metrics
+
+These protections are enforced by the `RoutingPolicyEngine` and `RoutingTable` components.
 
 ## Usage
 
@@ -138,11 +146,7 @@ Once installed and configured, the module automatically:
 
 ### Core Infrastructure
 
-`blvm-mesh` provides the core infrastructure layer for payment-gated routing, while specialized modules build on top for specific use cases. This separation of concerns makes the system composable and allows each module to focus on its domain.
-
-**Repository Structure**: All modules live in the same repository (`blvm-mesh/`) as a Rust workspace. Each submodule is a separate crate that depends on the core `blvm-mesh` library.
-
-**Code**: [BLVM_MESH_MODULAR_ARCHITECTURE.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/BLVM_MESH_MODULAR_ARCHITECTURE.md)
+`blvm-mesh` provides the core infrastructure layer for payment-gated routing. The module exposes a ModuleAPI that allows other modules to build specialized functionality on top of the mesh infrastructure. This separation of concerns makes the system composable and allows each module to focus on its domain.
 
 ### Core Components
 
@@ -163,23 +167,50 @@ Central coordinator for mesh networking operations:
 
 Verifies payment proofs for mesh routing:
 
-- **Lightning payments**: Verifies BOLT11 invoices with preimages
-- **CTV payments**: Verifies covenant proofs for instant settlement
-- **Expiry checking**: Validates payment proof timestamps
-- **Amount verification**: Confirms payment amount matches requirements
+- **Lightning payments**: Verifies BOLT11 invoices with preimages via NodeAPI
+- **CTV payments**: Verifies covenant proofs for instant settlement (requires CTV feature flag)
+- **Expiry checking**: Validates payment proof timestamps to prevent expired proofs
+- **Amount verification**: Confirms payment amount matches routing requirements
+- **NodeAPI integration**: Uses NodeAPI to query blockchain for payment verification
 
 **Code**: [verifier.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/verifier.rs)
+
+#### ReplayPrevention
+
+Prevents payment proof replay attacks:
+
+- **Hash-based tracking**: Tracks payment proof hashes to detect replays
+- **Sequence numbers**: Uses sequence numbers for additional replay protection
+- **Expiry cleanup**: Removes expired payment proof hashes (24-hour expiry)
+- **Lock-free reads**: Uses DashMap for concurrent access without blocking
+
+**Code**: [replay.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/replay.rs)
 
 #### RoutingTable
 
 Manages mesh network routing:
 
-- **Direct peers**: Tracks direct connections
-- **Multi-hop routes**: Discovers routes through intermediate nodes
-- **Fee calculation**: Calculates routing fees (60/30/10 split)
-- **Route discovery**: Finds optimal paths through network
+- **Direct peers**: Tracks direct connections using DashMap for lock-free concurrent access
+- **Multi-hop routes**: Discovers routes through intermediate nodes using distance vector routing
+- **Fee calculation**: Calculates routing fees (60/30/10 split) based on route length and payment amount
+- **Route discovery**: Finds optimal paths through network with route quality scoring
+- **Route expiry**: Routes expire after 1 hour (configurable)
+- **Route caching**: Caches discovered routes for performance
 
 **Code**: [routing.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/routing.rs)
+
+#### RouteDiscovery
+
+Implements route discovery protocol:
+
+- **Distance vector routing**: Simple, scalable routing algorithm
+- **Route requests**: Broadcasts route requests to find paths
+- **Route responses**: Collects route responses from network
+- **Route advertisements**: Advertises known routes to neighbors
+- **Timeout handling**: 30-second timeout for route discovery
+- **Maximum hops**: 10 hops maximum for route discovery
+
+**Code**: [discovery.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/discovery.rs)
 
 #### RoutingPolicyEngine
 
@@ -197,7 +228,7 @@ Determines routing policy based on protocol and configuration:
 
 `blvm-mesh` exposes a `ModuleAPI` that other modules can call via inter-module IPC. This allows specialized modules to use mesh routing without implementing routing logic themselves.
 
-**Code**: [api.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/api.rs#L66-L134)
+**Code**: [api.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/api.rs)
 
 ### Available Methods
 
@@ -205,150 +236,154 @@ Determines routing policy based on protocol and configuration:
 
 Send a packet through the mesh network.
 
-**Request**:
-```rust
-pub struct SendPacketRequest {
-    pub destination: NodeId,           // 32-byte destination node ID
-    pub payload: Vec<u8>,              // Packet payload
-    pub payment_proof: Option<PaymentProof>, // Required for paid routing
-    pub protocol_id: Option<String>,    // Optional protocol identifier
-    pub ttl: Option<u64>,              // Time-to-live (seconds)
-}
-```
+**Request**: `SendPacketRequest`
+- `destination: NodeId` - 32-byte destination node ID
+- `payload: Vec<u8>` - Packet payload
+- `payment_proof: Option<PaymentProof>` - Required for paid routing
+- `protocol_id: Option<String>` - Optional protocol identifier
+- `ttl: Option<u64>` - Time-to-live (seconds)
 
-**Response**:
-```rust
-pub struct SendPacketResponse {
-    pub success: bool,
-    pub packet_id: [u8; 32],           // Unique packet ID
-    pub route_length: usize,            // Number of hops
-    pub estimated_cost_sats: u64,       // Total routing cost
-    pub error: Option<String>,
-}
-```
+**Response**: `SendPacketResponse`
+- `success: bool` - Whether packet was sent successfully
+- `packet_id: [u8; 32]` - Unique packet ID
+- `route_length: usize` - Number of hops
+- `estimated_cost_sats: u64` - Total routing cost
+- `error: Option<String>` - Error message if failed
 
 #### `discover_route`
 
 Find a route to a destination node.
 
-**Request**:
-```rust
-pub struct DiscoverRouteRequest {
-    pub destination: NodeId,
-    pub max_hops: Option<u8>,          // Maximum route length
-    pub timeout_seconds: Option<u64>,   // Discovery timeout
-}
-```
+**Request**: `DiscoverRouteRequest`
+- `destination: NodeId` - Destination node ID
+- `max_hops: Option<u8>` - Maximum route length
+- `timeout_seconds: Option<u64>` - Discovery timeout
 
-**Response**:
-```rust
-pub struct DiscoverRouteResponse {
-    pub route: Option<Vec<NodeId>>,    // Route path (None if not found)
-    pub route_cost_sats: u64,          // Estimated routing cost
-    pub discovery_time_ms: u64,         // Time taken to discover
-}
-```
+**Response**: `DiscoverRouteResponse`
+- `route: Option<Vec<NodeId>>` - Route path (None if not found)
+- `route_cost_sats: u64` - Estimated routing cost
+- `discovery_time_ms: u64` - Time taken to discover
 
 #### `register_protocol_handler`
 
 Register a protocol handler for incoming packets.
 
-**Request**:
-```rust
-pub struct RegisterProtocolRequest {
-    pub protocol_id: String,           // e.g., "onion-v1", "mining-pool-v1"
-    pub handler_method: String,        // Module method to call when packet arrives
-}
-```
+**Request**: `RegisterProtocolRequest`
+- `protocol_id: String` - Protocol identifier (e.g., "onion-v1", "mining-pool-v1")
+- `handler_method: String` - Module method to call when packet arrives
 
-**Response**:
-```rust
-pub struct RegisterProtocolResponse {
-    pub success: bool,
-}
-```
+**Response**: `RegisterProtocolResponse`
+- `success: bool` - Whether registration succeeded
 
 #### `get_routing_stats`
 
 Get routing statistics.
 
-**Response**:
+**Response**: `MeshStats`
+- `enabled: bool` - Whether mesh is enabled
+- `mode: MeshMode` - Current mesh mode
+- `routing: RoutingStats` - Routing statistics
+- `replay: ReplayStats` - Replay prevention statistics
+
+#### `get_node_id`
+
+Get the mesh module's node ID.
+
+**Response**: `NodeId` - 32-byte node ID
+
+## Building on Mesh Infrastructure
+
+The `blvm-mesh` module exposes a ModuleAPI that allows other modules to build specialized functionality on top of the core mesh infrastructure. Specialized modules can use the mesh routing system via inter-module IPC.
+
+### Using the Mesh ModuleAPI
+
+Modules can call the mesh ModuleAPI in two ways:
+
+#### Option 1: Direct NodeAPI Call
+
 ```rust
-pub struct MeshStats {
-    pub enabled: bool,
-    pub mode: MeshMode,
-    pub routing: RoutingStats,
-    pub replay: ReplayStats,
-}
-```
+use blvm_node::module::traits::NodeAPI;
+use blvm_mesh::api::SendPacketRequest;
 
-### Example Module Usage
-
-Specialized modules can use `blvm-mesh` via inter-module IPC:
-
-```rust
-// In blvm-onion module
-use blvm_node::module::inter_module::api::ModuleAPI;
-
-// Call blvm-mesh ModuleAPI
-let mesh_api = module_context.get_module_api("blvm-mesh")?;
+// Call mesh module API directly
 let request = SendPacketRequest {
     destination: target_node_id,
-    payload: onion_packet,
+    payload: packet_data,
     payment_proof: Some(payment),
     protocol_id: Some("onion-v1".to_string()),
     ttl: Some(300),
 };
-let response: SendPacketResponse = mesh_api
-    .call_method("send_packet", &request)
+let response_data = node_api
+    .call_module(Some("blvm-mesh"), "send_packet", bincode::serialize(&request)?)
+    .await?;
+let response: SendPacketResponse = bincode::deserialize(&response_data)?;
+```
+
+#### Option 2: MeshClient Helper (Recommended)
+
+For convenience, the mesh module provides a `MeshClient` API wrapper that handles serialization:
+
+```rust
+use blvm_mesh::MeshClient;
+
+// Create mesh client
+let mesh_client = MeshClient::new(node_api, "blvm-mesh".to_string());
+
+// Send packet
+let response = mesh_client
+    .send_packet("my-module-id", destination, payload, payment_proof, Some("onion-v1".to_string()))
+    .await?;
+
+// Discover route
+let route = mesh_client
+    .discover_route("my-module-id", destination, Some(10))
+    .await?;
+
+// Register protocol handler
+mesh_client
+    .register_protocol_handler("my-module-id", "onion-v1".to_string(), "handle_packet".to_string())
     .await?;
 ```
 
-**Code**: [BLVM_MESH_MODULAR_ARCHITECTURE.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/BLVM_MESH_MODULAR_ARCHITECTURE.md#blvm-mesh-core-api)
+**Code**: [client_api.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/client_api.rs)
 
-## Example Modules
+### Example Use Cases
 
-### blvm-onion
+Specialized modules can be built to use `blvm-mesh` for:
 
-Onion routing module built on top of `blvm-mesh`:
+- **Onion Routing**: Multi-layer encrypted packets with anonymous routing
+- **Mining Pool Coordination**: Decentralized mining pool operations via mesh
+- **P2P Messaging**: Payment-gated messaging over mesh network
 
-- **Onion packet construction**: Builds multi-layer encrypted packets
-- **Route selection**: Chooses random routes through mesh
-- **Payment integration**: Uses mesh payment-gated routing
-- **Anonymity**: Provides sender/receiver anonymity
+### Integration Pattern
 
-**Location**: `blvm-mesh/modules/blvm-onion/`
+Any module can integrate with `blvm-mesh` by:
 
-### blvm-mining-pool
+1. **Using MeshClient**: Create a `MeshClient` instance with `MeshClient::new(node_api, "blvm-mesh".to_string())`
+2. **Registering a protocol**: Call `mesh_client.register_protocol_handler()` to register a protocol identifier (e.g., `"onion-v1"`, `"mining-pool-v1"`, `"messaging-v1"`)
+3. **Sending packets**: Use `mesh_client.send_packet()` to route packets through the mesh network
+4. **Discovering routes**: Use `mesh_client.discover_route()` to find routes to destination nodes
+5. **Receiving packets**: Handle incoming packets via the registered protocol handler method
 
-Mining pool coordination module:
+### Implementation Details
 
-- **Pool coordination**: Coordinates mining pool operations
-- **Share distribution**: Distributes mining shares via mesh
-- **Payment routing**: Uses mesh for pool payments
-- **Network discovery**: Discovers pool members via mesh
+The mesh module provides both internal routing via `MeshManager` and external API access via `MeshModuleAPI`:
 
-**Location**: `blvm-mesh/modules/blvm-mining-pool/`
+- **Internal routing**: Processes incoming mesh packets via `handle_packet`, routes packets through the mesh network, verifies payments, and manages routing tables
+- **External API**: Exposes `MeshModuleAPI` for other modules to call via inter-module IPC, providing methods for sending packets, discovering routes, and registering protocol handlers
+- **ModuleIntegration**: Uses the new `ModuleIntegration` API for IPC communication, replacing the old `ModuleClient` and `NodeApiIpc` approach
 
-### blvm-messaging
-
-P2P messaging module:
-
-- **Message routing**: Routes messages through mesh network
-- **Payment gating**: Uses payment-gated routing for premium messages
-- **Protocol handling**: Handles messaging protocol packets
-- **Network integration**: Integrates with mesh routing
-
-**Location**: `blvm-mesh/modules/blvm-messaging/`
+For detailed information on the mesh implementation, see the [API.md](https://github.com/BTCDecoded/blvm-mesh/blob/main/API.md) documentation. For developing modules that integrate with mesh routing, see [Module Development](../sdk/module-development.md).
 
 ## API Integration
 
-The module integrates with the node via the Node API IPC protocol:
+The module integrates with the node via `ModuleIntegration`:
 
-- **Read-only blockchain access**: Queries blockchain data for payment verification
-- **Event subscription**: Receives real-time events from the node (46+ event types)
-- **Event publication**: Publishes mesh routing events
-- **Inter-module IPC**: Exposes ModuleAPI for other modules to use
+- **ModuleIntegration**: Uses `ModuleIntegration::connect()` for IPC communication (replaces old `ModuleClient` and `NodeApiIpc`)
+- **NodeAPI access**: Gets NodeAPI via `integration.node_api()` for blockchain queries and payment verification
+- **Event subscription**: Subscribes to events via `integration.subscribe_events()` and receives via `integration.event_receiver()`
+- **Event publication**: Publishes mesh-specific events via NodeAPI
+- **Inter-module IPC**: Exposes ModuleAPI for other modules to call via `node_api.call_module()`
 
 ## Troubleshooting
 
@@ -361,10 +396,25 @@ The module integrates with the node via the Node API IPC protocol:
 
 ### Routing Not Working
 
-- Verify mesh mode is correctly configured
-- Check network listening address is accessible
-- Verify payment verification is working
+- Verify mesh mode is correctly configured (`bitcoin_only`, `payment_gated`, or `open`)
+- Check network listening address is accessible and not blocked by firewall
+- Verify payment verification is working (if using payment-gated mode)
 - Check node logs for routing errors
+- Verify peers are connected and routing table has entries
+- Check replay prevention isn't blocking valid packets
+
+### Payment Verification Issues
+
+- Verify Lightning node is accessible (if using Lightning payments)
+- Check CTV covenant proofs are valid (if using CTV payments)
+- Verify payment proof timestamps are not expired
+- Check payment amounts match routing requirements
+
+## Repository
+
+- **GitHub**: [blvm-mesh](https://github.com/BTCDecoded/blvm-mesh)
+- **Version**: 0.1.0
+- **API Documentation**: [API.md](https://github.com/BTCDecoded/blvm-mesh/blob/main/API.md)
 
 ## See Also
 

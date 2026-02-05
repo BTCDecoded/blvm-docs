@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Lightning Network module (`blvm-lightning`) handles Lightning Network payment processing for blvm-node: invoice verification, payment routing, channel management, and payment state tracking. For information on developing custom modules, see [Module Development](../sdk/module-development.md). For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Lightning Network module (`blvm-lightning`) handles Lightning Network payment processing for blvm-node: invoice verification, payment routing, channel management, and payment state tracking. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
 
 ## Features
 
-- **Invoice Verification**: Validates Lightning Network invoices (BOLT11)
-- **Payment Routing**: Discovers and manages payment routes
-- **Channel Management**: Tracks Lightning channel state
+- **Invoice Verification**: Validates Lightning Network invoices (BOLT11) using multiple provider backends
+- **Payment Processing**: Processes Lightning payments via LNBits API or LDK
+- **Provider Abstraction**: Supports multiple Lightning providers (LNBits, LDK, Stub) with unified interface
 - **Payment State Tracking**: Monitors payment lifecycle from request to settlement
 
 ## Installation
@@ -87,6 +87,20 @@ provider = "stub"
 - **LDK**: `data_dir`, `network`, `node_private_key` (optional)
 - **Stub**: No additional configuration needed
 
+### Provider Comparison
+
+| Feature | LNBits | LDK | Stub |
+|---------|--------|-----|------|
+| **Status** | ✅ Production-ready | ✅ Fully implemented | ✅ Testing |
+| **API Type** | REST (HTTP) | Rust-native (lightning-invoice) | None |
+| **Real Lightning** | ✅ Yes | ✅ Yes | ❌ No |
+| **External Service** | ✅ Yes | ❌ No | ❌ No |
+| **Invoice Creation** | ✅ Via API | ✅ Native | ✅ Mock |
+| **Payment Verification** | ✅ Via API | ✅ Native | ✅ Mock |
+| **Best For** | Payment processing | Full control, Rust-native | Testing |
+
+**Switching Providers**: All providers implement the same interface, so switching providers is just a configuration change. No code changes required.
+
 ## Module Manifest
 
 The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
@@ -128,11 +142,21 @@ The module publishes the following events:
 
 Once installed and configured, the module automatically:
 
-1. Subscribes to payment-related events from the node
-2. Verifies Lightning invoices when payment requests are created
-3. Discovers payment routes for Lightning payments
-4. Tracks channel state and publishes channel events
+1. Subscribes to payment-related events from the node (`PaymentRequestCreated`, `PaymentSettled`, `PaymentFailed`)
+2. Verifies Lightning invoices (BOLT11) when payment requests are created
+3. Processes payments using the configured provider (LNBits, LDK, or Stub)
+4. Publishes payment verification and status events (`PaymentVerified`, `PaymentRouteFound`, `PaymentRouteFailed`)
 5. Monitors payment lifecycle and publishes status events
+
+The module automatically selects the provider based on configuration. All providers implement the same interface, so switching providers requires only a configuration change.
+
+### Provider Selection
+
+The module uses the `LightningProcessor` to handle payment processing. The processor:
+- Reads provider configuration from `lightning.provider`
+- Creates the appropriate provider instance (LNBits, LDK, or Stub)
+- Routes all payment operations through the provider interface
+- Stores provider configuration in module storage for persistence
 
 ## API Integration
 
@@ -153,10 +177,20 @@ The module integrates with the node via the Node API IPC protocol:
 
 ### Payment Verification Failing
 
-- Verify Lightning node URL is correct (if using external node)
-- Check node public key is valid
-- Verify module has `read_blockchain` capability
-- Check node logs for detailed error messages
+- **LNBits Provider**: Verify API URL and API key are correct, check LNBits service is accessible
+- **LDK Provider**: Verify data directory permissions, check network configuration (mainnet/testnet/regtest)
+- **General**: Verify module has `read_blockchain` capability, check node logs for detailed error messages
+
+### Provider-Specific Issues
+
+- **LNBits**: Check API endpoint is accessible, verify wallet_id if specified, check API rate limits
+- **LDK**: Verify data directory exists and is writable, check network matches node configuration
+- **Stub**: No real verification - only for testing
+
+## Repository
+
+- **GitHub**: [blvm-lightning](https://github.com/BTCDecoded/blvm-lightning)
+- **Version**: 0.1.0
 
 ## See Also
 

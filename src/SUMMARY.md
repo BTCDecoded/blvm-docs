@@ -72,12 +72,14 @@
 - [Modules Overview](modules/overview.md)
 - [Lightning Network Module](modules/lightning.md)
 - [Commons Mesh Module](modules/mesh.md)
-- [Governance Module](modules/governance.md)
 - [Stratum V2 Module](modules/stratum-v2.md)
+- [Datum Module](modules/datum.md)
+- [Mining OS Module](modules/miningos.md)
 
 # Governance
 
 - [Overview](governance/overview.md)
+- [blvm-commons](governance/blvm-commons.md)
 - [Governance Model](governance/governance-model.md)
 - [Layer-Tier Model](governance/layer-tier-model.md)
 - [Configuration System](governance/configuration-system.md)

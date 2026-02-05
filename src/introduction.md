@@ -56,16 +56,17 @@ Report bugs or request features on GitHub Issues, ask questions in GitHub Discus
 - **[blvm-protocol](protocol/overview.md)** - Protocol variants (mainnet, testnet, regtest) and network messages
 - **[blvm-node](node/overview.md)** - Full Bitcoin node with RPC, storage, and [module system](architecture/module-system.md)
 - **[blvm-sdk](sdk/overview.md)** - Governance primitives and CLI tools (blvm-keygen, blvm-sign, blvm-verify)
-- **blvm-commons** - GitHub integration, OpenTimestamps, Nostr, cross-layer validation
+- **[blvm-commons](governance/blvm-commons.md)** - Governance enforcement system with GitHub integration, OpenTimestamps, Nostr, and cross-layer validation
 
 ### Module System
 
 BLVM includes a process-isolated module system enabling optional features:
 
 - **[blvm-lightning](modules/lightning.md)** - Lightning Network module (LDK implementation)
-- **[blvm-mesh](modules/mesh.md)** - Mesh networking module
-- **[blvm-governance](modules/governance.md)** - Governance integration module
+- **[blvm-mesh](modules/mesh.md)** - Mesh networking module with submodules (onion routing, mining pool, messaging)
 - **[blvm-stratum-v2](modules/stratum-v2.md)** - Stratum V2 mining module
+- **[blvm-datum](modules/datum.md)** - Datum blockchain module
+- **[blvm-miningos](modules/miningos.md)** - Mining OS module
 
 ### Key Capabilities
 

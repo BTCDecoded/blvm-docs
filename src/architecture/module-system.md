@@ -10,8 +10,9 @@ The following modules are available for blvm-node:
 
 - **[Lightning Network Module](../modules/lightning.md)** - Lightning Network payment processing, invoice verification, payment routing, and channel management
 - **[Commons Mesh Module](../modules/mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection
-- **[Governance Module](../modules/governance.md)** - Governance webhook integration and proposal monitoring
 - **[Stratum V2 Module](../modules/stratum-v2.md)** - Stratum V2 mining protocol support and mining pool management
+- **[Datum Module](../modules/datum.md)** - DATUM Gateway mining protocol
+- **[Mining OS Module](../modules/miningos.md)** - MiningOS integration
 - **[Merge Mining Module](../modules/stratum-v2.md)** - Merge mining available as separate paid plugin (`blvm-merge-mining`)
 
 For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
@@ -42,14 +43,14 @@ graph TB
         SB2[Sandbox<br/>Resource Limits]
     end
     
-    subgraph "Module Process 3<br/>blvm-governance"
-        GS[Governance State<br/>Isolated Memory]
+    subgraph "Module Process 3<br/>blvm-stratum-v2"
+        SS[Stratum V2 State<br/>Isolated Memory]
         SB3[Sandbox<br/>Resource Limits]
     end
     
     MM -->|IPC Unix Sockets| LS
     MM -->|IPC Unix Sockets| MS
-    MM -->|IPC Unix Sockets| GS
+    MM -->|IPC Unix Sockets| SS
     
     CS -.->|Read-Only Access| MM
     NM --> MM
@@ -60,7 +61,7 @@ graph TB
     style MM fill:#bbf,stroke:#333,stroke-width:2px
     style LS fill:#bfb,stroke:#333,stroke-width:2px
     style MS fill:#bfb,stroke:#333,stroke-width:2px
-    style GS fill:#bfb,stroke:#333,stroke-width:2px
+    style SS fill:#bfb,stroke:#333,stroke-width:2px
 ```
 
 **Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs#L1-L37)
@@ -486,7 +487,8 @@ For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protoc
 - [Modules Overview](../modules/overview.md) - Overview of all available modules
 - [Lightning Network Module](../modules/lightning.md) - Lightning Network payment processing
 - [Commons Mesh Module](../modules/mesh.md) - Payment-gated mesh networking
-- [Governance Module](../modules/governance.md) - Governance webhook integration
 - [Stratum V2 Module](../modules/stratum-v2.md) - Stratum V2 mining protocol
+- [Datum Module](../modules/datum.md) - DATUM Gateway mining protocol
+- [Mining OS Module](../modules/miningos.md) - MiningOS integration
 - [Module Development](../sdk/module-development.md) - Guide for developing custom modules
 

@@ -10,10 +10,11 @@ The following modules are available for blvm-node:
 
 ### Core Modules
 
-- **[Lightning Network Module](lightning.md)** - Lightning Network payment processing with LDK fully implemented, invoice verification, payment routing, and channel management
-- **[Commons Mesh Module](mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection
-- **[Governance Module](governance.md)** - Governance webhook integration and proposal monitoring
+- **[Lightning Network Module](lightning.md)** - Lightning Network payment processing with multiple provider support (LNBits, LDK, Stub), invoice verification, and payment state tracking
+- **[Commons Mesh Module](mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection. Designed to support specialized modules (onion routing, mining pool coordination, messaging) via ModuleAPI
 - **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support with network integration complete and mining pool management
+- **[Datum Module](datum.md)** - DATUM Gateway mining protocol module for Ocean pool integration (works with Stratum V2)
+- **[Mining OS Module](miningos.md)** - Operating system-level mining optimizations and hardware management
 
 ## Module System Architecture
 
@@ -35,8 +36,9 @@ Modules can be installed in several ways:
 ```bash
 cargo install blvm-lightning
 cargo install blvm-mesh
-cargo install blvm-governance
 cargo install blvm-stratum-v2
+cargo install blvm-datum
+cargo install blvm-miningos
 ```
 
 ### Via Module Installer
@@ -45,8 +47,9 @@ cargo install blvm-stratum-v2
 cargo install cargo-blvm-module
 cargo blvm-module install blvm-lightning
 cargo blvm-module install blvm-mesh
-cargo blvm-module install blvm-governance
 cargo blvm-module install blvm-stratum-v2
+cargo blvm-module install blvm-datum
+cargo blvm-module install blvm-miningos
 ```
 
 ### Manual Installation
@@ -58,7 +61,7 @@ cargo blvm-module install blvm-stratum-v2
 
 ## Module Configuration
 
-Each module requires a `config.toml` file in its module directory. See individual module documentation ([Lightning](lightning.md), [Mesh](mesh.md), [Governance](governance.md), [Stratum V2](stratum-v2.md)) for configuration options.
+Each module requires a `config.toml` file in its module directory. See individual module documentation ([Lightning](lightning.md), [Mesh](mesh.md), [Stratum V2](stratum-v2.md), [Datum](datum.md), [Mining OS](miningos.md)) for configuration options. For blvm-mesh submodules, see the [Mesh Module documentation](mesh.md#building-on-mesh-infrastructure).
 
 ## Module Lifecycle
 

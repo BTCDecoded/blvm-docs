@@ -106,15 +106,26 @@ The module publishes the following events:
 - `MiningPoolConnected` - Connected to mining pool
 - `MiningPoolDisconnected` - Disconnected from mining pool
 
+**Note**: Merge mining events (such as `MergeMiningReward`) are published by the separate `blvm-merge-mining` module, not by this module.
+
 ## Stratum V2 Protocol
 
 The module implements the Stratum V2 protocol specification, providing:
 
 - **Binary Protocol**: 50-66% bandwidth savings compared to Stratum V1
+- **TLV Encoding**: Tag-Length-Value encoding for efficient message serialization
 - **Encrypted Communication**: TLS/QUIC encryption for secure connections
 - **Multiplexed Channels**: QUIC stream multiplexing for multiple mining streams
 - **Template Distribution**: Efficient block template distribution
 - **Share Submission**: Optimized share submission protocol
+- **Channel Management**: Multiple mining channels per connection
+
+### Protocol Components
+
+- **Server**: `StratumV2Server` manages connections and job distribution
+- **Pool**: `StratumV2Pool` manages miners, channels, and share validation
+- **Template Generator**: `BlockTemplateGenerator` creates block templates from mempool
+- **Protocol Parser**: Handles TLV-encoded Stratum V2 messages
 
 For detailed information about the Stratum V2 protocol, see [Stratum V2 Mining Protocol](../node/mining-stratum-v2.md).
 
@@ -134,10 +145,17 @@ Once installed and configured, the module automatically:
 2. Receives Stratum V2 messages via the node's network layer (automatic routing)
 3. Creates and distributes mining jobs to connected miners
 4. Manages mining pool connections (if configured)
-5. Coordinates merge mining across multiple chains
-6. Tracks mining rewards and publishes mining events
+5. Tracks mining rewards and publishes mining events
+
+**Note**: Merge mining is handled by a separate module (`blvm-merge-mining`) that integrates with this module.
 
 The node's network layer automatically detects Stratum V2 messages (via TLV format) and routes them to this module via the event system. No additional network configuration is required.
+
+### Integration with Other Modules
+
+- **blvm-datum**: Works together with `blvm-datum` for DATUM Gateway mining. `blvm-stratum-v2` handles miner connections while `blvm-datum` handles pool communication.
+- **blvm-miningos**: MiningOS can update pool configuration via this module's inter-module API.
+- **blvm-merge-mining**: Separate module that integrates with Stratum V2 for merge mining functionality.
 
 ## API Integration
 
@@ -159,9 +177,11 @@ The module integrates with the node via the Node API IPC protocol:
 ### Mining Jobs Not Creating
 
 - Verify node has `read_blockchain` capability
-- Check that block template events are being published
-- Verify listening address is accessible
+- Check that block template events (`BlockTemplateUpdated`) are being published by the node
+- Verify listening address is accessible and not blocked by firewall
 - Check node logs for mining job creation errors
+- Verify node is synced and can generate block templates
+- Check that miners are connected (if no miners, jobs may not be created)
 
 ### Pool Connection Failing
 
@@ -169,6 +189,11 @@ The module integrates with the node via the Node API IPC protocol:
 - Check network connectivity to mining pool
 - Verify pool supports Stratum V2 protocol
 - Check node logs for connection errors
+
+## Repository
+
+- **GitHub**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2)
+- **Version**: 0.1.0
 
 ## See Also
 
@@ -178,5 +203,6 @@ The module integrates with the node via the Node API IPC protocol:
 - [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
 - [Stratum V2 + Merge Mining](../node/mining-stratum-v2.md) - Stratum V2 protocol documentation
 - [Mining Integration](../node/mining.md) - Mining functionality
+- [Datum Module](datum.md) - DATUM Gateway mining protocol (works with Stratum V2)
 
 
