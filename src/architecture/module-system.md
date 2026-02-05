@@ -479,6 +479,76 @@ Modules communicate with the node via the Module IPC Protocol:
 - **Security**: Process isolation, permission-based API access, resource sandboxing
 - **Performance**: Persistent connections, concurrent requests, correlation IDs
 
+### Integration Approaches
+
+There are two approaches for modules to integrate with the node:
+
+#### 1. ModuleIntegration (Recommended for New Modules)
+
+The `ModuleIntegration` API provides a simplified, unified interface for module integration:
+
+```rust
+use blvm_node::module::integration::ModuleIntegration;
+
+// Connect to node
+let mut integration = ModuleIntegration::connect(
+    socket_path,
+    module_id,
+    module_name,
+    version,
+).await?;
+
+// Subscribe to events
+integration.subscribe_events(event_types).await?;
+
+// Get NodeAPI
+let node_api = integration.node_api();
+
+// Get event receiver
+let mut event_receiver = integration.event_receiver();
+```
+
+**Benefits:**
+- Single unified API for all integration needs
+- Automatic handshake and connection management
+- Simplified event subscription
+- Direct access to NodeAPI and event receiver
+
+**Used by:** `blvm-mesh` and its submodules (`blvm-onion`, `blvm-mining-pool`, `blvm-messaging`, `blvm-bridge`)
+
+#### 2. ModuleClient + NodeApiIpc (Legacy Approach)
+
+The traditional approach uses separate components:
+
+```rust
+use blvm_node::module::ipc::client::ModuleIpcClient;
+use blvm_node::module::api::node_api::NodeApiIpc;
+
+// Connect to IPC socket
+let mut ipc_client = ModuleIpcClient::connect(&socket_path).await?;
+
+// Perform handshake manually
+let handshake_request = RequestMessage { /* ... */ };
+let response = ipc_client.request(handshake_request).await?;
+
+// Create NodeAPI wrapper
+let node_api = Arc::new(NodeApiIpc::new(ipc_client.clone()));
+
+// Create ModuleClient for event subscription
+let mut client = ModuleClient::connect(/* ... */).await?;
+client.subscribe_events(event_types).await?;
+let mut event_receiver = client.event_receiver();
+```
+
+**Benefits:**
+- More granular control over IPC communication
+- Direct access to IPC client for custom requests
+- Established, stable API
+
+**Used by:** `blvm-lightning`, `blvm-stratum-v2`, `blvm-datum`, `blvm-miningos`
+
+**Migration:** New modules should use `ModuleIntegration`. Existing modules can continue using `ModuleClient` + `NodeApiIpc`, but migration to `ModuleIntegration` is recommended for consistency and simplicity.
+
 For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protocol.md).
 
 ## See Also

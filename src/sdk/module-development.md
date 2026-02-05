@@ -101,32 +101,88 @@ poll_interval = "Polling interval in seconds (default: 5)"
 
 ### Basic Module Structure
 
-A minimal module implements the module lifecycle and connects to the node via IPC:
+A minimal module implements the module lifecycle and connects to the node via IPC. There are two approaches:
+
+#### Using ModuleIntegration (Recommended)
 
 ```rust
-use reference_node::module::ipc::client::ModuleIpcClient;
-use reference_node::module::traits::{ModuleContext, ModuleError};
-use std::env;
+use blvm_node::module::integration::ModuleIntegration;
+use blvm_node::module::EventType;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Parse command-line arguments
-    let args = Args::parse(); // Using clap
+    let args = Args::parse();
     
-    // Connect to node IPC socket
-    let mut client = ModuleIpcClient::connect(&args.socket_path).await?;
+    // Connect to node using ModuleIntegration
+    let mut integration = ModuleIntegration::connect(
+        args.socket_path,
+        args.module_id.unwrap_or_else(|| "my-module".to_string()),
+        "my-module".to_string(),
+        env!("CARGO_PKG_VERSION").to_string(),
+    ).await?;
+    
+    // Subscribe to events
+    let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
+    integration.subscribe_events(event_types).await?;
+    
+    // Get NodeAPI
+    let node_api = integration.node_api();
+    
+    // Get event receiver
+    let mut event_receiver = integration.event_receiver();
     
     // Main module loop
-    loop {
-        // Process events
-        if let Some(event) = client.receive_event().await? {
-            // Handle event
+    while let Some(event) = event_receiver.recv().await {
+        // Handle event
+        match event {
+            ModuleMessage::Event(event_msg) => {
+                // Process event
+            }
+            _ => {}
         }
-        
-        tokio::time::sleep(Duration::from_millis(100)).await;
     }
+    
+    Ok(())
 }
 ```
+
+#### Using ModuleClient + NodeApiIpc (Legacy)
+
+```rust
+use blvm_node::module::ipc::client::ModuleIpcClient;
+use blvm_node::module::api::node_api::NodeApiIpc;
+use std::sync::Arc;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Parse command-line arguments
+    let args = Args::parse();
+    
+    // Connect to node IPC socket
+    let mut ipc_client = ModuleIpcClient::connect(&args.socket_path).await?;
+    
+    // Perform handshake
+    // ... handshake code ...
+    
+    // Create NodeAPI wrapper
+    let node_api = Arc::new(NodeApiIpc::new(ipc_client.clone()));
+    
+    // Create ModuleClient for events
+    let mut client = ModuleClient::connect(/* ... */).await?;
+    client.subscribe_events(event_types).await?;
+    let mut event_receiver = client.event_receiver();
+    
+    // Main module loop
+    while let Some(event) = event_receiver.recv().await {
+        // Handle event
+    }
+    
+    Ok(())
+}
+```
+
+**Recommendation:** New modules should use `ModuleIntegration` for simplicity and consistency. The legacy approach is still supported for existing modules.
 
 ### Module Lifecycle
 
@@ -163,20 +219,41 @@ let response = client.send_request(request).await?;
 
 ### Subscribing to Events
 
-Modules can subscribe to real-time node events:
+Modules can subscribe to real-time node events. The approach depends on which integration method you're using:
+
+#### Using ModuleIntegration
 
 ```rust
-// Subscribe to new block events
-let request = RequestMessage {
-    correlation_id: client.next_correlation_id(),
-    payload: RequestPayload::SubscribeEvents {
-        event_types: vec![EventType::NewBlock],
-    },
-};
-let response = client.send_request(request).await?;
+// Subscribe to events
+let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
+integration.subscribe_events(event_types).await?;
+
+// Get event receiver
+let mut event_receiver = integration.event_receiver();
 
 // Receive events in main loop
-if let Some(event) = client.receive_event().await? {
+while let Some(event) = event_receiver.recv().await {
+    match event {
+        ModuleMessage::Event(event_msg) => {
+            // Handle event
+        }
+        _ => {}
+    }
+}
+```
+
+#### Using ModuleClient
+
+```rust
+// Subscribe to events
+let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
+client.subscribe_events(event_types).await?;
+
+// Get event receiver
+let mut event_receiver = client.event_receiver();
+
+// Receive events in main loop
+while let Some(event) = event_receiver.recv().await {
     match event {
         ModuleMessage::Event(event_msg) => {
             // Handle event
@@ -191,6 +268,12 @@ if let Some(event) = client.receive_event().await? {
 - `NewTransaction`: New transaction in mempool
 - `BlockDisconnected`: Block disconnected (chain reorg)
 - `ChainReorg`: Chain reorganization occurred
+- `PeerConnected`: Peer connected to network
+- `PeerDisconnected`: Peer disconnected from network
+- `MempoolTransactionAdded`: Transaction added to mempool
+- `MempoolTransactionRemoved`: Transaction removed from mempool
+- `ConfigLoaded`: Node configuration loaded/changed
+- And many more (see [Event System](../architecture/module-system.md#event-system))
 
 ## Configuration
 

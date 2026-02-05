@@ -88,6 +88,15 @@ cargo blvm-module install blvm-miningos
 
 ## Configuration
 
+The module searches for configuration files in the following order (first found is used):
+
+1. `{data_dir}/config/miningos.toml`
+2. `{data_dir}/miningos.toml`
+3. `./config/miningos.toml`
+4. `./miningos.toml`
+
+If no configuration file is found, the module uses default values.
+
 Create `data/config/miningos.toml`:
 
 ```toml
@@ -182,12 +191,12 @@ The module publishes the following events:
 
 ## API Integration
 
-The module integrates with the node via the Node API IPC protocol:
+The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 
 - **Read-only blockchain access**: Queries blockchain data for statistics
 - **Event subscription**: Receives real-time events from the node
 - **Event publication**: Publishes MiningOS-specific events
-- **Module calls**: Can call other modules (e.g., Stratum V2 for pool config updates)
+- **Module calls**: Can call other modules (e.g., Stratum V2 for pool config updates) via `call_module`
 - **Block templates**: Gets block templates via `get_block_template`
 - **Block submission**: Submits mined blocks via `submit_block`
 

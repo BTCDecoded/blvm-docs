@@ -158,13 +158,41 @@ The module uses the `LightningProcessor` to handle payment processing. The proce
 - Routes all payment operations through the provider interface
 - Stores provider configuration in module storage for persistence
 
+### Batch Payment Verification
+
+The module supports batch payment verification for improved performance when processing multiple payments:
+
+```rust
+use blvm_lightning::processor::LightningProcessor;
+
+// Verify multiple payments in parallel
+let payments = vec![
+    ("invoice1", "payment_id_1"),
+    ("invoice2", "payment_id_2"),
+    ("invoice3", "payment_id_3"),
+];
+
+let results = processor.verify_payments_batch(&payments).await?;
+// Returns Vec<bool> with verification results in same order as inputs
+```
+
+Batch verification processes all payments concurrently, significantly improving throughput for high-volume payment processing scenarios.
+
 ## API Integration
 
-The module integrates with the node via the Node API IPC protocol:
+The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 
 - **Read-only blockchain access**: Queries blockchain data for payment verification
 - **Event subscription**: Receives real-time events from the node
 - **Event publication**: Publishes Lightning-specific events
+- **Module storage**: Stores provider configuration and channel statistics in module storage tree `lightning_config`
+
+### Storage Usage
+
+The module uses module storage to persist configuration and statistics:
+- `provider_type`: Current provider type (lnbits, ldk, stub)
+- `channel_count`: Number of active Lightning channels
+- `total_capacity_sats`: Total channel capacity in satoshis
 
 ## Troubleshooting
 

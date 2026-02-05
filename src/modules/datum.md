@@ -98,6 +98,7 @@ enabled = true
 pool_url = "https://ocean.xyz/datum"
 pool_username = "user"
 pool_password = "pass"
+pool_public_key = "hex_encoded_32_byte_public_key"  # Optional, for encryption
 
 [modules.blvm-datum.mining]
 coinbase_tag_primary = "DATUM Gateway"
@@ -111,6 +112,7 @@ pool_address = "bc1q..."  # Bitcoin address for pool payouts
 - `pool_url` (required): DATUM pool URL (e.g., `https://ocean.xyz/datum`)
 - `pool_username` (required): Pool username
 - `pool_password` (required): Pool password
+- `pool_public_key` (optional): Pool public key (32-byte hex-encoded) for encryption
 - `coinbase_tag_primary` (optional): Primary coinbase tag
 - `coinbase_tag_secondary` (optional): Secondary coinbase tag
 - `pool_address` (optional): Bitcoin address for pool payouts
@@ -155,17 +157,29 @@ The module publishes the following events:
 ## Dependencies
 
 - `blvm-node`: Module system integration
-- `sodiumoxide`: Encryption for DATUM protocol (Ed25519, X25519, ChaCha20Poly1305)
+- `sodiumoxide`: Encryption for DATUM protocol (Ed25519, X25519, ChaCha20Poly1305, NaCl sealed boxes)
+- `ed25519-dalek`: Ed25519 signature verification
+- `x25519-dalek`: X25519 key exchange
+- `chacha20poly1305`: ChaCha20-Poly1305 authenticated encryption
 - `tokio`: Async runtime
 
 ## API Integration
 
-The module integrates with the node via the Node API IPC protocol:
+The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 
 - **Read-only blockchain access**: Queries blockchain data for template generation
 - **Event subscription**: Receives real-time events from the node
 - **Event publication**: Publishes DATUM-specific events
 - **NodeAPI calls**: Uses `get_block_template` and `submit_block` via NodeAPI
+- **ModuleAPI registration**: Registers `DatumModuleApi` for inter-module communication
+
+### Inter-Module Communication
+
+The module exposes a `ModuleAPI` for other modules (e.g., `blvm-stratum-v2`) to query coinbase payout requirements:
+
+- **`get_coinbase_payout`**: Returns the current coinbase payout structure (outputs, tags, unique ID) required by the DATUM pool
+
+This allows other modules to construct block templates with the correct coinbase structure for DATUM pool coordination.
 
 ## Integration with Stratum V2
 

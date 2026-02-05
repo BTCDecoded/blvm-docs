@@ -159,11 +159,13 @@ The node's network layer automatically detects Stratum V2 messages (via TLV form
 
 ## API Integration
 
-The module integrates with the node via the Node API IPC protocol:
+The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 
 - **Read-only blockchain access**: Queries blockchain data for block templates
 - **Event subscription**: Receives real-time mining events from the node
 - **Event publication**: Publishes mining-specific events
+
+**Note**: The module subscribes to `MiningJobCreated` and `ShareSubmitted` events for coordination with other modules (e.g., merge mining), but these events are also published by this module when jobs are created and shares are submitted.
 
 ## Troubleshooting
 
