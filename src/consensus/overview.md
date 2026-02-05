@@ -70,7 +70,7 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
 5. **Comprehensive Testing**: Extensive test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
-7. **Formal Verification**: [blvm-spec-lock model checking](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
+7. **Formal Verification**: [BLVM Specification Lock](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
 
 ## Formal Verification
 
@@ -135,10 +135,10 @@ Implementation is mathematically locked to the Orange Paper:
 
 **Chain of Trust**:
 ```
-Orange Paper (Math Spec) → blvm-spec-lock Proof → Implementation → Bitcoin Consensus
+Orange Paper (Math Spec) → BLVM Specification Lock (Z3 Proof) → Implementation → Bitcoin Consensus
 ```
 
-Every function implements a mathematical specification, every critical function has a blvm-spec-lock proof, and all proofs reference Orange Paper sections.
+Every function implements a mathematical specification, every critical function has a Z3 proof (via BLVM Specification Lock), and all proofs reference Orange Paper sections.
 
 ## Dependencies
 

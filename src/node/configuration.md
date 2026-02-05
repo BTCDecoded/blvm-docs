@@ -17,7 +17,7 @@ port = 18444          # P2P port (regtest default)
 
 [storage]
 data_dir = "/var/lib/blvm"
-backend = "sled"      # Storage backend
+backend = "auto"      # Auto-select best available backend (prefers redb)
 
 [rpc]
 enabled = true

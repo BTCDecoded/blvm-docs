@@ -4,14 +4,20 @@ BLVM node provides both a JSON-RPC 2.0 interface (Bitcoin Core compatible) and a
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Bitcoin Core-compatible interface at `http://localhost:8332`
+- **JSON-RPC 2.0**: Bitcoin Core-compatible interface
+  - Mainnet: `http://localhost:8332` (default)
+  - Testnet/Regtest: `http://localhost:18332` (default)
 - **REST API**: Modern RESTful interface at `http://localhost:8080/api/v1/`
 
 Both APIs provide access to the same functionality, with the REST API offering better type safety, clearer error messages, and improved developer experience.
 
 ## Connection
 
-Default RPC endpoint: `http://localhost:8332`
+Default RPC endpoints:
+- Mainnet: `http://localhost:8332`
+- Testnet/Regtest: `http://localhost:18332`
+
+RPC ports are configurable. See [Node Configuration](configuration.md) for details.
 
 ## Authentication
 
@@ -29,6 +35,7 @@ password = "rpcpassword"
 ### Get Blockchain Info
 
 ```bash
+# Mainnet uses port 8332, testnet/regtest use 18332
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{
@@ -42,6 +49,7 @@ curl -X POST http://localhost:8332 \
 ### Get Block
 
 ```bash
+# Mainnet uses port 8332, testnet/regtest use 18332
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{
@@ -55,6 +63,7 @@ curl -X POST http://localhost:8332 \
 ### Get Network Info
 
 ```bash
+# Mainnet uses port 8332, testnet/regtest use 18332
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{
@@ -166,6 +175,7 @@ RPC authentication is optional but recommended for production:
 ### Token-Based Authentication
 
 ```bash
+# Mainnet uses port 8332, testnet/regtest use 18332
 curl -X POST http://localhost:8332 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
@@ -248,7 +258,7 @@ Responses are returned in the same order as requests.
 
 ## Implementation Status
 
-{{#include ../../../blvm-node/docs/status/RPC_IMPLEMENTATION_STATUS.md}}
+The RPC API implements Bitcoin Core-compatible JSON-RPC 2.0 methods. See the [Available Methods](#available-methods) section above for a complete list of implemented methods.
 
 ## REST API
 

@@ -15,7 +15,7 @@ graph TB
     end
     
     subgraph "Layer 2: Symbolic Verification"
-        blvm-spec-lock[blvm-spec-lock Model Checking<br/>Tiered Execution]
+        SPECLOCK[BLVM Specification Lock<br/>Tiered Execution]
         SPEC[Math Specifications<br/>Orange Paper]
         SSE[State Space Exploration<br/>All Execution Paths]
     end
@@ -30,9 +30,9 @@ graph TB
     PT --> AUTO
     IT --> AUTO
     
-    blvm-spec-lock --> PROOF
-    SPEC --> blvm-spec-lock
-    SSE --> blvm-spec-lock
+    SPECLOCK --> PROOF
+    SPEC --> SPECLOCK
+    SSE --> SPECLOCK
     
     PROOF --> OTS
     AUTO --> OTS
@@ -52,7 +52,7 @@ graph TB
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification
-- **blvm-spec-lock**: Custom locking implementation for formal verification with tiered execution
+- **BLVM Specification Lock**: Formal verification tool using Z3 SMT solver with tiered execution
 - **Mathematical specifications**: Formal documentation of consensus rules
 - **State space exploration**: Verification of all possible execution paths
 
@@ -69,7 +69,17 @@ All critical consensus functions are verified across multiple files with tiered 
 
 **Verification Command**:
 ```bash
-# blvm-spec-lock verification
+# Run BLVM Specification Lock verification
+cargo spec-lock verify
+```
+
+For tiered execution:
+```bash
+# Run all Z3 proofs (uses tiered execution)
+cargo spec-lock verify
+
+# Run specific tier
+cargo spec-lock verify --tier strong
 ```
 
 **Tier System**:
@@ -278,15 +288,15 @@ Multiple functions have complete formal documentation
 
 ## Verification Tools
 
-### blvm-spec-lock
+### BLVM Specification Lock
 
-**Purpose**: Custom locking implementation for formal verification
+**Purpose**: Formal verification tool using Z3 SMT solver for mathematical proof of correctness
 
-**Usage**: blvm-spec-lock verification
+**Usage**: `cargo spec-lock verify`
 
-**Coverage**: All verified functions
+**Coverage**: All functions with `#[spec_locked]` attributes
 
-**Strategy**: Custom locking mechanism ensures specification compliance
+**Strategy**: Links Rust code to Orange Paper specifications and verifies contracts using Z3
 
 ### Proptest Property Testing
 
@@ -319,9 +329,9 @@ The `.github/workflows/verify.yml` workflow enforces verification:
    - `cargo test --all-features`
    - Must pass for CI to succeed
 
-2. **blvm-spec-lock Verification** (release verification)
-   - blvm-spec-lock verification
-   - Verifies all locked functions
+2. **BLVM Specification Lock Verification** (release verification)
+   - `cargo spec-lock verify`
+   - Verifies all Z3 proofs for functions with `#[spec_locked]` attributes
    - Full verification run before each release
    - Slower runs may be deferred between major releases
    - Not required for merge
@@ -338,15 +348,15 @@ The `.github/workflows/verify.yml` workflow enforces verification:
 cargo test --all-features
 ```
 
-**Run blvm-spec-lock verification:**
+**Run BLVM Specification Lock verification:**
 ```bash
-# blvm-spec-lock verification
+cargo spec-lock verify
 ```
 
 **Run specific verification:**
 ```bash
 cargo test --test property_tests
-# blvm-spec-lock verification
+cargo spec-lock verify --proof <function_name>
 ```
 
 ## Verification Coverage
@@ -355,7 +365,7 @@ Critical consensus functions are formally verified or property-tested across eco
 
 ## Network Protocol Verification
 
-Network protocol message parsing, serialization, and processing are formally verified using blvm-spec-lock, extending verification beyond consensus to the network layer.
+Network protocol message parsing, serialization, and processing are formally verified using BLVM Specification Lock, extending verification beyond consensus to the network layer.
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 
@@ -367,8 +377,8 @@ Verification runs automatically in CI. Proofs excluded from release builds via `
 
 ## Consensus Coverage Comparison
 
-![Consensus Coverage Comparison](../images/Consensus-Coverage-Comparison.png)
-*Figure: Consensus coverage comparison: Bitcoin Core achieves coverage through testing alone. Bitcoin Commons achieves formal verification coverage (blvm-spec-lock) plus comprehensive test coverage. Commons uses consensus-focused test files with extensive test functions compared to Core's total files. The mathematical specification enables both formal verification and comprehensive testing.*
+![Consensus Coverage Comparison](https://thebitcoincommons.org/assets/images/Consensus-Coverage-Comparison.png)
+*Figure: Consensus coverage comparison: Bitcoin Core achieves coverage through testing alone. Bitcoin Commons achieves formal verification coverage (Z3 proofs via BLVM Specification Lock) plus comprehensive test coverage. Commons uses consensus-focused test files with extensive test functions compared to Core's total files. The mathematical specification enables both formal verification and comprehensive testing.*
 
 ## Proof Maintenance Cost
 
@@ -382,7 +392,7 @@ Verification runs automatically in CI. Proofs excluded from release builds via `
 
 ## Network Protocol Verification
 
-Network protocol message parsing, serialization, and processing are formally verified using blvm-spec-lock, extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
+Network protocol message parsing, serialization, and processing are formally verified using BLVM Specification Lock, extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 

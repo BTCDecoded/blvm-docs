@@ -242,7 +242,7 @@ min_fee_rate = 1  # sat/vB
 
 ## Formal Verification
 
-The UTXO Commitments module includes blvm-spec-lock proofs verifying:
+The UTXO Commitments module includes Z3 proofs verifying:
 
 - Merkle tree operations (insert, remove, root calculation)
 - Commitment generation
@@ -255,7 +255,7 @@ The UTXO Commitments module includes blvm-spec-lock proofs verifying:
 
 ### Overview
 
-UTXO proof verification provides cryptographic proofs that UTXO set operations maintain correctness properties. The system uses Kani model checking to formally verify storage operations against mathematical specifications from the Orange Paper.
+UTXO proof verification provides cryptographic proofs that UTXO set operations maintain correctness properties. The system uses BLVM Specification Lock with Z3 to formally verify storage operations against mathematical specifications from the Orange Paper.
 
 **Code**: [utxostore_proofs.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L1-L229)
 
@@ -267,7 +267,7 @@ The proof verification system verifies the following mathematical properties:
 
 **Mathematical Specification**: ∀ outpoint: has_utxo(outpoint) ⟹ get_utxo(outpoint) = Some(utxo)
 
-**Verification**: Kani proof ensures that if a UTXO exists for an outpoint, retrieving it returns the same UTXO that was stored.
+**Verification**: Z3 proof ensures that if a UTXO exists for an outpoint, retrieving it returns the same UTXO that was stored.
 
 **Code**: [verify_utxo_uniqueness](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L28-L52)
 
@@ -275,7 +275,7 @@ The proof verification system verifies the following mathematical properties:
 
 **Mathematical Specification**: add_utxo(op, utxo); remove_utxo(op); has_utxo(op) = false
 
-**Verification**: Kani proof ensures that adding and then removing a UTXO results in the UTXO no longer existing.
+**Verification**: Z3 proof ensures that adding and then removing a UTXO results in the UTXO no longer existing.
 
 **Code**: [verify_add_remove_consistency](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L58-L83)
 
@@ -283,7 +283,7 @@ The proof verification system verifies the following mathematical properties:
 
 **Mathematical Specification**: mark_spent(op); is_spent(op) = true
 
-**Verification**: Kani proof ensures that marking an output as spent correctly updates the spent state.
+**Verification**: Z3 proof ensures that marking an output as spent correctly updates the spent state.
 
 **Code**: [verify_spent_output_tracking](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L89-L105)
 
@@ -291,7 +291,7 @@ The proof verification system verifies the following mathematical properties:
 
 **Mathematical Specification**: total_value(us) = Σ_{op ∈ dom(us)} us(op).value
 
-**Verification**: Kani proof ensures that the total value of the UTXO set equals the sum of all individual UTXO values.
+**Verification**: Z3 proof ensures that the total value of the UTXO set equals the sum of all individual UTXO values.
 
 **Code**: [verify_value_conservation](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L114-L146)
 
@@ -299,7 +299,7 @@ The proof verification system verifies the following mathematical properties:
 
 **Mathematical Specification**: utxo_count() = |{utxo : has_utxo(utxo)}|
 
-**Verification**: Kani proof ensures that the UTXO count matches the number of UTXOs that exist.
+**Verification**: Z3 proof ensures that the UTXO count matches the number of UTXOs that exist.
 
 **Code**: [verify_count_accuracy](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L152-L178)
 
@@ -307,7 +307,7 @@ The proof verification system verifies the following mathematical properties:
 
 **Mathematical Specification**: load_utxo_set(store_utxo_set(us)) = us
 
-**Verification**: Kani proof ensures that storing and then loading a UTXO set results in the same set.
+**Verification**: Z3 proof ensures that storing and then loading a UTXO set results in the same set.
 
 **Code**: [verify_roundtrip_storage](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L187-L228)
 
@@ -315,7 +315,7 @@ The proof verification system verifies the following mathematical properties:
 
 The proof verification system works as follows:
 
-1. **Proof Generation**: Kani model checker generates proofs for each property
+1. **Proof Generation**: BLVM Specification Lock generates Z3 proofs for each property
 2. **Property Verification**: Each proof verifies a specific mathematical property
 3. **Integration**: Proofs are integrated into the codebase and verified during CI/CD
 4. **Runtime Assertions**: Verified properties can be checked at runtime for additional safety
@@ -325,11 +325,11 @@ The proof verification system works as follows:
 Proof verification is automatic and integrated into the build system:
 
 ```bash
-# Run Kani proofs (requires Kani toolchain)
-cargo kani --features kani
+# Run BLVM Specification Lock verification
+cargo spec-lock verify
 
 # Verify specific proof
-cargo kani --features kani --proof verify_utxo_uniqueness
+cargo spec-lock verify --proof verify_utxo_uniqueness
 ```
 
 ### Benefits
@@ -406,7 +406,7 @@ update_commitments_after_block(
 3. **Efficiency**: Incremental updates, no full set download
 4. **Flexibility**: Multiple sync modes and verification levels
 5. **Transport Agnostic**: Works with TCP or QUIC
-6. **Formal Verification**: blvm-spec-lock proofs ensure correctness
+6. **Formal Verification**: Z3 proofs ensure correctness
 
 ## Components
 
@@ -417,7 +417,7 @@ The UTXO Commitments system includes:
 - Commitment verification
 - Network integration (TCP and Iroh)
 - Fast sync protocol
-- blvm-spec-lock proofs
+- Z3 proofs
 
 **Location**: `blvm-consensus/src/utxo_commitments/`, `blvm-node/src/network/utxo_commitments_client.rs`
 
@@ -429,4 +429,4 @@ The UTXO Commitments system includes:
 - [Node Configuration](../node/configuration.md) - UTXO commitment configuration
 - [Storage Backends](../node/storage-backends.md) - Storage backend details
 - [Performance Optimizations](../node/performance.md) - IBD optimizations and batch storage
-- [Formal Verification](formal-verification.md) - Kani proof verification system
+- [Formal Verification](formal-verification.md) - BLVM Specification Lock verification system

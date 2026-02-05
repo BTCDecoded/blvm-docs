@@ -178,9 +178,9 @@ let median_tip = if sorted_tips.len() % 2 == 0 {
 
 ## Formal Verification
 
-### blvm-spec-lock Proofs
+### Z3 Proofs
 
-blvm-spec-lock proofs verify mathematical specifications:
+Z3 proofs (via BLVM Specification Lock) verify mathematical specifications:
 
 - **Threshold Calculation**: Verifies integer-based threshold correctness
 - **Median Calculation**: Verifies median bounds
@@ -221,7 +221,7 @@ The mathematical specifications system includes:
 - Integer-based arithmetic (prevents floating-point bugs)
 - Runtime assertions (verify invariants)
 - Checked arithmetic (prevents overflow)
-- blvm-spec-lock proofs (formal verification)
+- Z3 proofs (formal verification via BLVM Specification Lock)
 - Property-based tests (invariant verification)
 
 **Location**: `blvm-consensus/docs/VERIFICATION.md`, `blvm-consensus/docs/MATHEMATICAL_SPECIFICATIONS_COMPLETE.md`, `blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md`
@@ -230,7 +230,7 @@ The mathematical specifications system includes:
 
 - [Consensus Overview](overview.md) - Consensus layer introduction
 - [Consensus Architecture](architecture.md) - Consensus layer design
-- [Formal Verification](formal-verification.md) - blvm-spec-lock verification details
+- [Formal Verification](formal-verification.md) - BLVM Specification Lock verification details
 - [Mathematical Correctness](mathematical-correctness.md) - Correctness guarantees
 - [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
 

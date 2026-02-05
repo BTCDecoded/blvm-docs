@@ -86,7 +86,7 @@ The PR can be merged.
 **Requirements**:
 - **Signatures**: 5-of-5 maintainers
 - **Review Period**: 90 days
-- **Requirement**: Formal verification (blvm-spec-lock) required
+- **Requirement**: Formal verification (BLVM Specification Lock) required
 
 **Examples**:
 - Changes to consensus validation logic

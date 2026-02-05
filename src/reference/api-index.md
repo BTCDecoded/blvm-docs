@@ -15,11 +15,13 @@ For detailed Rust API documentation with full type signatures, examples, and imp
 
 ### Consensus Layer (blvm-consensus)
 
-**Core Functions:**
+**Core Functions** (Orange Paper spec names):
 - `CheckTransaction` - Validate transaction structure and signatures
 - `ConnectBlock` - Validate and connect block to chain
 - `EvalScript` - Execute Bitcoin script
 - `VerifyScript` - Verify script execution results
+
+**Note**: These are Orange Paper mathematical specification names (PascalCase). The Rust API uses `ConsensusProof` struct methods (see [API Usage Patterns](#api-usage-patterns) below).
 
 **Key Types:**
 - `Transaction`, `Block`, `BlockHeader`
@@ -154,13 +156,35 @@ pub struct ModuleContext {
 ### Consensus Validation
 
 ```rust
-use blvm_consensus::{CheckTransaction, ConnectBlock, Transaction, Block};
+use blvm_consensus::{ConsensusProof, Transaction, Block};
+
+// Create consensus proof instance
+let proof = ConsensusProof::new();
 
 // Validate transaction
-let result = CheckTransaction::validate(&tx, &utxo_set)?;
+let result = proof.validate_transaction(&tx)?;
 
 // Validate and connect block
-let result = ConnectBlock::validate_and_connect(&block, &chain_state)?;
+let (result, new_utxo_set) = proof.validate_block(&block, utxo_set, height)?;
+```
+
+**Alternative**: Direct module functions are also available:
+```rust
+use blvm_consensus::{transaction, block, types::*};
+
+// Validate transaction using direct module function
+let result = transaction::check_transaction(&tx)?;
+
+// Connect block using direct module function
+let (result, new_utxo_set, _undo_log) = block::connect_block(
+    &block,
+    &witnesses,
+    utxo_set,
+    height,
+    None,
+    network_time,
+    network,
+)?;
 ```
 
 ### Protocol Abstraction

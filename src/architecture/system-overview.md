@@ -30,7 +30,7 @@ graph TB
 ## BLVM Stack Architecture
 
 ![BLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
-*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification paths (blvm-spec-lock proofs, spec drift detection, hash verification), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
+*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification paths (Z3 proofs via BLVM Specification Lock, spec drift detection, hash verification), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
 
 ## Tiered Architecture
 
@@ -111,9 +111,9 @@ graph TB
 
 ### Mathematical Rigor
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
-- [Formal verification](../consensus/formal-verification.md) with [blvm-spec-lock model checking](../consensus/formal-verification.md)
+- [Formal verification](../consensus/formal-verification.md) with [BLVM Specification Lock](../consensus/formal-verification.md)
 - [Property-based testing](../development/property-based-testing.md) for mathematical invariants
-- [PLACEHOLDER_NUMBER proofs](../consensus/formal-verification.md) verify critical consensus functions
+- [Formal proofs](../consensus/formal-verification.md) verify critical consensus functions
 
 ### Protocol Abstraction
 - Multiple Bitcoin variants (mainnet, testnet, regtest)

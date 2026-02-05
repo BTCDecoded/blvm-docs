@@ -37,7 +37,7 @@ In addition to the above, pushing to `main` triggers:
 - Unit tests
 - Integration tests
 - Property-based tests
-- blvm-spec-lock formal verification (optional, can be enabled)
+- BLVM Specification Lock formal verification (optional, can be enabled)
 - Code formatting check (`cargo fmt --check`)
 - Linting check (`cargo clippy`)
 
@@ -81,17 +81,17 @@ The `blvm-commons` repository provides reusable workflows that other repositorie
 
 ### verify_consensus.yml
 
-**Purpose**: Runs tests and optional blvm-spec-lock verification for consensus code
+**Purpose**: Runs tests and optional BLVM Specification Lock verification for consensus code
 
 **Inputs**:
 - `repo` - Repository name
 - `ref` - Git reference (branch/tag)
-- `blvm-spec-lock` - Boolean to enable blvm-spec-lock verification
+- `blvm-spec-lock` - Boolean to enable BLVM Specification Lock verification
 
 **What It Does**:
 - Checks out the repository
 - Runs test suite
-- Optionally runs blvm-spec-lock formal verification
+- Optionally runs BLVM Specification Lock formal verification
 - Reports results
 
 ### build_lib.yml
@@ -144,7 +144,7 @@ Parallel:
 6. blvm-commons - Depends on blvm-sdk
 ```
 
-**Security Gates**: Consensus verification (tests + optional blvm-spec-lock) must pass before downstream builds proceed.
+**Security Gates**: Consensus verification (tests + optional BLVM Specification Lock) must pass before downstream builds proceed.
 
 ## Self-Hosted Runners
 
@@ -153,7 +153,7 @@ All workflows run on **self-hosted Linux x64 runners**:
 - **Security**: Code never leaves our infrastructure
 - **Performance**: Faster builds, no rate limits
 - **Deterministic**: Consistent build environment
-- **Labels**: Optional labels (`rust`, `docker`, `blvm-spec-lock`) optimize job assignment
+- **Labels**: Optional labels (`rust`, `docker`, `blvm-spec-lock`) optimize job assignment (note: label uses lowercase for technical compatibility)
 
 **Runner Policy**:
 - All jobs run on `[self-hosted, linux, x64]` runners

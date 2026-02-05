@@ -159,7 +159,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 
 **Mitigations**:
 - Checked arithmetic
-- Formal verification (blvm-spec-lock proofs)
+- Formal verification (Z3 proofs via BLVM Specification Lock)
 - Property-based testing
 - Runtime assertions
 

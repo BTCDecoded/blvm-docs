@@ -26,7 +26,7 @@ backend = "auto"      # Auto-select best available backend
 
 [rpc]
 enabled = true
-port = 18332         # Regtest RPC port
+port = 18332         # RPC port (regtest default, configurable)
 host = "127.0.0.1"   # Only listen on localhost
 
 [logging]
@@ -94,7 +94,7 @@ backend = "auto"
 
 [rpc]
 enabled = true
-port = 18332
+port = 18332  # Regtest RPC port (configurable)
 host = "127.0.0.1"
 
 [rbf]
@@ -118,7 +118,7 @@ backend = "redb"
 
 [rpc]
 enabled = true
-port = 18332
+port = 18332  # Regtest RPC port (configurable)
 host = "127.0.0.1"
 
 [rbf]
@@ -148,7 +148,7 @@ header_cache_mb = 20
 
 [rpc]
 enabled = true
-port = 8332
+port = 8332  # Mainnet RPC port (configurable)
 host = "127.0.0.1"
 # Enable authentication for production
 # auth_required = true
@@ -180,7 +180,7 @@ The node automatically discovers peers, connects to the network, syncs blockchai
 Once running, interact with the node via JSON-RPC:
 
 ```bash
-# Get blockchain info
+# Get blockchain info (mainnet uses port 8332, testnet/regtest use 18332)
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'

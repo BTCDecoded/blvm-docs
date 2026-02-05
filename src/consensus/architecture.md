@@ -10,7 +10,7 @@ The consensus layer is designed as a pure mathematical implementation with no si
 4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
 5. **Testing**: Test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
-7. **Formal Verification**: [blvm-spec-lock model checking](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
+7. **Formal Verification**: [BLVM Specification Lock](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
 
 ## Core Functions
 
@@ -54,7 +54,7 @@ BLVM applies optimizations to transform the [Orange Paper](../reference/orange-p
 - **Constant Folding** - Pre-computed constants and constant propagation
 - **Memory Layout Optimization** - Cache-aligned structures and compact stack frames
 - **SIMD Vectorization** - Batch hash operations with parallel processing
-- **Bounds Check Optimization** - Removes redundant runtime bounds checks using [blvm-spec-lock](formal-verification.md)-proven bounds
+- **Bounds Check Optimization** - Removes redundant runtime bounds checks using [BLVM Specification Lock](formal-verification.md)-proven bounds
 - **Dead Code Elimination** - Removes unused code paths
 - **Inlining Hints** - Aggressive inlining of hot functions
 

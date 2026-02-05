@@ -13,7 +13,7 @@ BLVM (Bitcoin Low-Level Virtual Machine) is compiler-like infrastructure for Bit
 Like a compiler transforms source code → IR → optimized machine code, BLVM transforms:
 
 1. **[Orange Paper](reference/orange-paper.md)** - Mathematical specification (IR/intermediate representation)
-2. **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)** - Formal verification tooling linking code to Orange Paper specifications
+2. **[BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock)** - Formal verification tooling linking code to Orange Paper specifications using Z3
 3. **[Optimization Passes](consensus/architecture.md#optimization-passes)** - Transform spec into optimized code
 4. **[blvm-consensus](consensus/overview.md)** - Optimized implementation with [formal verification](consensus/formal-verification.md)
 5. **[blvm-protocol](protocol/overview.md)** - Protocol abstraction for mainnet, testnet, regtest

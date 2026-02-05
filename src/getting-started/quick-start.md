@@ -45,6 +45,7 @@ blvm --network mainnet
 Once the node is running, check its status via RPC:
 
 ```bash
+# Mainnet uses port 8332, testnet/regtest use 18332
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
@@ -73,6 +74,7 @@ curl -X POST http://localhost:8332 \
 ### Getting Peer Information
 
 ```bash
+# Mainnet uses port 8332, testnet/regtest use 18332
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "getpeerinfo", "params": [], "id": 2}'
@@ -81,6 +83,7 @@ curl -X POST http://localhost:8332 \
 ### Getting Mempool Information
 
 ```bash
+# Mainnet uses port 8332, testnet/regtest use 18332
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "getmempoolinfo", "params": [], "id": 3}'
@@ -93,7 +96,7 @@ blvm --version  # Verify installation
 blvm --help     # View available options
 ```
 
-The node connects to the P2P network, syncs blockchain state, accepts [RPC commands](rpc-api.md) on port 8332 (default), and can [mine blocks](mining.md) if configured.
+The node connects to the P2P network, syncs blockchain state, accepts [RPC commands](rpc-api.md) on port 8332 (mainnet default) or 18332 (testnet/regtest), and can [mine blocks](mining.md) if configured.
 
 ## Using the SDK
 
