@@ -13,7 +13,7 @@ Create a `blvm.toml` configuration file:
 ```toml
 [network]
 listen_addr = "127.0.0.1:8333"   # Network listening address (default: 127.0.0.1:8333)
-protocol = "regtest"              # or "testnet" or "mainnet" (default: "BitcoinV1")
+protocol_version = "BitcoinV1"    # Protocol version: "BitcoinV1" (mainnet), "Testnet3" (testnet), "Regtest" (regtest)
 transport_preference = "tcp_only" # Transport preference (default: "tcp_only")
 max_peers = 100                   # Maximum number of peers (default: 100)
 enable_self_advertisement = true  # Send own address to peers (default: true)
