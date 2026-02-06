@@ -609,7 +609,8 @@ The `ModuleIntegration` API provides a simplified, unified interface for module 
 ```rust
 use blvm_node::module::integration::ModuleIntegration;
 
-// Connect to node
+// Connect to node (socket_path must be PathBuf)
+let socket_path = std::path::PathBuf::from(socket_path);
 let mut integration = ModuleIntegration::connect(
     socket_path,
     module_id,
@@ -651,7 +652,9 @@ let handshake_request = RequestMessage { /* ... */ };
 let response = ipc_client.request(handshake_request).await?;
 
 // Create NodeAPI wrapper
-let node_api = Arc::new(NodeApiIpc::new(ipc_client.clone()));
+// NodeApiIpc requires Arc<Mutex<ModuleIpcClient>> and module_id
+let ipc_client_arc = Arc::new(tokio::sync::Mutex::new(ipc_client));
+let node_api = Arc::new(NodeApiIpc::new(ipc_client_arc, "my-module".to_string()));
 
 // Create ModuleClient for event subscription
 let mut client = ModuleClient::connect(/* ... */).await?;

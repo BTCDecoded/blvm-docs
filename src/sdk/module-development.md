@@ -115,8 +115,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
     
     // Connect to node using ModuleIntegration
+    // Note: socket_path must be PathBuf (convert from String if needed)
+    let socket_path = std::path::PathBuf::from(&args.socket_path);
     let mut integration = ModuleIntegration::connect(
-        args.socket_path,
+        socket_path,
         args.module_id.unwrap_or_else(|| "my-module".to_string()),
         "my-module".to_string(),
         env!("CARGO_PKG_VERSION").to_string(),
@@ -129,12 +131,75 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Get NodeAPI
     let node_api = integration.node_api();
     
-    // Get event receiver
+    // Get event receiver (broadcast::Receiver returns Result, not Option)
     let mut event_receiver = integration.event_receiver();
     
     // Main module loop
+    loop {
+        match event_receiver.recv().await {
+            Ok(ModuleMessage::Event(event_msg)) => {
+                // Process event
+                match event_msg.payload {
+                    // Handle specific event types
+                    _ => {}
+                }
+            }
+            Ok(_) => {} // Other message types
+            Err(tokio::sync::broadcast::error::RecvError::Lagged(skipped)) => {
+                warn!("Event receiver lagged, skipped {} messages", skipped);
+            }
+            Err(tokio::sync::broadcast::error::RecvError::Closed) => {
+                break; // Channel closed, exit loop
+            }
+        }
+    }
+    
+    Ok(())
+}
+```
+
+#### Using ModuleIpcClient + NodeApiIpc (Legacy)
+
+```rust
+use blvm_node::module::ipc::client::ModuleIpcClient;
+use blvm_node::module::api::node_api::NodeApiIpc;
+use blvm_node::module::ipc::protocol::{RequestMessage, RequestPayload, MessageType};
+use std::sync::Arc;
+use std::path::PathBuf;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Parse command-line arguments
+    let args = Args::parse();
+    
+    // Connect to node IPC socket (PathBuf required)
+    let socket_path = PathBuf::from(&args.socket_path);
+    let mut ipc_client = ModuleIpcClient::connect(&socket_path).await?;
+    
+    // Perform handshake
+    let correlation_id = ipc_client.next_correlation_id();
+    let handshake_request = RequestMessage {
+        correlation_id,
+        request_type: MessageType::Handshake,
+        payload: RequestPayload::Handshake {
+            module_id: "my-module".to_string(),
+            module_name: "my-module".to_string(),
+            version: env!("CARGO_PKG_VERSION").to_string(),
+        },
+    };
+    let response = ipc_client.request(handshake_request).await?;
+    // Verify handshake response...
+    
+    // Create NodeAPI wrapper (requires Arc<Mutex<ModuleIpcClient>> and module_id)
+    let ipc_client_arc = Arc::new(tokio::sync::Mutex::new(ipc_client));
+    let node_api = Arc::new(NodeApiIpc::new(ipc_client_arc.clone(), "my-module".to_string()));
+    
+    // Subscribe to events using NodeAPI
+    let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
+    let mut event_receiver = node_api.subscribe_events(event_types).await?;
+    
+    // Main module loop (mpsc::Receiver returns Option)
     while let Some(event) = event_receiver.recv().await {
-        // Handle event
         match event {
             ModuleMessage::Event(event_msg) => {
                 // Process event
@@ -147,42 +212,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-#### Using ModuleClient + NodeApiIpc (Legacy)
-
-```rust
-use blvm_node::module::ipc::client::ModuleIpcClient;
-use blvm_node::module::api::node_api::NodeApiIpc;
-use std::sync::Arc;
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Parse command-line arguments
-    let args = Args::parse();
-    
-    // Connect to node IPC socket
-    let mut ipc_client = ModuleIpcClient::connect(&args.socket_path).await?;
-    
-    // Perform handshake
-    // ... handshake code ...
-    
-    // Create NodeAPI wrapper
-    let node_api = Arc::new(NodeApiIpc::new(ipc_client.clone()));
-    
-    // Create ModuleClient for events
-    let mut client = ModuleClient::connect(/* ... */).await?;
-    client.subscribe_events(event_types).await?;
-    let mut event_receiver = client.event_receiver();
-    
-    // Main module loop
-    while let Some(event) = event_receiver.recv().await {
-        // Handle event
-    }
-    
-    Ok(())
-}
-```
-
-**Recommendation:** New modules should use `ModuleIntegration` for simplicity and consistency. The legacy approach is still supported for existing modules.
+**Recommendation:** New modules should use `ModuleIntegration` for simplicity and consistency. The legacy approach is still supported for existing modules but requires more boilerplate code.
 
 ### Module Lifecycle
 
@@ -190,23 +220,44 @@ Modules receive command-line arguments (`--module-id`, `--socket-path`, `--data-
 
 ### Querying Node Data
 
-Modules can query blockchain data through the Node API:
+Modules can query blockchain data through the Node API. **Recommended approach**: Use NodeAPI methods directly:
 
 ```rust
+// Get NodeAPI from integration
+let node_api = integration.node_api();
+
 // Get current chain tip
+let chain_tip = node_api.get_chain_tip().await?;
+
+// Get a block by hash
+let block = node_api.get_block(&block_hash).await?;
+
+// Get block header
+let header = node_api.get_block_header(&block_hash).await?;
+
+// Get transaction
+let tx = node_api.get_transaction(&tx_hash).await?;
+
+// Get UTXO
+let utxo = node_api.get_utxo(&outpoint).await?;
+
+// Get chain info
+let chain_info = node_api.get_chain_info().await?;
+```
+
+**Alternative (Low-Level IPC)**: For advanced use cases, you can use the IPC protocol directly:
+
+```rust
+// Note: This requires request_type field in RequestMessage
 let request = RequestMessage {
     correlation_id: client.next_correlation_id(),
+    request_type: MessageType::GetChainTip,
     payload: RequestPayload::GetChainTip,
 };
 let response = client.send_request(request).await?;
-
-// Get a block
-let request = RequestMessage {
-    correlation_id: client.next_correlation_id(),
-    payload: RequestPayload::GetBlock { hash },
-};
-let response = client.send_request(request).await?;
 ```
+
+**Recommendation**: Use NodeAPI methods for simplicity and type safety. Low-level IPC is only needed for custom protocols.
 
 **Available NodeAPI Methods:**
 
