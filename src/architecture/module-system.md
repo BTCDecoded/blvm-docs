@@ -117,13 +117,47 @@ Modules run in sandboxed environments with:
 
 ### Permission System
 
-Modules request capabilities that are validated before API access:
+Modules request capabilities that are validated before API access. Capabilities use snake_case in `module.toml` (e.g., `read_blockchain`) and map to `Permission` enum variants (e.g., `ReadBlockchain`).
 
-- `ReadBlockchain` - Read-only blockchain access
-- `ReadUTXO` - Query UTXO set (read-only)
-- `ReadChainState` - Query chain state (height, tip)
-- `SubscribeEvents` - Subscribe to node events
-- `SendTransactions` - Submit transactions to mempool
+**Core Permissions:**
+- `read_blockchain` / `ReadBlockchain` - Read-only blockchain access (blocks, headers, transactions)
+- `read_utxo` / `ReadUTXO` - Query UTXO set (read-only)
+- `read_chain_state` / `ReadChainState` - Query chain state (height, tip)
+- `subscribe_events` / `SubscribeEvents` - Subscribe to node events
+- `send_transactions` / `SendTransactions` - Submit transactions to mempool (future: may be restricted)
+
+**Mempool & Network Permissions:**
+- `read_mempool` / `ReadMempool` - Read mempool data (transactions, size, fee estimates)
+- `read_network` / `ReadNetwork` - Read network data (peers, stats)
+- `network_access` / `NetworkAccess` - Send network packets (mesh packets, etc.)
+
+**Lightning & Payment Permissions:**
+- `read_lightning` / `ReadLightning` - Read Lightning network data
+- `read_payment` / `ReadPayment` - Read payment data
+
+**Storage Permissions:**
+- `read_storage` / `ReadStorage` - Read from module storage
+- `write_storage` / `WriteStorage` - Write to module storage
+- `manage_storage` / `ManageStorage` - Manage storage (create/delete trees, manage quotas)
+
+**Filesystem Permissions:**
+- `read_filesystem` / `ReadFilesystem` - Read files from module data directory
+- `write_filesystem` / `WriteFilesystem` - Write files to module data directory
+- `manage_filesystem` / `ManageFilesystem` - Manage filesystem (create/delete directories, manage quotas)
+
+**RPC & Timers Permissions:**
+- `register_rpc_endpoint` / `RegisterRpcEndpoint` - Register RPC endpoints
+- `manage_timers` / `ManageTimers` - Manage timers and scheduled tasks
+
+**Metrics Permissions:**
+- `report_metrics` / `ReportMetrics` - Report metrics
+- `read_metrics` / `ReadMetrics` - Read metrics
+
+**Module Communication Permissions:**
+- `discover_modules` / `DiscoverModules` - Discover other modules
+- `publish_events` / `PublishEvents` - Publish events to other modules
+- `call_module` / `CallModule` - Call other modules' APIs
+- `register_module_api` / `RegisterModuleApi` - Register module API for other modules to call
 
 **Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs#L1-L184)
 
@@ -305,10 +339,40 @@ client.subscribe_events(event_types).await?;
 - `BlockDisconnected` - Block disconnected (reorg)
 - `ChainReorg` - Chain reorganization
 
+**Payment Events:**
+- `PaymentRequestCreated` - Payment request created
+- `PaymentSettled` - Payment settled (confirmed on-chain)
+- `PaymentFailed` - Payment failed
+- `PaymentVerified` - Lightning payment verified
+- `PaymentRouteFound` - Payment route discovered
+- `PaymentRouteFailed` - Payment routing failed
+- `ChannelOpened` - Lightning channel opened
+- `ChannelClosed` - Lightning channel closed
+
+**Mining Events:**
+- `BlockMined` - Block mined successfully
+- `BlockTemplateUpdated` - Block template updated
+- `MiningDifficultyChanged` - Mining difficulty changed
+- `MiningJobCreated` - Mining job created
+- `ShareSubmitted` - Mining share submitted
+- `MergeMiningReward` - Merge mining reward received
+- `MiningPoolConnected` - Mining pool connected
+- `MiningPoolDisconnected` - Mining pool disconnected
+
+**Mesh Networking Events:**
+- `MeshPacketReceived` - Mesh packet received from network
+
+**Stratum V2 Events:**
+- `StratumV2MessageReceived` - Stratum V2 message received from network
+
 **Module Lifecycle Events:**
 - `ModuleLoaded` - Module loaded (published after subscription)
 - `ModuleUnloaded` - Module unloaded
 - `ModuleCrashed` - Module crashed
+- `ModuleDiscovered` - Module discovered
+- `ModuleInstalled` - Module installed
+- `ModuleUpdated` - Module updated
+- `ModuleRemoved` - Module removed
 
 **Configuration Events:**
 - `ConfigLoaded` - Node configuration loaded/changed
@@ -332,13 +396,68 @@ client.subscribe_events(event_types).await?;
 - `GovernanceProposalCreated` - Proposal created
 - `GovernanceProposalVoted` - Vote cast
 - `GovernanceProposalMerged` - Proposal merged
+- `EconomicNodeRegistered` - Economic node registered
+- `EconomicNodeStatus` - Economic node status query/response
+- `EconomicNodeForkDecision` - Economic node fork decision
+- `EconomicNodeVeto` - Economic node veto signal
+- `VetoThresholdReached` - Veto threshold reached
+- `GovernanceForkDetected` - Governance fork detected
+- `WebhookSent` - Webhook sent
+- `WebhookFailed` - Webhook delivery failed
 
 **Network Events:**
 - `PeerConnected` - Peer connected
 - `PeerDisconnected` - Peer disconnected
+- `PeerBanned` - Peer banned
+- `PeerUnbanned` - Peer unbanned
 - `MessageReceived` - Network message received
+- `MessageSent` - Network message sent
 - `BroadcastStarted` - Broadcast started
 - `BroadcastCompleted` - Broadcast completed
+- `RouteDiscovered` - Route discovered
+- `RouteFailed` - Route failed
+- `ConnectionAttempt` - Connection attempt (success/failure)
+- `AddressDiscovered` - New peer address discovered
+- `AddressExpired` - Peer address expired
+- `NetworkPartition` - Network partition detected
+- `NetworkReconnected` - Network partition reconnected
+- `DoSAttackDetected` - DoS attack detected
+- `RateLimitExceeded` - Rate limit exceeded
+
+**Consensus Events:**
+- `BlockValidationStarted` - Block validation started
+- `BlockValidationCompleted` - Block validation completed (success/failure)
+- `ScriptVerificationStarted` - Script verification started
+- `ScriptVerificationCompleted` - Script verification completed
+- `UTXOValidationStarted` - UTXO validation started
+- `UTXOValidationCompleted` - UTXO validation completed
+- `DifficultyAdjusted` - Network difficulty adjusted
+- `SoftForkActivated` - Soft fork activated (SegWit, Taproot, CTV, etc.)
+- `SoftForkLockedIn` - Soft fork locked in (BIP9)
+- `ConsensusRuleViolation` - Consensus rule violation detected
+
+**Sync Events:**
+- `HeadersSyncStarted` - Headers sync started
+- `HeadersSyncProgress` - Headers sync progress update
+- `HeadersSyncCompleted` - Headers sync completed
+- `BlockSyncStarted` - Block sync started (IBD)
+- `BlockSyncProgress` - Block sync progress update
+- `BlockSyncCompleted` - Block sync completed
+
+**Mempool Events:**
+- `MempoolTransactionAdded` - Transaction added to mempool
+- `MempoolTransactionRemoved` - Transaction removed from mempool
+- `FeeRateChanged` - Fee rate changed
+
+**Additional Event Categories:**
+- Dandelion++ Events (DandelionStemStarted, DandelionStemAdvanced, DandelionFluffed, etc.)
+- Compact Blocks Events (CompactBlockReceived, BlockReconstructionStarted, etc.)
+- FIBRE Events (FibreBlockEncoded, FibreBlockSent, FibrePeerRegistered)
+- Package Relay Events (PackageReceived, PackageRejected)
+- UTXO Commitments Events (UtxoCommitmentReceived, UtxoCommitmentVerified)
+- Ban List Sharing Events (BanListShared, BanListReceived)
+
+For a complete list of all event types, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765).
 
 ### Event Delivery Guarantees
 

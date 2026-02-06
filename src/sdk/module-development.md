@@ -208,14 +208,79 @@ let request = RequestMessage {
 let response = client.send_request(request).await?;
 ```
 
-**Available API Operations:**
-- `GetBlock`: Get block by hash
-- `GetBlockHeader`: Get block header by hash
-- `GetTransaction`: Get transaction by hash
-- `HasTransaction`: Check if transaction exists
-- `GetChainTip`: Get current chain tip hash
-- `GetBlockHeight`: Get current block height
-- `GetUtxo`: Get UTXO by outpoint (read-only)
+**Available NodeAPI Methods:**
+
+**Blockchain API:**
+- `get_block(hash)` - Get block by hash
+- `get_block_header(hash)` - Get block header by hash
+- `get_transaction(hash)` - Get transaction by hash
+- `has_transaction(hash)` - Check if transaction exists
+- `get_chain_tip()` - Get current chain tip hash
+- `get_block_height()` - Get current block height
+- `get_block_by_height(height)` - Get block by height
+- `get_utxo(outpoint)` - Get UTXO by outpoint (read-only)
+- `get_chain_info()` - Get chain information (tip, height, difficulty, etc.)
+
+**Mempool API:**
+- `get_mempool_transactions()` - Get all transaction hashes in mempool
+- `get_mempool_transaction(hash)` - Get transaction from mempool by hash
+- `get_mempool_size()` - Get mempool size information
+- `check_transaction_in_mempool(hash)` - Check if transaction is in mempool
+- `get_fee_estimate(target_blocks)` - Get fee estimate for target confirmation blocks
+
+**Network API:**
+- `get_network_stats()` - Get network statistics
+- `get_network_peers()` - Get list of connected peers
+
+**Storage API:**
+- `storage_open_tree(name)` - Open a storage tree (isolated per module)
+- `storage_insert(tree_id, key, value)` - Insert a key-value pair
+- `storage_get(tree_id, key)` - Get a value by key
+- `storage_remove(tree_id, key)` - Remove a key-value pair
+- `storage_contains_key(tree_id, key)` - Check if key exists
+- `storage_iter(tree_id)` - Iterate over all key-value pairs
+- `storage_transaction(tree_id, operations)` - Execute atomic batch of operations
+
+**Filesystem API:**
+- `read_file(path)` - Read a file from module's data directory
+- `write_file(path, data)` - Write data to a file
+- `delete_file(path)` - Delete a file
+- `list_directory(path)` - List directory contents
+- `create_directory(path)` - Create a directory
+- `get_file_metadata(path)` - Get file metadata (size, type, timestamps)
+
+**Module Communication API:**
+- `call_module(target_module_id, method, params)` - Call an API method on another module
+- `publish_event(event_type, payload)` - Publish an event to other modules
+- `register_module_api(api)` - Register module API for other modules to call
+- `unregister_module_api()` - Unregister module API
+- `discover_modules()` - Discover all available modules
+- `get_module_info(module_id)` - Get information about a specific module
+- `is_module_available(module_id)` - Check if a module is available
+
+**RPC API:**
+- `register_rpc_endpoint(method, description)` - Register a JSON-RPC endpoint
+- `unregister_rpc_endpoint(method)` - Unregister an RPC endpoint
+
+**Timers API:**
+- `register_timer(interval_seconds, callback)` - Register a periodic timer
+- `cancel_timer(timer_id)` - Cancel a registered timer
+- `schedule_task(delay_seconds, callback)` - Schedule a one-time task
+
+**Metrics API:**
+- `report_metric(metric)` - Report a metric to the node
+- `get_module_metrics(module_id)` - Get module metrics
+- `get_all_metrics()` - Get aggregated metrics from all modules
+
+**Lightning & Payment API:**
+- `get_lightning_node_url()` - Get Lightning node connection info
+- `get_lightning_info()` - Get Lightning node information
+- `get_payment_state(payment_id)` - Get payment state by payment ID
+
+**Network Integration API:**
+- `send_mesh_packet_to_module(module_id, packet_data, peer_addr)` - Send mesh packet to a module
+
+For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L150-L450).
 
 ### Subscribing to Events
 
@@ -264,16 +329,41 @@ while let Some(event) = event_receiver.recv().await {
 ```
 
 **Available Event Types:**
-- `NewBlock`: New block connected to chain
-- `NewTransaction`: New transaction in mempool
-- `BlockDisconnected`: Block disconnected (chain reorg)
-- `ChainReorg`: Chain reorganization occurred
-- `PeerConnected`: Peer connected to network
-- `PeerDisconnected`: Peer disconnected from network
-- `MempoolTransactionAdded`: Transaction added to mempool
-- `MempoolTransactionRemoved`: Transaction removed from mempool
-- `ConfigLoaded`: Node configuration loaded/changed
-- And many more (see [Event System](../architecture/module-system.md#event-system))
+
+**Core Blockchain Events:**
+- `NewBlock` - New block connected to chain
+- `NewTransaction` - New transaction in mempool
+- `BlockDisconnected` - Block disconnected (chain reorg)
+- `ChainReorg` - Chain reorganization occurred
+
+**Payment Events:**
+- `PaymentRequestCreated`, `PaymentSettled`, `PaymentFailed`, `PaymentVerified`, `PaymentRouteFound`, `PaymentRouteFailed`, `ChannelOpened`, `ChannelClosed`
+
+**Mining Events:**
+- `BlockMined`, `BlockTemplateUpdated`, `MiningDifficultyChanged`, `MiningJobCreated`, `ShareSubmitted`, `MergeMiningReward`, `MiningPoolConnected`, `MiningPoolDisconnected`
+
+**Network Events:**
+- `PeerConnected`, `PeerDisconnected`, `PeerBanned`, `MessageReceived`, `MessageSent`, `BroadcastStarted`, `BroadcastCompleted`, `RouteDiscovered`, `RouteFailed`
+
+**Module Lifecycle Events:**
+- `ModuleLoaded`, `ModuleUnloaded`, `ModuleCrashed`, `ModuleDiscovered`, `ModuleInstalled`, `ModuleUpdated`, `ModuleRemoved`
+
+**Configuration & Lifecycle Events:**
+- `ConfigLoaded`, `NodeStartupCompleted`, `NodeShutdown`, `NodeShutdownCompleted`
+
+**Maintenance & Resource Events:**
+- `DataMaintenance`, `MaintenanceStarted`, `MaintenanceCompleted`, `HealthCheck`, `DiskSpaceLow`, `ResourceLimitWarning`
+
+**Governance Events:**
+- `GovernanceProposalCreated`, `GovernanceProposalVoted`, `GovernanceProposalMerged`, `EconomicNodeRegistered`, `EconomicNodeVeto`, `VetoThresholdReached`
+
+**Consensus Events:**
+- `BlockValidationStarted`, `BlockValidationCompleted`, `ScriptVerificationStarted`, `ScriptVerificationCompleted`, `DifficultyAdjusted`, `SoftForkActivated`
+
+**Mempool Events:**
+- `MempoolTransactionAdded`, `MempoolTransactionRemoved`, `FeeRateChanged`
+
+And many more. For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765) and [Event System](../architecture/module-system.md#event-system).
 
 ## Configuration
 
@@ -296,12 +386,32 @@ Modules can have their own `config.toml` files, passed via environment variables
 
 ### Permissions
 
-Modules operate with **whitelist-only access control**. Each module declares required capabilities in its manifest:
+Modules operate with **whitelist-only access control**. Each module declares required capabilities in its manifest. Capabilities use snake_case in `module.toml` and map to `Permission` enum variants.
 
-- `read_blockchain`: Access to blockchain data
-- `read_utxo`: Query UTXO set (read-only)
-- `read_chain_state`: Query chain state (height, tip)
-- `subscribe_events`: Receive node events (planned)
+**Core Permissions:**
+- `read_blockchain` - Access to blockchain data
+- `read_utxo` - Query UTXO set (read-only)
+- `read_chain_state` - Query chain state (height, tip)
+- `subscribe_events` - Subscribe to node events
+- `send_transactions` - Submit transactions to mempool (future: may be restricted)
+
+**Additional Permissions:**
+- `read_mempool` - Read mempool data
+- `read_network` - Read network data (peers, stats)
+- `network_access` - Send network packets
+- `read_lightning` - Read Lightning network data
+- `read_payment` - Read payment data
+- `read_storage`, `write_storage`, `manage_storage` - Storage access
+- `read_filesystem`, `write_filesystem`, `manage_filesystem` - Filesystem access
+- `register_rpc_endpoint` - Register RPC endpoints
+- `manage_timers` - Manage timers and scheduled tasks
+- `report_metrics`, `read_metrics` - Metrics access
+- `discover_modules` - Discover other modules
+- `publish_events` - Publish events to other modules
+- `call_module` - Call other modules' APIs
+- `register_module_api` - Register module API for other modules to call
+
+For complete list, see [Permission enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs#L42-L101).
 
 ### Sandboxing
 
@@ -321,11 +431,16 @@ All module API requests are validated:
 
 ## API Reference
 
-**Node API Operations**: `GetBlock`, `GetBlockHeader`, `GetTransaction`, `HasTransaction`, `GetChainTip`, `GetBlockHeight`, `GetUtxo` (read-only)
+**NodeAPI Methods**: See [Querying Node Data](#querying-node-data) section above for complete list of available methods.
 
-**Event Types**: `NewBlock`, `NewTransaction`, `BlockDisconnected`, `ChainReorg`
+**Event Types**: See [Subscribing to Events](#subscribing-to-events) section above for complete list of available event types.
 
-**Permissions**: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`
+**Permissions**: See [Permissions](#permissions) section above for complete list of available permissions.
+
+For detailed API reference, see:
+- [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L150-L450)
+- [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765)
+- [Permission enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs#L42-L101)
 
 For detailed API reference, see `blvm-node/src/module/` (traits, IPC protocol, Node API, security).
 

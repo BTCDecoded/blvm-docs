@@ -164,8 +164,6 @@ capabilities = [
     "subscribe_events",
     "publish_events",
     "call_module",
-    "get_block_template",
-    "submit_block",
 ]
 ```
 
@@ -197,8 +195,10 @@ The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 - **Event subscription**: Receives real-time events from the node
 - **Event publication**: Publishes MiningOS-specific events
 - **Module calls**: Can call other modules (e.g., Stratum V2 for pool config updates) via `call_module`
-- **Block templates**: Gets block templates via `get_block_template`
-- **Block submission**: Submits mined blocks via `submit_block`
+- **Block templates**: Gets block templates via NodeAPI `get_block_template` method (no special permission required)
+- **Block submission**: Submits mined blocks via NodeAPI `submit_block` method (no special permission required)
+
+**Note**: `get_block_template` and `submit_block` are NodeAPI methods, not permissions. Modules can call these methods through the NodeAPI interface without requiring special capabilities.
 
 ## Action Execution System
 

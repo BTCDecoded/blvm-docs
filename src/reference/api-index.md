@@ -75,10 +75,25 @@ pub trait NodeAPI {
 ```
 
 **Event Types:**
+**Core Blockchain Events:**
 - `EventType::NewBlock` - New block connected to chain
 - `EventType::NewTransaction` - New transaction in mempool
 - `EventType::BlockDisconnected` - Block disconnected (chain reorg)
 - `EventType::ChainReorg` - Chain reorganization occurred
+
+**Payment Events:**
+- `EventType::PaymentRequestCreated`, `EventType::PaymentSettled`, `EventType::PaymentFailed`, `EventType::PaymentVerified`, `EventType::PaymentRouteFound`, `EventType::PaymentRouteFailed`, `EventType::ChannelOpened`, `EventType::ChannelClosed`
+
+**Mining Events:**
+- `EventType::BlockMined`, `EventType::BlockTemplateUpdated`, `EventType::MiningDifficultyChanged`, `EventType::MiningJobCreated`, `EventType::ShareSubmitted`, `EventType::MergeMiningReward`, `EventType::MiningPoolConnected`, `EventType::MiningPoolDisconnected`
+
+**Network Events:**
+- `EventType::PeerConnected`, `EventType::PeerDisconnected`, `EventType::MessageReceived`, `EventType::MessageSent`, `EventType::BroadcastStarted`, `EventType::BroadcastCompleted`, `EventType::RouteDiscovered`, `EventType::RouteFailed`
+
+**Module Lifecycle Events:**
+- `EventType::ModuleLoaded`, `EventType::ModuleUnloaded`, `EventType::ModuleCrashed`, `EventType::ModuleDiscovered`, `EventType::ModuleInstalled`, `EventType::ModuleUpdated`, `EventType::ModuleRemoved`
+
+**And many more.** For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765) and [Event System](../architecture/module-system.md#event-system).
 
 **ModuleContext** - Context provided to modules:
 
