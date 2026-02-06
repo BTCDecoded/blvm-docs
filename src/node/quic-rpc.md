@@ -99,7 +99,7 @@ QUIC uses TLS certificates:
 
 ### QUIC Client
 
-Clients need QUIC support. Example with `quinn`:
+Clients need QUIC support. Example with `quinn` (requires `quinn` feature):
 
 ```rust
 use quinn::Endpoint;

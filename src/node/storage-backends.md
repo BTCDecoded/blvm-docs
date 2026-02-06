@@ -49,7 +49,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 **Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L78-L84), ```1:105:blvm-node/src/storage/bitcoin_core_storage.rs```
 
-**Note**: RocksDB and erlay features are mutually exclusive due to dependency conflicts.
+**Note**: RocksDB requires the `rocksdb` feature flag. RocksDB and erlay features are mutually exclusive due to dependency conflicts (both require libclang/LLVM).
 
 ## Backend Selection
 

@@ -164,7 +164,7 @@ Impact levels map to governance tiers:
 The validator detects placeholder implementations in security-critical files:
 
 - `PLACEHOLDER`
-- `TODO: Implement`
+- See [Threat Models](threat-models.md) for comprehensive security documentation
 - `0x00[PLACEHOLDER`
 - `0x02[PLACEHOLDER`
 - `0x03[PLACEHOLDER`

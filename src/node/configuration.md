@@ -127,8 +127,19 @@ Configure transport selection (see [Transport Abstraction](transport-abstraction
 
 ```toml
 [network]
-transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
+transport_preference = "tcp_only"  # Options: "tcp_only" (default), "iroh_only" (requires iroh feature), "quinn_only" (requires quinn feature), "hybrid" (requires iroh feature), "all" (requires both iroh and quinn features)
 ```
+
+**Available Transport Options**:
+- `"tcp_only"` - TCP transport only (default, Bitcoin P2P compatible)
+- `"iroh_only"` - Iroh QUIC transport only (requires `iroh` feature)
+- `"quinn_only"` - Quinn QUIC transport only (requires `quinn` feature)
+- `"hybrid"` - TCP + Iroh hybrid mode (requires `iroh` feature)
+- `"all"` - All transports enabled (requires both `iroh` and `quinn` features)
+
+**Feature Requirements**:
+- `iroh` feature: Enables Iroh QUIC transport with NAT traversal
+- `quinn` feature: Enables standalone Quinn QUIC transport
 
 ## RBF Configuration
 
