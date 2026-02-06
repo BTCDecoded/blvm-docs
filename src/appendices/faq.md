@@ -164,7 +164,7 @@ BLVM implements numerous Bitcoin Improvement Proposals. See [Protocol Specificat
 
 ### What storage backends are supported?
 
-The node supports multiple storage backends with automatic fallback: **redb** (default, recommended), **sled** (beta, fallback option), and **auto** (auto-select based on availability). See [Node Configuration](../node/configuration.md) for details.
+The node supports multiple storage backends with automatic fallback: **redb** (default, recommended), **sled** (beta, fallback option), and **rocksdb** (optional, Bitcoin Core compatible - can read Bitcoin Core's LevelDB databases). The system automatically selects the best available backend. See [Storage Backends](../node/storage-backends.md) for complete details.
 
 ### What transport protocols are supported?
 
@@ -184,7 +184,7 @@ Configuration can be done via config file (`blvm.toml`), environment variables, 
 
 ### What RPC methods are available?
 
-The node implements 28 Bitcoin Core-compatible JSON-RPC methods across blockchain, raw transaction, mempool, network, and mining categories. See [RPC API Reference](../node/rpc-api.md) for the complete list.
+The node implements numerous Bitcoin Core-compatible JSON-RPC methods across blockchain, raw transaction, mempool, network, mining, control, address, transaction, and payment categories. See [RPC API Reference](../node/rpc-api.md) for the complete list of all available methods.
 
 ### How does the module system work?
 

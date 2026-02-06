@@ -246,10 +246,22 @@ If you have questions about contributing:
 
 Thank you for contributing to BLVM!
 
+## Contributing to Documentation
+
+For documentation-specific contributions (improving docs, fixing typos, adding examples), see [Contributing to Documentation](../appendices/contributing-docs.md) in the Appendices section. This guide covers:
+
+- Documentation standards and style guidelines
+- Where to contribute (source repos vs. unified docs)
+- Documentation workflow
+- Local testing of documentation changes
+
+**Note**: Code contributions (this page) and documentation contributions (linked above) follow different workflows but both are welcome!
+
 ## See Also
 
 - [PR Process](pr-process.md) - Pull request review process and governance tiers
 - [CI/CD Workflows](ci-cd-workflows.md) - What happens when you push code
 - [Testing Infrastructure](testing.md) - Testing guides
 - [Release Process](release-process.md) - How releases are created
+- [Contributing to Documentation](../appendices/contributing-docs.md) - Documentation contribution guide
 
