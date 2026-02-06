@@ -57,7 +57,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 The system automatically selects the best available backend in this order:
 
-1. **Bitcoin Core Detection** (if RocksDB feature enabled): Checks for existing Bitcoin Core data and uses RocksDB if detected
+1. **Bitcoin Core Detection** (if RocksDB feature enabled): Checks for existing Bitcoin Core data and uses RocksDB to read it (Bitcoin Core uses LevelDB, but RocksDB can read LevelDB format)
 2. **redb** (default, preferred): Attempts to use redb as the primary backend
 3. **sled** (fallback): Falls back to sled if redb fails and sled is available
 4. **RocksDB** (fallback): Falls back to RocksDB if available and other backends fail
