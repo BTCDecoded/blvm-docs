@@ -12,8 +12,11 @@ Create a `blvm.toml` configuration file:
 
 ```toml
 [network]
-protocol = "regtest"  # or "testnet" or "mainnet"
-port = 18444          # P2P port (regtest default)
+listen_addr = "127.0.0.1:8333"   # Network listening address (default: 127.0.0.1:8333)
+protocol = "regtest"              # or "testnet" or "mainnet" (default: "BitcoinV1")
+transport_preference = "tcp_only" # Transport preference (default: "tcp_only")
+max_peers = 100                   # Maximum number of peers (default: 100)
+enable_self_advertisement = true  # Send own address to peers (default: true)
 
 [storage]
 data_dir = "/var/lib/blvm"
@@ -27,6 +30,13 @@ host = "127.0.0.1"    # Bind address
 [mining]
 enabled = false
 ```
+
+**Default Values**:
+- `listen_addr`: `127.0.0.1:8333` (localhost, mainnet port)
+- `protocol_version`: `"BitcoinV1"` (Bitcoin mainnet)
+- `transport_preference`: `"tcp_only"` (TCP transport only)
+- `max_peers`: `100` (maximum peer connections)
+- `enable_self_advertisement`: `true` (advertise own address to peers)
 
 ## Environment Variables
 
@@ -180,9 +190,24 @@ Configure process-isolated modules:
 
 ```toml
 [modules]
-enabled = true
-modules_dir = "modules"
-enabled_modules = ["blvm-lightning", "blvm-mesh"]
+enabled = true                    # Enable module system (default: true)
+modules_dir = "modules"           # Directory containing module binaries (default: "modules")
+data_dir = "data/modules"         # Directory for module data/state (default: "data/modules")
+socket_dir = "data/modules/sockets"  # Directory for IPC sockets (default: "data/modules/sockets")
+enabled_modules = ["blvm-lightning", "blvm-mesh"]  # List of enabled modules (empty = auto-discover all)
+```
+
+**Module Resource Limits** (optional):
+```toml
+[modules.resource_limits]
+default_max_cpu_percent = 50              # Max CPU usage per module (default: 50%)
+default_max_memory_bytes = 536870912      # Max memory per module (default: 512 MB)
+default_max_file_descriptors = 256        # Max file descriptors per module (default: 256)
+default_max_child_processes = 10          # Max child processes per module (default: 10)
+module_startup_wait_millis = 100          # Wait time for module startup (default: 100ms)
+module_socket_timeout_seconds = 5         # IPC socket timeout (default: 5s)
+module_socket_check_interval_millis = 100 # Socket check interval (default: 100ms)
+module_socket_max_attempts = 50           # Max socket connection attempts (default: 50)
 ```
 
 See [Module System](../architecture/module-system.md) for module configuration details.

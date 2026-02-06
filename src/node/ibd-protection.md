@@ -65,26 +65,34 @@ Tracks peer behavior to identify malicious patterns:
 
 ```toml
 [network.ibd_protection]
-max_bandwidth_per_peer_per_day_gb = 10.0
-max_bandwidth_per_peer_per_hour_gb = 2.0
-max_bandwidth_per_ip_per_day_gb = 50.0
-max_bandwidth_per_ip_per_hour_gb = 10.0
-max_bandwidth_per_subnet_per_day_gb = 200.0
-max_bandwidth_per_subnet_per_hour_gb = 50.0
+max_bandwidth_per_peer_per_day_gb = 50.0
+max_bandwidth_per_peer_per_hour_gb = 10.0
+max_bandwidth_per_ip_per_day_gb = 100.0
+max_bandwidth_per_ip_per_hour_gb = 20.0
+max_bandwidth_per_subnet_per_day_gb = 500.0
+max_bandwidth_per_subnet_per_hour_gb = 100.0
 max_concurrent_ibd_serving = 3
 ibd_request_cooldown_seconds = 3600
+suspicious_reconnection_threshold = 3
+reputation_ban_threshold = -100
+enable_emergency_throttle = false
+emergency_throttle_percent = 50
 ```
 
 ### Configuration Options
 
-- **max_bandwidth_per_peer_per_day_gb**: Daily limit per peer (default: 10 GB)
-- **max_bandwidth_per_peer_per_hour_gb**: Hourly limit per peer (default: 2 GB)
-- **max_bandwidth_per_ip_per_day_gb**: Daily limit per IP (default: 50 GB)
-- **max_bandwidth_per_ip_per_hour_gb**: Hourly limit per IP (default: 10 GB)
-- **max_bandwidth_per_subnet_per_day_gb**: Daily limit per subnet (default: 200 GB)
-- **max_bandwidth_per_subnet_per_hour_gb**: Hourly limit per subnet (default: 50 GB)
+- **max_bandwidth_per_peer_per_day_gb**: Daily limit per peer (default: 50 GB)
+- **max_bandwidth_per_peer_per_hour_gb**: Hourly limit per peer (default: 10 GB)
+- **max_bandwidth_per_ip_per_day_gb**: Daily limit per IP (default: 100 GB)
+- **max_bandwidth_per_ip_per_hour_gb**: Hourly limit per IP (default: 20 GB)
+- **max_bandwidth_per_subnet_per_day_gb**: Daily limit per subnet (default: 500 GB)
+- **max_bandwidth_per_subnet_per_hour_gb**: Hourly limit per subnet (default: 100 GB)
 - **max_concurrent_ibd_serving**: Maximum concurrent IBD serving (default: 3)
 - **ibd_request_cooldown_seconds**: Cooldown period after suspicious activity (default: 3600 seconds)
+- **suspicious_reconnection_threshold**: Number of reconnections in 1 hour to be considered suspicious (default: 3)
+- **reputation_ban_threshold**: Reputation score below which peer is banned (default: -100)
+- **enable_emergency_throttle**: Enable emergency bandwidth throttling (default: false)
+- **emergency_throttle_percent**: Percentage of bandwidth to throttle when emergency throttle is enabled (default: 50)
 
 **Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs#L209-L264)
 

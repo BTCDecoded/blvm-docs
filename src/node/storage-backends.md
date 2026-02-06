@@ -53,15 +53,21 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 ## Backend Selection
 
-The system automatically selects the best available backend:
+The system automatically selects the best available backend in this order:
 
-1. **Checks for Bitcoin Core data** (if RocksDB feature enabled) - uses RocksDB if detected
-2. **Attempts redb** (default, preferred)
-3. **Falls back to sled** if redb fails and sled is available
-4. **Falls back to RocksDB** if available and other backends fail
-5. **Returns error** if no backend is available
+1. **Bitcoin Core Detection** (if RocksDB feature enabled): Checks for existing Bitcoin Core data and uses RocksDB if detected
+2. **redb** (default, preferred): Attempts to use redb as the primary backend
+3. **sled** (fallback): Falls back to sled if redb fails and sled is available
+4. **RocksDB** (fallback): Falls back to RocksDB if available and other backends fail
+5. **Error**: Returns error if no backend is available
 
-**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L80-L129), ```59:100:blvm-node/src/storage/mod.rs```
+**Backend Selection Logic**:
+- The `"auto"` backend option follows this selection order
+- Bitcoin Core detection happens first (if RocksDB enabled) to preserve compatibility
+- redb is always preferred over sled when both are available
+- Automatic fallback ensures the node can start even if preferred backend fails
+
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L110-L135), [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs#L55-L100)
 
 ### Automatic Fallback
 

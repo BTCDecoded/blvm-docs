@@ -101,8 +101,24 @@ Internet checkpoints are the **primary security mechanism**. Even with discovery
 - **Header Checkpoints**: Every 10000 blocks, validate header hash against internet peers
 - **Consensus Requirement**: Requires agreement from at least 3 internet peers
 - **Failure Response**: Checkpoint failure results in permanent ban (1 year)
+- **Request Timeout**: 5 seconds per checkpoint request
+- **Max Retries**: 3 retry attempts per checkpoint
+- **Protocol Verify Timeout**: 5 seconds for protocol handshake verification
+- **Headers Verify Timeout**: 10 seconds for headers verification
+- **Max Header Divergence**: 6 blocks maximum divergence allowed
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L460-L690)
+**Security Constants**:
+- `BLOCK_CHECKPOINT_INTERVAL`: 1000 blocks
+- `HEADER_CHECKPOINT_INTERVAL`: 10000 blocks
+- `MIN_CHECKPOINT_PEERS`: 3 internet peers required
+- `CHECKPOINT_FAILURE_BAN_DURATION`: 1 year (31,536,000 seconds)
+- `CHECKPOINT_REQUEST_TIMEOUT`: 5 seconds
+- `CHECKPOINT_MAX_RETRIES`: 3 retries
+- `PROTOCOL_VERIFY_TIMEOUT`: 5 seconds
+- `HEADERS_VERIFY_TIMEOUT`: 10 seconds
+- `MAX_HEADER_DIVERGENCE`: 6 blocks
+
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L29-L51), [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L460-L690)
 
 ### Security Guarantees
 

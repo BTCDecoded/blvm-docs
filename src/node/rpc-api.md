@@ -88,12 +88,21 @@ curl -X POST http://localhost:8332 \
 - `getdifficulty` - Get current difficulty
 - `gettxoutsetinfo` - Get UTXO set statistics
 - `verifychain` - Verify blockchain database
+- `getblockfilter` - Get block filter (BIP158)
+- `getindexinfo` - Get index information
+- `getblockchainstate` - Get blockchain state
+- `invalidateblock` - Invalidate a block
+- `reconsiderblock` - Reconsider a previously invalidated block
+- `waitfornewblock` - Wait for a new block
+- `waitforblock` - Wait for a specific block
+- `waitforblockheight` - Wait for a specific block height
 
 ### Raw Transaction Methods
 - `getrawtransaction` - Get transaction by txid
 - `sendrawtransaction` - Submit transaction to mempool
 - `testmempoolaccept` - Test if transaction would be accepted
 - `decoderawtransaction` - Decode raw transaction hex
+- `createrawtransaction` - Create a raw transaction
 - `gettxout` - Get UTXO information
 - `gettxoutproof` - Get merkle proof for transaction
 - `verifytxoutproof` - Verify merkle proof
@@ -102,6 +111,9 @@ curl -X POST http://localhost:8332 \
 - `getmempoolinfo` - Get mempool statistics
 - `getrawmempool` - List transactions in mempool
 - `savemempool` - Persist mempool to disk
+- `getmempoolancestors` - Get mempool ancestors of a transaction
+- `getmempooldescendants` - Get mempool descendants of a transaction
+- `getmempoolentry` - Get mempool entry for a transaction
 
 ### Network Methods
 - `getnetworkinfo` - Get network information
@@ -114,12 +126,16 @@ curl -X POST http://localhost:8332 \
 - `clearbanned` - Clear banned nodes
 - `setban` - Ban/unban a subnet
 - `listbanned` - List banned nodes
+- `getaddednodeinfo` - Get information about manually added nodes
+- `getnodeaddresses` - Get known node addresses
+- `setnetworkactive` - Enable or disable network activity
 
 ### Mining Methods
 - `getmininginfo` - Get mining information
 - `getblocktemplate` - Get block template for mining
 - `submitblock` - Submit a mined block
 - `estimatesmartfee` - Estimate smart fee rate
+- `prioritisetransaction` - Prioritize a transaction in mempool
 
 ## Error Codes
 
