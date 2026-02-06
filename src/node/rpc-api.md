@@ -137,6 +137,26 @@ curl -X POST http://localhost:8332 \
 - `estimatesmartfee` - Estimate smart fee rate
 - `prioritisetransaction` - Prioritize a transaction in mempool
 
+### Control Methods
+- `stop` - Stop the node
+- `uptime` - Get node uptime
+- `getmemoryinfo` - Get memory usage information
+- `getrpcinfo` - Get RPC server information
+- `help` - Get help for RPC methods
+- `logging` - Control logging levels
+- `gethealth` - Get node health status
+- `getmetrics` - Get node metrics
+
+### Address Methods
+- `validateaddress` - Validate a Bitcoin address
+- `getaddressinfo` - Get detailed address information
+
+### Transaction Methods
+- `gettransactiondetails` - Get detailed transaction information
+
+### Payment Methods (BIP70, feature-gated)
+- `createpaymentrequest` - Create a BIP70 payment request (requires `bip70-http` feature)
+
 ## Error Codes
 
 The RPC API uses Bitcoin Core-compatible JSON-RPC 2.0 error codes:
