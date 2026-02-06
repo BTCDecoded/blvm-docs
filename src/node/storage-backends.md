@@ -33,7 +33,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 **rocksdb** is an optional high-performance backend with Bitcoin Core compatibility:
 
-- **Bitcoin Core Compatibility**: Can read Bitcoin Core LevelDB databases directly
+- **Bitcoin Core Compatibility**: Uses RocksDB to read Bitcoin Core's LevelDB databases (RocksDB has backward compatibility with LevelDB format)
 - **Automatic Detection**: Automatically detects and uses Bitcoin Core data if present
 - **Block File Access**: Direct access to Bitcoin Core block files (`blk*.dat`)
 - **Format Parsing**: Parses Bitcoin Core's internal data formats
@@ -43,11 +43,13 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 **Bitcoin Core Integration**:
 - Automatically detects Bitcoin Core data directories
-- Reads LevelDB chainstate databases via RocksDB's LevelDB compatibility
+- **Uses RocksDB to read LevelDB databases**: Bitcoin Core uses LevelDB, but we use RocksDB (which can read LevelDB format) to access the data
 - Accesses block files (`blk*.dat`) with lazy indexing
 - Supports mainnet, testnet, regtest, and signet networks
 
-**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L78-L84), ```1:105:blvm-node/src/storage/bitcoin_core_storage.rs```
+**Important**: We use **RocksDB** (not LevelDB directly). RocksDB provides backward compatibility with LevelDB format, allowing us to read Bitcoin Core's LevelDB databases.
+
+**Code**: [database.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L925-L997), [bitcoin_core_storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_storage.rs#L77-L104)
 
 **Note**: RocksDB requires the `rocksdb` feature flag. RocksDB and erlay features are mutually exclusive due to dependency conflicts (both require libclang/LLVM).
 
