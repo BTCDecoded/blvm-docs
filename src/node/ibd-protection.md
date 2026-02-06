@@ -130,8 +130,22 @@ The IBD protection is automatically integrated into the network manager:
 
 **Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L604-L650)
 
+## LAN Peer Prioritization
+
+LAN peers are automatically discovered and prioritized for IBD, but still respect bandwidth protection limits:
+
+- **Priority Assignment**: LAN peers get priority within bandwidth limits
+- **Score Multiplier**: LAN peers receive up to 3x score multiplier (progressive trust system)
+- **Bandwidth Limits**: LAN peers still respect per-peer, per-IP, and per-subnet limits
+- **Reputation Scoring**: LAN peer behavior affects reputation scoring
+
+**Code**: [parallel_ibd.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L680-L800)
+
+For details on LAN peering discovery, security, and configuration, see [LAN Peering System](lan-peering.md).
+
 ## See Also
 
+- [LAN Peering System](lan-peering.md) - Automatic local network discovery and prioritization
 - [Network Operations](operations.md) - General network operations
 - [Node Configuration](configuration.md) - IBD protection configuration
 - [Security Controls](../security/security-controls.md) - Security system overview

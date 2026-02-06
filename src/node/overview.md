@@ -136,6 +136,7 @@ graph TB
 - High-performance block relay (Fibre)
 - [Package relay](package-relay.md) (BIP331)
 - [UTXO commitments](../consensus/utxo-commitments.md) support
+- [LAN peering system](lan-peering.md) (automatic local network discovery, 10-50x IBD speedup)
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (redb, sled, rocksdb)

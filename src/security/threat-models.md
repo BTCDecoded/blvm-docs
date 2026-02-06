@@ -98,6 +98,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 **Mitigations**:
 - IP diversity tracking
 - Limits connections from same IP range
+- LAN peering security: 25% LAN peer cap, 75% internet peer minimum, checkpoint validation
 - Geographic diversity requirements
 - ASN diversity tracking
 
@@ -308,8 +309,58 @@ Storage layer security:
 
 **Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L117-L121)
 
+## LAN Peering Security
+
+The LAN peering system includes multiple security mechanisms to prevent eclipse attacks while allowing fast local network sync:
+
+### Security Limits
+
+- **25% LAN Peer Cap**: Maximum percentage of peers that can be LAN peers (hard limit)
+- **75% Internet Peer Minimum**: Minimum percentage of peers that must be internet peers
+- **Minimum 3 Internet Peers**: Required for checkpoint validation consensus
+- **Maximum 1 Discovered LAN Peer**: Limits automatically discovered peers (whitelisted are separate)
+
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L29-L51)
+
+### Checkpoint Validation
+
+Internet checkpoints are the **primary security mechanism** for LAN peering:
+
+- **Block Checkpoints**: Every 1000 blocks, validate block hash against internet peers
+- **Header Checkpoints**: Every 10000 blocks, validate header hash against internet peers
+- **Consensus Requirement**: Requires agreement from at least 3 internet peers
+- **Failure Response**: Checkpoint failure results in permanent ban (1 year duration)
+
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L460-L690)
+
+### Progressive Trust System
+
+LAN peers start with limited trust and earn higher priority over time:
+
+- **Initial Trust**: 1.5x multiplier for newly discovered peers
+- **Level 2 Trust**: 2.0x multiplier after 1000 valid blocks
+- **Maximum Trust**: 3.0x multiplier after 10000 blocks AND 1 hour connection
+- **Demotion**: After 3 failures, peer loses LAN status
+- **Banning**: Checkpoint failure results in permanent ban
+
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L89-L217)
+
+### Eclipse Attack Prevention
+
+The security model ensures eclipse attack prevention:
+
+1. **Internet Peer Majority**: 75% minimum ensures connection to honest network
+2. **Checkpoint Validation**: Regular validation prevents chain divergence
+3. **LAN Address Privacy**: LAN addresses never advertised to external peers
+4. **Failure Handling**: Multiple failures result in demotion or ban
+
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L1-L51)
+
+For complete documentation, see [LAN Peering System](../node/lan-peering.md).
+
 ## See Also
 
+- [LAN Peering System](../node/lan-peering.md) - Complete LAN peering documentation
 - [Security Controls](security-controls.md) - Security control implementation
 - [Developer Security Checklist](DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
 - [Security Architecture Review Template](ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process

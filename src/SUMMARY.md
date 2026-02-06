@@ -51,6 +51,7 @@
 - [Storage Backends](node/storage-backends.md)
 - [Transaction Indexing](node/transaction-indexing.md)
 - [IBD Bandwidth Protection](node/ibd-protection.md)
+- [LAN Peering System](node/lan-peering.md)
 - [Mining Integration](node/mining.md)
 - [Stratum V2 + Merge Mining](node/mining-stratum-v2.md)
 - [Multi-Transport Architecture](node/transport-abstraction.md)
