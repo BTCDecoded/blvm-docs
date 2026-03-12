@@ -172,4 +172,3 @@ The Stratum V2 system includes:
 **Location**: `blvm-node/src/network/stratum_v2/`
 
 **Note**: Merge mining functionality is provided by the separate `blvm-merge-mining` module, not by the core Stratum V2 implementation.
-

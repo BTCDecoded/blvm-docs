@@ -73,26 +73,22 @@ Fuzz tests discover edge cases through random generation:
 
 **Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
 
-### Z3 Proof Verification
+### Spec-Lock Formal Verification
 
-BLVM Specification Lock provides formal verification of UTXO set operations:
+blvm-spec-lock provides formal verification of consensus and UTXO operations:
 
-- **Location**: `blvm-node/src/storage/utxostore_proofs.rs`
-- **Coverage**: UTXO uniqueness, add/remove consistency, value conservation, round-trip storage
-- **Tool**: BLVM Specification Lock (uses Z3 SMT solver)
-- **Mathematical Specifications**: Verifies compliance with Orange Paper theorems
+- **Coverage**: Functions with `#[spec_locked("section")]` annotations
+- **Tool**: blvm-spec-lock (Z3-based)
+- **Mathematical Specifications**: Verifies compliance with Orange Paper sections
 
-**Verified Properties**:
-- UTXO uniqueness (Orange Paper Theorem 5.3.1)
-- Add/remove consistency
-- Spent output tracking
-- Value conservation (Orange Paper Theorem 5.3.2)
-- Count accuracy
-- Round-trip storage (Orange Paper Theorem 5.3.3)
+**Verified Properties** (via spec-lock):
+- Consensus rules (transaction, block, script validation)
+- UTXO set operations where annotated
+- Cryptographic primitives
 
-**Code**: [utxostore_proofs.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L1-L229)
+**Code**: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)
 
-**See Also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Proof verification workflow
+**See Also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Verification workflow
 
 ### Runtime Assertions
 
@@ -176,25 +172,26 @@ cargo +nightly fuzz run transaction_validation
 cargo +nightly miri test
 ```
 
-### Run Z3 Proofs
+### Run blvm-spec-lock Proofs
 
 ```bash
-# Run BLVM Specification Lock verification
-cargo spec-lock verify
-
-# Verify specific proof
-cargo spec-lock verify --proof verify_utxo_uniqueness
+cargo blvm-spec-lock
 ```
 
 **Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
 
-**Code**: [utxostore_proofs.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L1-L229)
+### Run Spec-Lock Verification
+
+```bash
+# Run spec-lock verification (requires cargo-spec-lock)
+cargo spec-lock verify --crate-path .
+```
 
 ## Coverage Goals
 
 ### Target Coverage
 
-- **Z3 Proofs**: All critical consensus functions
+- **blvm-spec-lock Proofs**: All critical consensus functions
 - **Property Tests**: All mathematical invariants
 - **Fuzz Targets**: All critical validation paths
 - **Runtime Assertions**: All critical code paths
@@ -217,7 +214,7 @@ All coverage goals met:
 
 ```
 blvm-consensus/
-├── src/                    # Source code with Z3 proofs
+├── src/                    # Source code with blvm-spec-lock proofs
 ├── tests/
 │   ├── consensus_property_tests.rs  # Main property tests
 │   ├── integration/         # Integration tests
@@ -234,7 +231,7 @@ blvm-consensus/
 
 ### Beyond Proof Bounds
 
-Edge cases beyond Z3 proof bounds are covered by:
+Edge cases beyond blvm-spec-lock proof bounds are covered by:
 
 1. **Property-Based Testing**: Random inputs of various sizes
 2. **Mainnet Block Tests**: Real Bitcoin mainnet blocks
@@ -265,7 +262,7 @@ All tests run in CI:
 - **Property Tests**: Required for merge
 - **Integration Tests**: Required for merge
 - **Fuzz Tests**: Run on schedule
-- **Z3 Proofs**: Run separately, not blocking
+- **blvm-spec-lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
 **Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
@@ -285,7 +282,7 @@ The testing infrastructure includes:
 - Property-based tests for mathematical invariants
 - Integration tests for end-to-end scenarios
 - Fuzz tests for edge case discovery
-- Z3 proofs for formal verification
+- blvm-spec-lock proofs for formal verification
 - Runtime assertions for execution-time checks
 - MIRI integration for undefined behavior detection
 - Differential tests for Bitcoin Core comparison
@@ -299,6 +296,6 @@ The testing infrastructure includes:
 - [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification
-- [Formal Verification](../consensus/formal-verification.md) - BLVM Specification Lock verification
-- [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Z3 proof verification for UTXO operations
+- [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking
+- [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Spec-lock verification for UTXO operations
 - [Contributing](contributing.md) - Testing requirements for contributions
