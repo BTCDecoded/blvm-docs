@@ -99,11 +99,90 @@ poll_interval = "Polling interval in seconds (default: 5)"
 
 ## Module Development
 
-### Basic Module Structure
+### SDK declarative style (recommended)
 
-A minimal module implements the module lifecycle and connects to the node via IPC. There are two approaches:
+The **blvm-sdk** crate provides attribute macros and a `run_module!` macro so you can define CLI, RPC, and event handling in one place without manual IPC or event loops. This is the recommended way to build new modules.
 
-#### Using ModuleIntegration (Recommended)
+**Dependency:** Add `blvm-sdk` with the `node` feature. Use the prelude:
+
+```rust
+use blvm_sdk::module::prelude::*;
+```
+
+**Module struct and config:**
+
+- **`#[blvm_module]`** / **`#[module]`** on the struct: `#[module(name = "my-module", config = MyConfig)]`. Optional `migrations = ((1, up_initial), (2, up_add_cache))` generates `ModuleMeta` for `run_module_main!`.
+- **`#[module_config(name = "my-module")]`** / **`#[config(name = "my-module")]`** on a config struct: generates `CONFIG_SECTION_NAME` (matches node `[modules.my-module]`), `apply_env_overrides()`, and `load(path)`. Field-level **`#[config_env]`** or **`#[config_env("ENV_NAME")]`** uses env vars to override (default: `MODULE_CONFIG_<FIELD>`).
+
+**Single impl for CLI, RPC, and events:**
+
+- **`#[module(name = "my-module")]`** on the impl block generates `cli_spec()`, `dispatch_cli()`, `rpc_method_names()`, `dispatch_rpc()`, `event_types()`, and `dispatch_event()` from one set of methods:
+  - Methods with **`ctx: &InvocationContext`** (and no `#[rpc_method]` / `#[on_event]`) become **CLI subcommands**. Use **`#[command]`** to mark them explicitly. Parameters can use **`#[arg(long)]`**, **`#[arg(short = 'n')]`**, **`#[arg(default = "value")]`** for CLI parsing.
+  - **`#[rpc_method]`** / **`#[rpc_method(name = "method_name")]`** marks **RPC endpoints**.
+  - **`#[on_event(NewBlock, NewTransaction)]`** marks **event handlers**; use with **`#[event_handlers]`** on the impl to generate `event_types()` and `dispatch_event()`.
+
+**Migrations:** **`#[migration(version = N)]`** on a function; use with `db.run_migrations(&[(1, up_initial), ...])` or via `#[module(migrations = (...))]`.
+
+**Entry point:**
+
+- **`ModuleBootstrap::from_env()`** reads `MODULE_ID`, `SOCKET_PATH`, `DATA_DIR` when the node spawns the module; for manual runs you can use **`ModuleBootstrap::init_module("my-module")`** or parse CLI.
+- **`ModuleDb::open(&bootstrap.data_dir)`** opens the module DB; then **`run_module! { bootstrap, module_name, module, module_type, db }`** runs the main loop (IPC connect, CLI/RPC/event dispatch, no manual event loop).
+- **`run_module_main!(MyModule)`** — when your struct has `#[module(config = MyConfig, migrations = (...))]` and implements `ModuleMeta`, this macro expands to a full `main` that does bootstrap, migrations, config load, and `run_module!`.
+
+**Example (skeleton):**
+
+```rust
+use blvm_sdk::module::prelude::*;
+use blvm_sdk::module::{ModuleBootstrap, ModuleDb};
+
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
+#[config(name = "my-module")]
+pub struct MyConfig { #[config_env] pub setting: String }
+
+#[derive(Clone)]
+#[module(name = "my-module", config = MyConfig)]
+pub struct MyModule { config: MyConfig }
+
+#[module(name = "my-module")]
+impl MyModule {
+    #[command]
+    fn status(&self, _ctx: &InvocationContext) -> Result<String, ModuleError> {
+        Ok("ok".into())
+    }
+    #[rpc_method(name = "my_method")]
+    fn my_method(&self, params: &serde_json::Value, _db: &std::sync::Arc<dyn blvm_node::storage::database::Database>) -> Result<serde_json::Value, ModuleError> {
+        Ok(serde_json::json!({}))
+    }
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let bootstrap = ModuleBootstrap::from_env().unwrap_or_else(|_| ModuleBootstrap::init_module("my-module"));
+    let db = ModuleDb::open(&bootstrap.data_dir)?;
+    let config = MyConfig::load(bootstrap.data_dir.join("config.toml")).unwrap_or_default();
+    let module = MyModule { config };
+    blvm_sdk::run_module! {
+        bootstrap: &bootstrap,
+        module_name: "my-module",
+        module: module,
+        module_type: MyModule,
+        db: db.as_db(),
+    }?;
+    Ok(())
+}
+```
+
+**Code:** [blvm-sdk-macros](https://github.com/BTCDecoded/blvm-sdk/tree/main/crates/blvm-sdk-macros) (attribute definitions), [hello-module example](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module), [selective-sync](https://github.com/BTCDecoded/blvm-selective-sync) (real module using this style).
+
+### Module CLI under the `blvm` binary
+
+Modules that expose CLI handlers (methods with `InvocationContext` / `#[command]`) register a **CLI spec** with the node when they connect over IPC. The main **blvm** binary discovers registered specs and dispatches invocations to the running module process (node RPC: e.g. listing specs and forwarding `runmodulecli`-style calls). Users run **`blvm <command-group> <subcommand>`** (e.g. `blvm sync-policy list` for selective-sync). The module must be **loaded**; otherwise those top-level commands are unavailable. See [blvm-node module docs](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md) for the full CLI flow.
+
+### Basic module structure (integration API)
+
+If you need more control than the SDK declarative style (e.g. custom bootstrap or no macros), you can implement the lifecycle and connect via IPC directly. Two approaches:
+
+#### Using ModuleIntegration
 
 ```rust
 use blvm_node::module::integration::ModuleIntegration;
@@ -212,7 +291,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-**Recommendation:** New modules should use `ModuleIntegration` for simplicity and consistency. The legacy approach is still supported for existing modules but requires more boilerplate code.
+**Recommendation:** Prefer the [SDK declarative style](#sdk-declarative-style-recommended) for new modules. Otherwise use `ModuleIntegration` for simplicity. The legacy IPC client approach is still supported but requires more boilerplate.
 
 ### Module Lifecycle
 
@@ -331,7 +410,7 @@ let response = client.send_request(request).await?;
 **Network Integration API:**
 - `send_mesh_packet_to_module(module_id, packet_data, peer_addr)` - Send mesh packet to a module
 
-For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L150-L450).
+For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs).
 
 ### Subscribing to Events
 
@@ -414,7 +493,7 @@ while let Some(event) = event_receiver.recv().await {
 **Mempool Events:**
 - `MempoolTransactionAdded`, `MempoolTransactionRemoved`, `FeeRateChanged`
 
-And many more. For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765) and [Event System](../architecture/module-system.md#event-system).
+And many more. For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) and [Event System](../architecture/module-system.md#event-system).
 
 ## Configuration
 
@@ -462,7 +541,7 @@ Modules operate with **whitelist-only access control**. Each module declares req
 - `call_module` - Call other modules' APIs
 - `register_module_api` - Register module API for other modules to call
 
-For complete list, see [Permission enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs#L42-L101).
+For complete list, see [Permission enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs).
 
 ### Sandboxing
 
@@ -471,14 +550,14 @@ Modules are sandboxed to ensure security:
 1. **Process Isolation**: Separate process, isolated memory
 2. **File System**: Access limited to module data directory
 3. **Network**: No network access (modules can only communicate via IPC)
-4. **Resource Limits**: CPU, memory, file descriptor limits (Phase 2+)
+4. **Resource Limits**: CPU, memory, and file descriptor limits (configurable via node `module_resource_limits`; on Linux applied via `prlimit` after spawn)
 
 ### Request Validation
 
 All module API requests are validated:
 - Permission checks (module has required permission)
 - Consensus protection (no consensus-modifying operations)
-- Resource limits (rate limiting, Phase 2+)
+- Resource limits (enforced per module); rate limiting (planned)
 
 ## API Reference
 
@@ -489,9 +568,9 @@ All module API requests are validated:
 **Permissions**: See [Permissions](#permissions) section above for complete list of available permissions.
 
 For detailed API reference, see:
-- [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L150-L450)
-- [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765)
-- [Permission enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs#L42-L101)
+- [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
+- [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
+- [Permission enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 
 For detailed API reference, see `blvm-node/src/module/` (traits, IPC protocol, Node API, security).
 

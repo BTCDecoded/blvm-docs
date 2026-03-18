@@ -38,10 +38,9 @@ blvm --data-dir ~/.blvm
 **Error**: `Failed to initialize database backend`
 
 **Solution**:
-- The system automatically falls back to alternative backends
-- Check data directory permissions
-- Ensure sufficient disk space
-- Try specifying backend explicitly: `--storage-backend sled`
+- The system automatically falls back to alternative backends when the chosen one fails
+- Check data directory permissions and sufficient disk space
+- Set backend explicitly in config: `[storage] database_backend = "redb"` (or `"rocksdb"`, `"sled"`, `"tidesdb"`). See [Configuration Reference](../reference/configuration-reference.md).
 
 ### Corrupted Database
 
@@ -132,7 +131,7 @@ blvm
 **Solutions**:
 - Use pruning: `--pruning enabled --pruning-keep-blocks 288`
 - Increase cache sizes in config
-- Use faster storage backend (redb recommended)
+- Use a storage backend suited to your workload (see [Storage Backends](../node/storage-backends.md))
 - Check network bandwidth and latency
 
 ### High Memory Usage

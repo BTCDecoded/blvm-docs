@@ -4,16 +4,29 @@ Quick reference and cross-references to all BLVM APIs across the ecosystem.
 
 ## Complete API Documentation
 
-For detailed Rust API documentation with full type signatures, examples, and implementation details:
+API reference in this book (hosted at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org)):
 
-- **[blvm-consensus](https://docs.rs/blvm-consensus)** - Consensus layer APIs (transaction validation, block validation, script execution)
-- **[blvm-protocol](https://docs.rs/blvm-protocol)** - Protocol abstraction layer APIs (network variants, message handling)
-- **[blvm-node](https://docs.rs/blvm-node)** - Node implementation APIs (storage, networking, RPC, modules)
-- **[blvm-sdk](https://docs.rs/blvm-sdk)** - Developer SDK APIs (governance primitives, composition framework)
+- **[blvm-primitives](#foundation-blvm-primitives)** - Foundation crate: types, serialization, crypto, opcodes, constants (shared by consensus and protocol; blvm-consensus re-exports for API compatibility)
+- **[blvm-consensus](#consensus-layer-blvm-consensus)** - Consensus layer APIs (transaction validation, block validation, script execution)
+- **[blvm-protocol](#protocol-layer-blvm-protocol)** - Protocol abstraction layer APIs (network variants, message handling)
+- **[blvm-node](#node-implementation-blvm-node)** - Node implementation APIs (storage, networking, RPC, modules)
+- **[blvm-sdk](#developer-sdk-blvm-sdk)** - Developer SDK APIs (governance primitives, composition framework)
+
+For full Rust type/signature documentation, build `cargo doc --open` in each crate repository.
 
 ## Quick Reference by Component
 
+### Foundation (blvm-primitives)
+
+Shared types, serialization, and crypto used by blvm-consensus and blvm-protocol. Consensus re-exports these for compatibility; protocol and node may use primitives directly.
+
+**Key areas:** types (Transaction, Block, BlockHeader, UTXO, Script, etc.), serialization, cryptographic operations, opcodes, constants.
+
+**Documentation:** See [Consensus Architecture](../consensus/architecture.md) and [System Overview](../architecture/system-overview.md).
+
 ### Consensus Layer (blvm-consensus)
+
+Block and script logic live in the `block/` and `script/` submodules (directories), not single files. Canonical types and crypto are in blvm-primitives and re-exported by consensus.
 
 **Core Functions** (Orange Paper spec names):
 - `CheckTransaction` - Validate transaction structure and signatures
@@ -93,7 +106,7 @@ pub trait NodeAPI {
 **Module Lifecycle Events:**
 - `EventType::ModuleLoaded`, `EventType::ModuleUnloaded`, `EventType::ModuleCrashed`, `EventType::ModuleDiscovered`, `EventType::ModuleInstalled`, `EventType::ModuleUpdated`, `EventType::ModuleRemoved`
 
-**And many more.** For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765) and [Event System](../architecture/module-system.md#event-system).
+**And many more.** For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) and [Event System](../architecture/module-system.md#event-system).
 
 **ModuleContext** - Context provided to modules:
 
@@ -133,13 +146,17 @@ pub struct ModuleContext {
 - `get_chain_tip(&self) -> Result<Hash>`
 - `get_block_height(&self) -> Result<u64>`
 
-**Backends:**
-- `redb` - Production-ready embedded database (default, see [Storage Backends](../node/storage-backends.md#redb))
-- `sled` - Beta fallback option (see [Storage Backends](../node/storage-backends.md#sled))
+**Backends:** Selected by `database_backend` (default `auto` resolves by build features: RocksDB when `rocksdb` enabled, then TidesDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
 
 **Documentation:** See [Storage Backends](../node/storage-backends.md) and [Node Configuration](../node/configuration.md#storage-backends).
 
 ### Developer SDK (blvm-sdk)
+
+#### Module authoring (`node` feature)
+
+- **Crate:** [blvm-sdk](../sdk/api-reference.md) (feature **`node`**); procedural macros in **[blvm-sdk-macros](https://github.com/BTCDecoded/blvm-sdk/tree/main/crates/blvm-sdk-macros)** (`#[module]`, `#[command]`, `#[rpc_method]`, `#[on_event]`, `#[config]`, `#[migration]`, etc.).
+- **Entry:** `blvm_sdk::module::prelude::*`, **`run_module!`**, **`run_module_main!`**, `ModuleBootstrap`, `ModuleDb`, `InvocationContext`.
+- **Documentation:** [Module Development](../sdk/module-development.md#sdk-declarative-style-recommended), [hello-module example](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module).
 
 #### Governance Primitives
 

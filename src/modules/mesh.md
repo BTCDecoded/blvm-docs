@@ -161,7 +161,7 @@ Central coordinator for mesh networking operations:
 - **Payment verification**: Verifies Lightning and CTV payments
 - **Routing table management**: Manages mesh network topology
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/manager.rs#L31-L49)
+**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-mesh/blob/main/src/manager.rs)
 
 #### PaymentVerifier
 

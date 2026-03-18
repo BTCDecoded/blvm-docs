@@ -14,7 +14,7 @@ UTXO Commitments enable fast synchronization of the Bitcoin UTXO set without req
 4. **Verification**: PoW-based commitment verification
 5. **Network Integration**: Works with TCP and Iroh transports
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/mod.rs#L1-L48)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/mod.rs)
 
 ## Merkle Tree Implementation
 
@@ -27,23 +27,24 @@ The system uses a sparse Merkle tree for efficient incremental updates:
 - **Root Calculation**: Efficient root hash calculation
 - **SHA256 Hashing**: Uses SHA256 for all hashing operations
 
-**Code**: [merkle_tree.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/merkle_tree.rs#L1-L603)
+**Code**: [merkle_tree.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/merkle_tree.rs)
 
 ### Usage
 
 ```rust
-use blvm_consensus::utxo_commitments::{UtxoCommitmentSet, UtxoCommitment};
+use blvm_protocol::utxo_commitments::{UtxoMerkleTree, UtxoCommitment};
+use blvm_consensus::types::{OutPoint, UTXO};
 
-// Create UTXO commitment set
-let mut commitment_set = UtxoCommitmentSet::new();
+// Create UTXO Merkle tree
+let mut tree = UtxoMerkleTree::new()?;
 
 // Add UTXO
 let outpoint = OutPoint { hash: [1; 32], index: 0 };
-let utxo = UTXO { value: 1000, script_pubkey: vec![], height: 0 };
-commitment_set.insert(outpoint, utxo)?;
+let utxo = UTXO { value: 1000, script_pubkey: vec![].into(), height: 0, is_coinbase: false };
+tree.insert(outpoint, utxo)?;
 
 // Generate commitment
-let commitment = commitment_set.generate_commitment(block_hash, height)?;
+let commitment = tree.generate_commitment(block_hash, height);
 ```
 
 ## Peer Consensus Protocol
@@ -60,7 +61,7 @@ Peers are selected for diversity across:
 - **Subnet**: /16 subnet distribution
 - **Implementation**: Different Bitcoin implementations (Bitcoin Core, btcd, etc.)
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L20-L45)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ### Consensus Configuration
 
@@ -74,7 +75,7 @@ pub struct ConsensusConfig {
 }
 ```
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L66-L91)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ### Consensus Process
 
@@ -85,7 +86,7 @@ pub struct ConsensusConfig {
 5. **Verify Threshold**: Check if agreement meets consensus threshold (80%)
 6. **Verify Commitment**: Verify consensus commitment against block headers and PoW
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L241-L350)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ## Fast Sync Protocol
 
@@ -99,7 +100,7 @@ pub struct ConsensusConfig {
 6. **Sync Forward**: Download filtered blocks from checkpoint to tip
 7. **Update Incrementally**: Update UTXO set incrementally for each block
 
-**Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/initial_sync.rs#L1-L132)
+**Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs)
 
 ### Bandwidth Savings
 
@@ -123,7 +124,7 @@ UTXO Commitments use spam filtering to reduce bandwidth during sync. Spam filter
 
 When processing blocks for UTXO commitments, spam filtering is applied:
 
-- **Location**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/initial_sync.rs#L206-L310)
+- **Location**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs)
 - **Process**: All transactions are processed, but spam outputs are filtered out
 - **Benefit**: 40-60% bandwidth reduction during ongoing sync
 - **Critical Design**: INPUTS are always removed (maintains UTXO consistency), OUTPUTS are filtered (bandwidth savings)
@@ -136,12 +137,11 @@ When processing blocks for UTXO commitments, spam filtering is applied:
 
 ## BIP158 Compact Block Filters
 
-The node implements BIP158 compact block filters for light client support. While this is implemented at the node level, it integrates with UTXO commitments for efficient filtered block serving.
+BIP158 compact block filters support light clients and integrate with UTXO commitments for efficient filtered block serving.
 
 ### Location
-- **Node Implementation**: `blvm-node/src/bip158.rs`
-- **Service**: `blvm-node/src/network/filter_service.rs`
-- **Integration**: Used for light client support
+- **Protocol (algorithm)**: `blvm-protocol/src/bip158.rs`, `blvm-protocol/src/bip157.rs` — GCS filter construction and filter header chain
+- **Node (handlers)**: `blvm-node/src/network/bip157_handler.rs`, `blvm-node/src/network/filter_service.rs` — serving and network integration
 
 ### Capabilities
 
@@ -168,7 +168,7 @@ The node implements BIP158 compact block filters for light client support. While
 
 BIP158 filters can be included in `FilteredBlockMessage` alongside spam-filtered transactions and UTXO commitments, enabling efficient light client synchronization.
 
-**Code**: [bip158.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/bip158.rs#L1-L200)
+**Code**: [bip158.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/bip158.rs)
 
 ## Verification
 
@@ -178,7 +178,7 @@ BIP158 filters can be included in `FilteredBlockMessage` alongside spam-filtered
 2. **Standard**: Peer consensus + PoW + supply checks
 3. **Paranoid**: All checks + background genesis verification
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/config.rs#L26-L35)
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/config.rs)
 
 ### Verification Checks
 
@@ -187,7 +187,7 @@ BIP158 filters can be included in `FilteredBlockMessage` alongside spam-filtered
 - **Header Chain Verification**: Verify commitment height matches header chain
 - **Merkle Root Verification**: Verify Merkle root matches UTXO set
 
-**Code**: [verification.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/verification.rs#L1-L200)
+**Code**: [verification.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/verification.rs)
 
 ## Network Integration
 
@@ -198,7 +198,7 @@ UTXO Commitments work with both TCP and Iroh transports via the transport abstra
 - **TCP**: Bitcoin P2P compatible
 - **Iroh/QUIC**: QUIC with NAT traversal and DERP
 
-**Code**: [utxo_commitments_client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/utxo_commitments_client.rs#L1-L520)
+**Code**: [utxo_commitments_client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/utxo_commitments_client.rs)
 
 ### Network Messages
 
@@ -207,7 +207,7 @@ UTXO Commitments work with both TCP and Iroh transports via the transport abstra
 - `GetFilteredBlock`: Request filtered block (spam-filtered)
 - `FilteredBlock`: Response with filtered block
 
-**Code**: [network_integration.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/network_integration.rs#L1-L200)
+**Code**: [network_integration.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/network_integration.rs)
 
 ## Configuration
 
@@ -217,7 +217,7 @@ UTXO Commitments work with both TCP and Iroh transports via the transport abstra
 - **Genesis**: Sync from genesis (slow, but no trust required)
 - **Hybrid**: Use peer consensus but verify from genesis in background
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/config.rs#L15-L24)
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/config.rs)
 
 ### Configuration Example
 
@@ -238,7 +238,7 @@ min_value = 546  # dust threshold
 min_fee_rate = 1  # sat/vB
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/config.rs#L1-L100)
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/config.rs)
 
 ## Formal Verification
 
@@ -249,109 +249,16 @@ The UTXO Commitments module includes blvm-spec-lock proofs verifying:
 - Verification logic
 - Peer consensus calculations
 
-**Location**: `blvm-consensus/src/utxo_commitments/`
+**Location**: `blvm-protocol/src/utxo_commitments/`
 
-## UTXO Proof Verification
-
-### Overview
-
-UTXO proof verification provides cryptographic proofs that UTXO set operations maintain correctness properties. The system uses blvm-spec-lock to formally verify storage operations against mathematical specifications from the Orange Paper.
-
-**Code**: [utxostore_proofs.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L1-L229)
-
-### Verified Properties
-
-The proof verification system verifies the following mathematical properties:
-
-#### 1. UTXO Uniqueness (Orange Paper Theorem 5.3.1)
-
-**Mathematical Specification**: ∀ outpoint: has_utxo(outpoint) ⟹ get_utxo(outpoint) = Some(utxo)
-
-**Verification**: Spec-lock verifies that if a UTXO exists for an outpoint, retrieving it returns the same UTXO that was stored.
-
-**Code**: [verify_utxo_uniqueness](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L28-L52)
-
-#### 2. Add/Remove Consistency
-
-**Mathematical Specification**: add_utxo(op, utxo); remove_utxo(op); has_utxo(op) = false
-
-**Verification**: Spec-lock verifies that adding and then removing a UTXO results in the UTXO no longer existing.
-
-**Code**: [verify_add_remove_consistency](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L58-L83)
-
-#### 3. Spent Output Tracking
-
-**Mathematical Specification**: mark_spent(op); is_spent(op) = true
-
-**Verification**: Spec-lock verifies that marking an output as spent correctly updates the spent state.
-
-**Code**: [verify_spent_output_tracking](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L89-L105)
-
-#### 4. Value Conservation (Orange Paper Theorem 5.3.2)
-
-**Mathematical Specification**: total_value(us) = Σ_{op ∈ dom(us)} us(op).value
-
-**Verification**: Spec-lock verifies that the total value of the UTXO set equals the sum of all individual UTXO values.
-
-**Code**: [verify_value_conservation](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L114-L146)
-
-#### 5. Count Accuracy
-
-**Mathematical Specification**: utxo_count() = |{utxo : has_utxo(utxo)}|
-
-**Verification**: Spec-lock verifies that the UTXO count matches the number of UTXOs that exist.
-
-**Code**: [verify_count_accuracy](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L152-L178)
-
-#### 6. Round-Trip Storage (Orange Paper Theorem 5.3.3)
-
-**Mathematical Specification**: load_utxo_set(store_utxo_set(us)) = us
-
-**Verification**: Spec-lock verifies that storing and then loading a UTXO set results in the same set.
-
-**Code**: [verify_roundtrip_storage](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs#L187-L228)
-
-### Verification Workflow
-
-The proof verification system works as follows:
-
-1. **Proof Generation**: blvm-spec-lock verifies each `#[spec_locked]` function
-2. **Property Verification**: Each proof verifies a specific mathematical property
-3. **Integration**: Proofs are integrated into the codebase and verified during CI/CD
-4. **Runtime Assertions**: Verified properties can be checked at runtime for additional safety
-
-### Usage
-
-Proof verification is automatic and integrated into the build system:
-
-```bash
-# Run spec-lock verification
-cargo spec-lock verify --crate-path .
-```
-
-### Benefits
-
-1. **Mathematical Correctness**: Properties are proven, not just tested
-2. **Orange Paper Compliance**: Proofs verify compliance with Orange Paper specifications
-3. **Runtime Safety**: Verified properties can be checked at runtime
-4. **CI/CD Integration**: Proofs run automatically in continuous integration
-
-### Integration with UTXO Commitments
-
-UTXO proof verification ensures that UTXO set operations used by UTXO commitments maintain correctness:
-
-- **Merkle Tree Operations**: Verified to maintain UTXO uniqueness and value conservation
-- **Storage Operations**: Verified to maintain round-trip consistency
-- **Commitment Generation**: Uses verified UTXO set operations
-
-**Code**: [utxostore_proofs.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore_proofs.rs)
+Storage correctness for UTXO set operations is covered by tests and, where applicable, blvm-spec-lock verification in the consensus and protocol crates. The UTXO commitments implementation in blvm-protocol (merkle tree, verification, peer consensus) is the reference for commitment-related logic.
 
 ## Usage
 
 ### Initial Sync
 
 ```rust
-use blvm_consensus::utxo_commitments::InitialSync;
+use blvm_protocol::utxo_commitments::InitialSync;
 
 let sync = InitialSync::new(
     peer_consensus,
@@ -385,7 +292,7 @@ sync.complete_sync_from_checkpoint(
 ### Update After Block
 
 ```rust
-use blvm_consensus::utxo_commitments::update_commitments_after_block;
+use blvm_protocol::utxo_commitments::update_commitments_after_block;
 
 update_commitments_after_block(
     &mut utxo_tree,
@@ -394,7 +301,7 @@ update_commitments_after_block(
 )?;
 ```
 
-**Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/initial_sync.rs#L1-L200)
+**Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs)
 
 ## Benefits
 
@@ -416,7 +323,7 @@ The UTXO Commitments system includes:
 - Fast sync protocol
 - blvm-spec-lock proofs
 
-**Location**: `blvm-consensus/src/utxo_commitments/`, `blvm-node/src/network/utxo_commitments_client.rs`
+**Location**: `blvm-protocol/src/utxo_commitments/`, `blvm-node/src/network/utxo_commitments_client.rs`
 
 ## See Also
 

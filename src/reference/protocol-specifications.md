@@ -5,12 +5,12 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical BIP
 ## Consensus-Critical BIPs
 
 **Script Opcodes**:
-- **BIP65** (CLTV, opcode 0xb1): Locktime validation (`blvm-consensus/src/script.rs`)
-- **BIP112** (CSV, opcode 0xb2): Relative locktime via sequence numbers (`blvm-consensus/src/script.rs`)
+- **BIP65** (CLTV, opcode 0xb1): Locktime validation (`blvm-consensus/src/script/`)
+- **BIP112** (CSV, opcode 0xb2): Relative locktime via sequence numbers (`blvm-consensus/src/script/`)
 - **BIP68**: Relative locktime sequence encoding (used by BIP112)
 
 **Time Validation**:
-- **BIP113**: Median time-past for CLTV timestamp validation (`blvm-consensus/src/block.rs`)
+- **BIP113**: Median time-past for CLTV timestamp validation (`blvm-consensus/src/block/mod.rs`)
 
 **Transaction Features**:
 - **BIP125** (RBF): Replace-by-fee with all 5 requirements (`blvm-consensus/src/mempool.rs`) with tests
@@ -27,7 +27,7 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical BIP
 
 - **BIP21**: Bitcoin URI scheme (`blvm-node/src/bip21.rs`)
 - **BIP32/39/44**: HD wallets, mnemonic phrases, standard derivation paths (`blvm-node/src/wallet/`)
-- **BIP70**: Payment protocol (deprecated, legacy compatibility only, `blvm-node/src/bip70.rs`)
+- **BIP70**: Payment protocol (full reimplementation, `blvm-node/src/network/bip70_handler.rs`)
 - **BIP174**: PSBT format for hardware wallet support (`blvm-node/src/psbt.rs`)
 - **BIP350/351**: Bech32m for Taproot (P2TR), Bech32 for SegWit (`blvm-node/src/bech32m.rs`)
 

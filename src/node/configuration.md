@@ -6,6 +6,16 @@ BLVM node configuration supports different use cases.
 
 The node supports multiple Bitcoin protocol variants: **Regtest** (default, regression testing network for development), **Testnet3** (Bitcoin test network), and **BitcoinV1** (production Bitcoin mainnet). See [Protocol Variants](../protocol/overview.md#protocol-variants) for details.
 
+## Configuration Precedence
+
+**CLI > ENV > config file > defaults**
+
+Environment variables (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`) override config file values. See the project `docs/ENV_VARIABLES.md` (in the main repo or workspace root) for the full list. Some options (relay, fibre, dandelion) are config-file-only; use CLI flags like `--enable-dandelion` for common overrides.
+
+## Path Expansion
+
+Config path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, etc.) support `~` expansion to the home directory when loading from file. Example: `data_dir = "~/.local/share/blvm-mainnet"` resolves to `/home/user/.local/share/blvm-mainnet` on Unix.
+
 ## Configuration File
 
 Create a `blvm.toml` configuration file:
@@ -20,7 +30,7 @@ enable_self_advertisement = true  # Send own address to peers (default: true)
 
 [storage]
 data_dir = "/var/lib/blvm"
-backend = "auto"      # Auto-select best available backend (prefers redb)
+database_backend = "auto"  # Selects by build features: RocksDB when rocksdb enabled, then TidesDB, Redb, Sled
 
 [rpc]
 enabled = true
@@ -38,28 +48,87 @@ enabled = false
 - `max_peers`: `100` (maximum peer connections)
 - `enable_self_advertisement`: `true` (advertise own address to peers)
 
+Configuration is organized in logical sections (network, storage, rpc, mempool, ibd, governance, etc.) in the node codebase. Initial block download uses parallel IBD only.
+
+## IBD Configuration
+
+Parallel IBD settings (ENV overrides config):
+
+```toml
+[ibd]
+chunk_size = 16
+download_timeout_secs = 30
+mode = "parallel"
+eviction = "fifo"           # dynamic, fifo, lifo
+max_blocks_in_transit_per_peer = 16
+headers_timeout_secs = 30
+headers_max_failures = 10
+```
+
+See `BLVM_IBD_*` in the project's `ENV_VARIABLES.md` for overrides.
+
+## Protocol Limits
+
+Tune P2P message limits for constrained networks:
+
+```toml
+[protocol_limits]
+max_protocol_message_length = 33554432   # 32 MB default
+max_addr_to_send = 1000
+max_inv_sz = 50000
+max_headers_results = 2000
+```
+
 ## Environment Variables
 
-You can also configure via environment variables:
+You can also configure via environment variables (ENV overrides config file):
 
 ```bash
 export BLVM_NETWORK=testnet
 export BLVM_DATA_DIR=/var/lib/blvm
-export BLVM_RPC_PORT=8332
+export BLVM_RPC_ADDR=127.0.0.1:8332
+export BLVM_IBD_EVICTION=dynamic
+export BLVM_NETWORK_TARGET_PEER_COUNT=125
 ```
+
+**Common ENV vars:** `BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`, `BLVM_LOG_LEVEL`, `BLVM_NODE_MAX_PEERS`, `BLVM_IBD_*`, `BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_REQUEST_*`, `BLVM_MODULE_MAX_*`, `RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`.
+
+See the project's `docs/ENV_VARIABLES.md` for the complete list.
 
 ## Command Line Options
 
+**Precedence:** CLI > ENV > config file > defaults
+
+### Global Options
+
+| Option | Short | Default | Description |
+|--------|-------|---------|-------------|
+| `--network` | `-n` | `regtest` | Network: `regtest`, `testnet`, `mainnet` |
+| `--rpc-addr` | `-r` | `127.0.0.1:18332` | RPC server bind address |
+| `--listen-addr` | `-l` | `0.0.0.0:8333` | P2P listen address |
+| `--data-dir` | `-d` | — | Data directory (overrides ENV and config) |
+| `--config` | `-c` | — | Configuration file path (TOML or JSON) |
+| `--verbose` | `-v` | false | Enable verbose logging |
+
+### Feature Flags
+
+`--enable-stratum-v2`, `--enable-bip158`, `--enable-dandelion`, `--enable-sigop` and corresponding `--disable-*` flags.
+
+### Advanced Options
+
+`--assumevalid`, `--noassumevalid`, `--assumeutxo`, `--target-peer-count`, `--async-request-timeout`, `--module-max-cpu-percent`, `--module-max-memory-bytes`.
+
+### Commands
+
+`start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `rpc`.
+
 ```bash
-# Start with specific network
-blvm --network testnet
-
-# Use custom config file
-blvm --config /path/to/config.toml
-
-# Override data directory
-blvm --data-dir /custom/path
+blvm --network mainnet -d /var/lib/blvm
+blvm config show
+blvm status --rpc-addr 127.0.0.1:8332
 ```
+
+See `docs/CLI_OPTIONS.md` for the complete CLI reference.
 
 ## Storage Backends
 
@@ -67,16 +136,15 @@ The node uses multiple [storage backends](storage-backends.md) with automatic fa
 
 ### Database Backends
 
-- **redb** (default, recommended): Production-ready embedded database (see [Storage Backends](storage-backends.md#redb))
-- **sled**: Beta, fallback option (see [Storage Backends](storage-backends.md#sled))
-- **auto**: Auto-select based on availability (prefers redb, falls back to sled)
+- **auto** (default): Resolve by build features—RocksDB when `rocksdb` feature enabled, then TidesDB, Redb, Sled (see [Configuration Reference](../reference/configuration-reference.md))
+- **redb**, **rocksdb**, **sled**, **tidesdb**: Force a specific backend (see [Storage Backends](storage-backends.md))
 
 ### Storage Configuration
 
 ```toml
 [storage]
 data_dir = "/var/lib/blvm"
-backend = "auto"  # or "redb", "sled"
+database_backend = "auto"  # or "redb", "sled", "rocksdb", "tidesdb"
 
 [storage.cache]
 block_cache_mb = 100
@@ -90,17 +158,12 @@ keep_blocks = 288  # Keep last 288 blocks (2 days)
 
 ### Backend Selection
 
-The system automatically selects the best available backend:
-1. Attempts to use redb (default)
-2. Falls back to sled if redb fails and sled is available
-3. Returns error if no backend is available
+When `database_backend = "auto"`, the node selects by build features: RocksDB (if `rocksdb` feature enabled), then TidesDB, Redb, Sled. Falls back to the next option if the preferred backend is unavailable.
 
 ### Cache Configuration
 
 Storage cache sizes can be configured:
-- **Block cache**: Default 100 MB, caches recently accessed blocks
-- **UTXO cache**: Default 50 MB, caches frequently accessed UTXOs
-- **Header cache**: Default 10 MB, caches block headers
+- **Block / UTXO / header cache**: See [Configuration Reference](../reference/configuration-reference.md) for canonical defaults (e.g. 100 / 50 / 10 MB).
 
 ### Pruning
 
@@ -205,6 +268,7 @@ enabled = true                    # Enable module system (default: true)
 modules_dir = "modules"           # Directory containing module binaries (default: "modules")
 data_dir = "data/modules"         # Directory for module data/state (default: "data/modules")
 socket_dir = "data/modules/sockets"  # Directory for IPC sockets (default: "data/modules/sockets")
+# Paths support ~ expansion (e.g. "~/.local/share/blvm-modules")
 enabled_modules = ["blvm-lightning", "blvm-mesh"]  # List of enabled modules (empty = auto-discover all)
 ```
 
@@ -225,6 +289,7 @@ See [Module System](../architecture/module-system.md) for module configuration d
 
 ## See Also
 
+- [CLI Options](../../../../docs/CLI_OPTIONS.md) - Full command-line reference
 - [Node Overview](overview.md) - Node features and architecture
 - [Node Operations](operations.md) - Running and managing your node
 - [Storage Backends](storage-backends.md) - Detailed storage backend information

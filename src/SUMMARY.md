@@ -76,6 +76,7 @@
 - [Stratum V2 Module](modules/stratum-v2.md)
 - [Datum Module](modules/datum.md)
 - [Mining OS Module](modules/miningos.md)
+- [Selective Sync Module](modules/selective-sync.md)
 
 # Governance
 

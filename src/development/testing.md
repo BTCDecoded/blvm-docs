@@ -18,7 +18,7 @@ The testing strategy uses multiple complementary techniques:
 6. **Runtime Assertions**: Catches violations during execution
 7. **MIRI Integration**: Detects undefined behavior
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L1-L196)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ## Test Types
 
@@ -30,7 +30,7 @@ Unit tests verify individual functions in isolation:
 - **Coverage**: Public functions
 - **Examples**: Transaction validation, block validation, script execution
 
-**Code**: [estimate_test_coverage.py](https://github.com/BTCDecoded/blvm-consensus/blob/main/estimate_test_coverage.py#L52-L94)
+**Code**: [estimate_test_coverage.py](https://github.com/BTCDecoded/blvm-consensus/blob/main/estimate_test_coverage.py)
 
 ### Property-Based Tests
 
@@ -40,7 +40,7 @@ Property-based tests verify mathematical invariants:
 - **Coverage**: Mathematical invariants
 - **Tool**: Proptest
 
-**Code**: [consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs#L1-L2025)
+**Code**: [consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
 
 ### Integration Tests
 
@@ -50,7 +50,7 @@ Integration tests verify end-to-end correctness:
 - **Coverage**: Multi-component scenarios
 - **Examples**: BIP compliance, historical replay, mempool mining
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/mod.rs#L1-L35)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/mod.rs)
 
 ### Fuzz Tests
 
@@ -60,7 +60,7 @@ Fuzz tests discover edge cases through random generation:
 - **Tool**: libFuzzer
 - **Coverage**: Critical consensus functions
 
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/README.md#L1-L269)
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/README.md)
 
 ### Formal Verification
 
@@ -71,7 +71,7 @@ Fuzz tests discover edge cases through random generation:
 - **Coverage**: Critical consensus functions
 - **Tool**: Formal verification tooling
 
-**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
+**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
 
 ### Spec-Lock Formal Verification
 
@@ -97,7 +97,7 @@ Runtime assertions catch violations during execution:
 - **Coverage**: Critical paths with runtime assertions
 - **Production**: Available via feature flag
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L156-L160)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ### MIRI Integration
 
@@ -107,7 +107,7 @@ MIRI detects undefined behavior:
 - **Coverage**: Property tests and critical unit tests
 - **Tool**: MIRI interpreter
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L167-L170)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ## Coverage Statistics
 
@@ -122,7 +122,7 @@ MIRI detects undefined behavior:
 | **MIRI Integration** | ✅ Undefined behavior detection |
 | **Mathematical Specs** | ✅ Complete formal documentation |
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L10-L21)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ### Coverage by Consensus Area
 
@@ -139,7 +139,7 @@ Verification coverage includes all major consensus areas:
 - **SegWit**: Formal proofs, runtime assertions, and fuzz targets
 - **Serialization**: Formal proofs, runtime assertions, and fuzz targets
 
-**Code**: [EXACT_VERIFICATION_COUNTS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/EXACT_VERIFICATION_COUNTS.md#L271-L283)
+**Code**: [EXACT_VERIFICATION_COUNTS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/EXACT_VERIFICATION_COUNTS.md)
 
 ## Running Tests
 
@@ -178,7 +178,7 @@ cargo +nightly miri test
 cargo blvm-spec-lock
 ```
 
-**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
+**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
 
 ### Run Spec-Lock Verification
 
@@ -206,7 +206,7 @@ All coverage goals met:
 - ✅ Runtime assertions in all critical paths
 - ✅ Comprehensive integration test suite
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L179-L196)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ## Test Organization
 
@@ -225,7 +225,7 @@ blvm-consensus/
     └── fuzz_targets/        # Fuzz targets
 ```
 
-**Code**: [](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/#L1-L200)
+**Code**: [](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/)
 
 ## Edge Case Coverage
 
@@ -238,7 +238,7 @@ Edge cases beyond blvm-spec-lock proof bounds are covered by:
 3. **Integration Tests**: Realistic scenarios
 4. **Fuzz Testing**: Random generation
 
-**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md#L101-L140)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Differential Testing
 
@@ -250,7 +250,7 @@ Differential tests compare behavior with Bitcoin Core:
 - **Purpose**: Verify consistency with Bitcoin Core
 - **Coverage**: Critical consensus functions
 
-**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs#L1-L200)
+**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs)
 
 ## CI Integration
 
@@ -265,7 +265,7 @@ All tests run in CI:
 - **blvm-spec-lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
-**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md#L1-L412)
+**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
 
 ## Test Metrics
 
@@ -273,7 +273,7 @@ All tests run in CI:
 - **Runtime Assertions**: Multiple assertions (`assert!` and `debug_assert!`)
 - **Fuzz Targets**: Multiple fuzz targets
 
-**Code**: [EXACT_VERIFICATION_COUNTS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/EXACT_VERIFICATION_COUNTS.md#L253-L265)
+**Code**: [EXACT_VERIFICATION_COUNTS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/EXACT_VERIFICATION_COUNTS.md)
 
 ## Components
 

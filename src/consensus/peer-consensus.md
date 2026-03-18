@@ -15,7 +15,7 @@ The protocol uses an N-of-M consensus model:
 - **Threshold**: Consensus threshold (e.g., 70% agreement)
 - **Diversity**: Peers must be diverse across ASNs, subnets, geographic regions
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L1-L6)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ### Peer Information
 
@@ -31,7 +31,7 @@ pub struct PeerInfo {
 }
 ```
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L20-L28)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ## Diverse Peer Discovery
 
@@ -44,7 +44,7 @@ Peers must be diverse across:
 - **Geographic Regions**: Geographic diversity
 - **Bitcoin Implementations**: Implementation diversity
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L104-L143)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ### Discovery Process
 
@@ -54,7 +54,7 @@ Peers must be diverse across:
 4. **Select Diverse Set**: Select diverse peer set
 5. **Stop at Target**: Stop when target number reached
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L111-L143)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ## Consensus Finding
 
@@ -67,7 +67,7 @@ Commitments are grouped by their values:
 - **UTXO Count**: Number of UTXOs
 - **Block Height**: Block height of commitment
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L254-L269)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ### Consensus Threshold
 
@@ -78,7 +78,7 @@ Consensus threshold check:
 - **Required Count**: `ceil(total_peers * threshold)`
 - **Verification**: Check if agreement count >= required count
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L294-L333)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ### Mathematical Invariants
 
@@ -89,7 +89,7 @@ Consensus finding maintains invariants:
 - `best_agreement_count <= total_peers`
 - If `agreement_count >= required_agreement_count`, then `agreement_count/total_peers >= threshold`
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L298-L321)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ## Checkpoint Height Determination
 
@@ -104,7 +104,7 @@ Checkpoint height determined from peer chain tips:
   - Checkpoint height is always >= 0
   - Checkpoint height <= median_tip
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L145-L153)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ## Ban List Sharing
 
@@ -117,7 +117,7 @@ Nodes share ban lists to protect against malicious peers:
 - **Merging**: Ban list merging from multiple peers
 - **Network-Wide Protection**: Protects entire network
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L4310-L4345)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ### Ban List Validation
 
@@ -128,7 +128,7 @@ Ban list entries are validated:
 - **Merging Logic**: Merged with local ban list
 - **Duplicate Prevention**: Duplicate entries prevented
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L4316-L4345)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ### Ban List Merging
 
@@ -139,7 +139,7 @@ Ban lists are merged from multiple peers:
 - **Merging**: Merge with local ban list
 - **Conflict Resolution**: Resolve conflicts (longest ban wins)
 
-**Code**: [ban_list_merging.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ban_list_merging.rs#L1-L24)
+**Code**: [ban_list_merging.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ban_list_merging.rs)
 
 ## Filtered Blocks
 
@@ -152,7 +152,7 @@ Nodes can request filtered blocks:
 - **Efficiency**: More efficient than full blocks
 - **Privacy**: Better privacy for light clients
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs#L56-L59)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs)
 
 ## Network-Wide Malicious Peer Protection
 
@@ -165,7 +165,7 @@ Network-wide protection against malicious peers:
 - **Auto-Ban**: Automatic banning of abusive peers
 - **Eclipse Prevention**: Prevent eclipse attacks
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L125-L127)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Configuration
 
@@ -181,7 +181,7 @@ pub struct ConsensusConfig {
 }
 ```
 
-**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs#L56-L93)
+**Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/peer_consensus.rs)
 
 ## Benefits
 

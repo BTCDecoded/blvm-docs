@@ -162,6 +162,13 @@ blvm-verify-binary \
 
 For more examples, see the [blvm-sdk examples](../../blvm-sdk/examples/) directory.
 
+## Node module example (hello-module)
+
+The **hello-module** example shows the full declarative pattern: `#[config]`, `#[module]` on struct (with migrations), `#[module]` on impl with `#[command]` and `#[rpc_method]`, `ModuleBootstrap`, `ModuleDb`, and `run_module!`. After building and loading, **`blvm hello greet`** is served by the running module (top-level CLI group is derived from the module name, e.g. `HelloModule` → `hello`).
+
+- Source: [blvm-sdk/examples/hello-module](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module)
+- Production-style reference: [blvm-selective-sync](https://github.com/BTCDecoded/blvm-selective-sync) ([doc](../modules/selective-sync.md))
+
 ## See Also
 
 - [SDK Overview](overview.md) - SDK introduction and architecture

@@ -57,7 +57,7 @@ graph TB
 - Privacy protocols (Dandelion++, Fibre)
 - Package relay (BIP331)
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L1-L2680)
+**Code**: [network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (module root), [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (connection and message handling)
 
 ### Storage Layer
 - Database abstraction with multiple backends (see [Storage Backends](storage-backends.md))
@@ -68,7 +68,7 @@ graph TB
 - Transaction indexing
 - Pruning support
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs#L1-L89)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
 
 ### RPC Server
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
@@ -77,7 +77,7 @@ graph TB
 - Authentication and rate limiting
 - Method coverage
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mod.rs#L1-L47)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mod.rs)
 
 ### Module System
 - Process-isolated modules (see [Module System Architecture](../architecture/module-system.md))
@@ -86,7 +86,7 @@ graph TB
 - Permission-based API access
 - Hot reload support
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs#L1-L520)
+**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Mempool Manager
 - Transaction validation and storage
@@ -96,14 +96,14 @@ graph TB
 - Transaction expiry
 - Advanced indexing (address and value range indexing)
 
-**Code**: [mempool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mempool.rs#L1-L200)
+**Code**: [mempool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mempool.rs)
 
 ### Mining Coordinator
 - Block template generation
 - Stratum V2 protocol support
 - Mining job distribution
 
-**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs#L1-L531)
+**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
 
 ### Payment Processing
 - CTV (CheckTemplateVerify) support
@@ -112,14 +112,14 @@ graph TB
 - Covenant support
 - Payment state management
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/payment/mod.rs#L1-L10)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/payment/mod.rs)
 
 ### Governance Integration
 - P2P governance message relay
 - Webhook handlers for governance events
 - User signaling support
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/governance/mod.rs#L1-L3)
+**Code**: [network/handlers/governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/handlers/governance.rs), [config/governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/governance.rs)
 
 ## Design Principles
 
@@ -136,7 +136,7 @@ graph TB
 - High-performance block relay (Fibre)
 - [Package relay](package-relay.md) (BIP331)
 - [UTXO commitments](../consensus/utxo-commitments.md) support
-- [LAN peering system](lan-peering.md) (automatic local network discovery, 10-50x IBD speedup)
+- [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (redb, sled, rocksdb)
@@ -182,7 +182,7 @@ graph TB
 4. **Running**: Validate blocks/transactions, relay messages, serve RPC requests
 5. **Shutdown**: Graceful shutdown of all components
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs#L76-L1094)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs)
 
 ## Metrics and Monitoring
 
@@ -194,7 +194,7 @@ The node includes metrics collection:
 - **Performance Metrics**: Block validation time, transaction processing time
 - **System Metrics**: CPU usage, memory usage, disk I/O
 
-**Code**: [metrics.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/metrics.rs#L1-L71)
+**Code**: [metrics.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/metrics.rs)
 
 ## See Also
 

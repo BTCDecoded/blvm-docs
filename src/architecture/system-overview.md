@@ -1,6 +1,6 @@
 # System Overview
 
-Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on the [Orange Paper](../reference/orange-paper.md) mathematical specifications. The system implements consensus rules directly from the spec, provides protocol abstraction, delivers a minimal reference implementation, and includes a developer SDK.
+Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on the [Orange Paper](../reference/orange-paper.md) mathematical specifications. blvm-consensus and blvm-protocol share the **blvm-primitives** crate for types, serialization, and crypto. The system implements consensus rules directly from the spec, provides protocol abstraction, delivers a full node implementation, and includes a developer SDK.
 
 ## 6-Tier Component Architecture
 
@@ -30,7 +30,7 @@ graph TB
 ## BLVM Stack Architecture
 
 ![BLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
-*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification paths (Z3 proofs via BLVM Specification Lock, spec drift detection, hash verification), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
+*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification (BLVM Specification Lock, property-based tests, spec drift detection), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
 
 ## Tiered Architecture
 
@@ -50,7 +50,7 @@ graph TB
 - Side-effect-free, deterministic functions
 - Consensus-critical dependencies pinned to exact versions
 
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/README.md#L1-L260)
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/README.md)
 
 ### Tier 3: [blvm-protocol](../protocol/overview.md) (Protocol Abstraction)
 - Bitcoin protocol abstraction for multiple variants
@@ -58,7 +58,7 @@ graph TB
 - Commons-specific protocol extensions ([UTXO commitments](../consensus/utxo-commitments.md), ban list sharing)
 - BIP implementations (BIP152, BIP157, BIP158, BIP173/350/351)
 
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md#L1-L344)
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md)
 
 ### Tier 4: [blvm-node](../node/overview.md) (Node Implementation)
 - Minimal, production-ready Bitcoin node
@@ -74,7 +74,7 @@ graph TB
 - Governance integration (webhooks, user signaling)
 - ZeroMQ notifications (optional)
 
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-node/blob/main/README.md#L1-L178)
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-node/blob/main/README.md)
 
 ### Tier 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
 - Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
@@ -82,7 +82,7 @@ graph TB
 - [Composition framework](../architecture/module-system.md) (declarative node composition)
 - Bitcoin-compatible signing standards
 
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-sdk/blob/main/README.md#L1-L130)
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-sdk/blob/main/README.md)
 
 ### Tier 6: blvm-commons (Governance Enforcement)
 - GitHub App for governance enforcement

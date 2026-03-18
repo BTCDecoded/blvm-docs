@@ -4,9 +4,9 @@
 
 Spam filtering provides transaction-level filtering for bandwidth optimization and non-monetary transaction detection. The system filters spam transactions to achieve 40-60% bandwidth savings during ongoing sync while maintaining consensus correctness.
 
-**Code**: [spam_filter.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/utxo_commitments/spam_filter.rs#L1-L680)
+**Code**: [spam_filter/mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/spam_filter/mod.rs)
 
-**Note**: While the implementation is located in the `utxo_commitments` module for organizational purposes, spam filtering is a general-purpose feature that can be used independently of UTXO commitments.
+Spam filtering is implemented in the protocol layer (blvm-protocol). It can be used independently of UTXO commitments; mempool and consensus config reference it where needed.
 
 ## Spam Detection Types
 
@@ -79,14 +79,14 @@ When processing a spam transaction:
 
 This ensures UTXO set consistency even when spam transactions spend non-spam inputs.
 
-**Implementation**: ```206:310:blvm-consensus/src/utxo_commitments/initial_sync.rs```
+**Implementation**: [blvm-protocol `utxo_commitments/initial_sync.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs) (output-only filtering when processing blocks for UTXO commitments).
 
 ## Configuration
 
 ### Default Configuration
 
 ```rust
-use blvm_consensus::utxo_commitments::spam_filter::{SpamFilter, SpamFilterConfig};
+use blvm_protocol::spam_filter::{SpamFilter, SpamFilterConfig};
 
 // Default configuration (all detection methods enabled except low_fee_rate)
 let filter = SpamFilter::new();
@@ -136,7 +136,7 @@ let result = filter.is_spam(&tx);
 ### Basic Usage
 
 ```rust
-use blvm_consensus::utxo_commitments::spam_filter::SpamFilter;
+use blvm_protocol::spam_filter::SpamFilter;
 
 let filter = SpamFilter::new();
 let result = filter.is_spam(&transaction);
@@ -190,7 +190,7 @@ config.reject_spam_in_mempool = true; // Enable spam rejection at mempool entry
 // Optional: Customize spam filter configuration
 #[cfg(feature = "utxo-commitments")]
 {
-    use blvm_consensus::utxo_commitments::config::SpamFilterConfigSerializable;
+    use blvm_protocol::spam_filter::SpamFilterConfigSerializable;
     config.spam_filter_config = Some(SpamFilterConfigSerializable {
         filter_ordinals: true,
         filter_dust: true,

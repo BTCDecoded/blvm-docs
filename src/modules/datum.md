@@ -203,7 +203,7 @@ Ocean Pool ← blvm-datum (DATUM client) ← NodeAPI (block templates)
 
 ## Status
 
-🚧 **In Development** - Initial implementation phase
+🚧 **In Development** - Initial implementation
 
 ## Troubleshooting
 

@@ -2,13 +2,13 @@
 
 ## Overview
 
-The LAN peering system automatically discovers and prioritizes local network (LAN) Bitcoin nodes for faster Initial Block Download (IBD) while maintaining security through checkpoint validation and peer diversity requirements. This can speed up IBD by **10-50x** when a local Bitcoin node is available on your network.
+The LAN peering system automatically discovers and prioritizes local network (LAN) Bitcoin nodes for Initial Block Download (IBD), reducing sync time when a local node is available (lower latency than typical internet peers). Security is maintained through checkpoint validation and peer diversity requirements.
 
 ## Benefits
 
-- **10-50x IBD Speedup**: LAN peers typically have <10ms latency vs 100-5000ms for internet peers
-- **High Throughput**: ~1 Gbps local network vs ~10-100 Mbps internet
-- **100% Reliability**: No connection drops compared to internet peers
+- **Lower latency**: LAN peers typically have much lower latency than internet peers
+- **Local throughput**: Local network capacity is often higher than internet links
+- **Stable connectivity**: LAN peers are not subject to internet path failures
 - **Automatic Discovery**: Scans local network automatically during startup
 - **Secure by Default**: Internet checkpoint validation prevents eclipse attacks
 
@@ -23,7 +23,7 @@ During node startup, the system automatically:
 3. **Parallel Scanning**: Uses up to 64 concurrent connection attempts for fast discovery
 4. **Verifies Peers**: Performs protocol handshake and chain verification before accepting
 
-**Code**: [lan_discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_discovery.rs#L1-L333)
+**Code**: [lan_discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_discovery.rs)
 
 ### LAN Peer Detection
 
@@ -41,7 +41,7 @@ A peer is considered a LAN peer if its IP address is in one of these ranges:
 - `fd00::/8` - Unique Local Addresses (ULA)
 - `fe80::/10` - Link-local addresses
 
-**Code**: [peer_scoring.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/peer_scoring.rs#L26-L50)
+**Code**: [peer_scoring.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/peer_scoring.rs)
 
 ### Progressive Trust System
 
@@ -67,18 +67,18 @@ LAN peers start with limited trust and earn higher priority over time:
    - Checkpoint validation failure
    - Permanent ban (1 year duration)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L89-L217)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Peer Prioritization
 
 LAN peers receive priority for block downloads during IBD:
 
 - **IBD Optimization**: LAN peers get priority chunks (first 50,000 blocks)
-- **Header Download**: LAN peers prioritized for header sync (10-100x faster)
-- **Score Multiplier**: Up to 3x score multiplier for peer selection
+- **Header Download**: LAN peers prioritized for header sync
+- **Score Multiplier**: Higher trust score for LAN peers in selection
 - **Bandwidth Allocation**: LAN peers receive more bandwidth allocation
 
-**Code**: [parallel_ibd.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L680-L800)
+**Code**: [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 ## Security Model
 
@@ -91,7 +91,7 @@ The system enforces strict security limits to prevent eclipse attacks:
 - **Minimum 3 Internet Peers**: Required for checkpoint validation
 - **Maximum 1 Discovered LAN Peer**: Limits automatically discovered peers (whitelisted are separate)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L29-L51)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Checkpoint Validation
 
@@ -118,7 +118,7 @@ Internet checkpoints are the **primary security mechanism**. Even with discovery
 - `HEADERS_VERIFY_TIMEOUT`: 10 seconds
 - `MAX_HEADER_DIVERGENCE`: 6 blocks
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L29-L51), [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L460-L690)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs) (progressive trust and auto-trust thresholds)
 
 ### Security Guarantees
 
@@ -128,7 +128,7 @@ Internet checkpoints are the **primary security mechanism**. Even with discovery
 4. **Progressive Trust**: New LAN peers start with limited trust
 5. **Failure Handling**: Multiple failures result in demotion or ban
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L1-L51)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ## Configuration
 
@@ -137,23 +137,23 @@ Internet checkpoints are the **primary security mechanism**. Even with discovery
 You can whitelist trusted LAN peers to start at maximum trust:
 
 ```rust
-// Whitelisted peers start at maximum trust (3x multiplier)
+// Whitelisted peers start at maximum trust
 policy.add_to_whitelist("192.168.1.100:8333".parse().unwrap());
 ```
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L245-L254)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Discovery Control
 
 LAN discovery is enabled by default. The system automatically discovers peers during startup, but you can control this behavior through the security policy.
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L232-L243)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ## Use Cases
 
 ### Home Networks
 
-If you run multiple Bitcoin nodes on your home network (e.g., Start9, Umbrel, RaspiBlitz), the system will automatically discover and prioritize them for faster sync.
+If you run multiple Bitcoin nodes on your home network (e.g., Start9, Umbrel, RaspiBlitz), the system can discover and prioritize them for IBD.
 
 **Example**: Node on `192.168.1.50` automatically discovers node on `192.168.1.100` and uses it for fast IBD.
 
@@ -163,7 +163,7 @@ The system also checks common Docker/VM bridge networks:
 - Docker default bridge: `172.17.0.1`
 - Common VM network: `10.0.0.1`
 
-**Code**: [lan_discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_discovery.rs#L42-L60)
+**Code**: [lan_discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_discovery.rs)
 
 ### Local Development
 
@@ -181,7 +181,7 @@ For local development and testing, LAN peering speeds up blockchain sync when ru
 3. Check firewall rules (local network traffic may be blocked)
 4. Verify network interface detection (check logs for "Detected local interface")
 
-**Code**: [lan_discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_discovery.rs#L94-L156)
+**Code**: [lan_discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_discovery.rs)
 
 ### Checkpoint Failures
 
@@ -193,7 +193,7 @@ For local development and testing, LAN peering speeds up blockchain sync when ru
 3. Check network connectivity (LAN peer may be on different chain due to network issues)
 4. Verify LAN peer is not malicious (check logs for checkpoint failure details)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L656-L688)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Trust Level Not Increasing
 
@@ -205,11 +205,11 @@ For local development and testing, LAN peering speeds up blockchain sync when ru
 3. Verify connection time (Maximum trust requires 1 hour of connection)
 4. Check for failures (3 failures result in demotion)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L147-L193)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Performance Issues
 
-**Problem**: LAN peer is not providing expected speedup.
+**Problem**: LAN peer is not being used or sync is slow.
 
 **Solutions**:
 1. Verify network speed (check actual bandwidth between nodes)
@@ -241,7 +241,7 @@ Regular checkpoint validation ensures that LAN peers cannot diverge from the hon
 
 LAN addresses are never advertised to external peers, preventing information leakage about your local network topology.
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L401-L404)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ## See Also
 

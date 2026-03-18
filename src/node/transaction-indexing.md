@@ -15,7 +15,7 @@ Basic transaction lookup by hash:
 - **Lookup**: O(1) hash-based lookup
 - **Always Enabled**: Core indexing functionality
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L49-L706)
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
 
 ### Address Index (Optional)
 
@@ -27,7 +27,7 @@ Indexes transactions by output addresses:
 - **Lazy Indexing**: Built on-demand when first queried
 - **Configuration**: Enable with `storage.indexing.enable_address_index = true`
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L128-L200)
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
 
 ### Value Range Index (Optional)
 
@@ -39,7 +39,7 @@ Indexes transactions by output value ranges:
 - **Lazy Indexing**: Built on-demand when first queried
 - **Configuration**: Enable with `storage.indexing.enable_value_index = true`
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L200-L280)
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
 
 ## Indexing Strategy
 
@@ -52,7 +52,7 @@ Indexes are built on-demand to minimize impact on block processing:
 3. **Caching**: Indexed addresses are cached to avoid re-indexing
 4. **Batch Operations**: Multiple transactions indexed together for efficiency
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L109-L126)
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
 
 ### Batch Indexing
 
@@ -63,7 +63,7 @@ Block-level indexing optimizations:
 - **Batching**: Groups updates per unique address/bucket to reduce DB I/O
 - **Conditional Writes**: Only writes to DB if updates were made
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L109-L126)
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
 
 ## Configuration
 
@@ -88,7 +88,7 @@ println!("Indexed addresses: {}", stats.indexed_addresses);
 println!("Indexed value buckets: {}", stats.indexed_value_buckets);
 ```
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs#L28-L36)
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
 
 ## Usage
 

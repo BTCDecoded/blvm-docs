@@ -17,6 +17,8 @@ The following modules are available for blvm-node:
 
 For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
 
+**Writing modules:** Use the **SDK declarative style** (blvm-sdk attribute macros and `run_module!`) to define CLI, RPC, and event handling in one impl block without manual IPC loops; see [Module Development](../sdk/module-development.md#sdk-declarative-style-recommended). Alternatively use the integration API or low-level IPC for custom control.
+
 ## Architecture
 
 ### Process Isolation
@@ -64,7 +66,7 @@ graph TB
     style SS fill:#bfb,stroke:#333,stroke-width:2px
 ```
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs#L1-L37)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
 
 ## Core Components
 
@@ -80,7 +82,7 @@ Orchestrates all modules, handling lifecycle, runtime loading/unloading/reloadin
 - Dependency resolution
 - Registry integration
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs#L1-L520)
+**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Process Isolation
 
@@ -91,7 +93,7 @@ Modules run in separate processes via `ModuleProcessSpawner`:
 - Resource limits enforced
 - Crash containment
 
-**Code**: [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs#L1-L132)
+**Code**: [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs)
 
 ### IPC Communication
 
@@ -102,7 +104,7 @@ Modules communicate with the base node via Unix domain sockets (Unix) or named p
 - Correlation IDs for async operations
 - Type-safe message serialization
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs#L1-L234)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Security Sandbox
 
@@ -113,7 +115,7 @@ Modules run in sandboxed environments with:
 - Network restrictions
 - Permission-based API access
 
-**Code**: [network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/network.rs#L1-L60)
+**Code**: [network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/network.rs)
 
 ### Permission System
 
@@ -159,7 +161,7 @@ Modules request capabilities that are validated before API access. Capabilities 
 - `call_module` / `CallModule` - Call other modules' APIs
 - `register_module_api` / `RegisterModuleApi` - Register module API for other modules to call
 
-**Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs#L1-L184)
+**Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 
 ## Module Lifecycle
 
@@ -178,7 +180,7 @@ Modules discovered through:
 - Module registry (REST API)
 - Manual installation
 
-**Code**: [discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/discovery.rs#L1-L200)
+**Code**: [discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/discovery.rs)
 
 ### Verification
 
@@ -188,7 +190,7 @@ Each module verified through:
 - Permission checking (capability validation)
 - Compatibility checking (version requirements)
 
-**Code**: [manifest_validator.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/validation/manifest_validator.rs#L1-L200)
+**Code**: [manifest_validator.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/validation/manifest_validator.rs)
 
 ### Loading
 
@@ -197,7 +199,7 @@ Module loaded into isolated process:
 - IPC connection establishment
 - API subscription setup
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs#L159-L235)
+**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Execution
 
@@ -215,7 +217,7 @@ Module health monitored:
 - Error tracking
 - Crash isolation
 
-**Code**: [monitor.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/monitor.rs#L1-L100)
+**Code**: [monitor.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/monitor.rs)
 
 ## Security Model
 
@@ -234,7 +236,7 @@ Modules cannot:
 
 Module crashes are isolated and do not affect the base node. The `ModuleProcessMonitor` detects crashes and automatically removes failed modules.
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs#L144-L153)
+**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Security Flow
 
@@ -301,7 +303,7 @@ capabilities = [
 ]
 ```
 
-**Code**: [manifest.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/manifest.rs#L1-L200)
+**Code**: [manifest.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/manifest.rs)
 
 ## API Hub
 
@@ -311,7 +313,7 @@ The `ModuleApiHub` routes API requests from modules to the appropriate handlers:
 - Governance API (proposals, votes)
 - Communication API (P2P messaging)
 
-**Code**: [hub.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/hub.rs#L1-L200)
+**Code**: [hub.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/hub.rs)
 
 ## Event System
 
@@ -457,7 +459,7 @@ client.subscribe_events(event_types).await?;
 - UTXO Commitments Events (UtxoCommitmentReceived, UtxoCommitmentVerified)
 - Ban List Sharing Events (BanListShared, BanListReceived)
 
-For a complete list of all event types, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L485-L765).
+For a complete list of all event types, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs).
 
 ### Event Delivery Guarantees
 
@@ -509,7 +511,7 @@ For a complete list of all event types, see [EventType enum](https://github.com/
 - Available via `EventManager::get_delivery_stats()`
 - Useful for monitoring and debugging
 
-**Code**: [events.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/events.rs#L1-L274)
+**Code**: [events.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/events.rs)
 
 For detailed event system documentation, see:
 - [Event System Integration](event-system-integration.md) - Complete integration guide
@@ -525,7 +527,7 @@ Modules can be discovered and installed from a module registry:
 - Dependency resolution
 - Signature verification
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/client.rs#L1-L200)
+**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/client.rs)
 
 ## Usage
 
@@ -557,7 +559,7 @@ manager.load_module(
 manager.auto_load_modules().await?;
 ```
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs#L306-L391)
+**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ## Benefits
 

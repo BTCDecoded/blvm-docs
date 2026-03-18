@@ -39,7 +39,7 @@ Messages use length-delimited binary encoding:
 - **Length**: 4-byte little-endian integer (message size)
 - **Payload**: Binary-encoded message (bincode serialization)
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/mod.rs#L1-L56)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/mod.rs)
 
 ### Message Types
 
@@ -50,7 +50,7 @@ The protocol supports four message types:
 3. **Event**: Node → Module (event notifications)
 4. **Log**: Module → Node (logging)
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs#L16-L49)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ## Message Structure
 
@@ -77,7 +77,7 @@ pub struct RequestMessage {
 - `GetNetworkPeers` - Get connected peers
 - `GetChainInfo` - Get chain information
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs#L51-L150)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Response Message
 
@@ -93,7 +93,7 @@ pub struct ResponseMessage {
 - `Error` - Request failed with error details
 - `NotFound` - Resource not found
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs#L152-L207)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Event Message
 
@@ -110,7 +110,7 @@ pub struct EventMessage {
 - Chain events: `NewBlock`, `ChainTipUpdated`, `BlockDisconnected`
 - Mempool events: `MempoolTransactionAdded`, `FeeRateChanged`, `MempoolTransactionRemoved`
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs#L209-L234)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Log Message
 
@@ -124,7 +124,7 @@ pub struct LogMessage {
 
 **Log Levels**: `Error`, `Warn`, `Info`, `Debug`, `Trace`
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs#L236-L250)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ## Communication Flow
 
@@ -135,7 +135,7 @@ pub struct LogMessage {
 3. **Node sends Response**: Node sends response with matching correlation ID
 4. **Module receives Response**: Module matches response to request using correlation ID
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs#L138-L200)
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ### Event Subscription Pattern
 
@@ -144,7 +144,7 @@ pub struct LogMessage {
 3. **Node publishes Events**: Node sends event messages as they occur
 4. **Module receives Events**: Module processes events asynchronously
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs#L200-L300)
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ## Connection Management
 
@@ -160,7 +160,7 @@ pub struct HandshakeMessage {
 }
 ```
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs#L148-L200)
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ### Connection Lifecycle
 
@@ -169,7 +169,7 @@ pub struct HandshakeMessage {
 3. **Active**: Connection active, ready for requests/events
 4. **Disconnect**: Connection closed (graceful or error)
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs#L139-L200)
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ## Security
 
@@ -179,7 +179,7 @@ pub struct HandshakeMessage {
 - No shared memory between node and modules
 - Module crashes don't affect the base node
 
-**Code**: [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs#L1-L132)
+**Code**: [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs)
 
 ### Permission System
 
@@ -191,7 +191,7 @@ Modules request capabilities that are validated before API access:
 - `SubscribeEvents` - Subscribe to node events
 - `SendTransactions` - Submit transactions to mempool
 
-**Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs#L1-L100)
+**Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 
 ### Sandboxing
 
@@ -202,7 +202,7 @@ Modules run in sandboxed environments with:
 - Network restrictions (modules cannot open network connections)
 - Permission-based API access
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs#L1-L200)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs)
 
 ## Error Handling
 
@@ -218,7 +218,7 @@ pub enum ModuleError {
 }
 ```
 
-**Code**: [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs#L1-L100)
+**Code**: [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
 
 ### Error Recovery
 
@@ -227,7 +227,7 @@ pub enum ModuleError {
 - **Permission Errors**: Detailed error messages, request rejection
 - **Timeout Errors**: Request timeout, connection remains active
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs#L1-L200)
+**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs)
 
 ## Performance
 
@@ -237,7 +237,7 @@ pub enum ModuleError {
 - **Size**: Compact binary representation
 - **Speed**: Fast serialization/deserialization
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs#L1-L56)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Connection Pooling
 
@@ -245,7 +245,7 @@ pub enum ModuleError {
 - **Concurrent Requests**: Multiple requests can be in-flight simultaneously
 - **Correlation IDs**: Match responses to requests asynchronously
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs#L1-L200)
+**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs)
 
 ## Implementation Details
 
@@ -258,7 +258,7 @@ The node-side IPC server:
 - Routes requests to NodeAPI implementation
 - Publishes events to subscribed modules
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs#L1-L151)
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ### IPC Client
 
@@ -269,7 +269,7 @@ The module-side IPC client:
 - Subscribes to events
 - Handles connection errors
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs#L1-L200)
+**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs)
 
 ## See Also
 

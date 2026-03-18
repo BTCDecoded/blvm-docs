@@ -2,6 +2,10 @@
 
 Reference for BLVM node configuration options. Configuration can be provided via TOML file, JSON file, command-line arguments, or environment variables. See [Node Configuration](../node/configuration.md) for usage examples.
 
+**Precedence:** CLI > ENV > config file > defaults. **Canonical defaults:** This reference is the single source of truth for default values; other docs (e.g. first-node, storage-backends) may show examples and should point here for authoritative defaults.
+
+**Path expansion:** Path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, `ibd.snapshot_dir`) expand `~` to the home directory when loading from file.
+
 ## Configuration File Format
 
 Configuration files support both TOML (`.toml`) and JSON (`.json`) formats. TOML is recommended for readability.
@@ -83,6 +87,10 @@ rate_limit_rate = 10
 - **Default**: `true`
 - **Description**: Whether to advertise own address to peers. Set to `false` for privacy.
 
+## IBD Configuration
+
+Initial block download uses parallel IBD only. **`[ibd]`** (top-level): chunk_size, download_timeout_secs, mode, eviction, max_blocks_in_transit_per_peer, headers_timeout_secs, headers_max_failures; optional: preferred_peers, max_ahead_blocks, memory_only, dump_dir, snapshot_dir, yield_interval, earliest_first, prefetch_*, utxo_prefetch_lookahead. **`[ibd_protection]`** (top-level): bandwidth limits per peer/IP/subnet. `max_concurrent_per_peer` is fixed at 64 in code (not in config). See [Node Configuration](../node/configuration.md#ibd-configuration) and [IBD Protection](../node/ibd-protection.md); ENV: `BLVM_IBD_*`.
+
 ## Storage Configuration
 
 ### `storage.data_dir`
@@ -94,9 +102,11 @@ rate_limit_rate = 10
 - **Type**: `string` (enum)
 - **Default**: `"auto"`
 - **Options**:
-  - `"auto"` - Auto-select based on availability (prefers redb, falls back to sled)
-  - `"redb"` - Use redb database (default, recommended, production-ready)
+  - `"auto"` - Select by build features: RocksDB when `rocksdb` feature enabled (typical default), else TidesDB, else Redb, else Sled
+  - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature, Bitcoin Core compatible)
+  - `"redb"` - Use redb database (production-ready)
   - `"sled"` - Use sled database (beta, fallback option)
+  - `"tidesdb"` - Use TidesDB (if available)
 - **Description**: Database backend selection. System automatically falls back if preferred backend fails.
 
 ### Storage Cache
@@ -120,7 +130,8 @@ rate_limit_rate = 10
 
 #### `storage.pruning.mode`
 - **Type**: `object` (enum with variants)
-- **Default**: Aggressive mode (if UTXO commitments enabled) or Normal mode
+- **Default**: Aggressive (configurable; for full archival nodes use Disabled or Normal)
+- **Options**: Disabled, Normal (`keep_from_height`, `min_recent_blocks`), Aggressive (`keep_from_height`, `keep_commitments`, `keep_filtered_blocks`, `min_blocks`), Custom (fine-grained control)
 - **Description**: Pruning mode configuration. See [Pruning Modes](#pruning-modes) below.
 
 #### `storage.pruning.auto_prune`
@@ -415,30 +426,48 @@ secondary_chains = []
 
 ## Command-Line Arguments
 
-Configuration can be overridden via command-line arguments:
+Configuration can be overridden via command-line arguments. CLI overrides ENV and config file.
+
+**Global:** `--network` / `-n`, `--rpc-addr` / `-r`, `--listen-addr` / `-l`, `--data-dir` / `-d`, `--config` / `-c`, `--verbose` / `-v`
+
+**Advanced:** `--assumevalid`, `--noassumevalid`, `--assumeutxo`, `--target-peer-count`, `--async-request-timeout`, `--module-max-cpu-percent`, `--module-max-memory-bytes`
+
+**Feature flags:** `--enable-stratum-v2`, `--enable-bip158`, `--enable-dandelion`, `--enable-sigop` and `--disable-*` counterparts
+
+**Commands:** `start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `rpc`
 
 ```bash
-blvm --config /path/to/config.toml     # Load config from file
-blvm --network testnet                  # Override protocol version
-blvm --data-dir /custom/path            # Override data directory
+blvm --config /path/to/config.toml
+blvm --network mainnet --data-dir /var/lib/blvm
+blvm config show
 ```
+
+See `docs/CLI_OPTIONS.md` for the complete CLI reference.
 
 ## Environment Variables
 
-Configuration can also be set via environment variables (prefixed with `BLVM_`):
+Configuration can also be set via environment variables (prefixed with `BLVM_`). ENV overrides config file.
 
 ```bash
 export BLVM_NETWORK=testnet
 export BLVM_DATA_DIR=/var/lib/blvm
-export BLVM_RPC_PORT=8332
+export BLVM_RPC_ADDR=127.0.0.1:8332
+export BLVM_IBD_EVICTION=dynamic
+export BLVM_NETWORK_TARGET_PEER_COUNT=125
 ```
+
+**Key ENV categories:** Node (`BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`), Network timing (`BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_NETWORK_PEER_CONNECTION_DELAY`), Request timeouts (`BLVM_REQUEST_ASYNC_TIMEOUT`, etc.), Module limits (`BLVM_MODULE_MAX_*`), IBD (`BLVM_IBD_*`), Storage (`BLVM_DBCACHE_MB`, `BLVM_ROCKSDB_*`), External (`RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`).
+
+See `docs/ENV_VARIABLES.md` for the complete reference.
 
 ## Configuration Precedence
 
 1. **Command-line arguments** (highest priority)
-2. **Environment variables**
+2. **Environment variables** (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`)
 3. **Configuration file**
 4. **Default values** (lowest priority)
+
+**Config-file-only options:** `relay`, `fibre`, `dandelion`, `peer_rate_limiting`, `rest_api`, `ban_list_sharing` have no ENV overrides. Use CLI flags (e.g. `--enable-dandelion`) or config file.
 
 ## Validation
 
@@ -452,6 +481,7 @@ Common validation errors:
 
 ## See Also
 
+- [CLI Options](../../../../docs/CLI_OPTIONS.md) - Full command-line reference
 - [Node Configuration](../node/configuration.md) - Quick start guide
 - [Storage Backends](../node/configuration.md#storage-backends) - Backend selection details
 - [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer) - Transport options

@@ -13,7 +13,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - **Invariants**: Properties that must always hold
 - **Constraints**: Bounds and limits
 
-**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md#L26-L54)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ## Core Specifications
 
@@ -35,7 +35,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - `calculate_chain_work`: Verifies cumulative work calculation
 - `expand_target`: Handles difficulty target edge cases
 
-**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md#L28-L45)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ### Block Subsidy
 
@@ -50,7 +50,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - Subsidy decreases monotonically
 - Total supply converges to 21 million BTC
 
-**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md#L46-L54)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ### Total Supply
 
@@ -64,7 +64,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - Total supply is bounded (≤ 21 * 10^6 * 10^8 satoshis)
 - Total supply converges to 21 million BTC
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L89-L94)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ### Difficulty Adjustment
 
@@ -79,7 +79,7 @@ timespan_clamped = clamp(timespan, expected/4, expected*4)
 - Timespan is clamped to [expected/4, expected*4]
 - Difficulty adjustment is deterministic
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L236-L246)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ### Consensus Threshold
 
@@ -94,7 +94,7 @@ consensus_met ⟺ agreement_count >= required_agreement_count
 - `agreement_count >= required` ⟺ `ratio >= threshold`
 - Integer comparison is deterministic
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L102-L108)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ### Median Calculation
 
@@ -111,7 +111,7 @@ median(tips) = {
 - Median is deterministic
 - Checkpoint = max(0, median - safety_margin)
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L114-L124)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ## Specification Coverage
 
@@ -129,7 +129,7 @@ Multiple functions have formal mathematical specifications:
 - Consensus threshold (`find_consensus`)
 - Median calculation (`determine_checkpoint_height`)
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L172-L175)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ## Mathematical Protections
 
@@ -145,7 +145,7 @@ if agreement_count >= required_agreement_count {
 }
 ```
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L9-L31)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ### Runtime Assertions
 
@@ -156,7 +156,7 @@ Runtime assertions verify mathematical invariants:
 - Median calculation bounds
 - Checkpoint bounds
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L32-L53)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ### Checked Arithmetic
 
@@ -174,7 +174,7 @@ let median_tip = if sorted_tips.len() % 2 == 0 {
 };
 ```
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L80-L96)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ## Formal Verification
 
@@ -187,7 +187,7 @@ Z3 proofs (via BLVM Specification Lock) verify mathematical specifications:
 - **Consensus Result**: Verifies consensus result invariants
 - **Economic Rules**: Verifies subsidy and supply calculations
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L54-L79)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ### Property-Based Tests
 
@@ -198,7 +198,7 @@ Property-based tests verify invariants:
 - Discover edge cases
 - Test mathematical correctness
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md#L169-L172)
+**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
 
 ## Documentation
 
@@ -211,7 +211,7 @@ Mathematical specifications are documented in:
 - **MATHEMATICAL_PROTECTIONS.md**: Protection mechanisms
 - **PROTECTION_COVERAGE.md**: Coverage statistics
 
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md#L1-L20)
+**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)
 
 ## Components
 

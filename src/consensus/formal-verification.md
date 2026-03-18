@@ -107,7 +107,7 @@ Runtime assertions provide invariant checking during execution.
 
 **Runtime Invariant Feature Flag**:
 - `#[cfg(any(debug_assertions, feature = "runtime-invariants"))]` enables assertions
-- `src/block.rs`: Supply invariant checks in `connect_block`
+- `src/block/mod.rs`: Supply invariant checks in `connect_block`
 
 **Verification**: Runtime assertions execute during debug builds and can be enabled in production with `--features runtime-invariants`.
 
@@ -263,7 +263,7 @@ Multiple functions have complete formal documentation
 - `check_tx_inputs`: Handles coinbase correctly
 - `is_coinbase`: Correctly identifies coinbase transactions
 
-### Block Connection (`src/block.rs`)
+### Block Connection (`src/block/mod.rs`)
 
 **Mathematical Specification:**
 ```
@@ -369,7 +369,7 @@ Network protocol message parsing, serialization, and processing are formally ver
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 
-**Verified Messages**: Phase 1: Version, VerAck, Ping, Pong. Phase 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
+**Verified Messages**: Tier 1: Version, VerAck, Ping, Pong. Tier 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
 
 **Mathematical Specifications**: Round-trip property `∀ msg: parse(serialize(msg)) = msg`, checksum validation rejects invalid checksums, size limits enforced for all messages.
 
@@ -396,7 +396,7 @@ Network protocol message parsing, serialization, and processing are formally ver
 
 **Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
 
-**Verified Messages**: Phase 1: Version, VerAck, Ping, Pong. Phase 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
+**Verified Messages**: Tier 1: Version, VerAck, Ping, Pong. Tier 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
 
 **Mathematical Specifications**: Round-trip property `∀ msg: parse(serialize(msg)) = msg`, checksum validation rejects invalid checksums, size limits enforced for all messages.
 

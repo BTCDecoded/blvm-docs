@@ -154,7 +154,7 @@ curl -X POST http://localhost:8332 \
 ### Transaction Methods
 - `gettransactiondetails` - Get detailed transaction information
 
-### Payment Methods (BIP70, feature-gated)
+### Payment Methods (BIP70)
 - `createpaymentrequest` - Create a BIP70 payment request (requires `bip70-http` feature)
 
 ## Error Codes
@@ -183,7 +183,7 @@ The RPC API uses Bitcoin Core-compatible JSON-RPC 2.0 error codes:
 | -25 | Transaction rejected | Transaction rejected by consensus rules |
 | -27 | Transaction already in mempool | Transaction already in mempool |
 
-**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs#L9-L78)
+**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs)
 
 ### Error Response Format
 
@@ -202,7 +202,7 @@ The RPC API uses Bitcoin Core-compatible JSON-RPC 2.0 error codes:
 }
 ```
 
-**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs#L432-L450)
+**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs)
 
 ## Authentication
 
@@ -222,7 +222,7 @@ curl -X POST http://localhost:8332 \
 
 TLS client certificates can be used for authentication when QUIC transport is enabled.
 
-**Code**: [auth.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/auth.rs#L1-L100)
+**Code**: [auth.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/auth.rs)
 
 ## Rate Limiting
 
@@ -232,7 +232,7 @@ Rate limiting is enforced per IP, per user, and per method:
 - **Unauthenticated**: 50 burst, 5 req/sec
 - **Per-method limits**: May override defaults for specific methods
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/server.rs#L1-L100)
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/server.rs)
 
 ## Request/Response Format
 
@@ -276,7 +276,7 @@ Rate limiting is enforced per IP, per user, and per method:
 }
 ```
 
-**Code**: [types.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/types.rs#L16-L45)
+**Code**: [types.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/types.rs)
 
 ## Batch Requests
 
@@ -304,7 +304,7 @@ The REST API provides a modern, developer-friendly interface alongside the JSON-
 
 **Base URL**: `http://localhost:8080/api/v1/`
 
-**Code**: [rest/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/mod.rs#L1-L37)
+**Code**: [rest/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/mod.rs)
 
 ### Authentication
 
@@ -326,7 +326,7 @@ Rate limiting is enforced per IP, per user, and per endpoint:
 - **Unauthenticated**: 50 burst, 5 req/sec
 - **Per-endpoint limits**: Stricter limits for write operations
 
-**Code**: [rest/server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/server.rs#L207-L256)
+**Code**: [rest/server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/server.rs)
 
 ### Response Format
 
@@ -363,7 +363,7 @@ All REST API responses follow a consistent format:
 
 #### Node Endpoints
 
-**Code**: [rest/node.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/node.rs#L1-L81)
+**Code**: [rest/node.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/node.rs)
 
 - `GET /api/v1/node/uptime` - Get node uptime
 - `GET /api/v1/node/memory` - Get memory information
@@ -396,7 +396,7 @@ curl http://localhost:8080/api/v1/chain/info
 
 #### Block Endpoints
 
-**Code**: [rest/blocks.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/blocks.rs#L1-L91)
+**Code**: [rest/blocks.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/blocks.rs)
 
 - `GET /api/v1/blocks/{hash}` - Get block by hash
 - `GET /api/v1/blocks/{hash}/transactions` - Get block transactions
@@ -454,7 +454,7 @@ curl http://localhost:8080/api/v1/mempool/info
 
 #### Network Endpoints
 
-**Code**: [rest/network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/network.rs#L1-L133)
+**Code**: [rest/network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/network.rs)
 
 - `GET /api/v1/network/info` - Get network information
 - `GET /api/v1/network/peers` - Get connected peers
@@ -543,7 +543,7 @@ The REST API includes security headers by default:
 - `X-XSS-Protection: 1; mode=block`
 - `Strict-Transport-Security: max-age=31536000` (when TLS enabled)
 
-**Code**: [rest/server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/server.rs#L111-L115)
+**Code**: [rest/server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/server.rs)
 
 ### Error Codes
 

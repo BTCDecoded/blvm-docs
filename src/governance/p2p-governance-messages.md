@@ -26,12 +26,12 @@ Node
 1. **Gossip Mode**: Messages relayed to governance-enabled peers only
 2. **Relay Mode**: Messages forwarded to governance application via VPN/API
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L731-L848)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ## Governance Message Types
 
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L1049-L1100)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ## Gossip Protocol
 
@@ -42,7 +42,7 @@ Nodes gossip governance messages to:
 - Excluding the sender
 - Using Bitcoin P2P protocol
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L805-L848)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ### Message Serialization
 
@@ -53,7 +53,7 @@ let msg_json = serde_json::to_vec(msg)?;
 peer.send_message(msg_json).await?;
 ```
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L829-L844)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ## Governance Relay
 
@@ -66,7 +66,7 @@ commons_url = "https://commons.example.com/api"
 vpn_enabled = true
 ```
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs#L486-L559)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs)
 
 ### Relay Process
 
@@ -75,7 +75,7 @@ vpn_enabled = true
 3. **Forward to Commons**: Send message to governance application via API
 4. **Gossip to Peers**: Also gossip message to other governance-enabled peers
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L731-L803)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ## Message Deduplication
 
@@ -87,7 +87,7 @@ The governance application deduplicates messages:
 - **Sender Tracking**: Tracks message origin
 - **Timestamp**: Prevents replay attacks
 
-**Code**: [message_dedup.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/message_dedup.rs#L1-L200)
+**Code**: [message_dedup.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/message_dedup.rs)
 
 ## P2P Receiver
 
@@ -100,7 +100,7 @@ The governance application receives messages via P2P receiver:
 - **Storage**: Stores messages in database
 - **Processing**: Processes governance actions
 
-**Code**: [p2p_receiver.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/p2p_receiver.rs#L1-L28)
+**Code**: [p2p_receiver.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/p2p_receiver.rs)
 
 ## Network Integration
 
@@ -112,7 +112,7 @@ Governance messages are integrated into Bitcoin P2P protocol:
 - **Backward Compatible**: Non-governance nodes ignore messages
 - **Service Flags**: Nodes advertise governance capability
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs#L1-L200)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs)
 
 ### Peer Management
 
@@ -122,7 +122,7 @@ Nodes track governance-enabled peers:
 - **Peer List**: Maintain list of governance peers
 - **Connection Management**: Handle peer connections/disconnections
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs#L814-L848)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ## Benefits
 

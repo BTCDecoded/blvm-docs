@@ -1,6 +1,6 @@
 # SDK Getting Started
 
-The developer SDK (`blvm-sdk`) provides governance infrastructure and cryptographic primitives for Bitcoin governance operations.
+The developer SDK (`blvm-sdk`) provides governance infrastructure and cryptographic primitives for Bitcoin governance operations, plus **module authoring** (process-isolated node modules with CLI, RPC, and events). See [Module Development](module-development.md#sdk-declarative-style-recommended) for the declarative style.
 
 ## Quick Start
 
@@ -51,6 +51,12 @@ blvm-verify release \
 ```
 
 For more details, see the [blvm-sdk README](../../blvm-sdk/README.md).
+
+### Authoring a node module
+
+1. Add **`blvm-sdk`** with the **`node`** feature and use the [SDK declarative style](module-development.md#sdk-declarative-style-recommended) (`#[module]`, `run_module!`).
+2. Ship a binary + **`module.toml`** under the node’s modules directory (see [Module Development](module-development.md)).
+3. Optional: register **CLI subcommands** so users invoke your module via **`blvm <your-cli-group> …`** when the module is loaded ([Module CLI under blvm](module-development.md#module-cli-under-the-blvm-binary)).
 
 ## See Also
 

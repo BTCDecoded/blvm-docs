@@ -10,7 +10,7 @@ Bitcoin Commons implements multiple privacy-preserving and performance-optimized
 
 Dandelion++ provides privacy-preserving transaction relay with formal anonymity guarantees against transaction origin analysis. It operates in two phases: stem phase (obscures origin) and fluff phase (standard diffusion).
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs#L1-L621)
+**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Architecture
 
@@ -31,7 +31,7 @@ pub struct StemPath {
 }
 ```
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs#L37-L46)
+**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Stem Phase Behavior
 
@@ -41,7 +41,7 @@ pub struct StemPath {
 - Fluff probability: 10% per hop (default)
 - Maximum stem hops: 2 (default)
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs#L152-L200)
+**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Fluff Phase Behavior
 
@@ -52,7 +52,7 @@ pub struct StemPath {
   - Stem timeout expiration
   - Maximum hop count reached
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs#L200-L300)
+**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Configuration
 
@@ -64,7 +64,7 @@ fluff_probability = 0.1  # 10%
 max_stem_hops = 2
 ```
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs#L19-L35)
+**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Benefits
 
@@ -79,7 +79,7 @@ max_stem_hops = 2
 
 Fibre (Fast Internet Bitcoin Relay Engine) provides high-performance block relay using UDP transport with Forward Error Correction (FEC) encoding for packet loss tolerance.
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs#L1-L1293)
+**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
 ### Architecture
 
@@ -98,7 +98,7 @@ Blocks are encoded using Reed-Solomon erasure coding:
 - **Shard Size**: Configurable (default: 1024 bytes)
 - **Parity Ratio**: Configurable (default: 0.2 = 20% parity)
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs#L65-L173)
+**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
 ### Block Encoding Process
 
@@ -108,7 +108,7 @@ Blocks are encoded using Reed-Solomon erasure coding:
 4. Create FEC chunks for transmission
 5. Send chunks via UDP
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs#L617-L708)
+**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
 ### Block Assembly Process
 
@@ -117,7 +117,7 @@ Blocks are encoded using Reed-Solomon erasure coding:
 3. When enough chunks received (data shards), reconstruct block
 4. Verify block hash matches
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs#L814-L946)
+**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
 ### UDP Transport
 
@@ -128,7 +128,7 @@ Fibre uses UDP for low-latency transmission:
 - **Sequence Numbers**: Duplicate detection
 - **Timeout Handling**: Connection timeout management
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs#L216-L498)
+**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
 ### Configuration
 
@@ -142,7 +142,7 @@ fec_parity_ratio = 0.2  # 20% parity
 max_assemblies = 100
 ```
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs#L506-L559)
+**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
 ### Statistics
 
@@ -155,7 +155,7 @@ Fibre tracks comprehensive statistics:
 - Average latency
 - Success rate
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs#L1011-L1040)
+**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
 ### Benefits
 
@@ -170,7 +170,7 @@ Fibre tracks comprehensive statistics:
 
 Package Relay (BIP331) allows nodes to relay and validate groups of transactions together, enabling efficient fee-bumping (RBF) and CPFP (Child Pays For Parent) scenarios.
 
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs#L1-L400)
+**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
 
 ### Package Structure
 
@@ -181,7 +181,7 @@ A transaction package contains:
 - **Combined Fee**: Sum of all transaction fees
 - **Combined Weight**: Total weight for fee rate calculation
 
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs#L34-L45)
+**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
 
 ### Package Validation
 
@@ -193,7 +193,7 @@ Packages are validated for:
 - **Ordering**: Parents must precede children
 - **No Duplicates**: No duplicate transactions
 
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs#L86-L250)
+**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
 
 ### Use Cases
 
@@ -201,7 +201,7 @@ Packages are validated for:
 2. **CPFP**: Child transaction pays for parent's fees
 3. **Atomic Sets**: Multiple transactions that must be accepted together
 
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs#L1-L15)
+**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
 
 ### Package ID Calculation
 
@@ -213,7 +213,7 @@ pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
 }
 ```
 
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs#L107-L134)
+**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
 
 ### Configuration
 
@@ -225,7 +225,7 @@ max_package_weight = 404000  # 404k WU
 min_fee_rate = 1000  # 1 sat/vB
 ```
 
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs#L86-L105)
+**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
 
 ### Benefits
 
@@ -245,7 +245,7 @@ The `RelayManager` coordinates all relay protocols:
 - Fibre integration (optional)
 - Package relay support
 
-**Code**: [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs#L1-L390)
+**Code**: [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs)
 
 ### Protocol Selection
 
@@ -256,7 +256,7 @@ Relay protocols are selected based on:
 - Configuration settings
 - Runtime preferences
 
-**Code**: [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs#L67-L129)
+**Code**: [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs)
 
 ## Components
 

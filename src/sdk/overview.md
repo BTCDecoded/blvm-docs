@@ -17,6 +17,15 @@ Tier 5 of the 6-tier Bitcoin Commons architecture:
 
 ## Core Components
 
+### Module authoring (blvm-sdk + macros)
+
+For **node modules** (process-isolated extensions), blvm-sdk provides:
+
+- **`blvm_sdk::module::prelude`** and **`run_module!` / `run_module_main!`** — bootstrap, DB, IPC main loop without hand-written event plumbing.
+- **`blvm-sdk-macros`** — `#[module]`, `#[command]`, `#[rpc_method]`, `#[on_event]`, `#[config]`, `#[migration]`, etc., to declare CLI, RPC, events, and config in one place.
+
+Requires the **`node`** feature on `blvm-sdk`. See [Module Development](module-development.md) (especially [SDK declarative style](module-development.md#sdk-declarative-style-recommended)) and the [hello-module](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module) example.
+
 ### Governance Primitives
 
 Cryptographic primitives for governance operations:
@@ -28,7 +37,7 @@ Cryptographic primitives for governance operations:
 - **Nested Multisig**: Team-based governance with hierarchical multisig support
 - **Message Formats**: Structured messages for releases, approvals, decisions
 
-**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs#L1-L200)
+**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs)
 
 ### CLI Tools
 
@@ -42,7 +51,7 @@ Command-line tools for governance operations:
 - **`blvm-verify-binary`**: Verify binary file signatures
 - **`blvm-aggregate-signatures`**: Aggregate multiple signatures
 
-**Code**: [blvm-keygen.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/bin/blvm-keygen.rs#L1-L100)
+**Code**: [blvm-keygen.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/bin/blvm-keygen.rs)
 
 ### Composition Framework
 
@@ -53,7 +62,7 @@ Declarative node composition from modules:
 - **Economic Integration**: Merge mining revenue distribution
 - **Dependency Resolution**: Automatic module dependency handling
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/composition/mod.rs#L1-L200)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/composition/mod.rs)
 
 ## Key Features
 
@@ -90,7 +99,7 @@ Threshold-based signature verification:
 - **Signature Aggregation**: Combine multiple signatures
 - **Verification**: Cryptographic verification of threshold satisfaction
 
-**Code**: [multisig.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/multisig.rs#L1-L200)
+**Code**: [multisig.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/multisig.rs)
 
 ### Bitcoin-Compatible Signing
 
@@ -101,7 +110,7 @@ Uses Bitcoin message signing standards:
 - **Hash Function**: Double SHA256
 - **Compatibility**: Compatible with Bitcoin Core signing
 
-**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs#L1-L200)
+**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs)
 
 ## Design Principles
 

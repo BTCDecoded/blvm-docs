@@ -15,6 +15,7 @@ The following modules are available for blvm-node:
 - **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support with network integration complete and mining pool management
 - **[Datum Module](datum.md)** - DATUM Gateway mining protocol module for Ocean pool integration (works with Stratum V2)
 - **[Mining OS Module](miningos.md)** - Operating system-level mining optimizations and hardware management
+- **[Selective Sync Module](selective-sync.md)** — Configurable IBD sync policy (e.g. skip flagged transaction content during IBD); `blvm sync-policy …` CLI when the module is loaded
 
 ## Module System Architecture
 
@@ -39,6 +40,7 @@ cargo install blvm-mesh
 cargo install blvm-stratum-v2
 cargo install blvm-datum
 cargo install blvm-miningos
+cargo install blvm-selective-sync
 ```
 
 ### Via Module Installer
@@ -50,6 +52,7 @@ cargo blvm-module install blvm-mesh
 cargo blvm-module install blvm-stratum-v2
 cargo blvm-module install blvm-datum
 cargo blvm-module install blvm-miningos
+cargo blvm-module install blvm-selective-sync
 ```
 
 ### Manual Installation
@@ -61,7 +64,7 @@ cargo blvm-module install blvm-miningos
 
 ## Module Configuration
 
-Each module requires a `config.toml` file in its module directory. See individual module documentation ([Lightning](lightning.md), [Mesh](mesh.md), [Stratum V2](stratum-v2.md), [Datum](datum.md), [Mining OS](miningos.md)) for configuration options. For blvm-mesh submodules, see the [Mesh Module documentation](mesh.md#building-on-mesh-infrastructure).
+Each module requires a `config.toml` file in its module directory where applicable. See individual module documentation ([Lightning](lightning.md), [Mesh](mesh.md), [Stratum V2](stratum-v2.md), [Datum](datum.md), [Mining OS](miningos.md), [Selective Sync](selective-sync.md)). For blvm-mesh submodules, see the [Mesh Module documentation](mesh.md#building-on-mesh-infrastructure).
 
 ## Module Lifecycle
 

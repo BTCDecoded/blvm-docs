@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons implements performance optimizations for faster initial block download (IBD), parallel validation, and efficient UTXO operations. These optimizations provide 10-50x speedups for common operations while maintaining consensus correctness.
+The node implements performance optimizations for initial block download (IBD), parallel validation, and efficient UTXO operations. Actual speedup depends on hardware, network, and workload. For current numbers, see [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org) (when available) or run benchmarks locally ([Benchmarking](../development/benchmarking.md)).
 
 ## Parallel Initial Block Download (IBD)
 
@@ -10,7 +10,7 @@ Bitcoin Commons implements performance optimizations for faster initial block do
 
 Parallel IBD significantly speeds up initial blockchain synchronization by downloading and validating blocks concurrently from multiple peers. The system uses checkpoint-based parallel header download, block pipelining, streaming validation, and efficient batch storage operations.
 
-**Code**: [parallel_ibd.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L1-L1819)
+The node uses parallel IBD for initial sync. **Code**: [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 ### Architecture
 
@@ -27,7 +27,7 @@ Headers are downloaded in parallel using hardcoded checkpoints at well-known blo
 
 **Checkpoints**: Genesis, 11111, 33333, 74000, 105000, 134444, 168000, 193000, 210000 (first halving), 250000, 295000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000
 
-**Code**: [MAINNET_CHECKPOINTS](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L36-L198)
+**Code**: [parallel_ibd/checkpoints.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/checkpoints.rs)
 
 **Algorithm**:
 1. Identify checkpoint ranges for the target height range
@@ -35,18 +35,16 @@ Headers are downloaded in parallel using hardcoded checkpoints at well-known blo
 3. Each range uses the checkpoint hash as its starting locator
 4. Verification ensures continuity and checkpoint hash matching
 
-**Performance**: 4-8x faster header download vs sequential
-
 ### Block Pipelining
 
 Blocks are downloaded with deep pipelining per peer, allowing multiple outstanding block requests to hide network latency.
 
-**Configuration**:
-- `max_concurrent_per_peer`: 64 concurrent downloads per peer (default)
-- `chunk_size`: 100 blocks per chunk (default)
-- `download_timeout_secs`: 60 seconds per block (default)
+**Configuration** (see [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs) and [IBD Configuration](../reference/configuration-reference.md#ibd-configuration)):
+- `chunk_size`: blocks per chunk (default: 16; ENV `BLVM_IBD_CHUNK_SIZE` 16–2000)
+- `download_timeout_secs`: timeout per block in seconds (default: 30)
+- `max_concurrent_per_peer`: fixed at 64 in code (not in `[ibd]` config; see `ParallelIBDConfig`)
 
-**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L209-L245)
+**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 **Dynamic Work Dispatch**:
 - Uses a shared work queue instead of static chunk assignment
@@ -54,36 +52,27 @@ Blocks are downloaded with deep pipelining per peer, allowing multiple outstandi
 - FIFO ordering ensures lowest heights are processed first
 - Natural load balancing across peers
 
-**Performance**: 4-8x improvement vs sequential block requests
-
 ### Streaming Validation with Reorder Buffer
 
 Blocks may arrive out of order from parallel downloads. A reorder buffer ensures blocks are validated in sequential order while allowing downloads to continue.
 
 **Implementation**:
-- Bounded channel: 1000 blocks max in flight (~500MB-1GB memory)
-- Reorder buffer: BTreeMap maintains blocks until next expected height
-- Streaming validation: Validates blocks as they become available in order
-- Natural backpressure: Downloads pause when buffer is full
+- Reorder buffer (BTreeMap) holds blocks until next expected height; buffer limit is height-dependent (see [memory.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/memory.rs)).
+- Streaming validation: validates blocks in order as they become available.
+- Backpressure: downloads pause when buffer is full.
 
-**Code**: [streaming validation](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L536-L745)
-
-**Memory Bounds**: ~500MB-1GB maximum (1000 blocks × ~500KB average)
+**Code**: [parallel_ibd](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/) (feeder, validation_loop when `production` feature enabled)
 
 ### Batch Storage Operations
 
-UTXO set updates use batch writes for efficient bulk operations. Batch writes are 10-100x faster than individual inserts.
+UTXO set updates use batch writes for efficient bulk operations (single transaction vs many).
 
 **BatchWriter Trait**:
 - Accumulates multiple put/delete operations
 - Commits all operations atomically in a single transaction
 - Ensures database consistency even on crash
 
-**Code**: [BatchWriter](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database.rs#L67-L100)
-
-**Performance**:
-- Individual `Tree::insert()`: ~1ms per operation (transaction overhead)
-- BatchWriter: ~1ms total for thousands of operations (single transaction)
+**Code**: [BatchWriter](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (trait and backend impls)
 
 **Usage**:
 ```rust
@@ -102,37 +91,25 @@ The system tracks peer performance and filters out extremely slow peers during I
 - **Slow Peer Filtering**: Drops peers with >90s average latency (keeps at least 2)
 - **Dynamic Selection**: Fast peers automatically get more work
 
-**Code**: [peer filtering](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L492-L529)
+**Code**: [parallel_ibd](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/) (peer scoring and filtering)
 
 ### Configuration
 
 ```toml
 [ibd]
-# Number of parallel workers (default: CPU count)
-num_workers = 8
-
-# Chunk size in blocks (default: 100)
-chunk_size = 100
-
-# Maximum concurrent downloads per peer (default: 64)
-max_concurrent_per_peer = 64
-
-# Checkpoint interval in blocks (default: 10,000)
-checkpoint_interval = 10000
-
-# Timeout for block download in seconds (default: 60)
-download_timeout_secs = 60
+chunk_size = 16
+download_timeout_secs = 30
+mode = "parallel"
+eviction = "fifo"
+max_blocks_in_transit_per_peer = 16
+headers_timeout_secs = 30
+headers_max_failures = 10
 ```
+(`max_concurrent_per_peer` is fixed at 64 in the node; not in `IbdConfig`. See [Node Configuration](configuration.md#ibd-configuration) and [configuration-reference](../reference/configuration-reference.md#ibd-configuration).)
 
-**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd.rs#L209-L245)
+**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
-### Performance Impact
-
-- **Parallel Headers**: 4-8x faster header download
-- **Block Pipelining**: 4-8x improvement vs sequential requests
-- **Streaming Validation**: Enables concurrent download + validation
-- **Batch Storage**: 10-100x faster UTXO updates
-- **Overall IBD**: 10-50x faster than sequential IBD
+Parallel headers, pipelining, streaming validation, and batch storage all contribute to faster IBD compared to a single-threaded sequential sync. See benchmarks for current measurements.
 
 ## Parallel Block Validation
 
@@ -140,16 +117,16 @@ download_timeout_secs = 60
 
 Blocks are validated in parallel when they are deep enough from the chain tip. This optimization uses Rayon for parallel execution.
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs#L78-L122)
+**Code**: [validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs)
 
 ### Safety Conditions
 
 Parallel validation is only used when:
-- Blocks are beyond `max_parallel_depth` from tip (default: 6 blocks)
+- Blocks are beyond `max_parallel_depth` from tip (default in code: 100 blocks; see `ParallelBlockValidator::default`)
 - Each block uses its own UTXO set snapshot (independent validation)
 - Blocks are validated sequentially if too close to tip
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs#L86-L90)
+**Code**: [validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs)
 
 ### Implementation
 
@@ -172,7 +149,7 @@ pub fn validate_blocks_parallel(
 }
 ```
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs#L80-L118)
+**Code**: [validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs)
 
 ## Batch UTXO Operations
 
@@ -185,7 +162,7 @@ Transaction fees are calculated in batches by pre-fetching all UTXOs before vali
 3. Cache UTXOs for fee calculation
 4. Calculate fees using cached UTXOs
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L306-L325)
+**Code**: [block/apply.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/apply.rs)
 
 ### Implementation
 
@@ -208,7 +185,7 @@ for prevout in &all_prevouts {
 }
 ```
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L308-L324)
+**Code**: [block/apply.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/apply.rs)
 
 ### Configuration
 
@@ -218,15 +195,15 @@ enable_batch_utxo_lookups = true
 parallel_batch_size = 8
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs#L245-L248)
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 
 ## Assume-Valid Checkpoints
 
 ### Overview
 
-Assume-valid checkpoints skip expensive signature verification for blocks before a configured height, providing 10-50x faster IBD.
+Assume-valid checkpoints skip expensive signature verification for blocks before a configured height, reducing IBD time when enabled.
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L58-L86)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Safety
 
@@ -235,7 +212,7 @@ This optimization is safe because:
 2. Block structure, Merkle roots, and PoW are still validated
 3. Only signature verification is skipped (the expensive operation)
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L79-L85)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Configuration
 
@@ -249,13 +226,9 @@ assume_valid_height = 700000  # Skip signatures before this height
 ASSUME_VALID_HEIGHT=700000
 ```
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L74-L86)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
-### Performance Impact
-
-- **10-50x faster IBD**: Signature verification is the bottleneck
-- **Safe**: Only skips signatures, validates everything else
-- **Configurable**: Can be disabled (set to 0) for maximum safety
+Signature verification is a major cost; skipping it for pre-checkpoint blocks speeds IBD. Only signature verification is skipped; structure, Merkle, and PoW are still validated. Can be disabled (set to 0) for maximum safety.
 
 ## Parallel Transaction Validation
 
@@ -263,18 +236,10 @@ ASSUME_VALID_HEIGHT=700000
 
 Within a block, transaction validation is parallelized where safe:
 
-1. **Phase 1: Parallel Validation** (read-only UTXO access)
-   - Transaction structure validation
-   - Input validation
-   - Fee calculation
-   - Script verification (read-only)
+1. **Parallel validation** (read-only UTXO access): transaction structure, input validation, fee calculation, script verification.
+2. **Sequential application** (write operations): UTXO set updates and state transitions to maintain correctness.
 
-2. **Phase 2: Sequential Application** (write operations)
-   - UTXO set updates
-   - State transitions
-   - Maintains correctness
-
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L326-L400)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Implementation
 
@@ -282,27 +247,20 @@ Within a block, transaction validation is parallelized where safe:
 #[cfg(feature = "rayon")]
 {
     use rayon::prelude::*;
-    // Phase 1: Parallel validation (read-only)
+    // Parallel validation (read-only)
     let validation_results: Vec<Result<...>> = block
         .transactions
         .par_iter()
-        .enumerate()
-        .map(|(i, tx)| {
-            // Validate transaction structure (read-only)
-            check_transaction(tx)?;
-            // Check inputs and calculate fees (read-only UTXO access)
-            check_tx_inputs(tx, &utxo_cache, height)?;
-        })
+        .map(|tx| { check_transaction(tx)?; check_tx_inputs(tx, &utxo_cache, height)?; ... })
         .collect();
-    
-    // Phase 2: Sequential application (write operations)
+    // Sequential application (write operations)
     for (tx, validation) in transactions.zip(validation_results) {
         apply_transaction(tx, &mut utxo_set)?;
     }
 }
 ```
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L329-L400)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ## Advanced Indexing
 
@@ -314,14 +272,14 @@ Indexes transactions by address for fast lookup:
 - **Fast Lookup**: O(1) address-to-transaction mapping
 - **Incremental Updates**: Updates on each block
 
-**Code**: [INDEXING_OPTIMIZATIONS.md](https://github.com/BTCDecoded/blvm-node/blob/main/INDEXING_OPTIMIZATIONS.md#L1-L66)
+**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs), [transaction-indexing.md](transaction-indexing.md)
 
 ### Value Range Indexing
 
 Indexes UTXOs by value range for efficient queries:
 
 - **Range Queries**: Find UTXOs in value ranges
-- **Optimized Lookups**: Faster than scanning all UTXOs
+- **Optimized Lookups**: Indexed by value range for efficient queries
 - **Memory Efficient**: Sparse indexing structure
 
 ## Runtime Optimizations
@@ -338,7 +296,7 @@ pub mod precomputed_constants {
 }
 ```
 
-**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs#L15-L37)
+**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 
 ### Bounds Check Optimization
 
@@ -355,7 +313,7 @@ pub fn get_proven<T>(slice: &[T], index: usize, bound_check: bool) -> Option<&T>
 }
 ```
 
-**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs#L39-L76)
+**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 
 ### Cache-Friendly Memory Layouts
 
@@ -366,7 +324,7 @@ pub fn get_proven<T>(slice: &[T], index: usize, bound_check: bool) -> Option<&T>
 pub struct CacheAlignedHash([u8; 32]);
 ```
 
-**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs#L78-L100)
+**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 
 ## Performance Configuration
 
@@ -390,7 +348,7 @@ enable_cache_optimizations = true
 enable_batch_utxo_lookups = true
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs#L218-L265)
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 
 ### Default Values
 
@@ -400,18 +358,11 @@ enable_batch_utxo_lookups = true
 - `enable_cache_optimizations`: true
 - `enable_batch_utxo_lookups`: true
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs#L255-L265)
+**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 
 ## Benchmark Results
 
-Benchmark results are available at `benchmarks.thebitcoincommons.org`, generated by workflows in `blvm-bench`.
-
-### Performance Improvements
-
-- **Parallel Validation**: 4-8x speedup for deep blocks
-- **Batch UTXO Lookups**: 2-3x speedup for fee calculation
-- **Assume-Valid Checkpoints**: 10-50x faster IBD
-- **Cache-Friendly Layouts**: 10-30% improvement for hash operations
+Benchmark results are published at [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org), generated by workflows in the `blvm-bench` repository. Run benchmarks locally for your hardware; see [Benchmarking](../development/benchmarking.md).
 
 ## Components
 
@@ -424,7 +375,7 @@ The performance optimization system includes:
 - Runtime optimizations (constant folding, bounds checks, cache-friendly layouts)
 - Performance configuration
 
-**Location**: `blvm-consensus/src/optimizations.rs`, `blvm-consensus/src/block.rs`, `blvm-consensus/src/config.rs`, `blvm-node/src/validation/mod.rs`
+**Location**: `blvm-consensus/src/optimizations.rs`, `blvm-consensus/src/block/`, `blvm-consensus/src/config.rs`, `blvm-node/src/validation/mod.rs`. Storage default for IBD is RocksDB when the `rocksdb` feature is enabled.
 
 ## See Also
 

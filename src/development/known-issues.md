@@ -142,7 +142,7 @@ match self.address_database.lock() {
 
 - `blvm-node/src/network/mod.rs`: Multiple locations (19+ instances)
 - `blvm-node/src/network/utxo_commitments_client.rs`: Lines 156, 165, 257, 349, 445
-- `blvm-consensus/src/script.rs`: Multiple locations
+- `blvm-consensus/src/script/`: Multiple locations (script logic is in the `script/` directory)
 
 ---
 
@@ -237,7 +237,7 @@ network.socket_to_transport.lock().unwrap();  // Mutex lock inside
 
 1. **blvm-node/src/network/mod.rs** - Multiple critical issues
 2. **blvm-node/src/network/utxo_commitments_client.rs** - MutexGuard across await
-3. **blvm-consensus/src/script.rs** - Unwrap() on locks
+3. **blvm-consensus/src/script/** - Unwrap() on locks
 
 ---
 

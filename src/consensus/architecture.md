@@ -1,12 +1,12 @@
 # Consensus Layer Architecture
 
-The consensus layer is designed as a pure mathematical implementation with no side effects.
+The consensus layer is designed as a pure mathematical implementation with no side effects. Block and script logic are organized in `block/` and `script/` submodules. Canonical types, serialization, and crypto live in **blvm-primitives** and are re-exported by blvm-consensus for compatibility.
 
 ## Design Principles
 
 1. **Pure Functions**: All functions are deterministic and side-effect-free
 2. **Mathematical Accuracy**: Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
-3. **Optimization Passes**: LLVM-like optimization passes transform the [Orange Paper](../reference/orange-paper.md) specification into optimized code (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination)
+3. **Optimization Passes**: Runtime optimizations applied to the implementation (constant folding, memory layout optimization, SIMD vectorization, bounds check optimization, dead code elimination). The implementation is validated against the Orange Paper, not generated from it. See the consensus crate `docs/FEATURES.md` for production and rayon features.
 4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
 5. **Testing**: Test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
@@ -49,7 +49,7 @@ The consensus layer is designed as a pure mathematical implementation with no si
 
 ## Optimization Passes
 
-BLVM applies optimizations to transform the [Orange Paper](../reference/orange-paper.md) specification into optimized, production-ready code:
+The implementation is validated against the [Orange Paper](../reference/orange-paper.md); optimization passes optimize the implementation code (not the spec):
 
 - **Constant Folding** - Pre-computed constants and constant propagation
 - **Memory Layout Optimization** - Cache-aligned structures and compact stack frames

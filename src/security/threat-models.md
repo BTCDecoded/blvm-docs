@@ -24,7 +24,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Cryptographic key generation (delegated to blvm-sdk or modules)
 - Governance enforcement (delegated to blvm-commons)
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L11-L28)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Module System Security Boundaries
 
@@ -33,7 +33,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Node consensus state is protected and read-only to modules
 - Module crashes are isolated and do not affect the base node
 
-**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md#L115-L142)
+**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
 
 **What Modules Cannot Do**:
 - Modify consensus rules
@@ -42,14 +42,14 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Bypass security boundaries
 - Affect other modules
 
-**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md#L334-L341)
+**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
 
 ## Threat Model: Pre-Production Testing
 
 ### Environment
 
 - **Network**: Trusted network only
-- **Timeline**: 6-12 months testing phase
+- **Timeline**: Extended testing before production use
 - **Threats**: Limited to development and testing scenarios
 
 ### Threats NOT Applicable (Trusted Network)
@@ -59,7 +59,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Network partitioning attacks
 - Malicious peer injection
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L79-L91)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Threats That Apply
 
@@ -69,7 +69,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - **Resource exhaustion** (DoS)
 - **Supply chain attacks** on dependencies
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L92-L98)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Threat Model: Mainnet Deployment
 
@@ -87,7 +87,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - **Resource exhaustion** - memory/CPU DoS
 - **Protocol manipulation** - malformed messages
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L99-L112)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Attack Vectors
 
@@ -102,7 +102,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Geographic diversity requirements
 - ASN diversity tracking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L156-L156)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Sybil Attacks
 
@@ -114,7 +114,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Peer reputation tracking
 - Ban list sharing
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L125-L127)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Resource Exhaustion (DoS)
 
@@ -127,7 +127,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Resource monitoring
 - Per-user RPC rate limiting
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L125-L127)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Protocol Manipulation
 
@@ -140,7 +140,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Property-based testing (141 property tests)
 - Network protocol validation
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L134-L138)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Memory Corruption
 
@@ -152,7 +152,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Fuzzing with sanitizers (ASAN, UBSAN, MSAN)
 - Runtime assertions
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L167-L170)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ### Integer Overflow
 
@@ -164,7 +164,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Property-based testing
 - Runtime assertions
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md#L156-L160)
+**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ### Supply Chain Attacks
 
@@ -176,11 +176,11 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Minimal dependency set
 - Trusted dependency sources
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L136-L137)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Security Hardening
 
-### Phase 1: Pre-Production (Current)
+### Pre-Production (Current)
 
 - Fix signature verification with real transaction hashes
 - Implement proper Bitcoin double SHA256 hashing
@@ -194,16 +194,16 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Add eclipse attack prevention
 - Add storage bounds checking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L142-L158)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
-### Phase 2: Production Readiness
+### Production Readiness
 
-- All Phase 1 items completed
+- All pre-production items completed
 - Professional security audit (external, requires security firm)
 - Formal verification of critical paths
 - Advanced peer management
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L159-L162)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Module System Security
 
@@ -216,7 +216,7 @@ Modules run in separate processes:
 - **Crash Isolation**: Module crashes don't affect node
 - **Resource Limits**: CPU, memory, and network limits enforced
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs#L1-L13)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
 
 ### Sandboxing
 
@@ -227,7 +227,7 @@ Modules are sandboxed:
 - **Process**: Resource limits enforced
 - **Capabilities**: Permission-based access control
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs#L1-L12)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs)
 
 ### Permission System
 
@@ -238,7 +238,7 @@ Modules require explicit permissions:
 - **Resource Limits**: Enforced resource limits
 - **Request Validation**: All requests validated
 
-**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md#L317-L325)
+**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
 
 ## RPC Security
 
@@ -250,7 +250,7 @@ RPC authentication implemented:
 - **Certificate-Based**: Certificate-based authentication
 - **Configurable**: Authentication method configurable
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L129-L132)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Rate Limiting
 
@@ -260,7 +260,7 @@ RPC rate limiting implemented:
 - **Token Bucket**: Token bucket algorithm
 - **Configurable**: Rate limits configurable
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L130-L130)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Input Validation
 
@@ -270,7 +270,7 @@ RPC input validation:
 - **Validation**: Input validation
 - **Access Control**: Access control via authentication
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L131-L132)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Network Security
 
@@ -283,7 +283,7 @@ DoS protection mechanisms:
 - **Auto-Ban**: Automatic banning of abusive peers
 - **Resource Monitoring**: Resource usage monitoring
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L125-L127)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Eclipse Attack Prevention
 
@@ -294,7 +294,7 @@ Eclipse attack prevention:
 - **Geographic Diversity**: Geographic diversity requirements
 - **ASN Diversity**: ASN diversity tracking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L156-L156)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Storage Security
 
@@ -307,7 +307,7 @@ Storage layer security:
 - **Database Abstraction**: Allows switching backends
 - **Storage Bounds**: Storage bounds checking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md#L117-L121)
+**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## LAN Peering Security
 
@@ -320,7 +320,7 @@ The LAN peering system includes multiple security mechanisms to prevent eclipse 
 - **Minimum 3 Internet Peers**: Required for checkpoint validation consensus
 - **Maximum 1 Discovered LAN Peer**: Limits automatically discovered peers (whitelisted are separate)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L29-L51)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Checkpoint Validation
 
@@ -331,7 +331,7 @@ Internet checkpoints are the **primary security mechanism** for LAN peering:
 - **Consensus Requirement**: Requires agreement from at least 3 internet peers
 - **Failure Response**: Checkpoint failure results in permanent ban (1 year duration)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L460-L690)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Progressive Trust System
 
@@ -343,7 +343,7 @@ LAN peers start with limited trust and earn higher priority over time:
 - **Demotion**: After 3 failures, peer loses LAN status
 - **Banning**: Checkpoint failure results in permanent ban
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L89-L217)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Eclipse Attack Prevention
 
@@ -354,7 +354,7 @@ The security model ensures eclipse attack prevention:
 3. **LAN Address Privacy**: LAN addresses never advertised to external peers
 4. **Failure Handling**: Multiple failures result in demotion or ban
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs#L1-L51)
+**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 For complete documentation, see [LAN Peering System](../node/lan-peering.md).
 

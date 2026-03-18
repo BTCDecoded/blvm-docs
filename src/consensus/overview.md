@@ -25,7 +25,7 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 - `EvalScript`: Script execution engine
 - `VerifyScript`: Script verification with witness data
 
-**Code**: [transaction.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/transaction.rs#L1-L200)
+**Code**: [transaction.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/transaction.rs)
 
 ### Block Validation
 - `ConnectBlock`: Block connection and validation
@@ -33,40 +33,40 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 - `CheckProofOfWork`: Proof of work verification
 - `ShouldReorganize`: Chain reorganization logic
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L1-L300)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Economic Model
 - `GetBlockSubsidy`: Block reward calculation with halving
 - `TotalSupply`: Total supply computation
 - `GetNextWorkRequired`: Difficulty adjustment calculation
 
-**Code**: [economic.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/economic.rs#L1-L200)
+**Code**: [economic.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/economic.rs)
 
 ### Mempool Protocol
 - `AcceptToMemoryPool`: Transaction mempool validation
 - `IsStandardTx`: Standard transaction checks
 - `ReplacementChecks`: RBF (Replace-By-Fee) logic
 
-**Code**: [mempool.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/mempool.rs#L1-L200)
+**Code**: [mempool.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/mempool.rs)
 
 ### Mining Protocol
 - `CreateNewBlock`: Block creation from mempool
 - `MineBlock`: Block mining and nonce finding
 - `GetBlockTemplate`: Block template generation
 
-**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/mining.rs#L1-L200)
+**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/mining.rs)
 
 ### Advanced Features
 - **SegWit**: Witness data validation and weight calculation
 - **Taproot**: P2TR output validation and key aggregation
 
-**Code**: [segwit.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/segwit.rs#L1-L200)
+**Code**: [segwit.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/segwit.rs)
 
 ## Design Principles
 
 1. **Pure Functions**: All functions are deterministic and side-effect-free
 2. **Mathematical Accuracy**: Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
-3. **Optimization Passes**: LLVM-like [optimization passes](architecture.md#optimization-passes) transform specifications into optimized code
+3. **Optimization Passes**: [Optimization passes](architecture.md#optimization-passes) (e.g. constant folding, batch script verification) optimize the implementation; the implementation is validated against the spec, not generated from it
 4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
 5. **Comprehensive Testing**: Extensive test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
@@ -76,12 +76,9 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 
 Implements mathematical verification of Bitcoin consensus rules:
 
-### Recent Improvements
-- **Strong Tier System**: Critical proofs prioritized with AWS spot instance integration
-- **Spam Filtering**: Always available (removed feature gate dependency)
-- **Parallel Proof Execution**: Tiered scheduling for efficient verification
+Verification uses BLVM Specification Lock and property-based tests. Critical proofs run in CI; see [Formal Verification](formal-verification.md) for coverage.
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L1-L412)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Verification Coverage
 
@@ -91,7 +88,7 @@ Implements mathematical verification of Bitcoin consensus rules:
 **Transaction Validation**: `check_transaction` structure rules verified  
 **Block Connection**: `connect_block` UTXO consistency verified  
 
-**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md#L1-L100)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ## BIP Implementation
 
@@ -103,7 +100,7 @@ Critical Bitcoin Improvement Proposals (BIPs) implemented:
 - **BIP90**: Block version enforcement (integrated in `connect_block()`)
 - **BIP147**: NULLDUMMY enforcement (enforced via script verification)
 
-**Code**: [block.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block.rs#L1-L200)
+**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ## Performance Optimizations
 
@@ -115,11 +112,11 @@ For maximum performance:
 ./scripts/pgo-build.sh
 ```
 
-**Expected gain**: Significant performance improvement
+**Expected gain**: Build and run with PGO for better throughput; measure on your workload.
 
 ### Optimization Passes
 
-LLVM-like optimization passes transform Orange Paper specifications:
+Optimization passes optimize the implementation (the implementation is validated against the Orange Paper, not generated from it):
 
 - **Constant Folding**: Compile-time constant evaluation
 - **Memory Layout Optimization**: Cache-friendly data structures
@@ -127,7 +124,7 @@ LLVM-like optimization passes transform Orange Paper specifications:
 - **Bounds Check Optimization**: Eliminate unnecessary checks
 - **Dead Code Elimination**: Remove unused code paths
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations/mod.rs#L1-L100)
+**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 
 ## Mathematical Lock
 
@@ -152,7 +149,7 @@ ripemd = "=0.1.3"
 bitcoin_hashes = "=0.11.0"
 ```
 
-**Code**: [Cargo.toml](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml#L1-L163)
+**Code**: [Cargo.toml](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml)
 
 ## See Also
 

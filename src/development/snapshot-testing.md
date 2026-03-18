@@ -13,7 +13,7 @@ Snapshot testing serves to:
 - **Document Behavior**: Snapshots serve as documentation of expected behavior
 - **Review Changes**: Interactive review of snapshot changes
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/mod.rs#L1-L5)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/mod.rs)
 
 ## Architecture
 
@@ -26,7 +26,7 @@ Bitcoin Commons uses `insta` for snapshot testing:
 - **Interactive Review**: Review changes before accepting
 - **Format Support**: Text, JSON, YAML, and custom formats
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L98-L129)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ## Usage
 
@@ -42,7 +42,7 @@ fn test_example() {
 }
 ```
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L100-L110)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ### Snapshot Examples
 
@@ -59,7 +59,7 @@ fn test_content_hash_snapshot() {
 }
 ```
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs#L10-L18)
+**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
 
 #### Directory Hash Snapshot
 
@@ -84,7 +84,7 @@ fn test_directory_hash_snapshot() {
 }
 ```
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs#L19-L37)
+**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
 
 #### Version Format Snapshot
 
@@ -102,7 +102,7 @@ fn test_version_format_snapshot() {
 }
 ```
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs#L39-L49)
+**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
 
 ## Running Snapshot Tests
 
@@ -118,7 +118,7 @@ Or using Makefile:
 make test-snapshot
 ```
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L44-L48)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ## Updating Snapshots
 
@@ -135,7 +135,7 @@ This opens an interactive review where you can:
 - Reject changes
 - See diffs
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L112-L123)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ### Update Command
 
@@ -143,7 +143,7 @@ This opens an interactive review where you can:
 make update-snapshots
 ```
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L47-L47)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ## Snapshot Files
 
@@ -153,7 +153,7 @@ make update-snapshots
 - **Format**: `.snap` files
 - **Version Controlled**: Yes
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L124-L129)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ### File Structure
 
@@ -177,7 +177,7 @@ tests/snapshots/
 - Review snapshot changes in PRs
 - Don't ignore snapshot files
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L203-L206)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ### 2. Review Changes
 
@@ -185,7 +185,7 @@ tests/snapshots/
 - Understand why snapshots changed
 - Verify changes are expected
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L159-L165)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ### 3. Use Descriptive Names
 
@@ -209,7 +209,7 @@ If snapshots fail unexpectedly:
 2. If changes are expected, accept them
 3. If changes are unexpected, investigate
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L159-L165)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ### Snapshot Not Found
 
@@ -236,7 +236,7 @@ Snapshot tests run in CI:
 make test-snapshot
 ```
 
-**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md#L144-L155)
+**Code**: [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 
 ## Configuration
 
@@ -249,7 +249,7 @@ Configuration file: `.insta.yml`
 snapshot_path: tests/snapshots
 ```
 
-**Code**: [.insta.yml](https://github.com/BTCDecoded/blvm-commons/blob/main/.insta.yml#L1-L15)
+**Code**: [.insta.yml](https://github.com/BTCDecoded/blvm-commons/blob/main/.insta.yml)
 
 ## Test Suites
 
@@ -262,7 +262,7 @@ Tests for validation functions:
 - Version format generation
 - Version parsing
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs#L1-L53)
+**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
 
 ### GitHub Snapshots
 
@@ -272,7 +272,7 @@ Tests for GitHub integration:
 - Status check formatting
 - Webhook processing
 
-**Code**: [github_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/github_snapshot_tests.rs#L1-L51)
+**Code**: [github_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/github_snapshot_tests.rs)
 
 ## See Also
 

@@ -8,7 +8,7 @@ The BLVM SDK provides two main API categories:
 - **Governance Primitives**: Cryptographic operations for governance (keys, signatures, multisig)
 - **Composition Framework**: Module registry and node composition APIs
 
-For detailed Rust API documentation, see [blvm-sdk on docs.rs](https://docs.rs/blvm-sdk).
+For more API overview and cross-references, see [API Index](../reference/api-index.md) in this book.
 
 ## Governance Primitives
 
@@ -467,4 +467,4 @@ let deps = registry.resolve_dependencies(&["lightning-module".to_string()])?;
 - [Module Development](../sdk/module-development.md) - Building modules that use these APIs
 - [SDK Examples](../sdk/examples.md) - More usage examples
 - [API Index](../reference/api-index.md) - Cross-reference to all APIs
-- [docs.rs/blvm-sdk](https://docs.rs/blvm-sdk) - Complete Rust API documentation
+- [API Index](../reference/api-index.md) - Cross-reference to all BLVM APIs in this book

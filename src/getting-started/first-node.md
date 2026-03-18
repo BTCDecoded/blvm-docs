@@ -16,27 +16,25 @@ cd ~/.config/blvm
 Create a configuration file `blvm.toml`:
 
 ```toml
-[network]
-protocol = "regtest"  # Start with regtest for safe testing
-port = 18444          # Regtest default port
+# Regtest for safe development
+listen_addr = "127.0.0.1:18444"
+protocol_version = "Regtest"
 
 [storage]
 data_dir = "~/.local/share/blvm"
-backend = "auto"      # Auto-select best available backend
-
-[rpc]
-enabled = true
-port = 18332         # RPC port (regtest default, configurable)
-host = "127.0.0.1"   # Only listen on localhost
+database_backend = "auto"  # Selects by build features: RocksDB when rocksdb enabled, then TidesDB, Redb, Sled
 
 [logging]
-level = "info"       # info, debug, trace, warn, error
+level = "info"  # info, debug, trace, warn, error
 ```
+
+**RPC address** is set via `--rpc-addr` (default `127.0.0.1:18332` for regtest) or `BLVM_RPC_ADDR`. Not in config file.
 
 ### Step 3: Start the Node
 
 ```bash
 blvm --config ~/.config/blvm/blvm.toml
+# Or: blvm -n regtest -d ~/.local/share/blvm
 ```
 
 **Expected Output:**
@@ -84,18 +82,12 @@ curl -X POST http://localhost:18332 \
 ### Development Node (Regtest)
 
 ```toml
-[network]
-protocol = "regtest"
-port = 18444
+listen_addr = "127.0.0.1:18444"
+protocol_version = "Regtest"
 
 [storage]
 data_dir = "~/.local/share/blvm"
-backend = "auto"
-
-[rpc]
-enabled = true
-port = 18332  # Regtest RPC port (configurable)
-host = "127.0.0.1"
+database_backend = "auto"
 
 [rbf]
 mode = "standard"  # Standard RBF for development
@@ -105,21 +97,17 @@ max_mempool_mb = 100
 min_relay_fee_rate = 1
 ```
 
+Start with: `blvm -n regtest -d ~/.local/share/blvm` (RPC defaults to `127.0.0.1:18332`)
+
 ### Testnet Node
 
 ```toml
-[network]
-protocol = "testnet"
-port = 18333
+listen_addr = "127.0.0.1:18333"
+protocol_version = "Testnet3"
 
 [storage]
 data_dir = "~/.local/share/blvm-testnet"
-backend = "redb"
-
-[rpc]
-enabled = true
-port = 18332  # Regtest RPC port (configurable)
-host = "127.0.0.1"
+database_backend = "redb"
 
 [rbf]
 mode = "standard"
@@ -130,28 +118,23 @@ min_relay_fee_rate = 1
 eviction_strategy = "lowest_fee_rate"
 ```
 
+Start with: `blvm -n testnet -d ~/.local/share/blvm-testnet -r 127.0.0.1:18332`
+
 ### Production Mainnet Node
 
 ```toml
-[network]
-protocol = "mainnet"
-port = 8333
+listen_addr = "0.0.0.0:8333"
+protocol_version = "BitcoinV1"
 
 [storage]
 data_dir = "/var/lib/blvm"
-backend = "redb"
+database_backend = "redb"
 
 [storage.cache]
+# Example values; canonical defaults in [Configuration Reference](../reference/configuration-reference.md)
 block_cache_mb = 200
 utxo_cache_mb = 100
 header_cache_mb = 20
-
-[rpc]
-enabled = true
-port = 8332  # Mainnet RPC port (configurable)
-host = "127.0.0.1"
-# Enable authentication for production
-# auth_required = true
 
 [rbf]
 mode = "standard"
@@ -165,11 +148,13 @@ max_ancestor_count = 25
 max_descendant_count = 25
 ```
 
+Start with: `blvm -n mainnet -d /var/lib/blvm -r 127.0.0.1:8332`. Use `[rpc_auth]` and `RPC_AUTH_TOKENS` for production.
+
 See [Node Configuration](../node/configuration.md) for complete configuration options.
 
 ## Storage
 
-The node stores blockchain data (blocks, UTXO set, chain state, and indexes) in the configured data directory. See [Storage Backends](../node/configuration.md#storage-backends) for configuration options.
+The node stores blockchain data (blocks, UTXO set, chain state, and indexes) in the configured data directory. See [Storage Backends](../node/storage-backends.md) for configuration options.
 
 ## Network Connection
 

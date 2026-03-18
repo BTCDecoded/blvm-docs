@@ -172,7 +172,7 @@ All repositories run their test suites:
 - Unit tests
 - Integration tests
 - Library and binary tests
-- **Excluded**: Doctests (for Phase 1 speed)
+- **Excluded**: Doctests (for build speed)
 
 **Test Requirements**:
 - All tests must pass

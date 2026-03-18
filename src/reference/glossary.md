@@ -4,19 +4,21 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## BLVM Components
 
-**BLVM** (Bitcoin Low-Level Virtual Machine) - Compiler-like infrastructure for Bitcoin implementations. Transforms the [Orange Paper](orange-paper.md) (IR) through [optimization passes](../consensus/architecture.md#optimization-passes) into optimized code, with [formal verification](../consensus/formal-verification.md) ensuring correctness. Similar to how LLVM provides compiler infrastructure, BLVM provides Bitcoin implementation infrastructure.
+**BLVM** (Bitcoin Low-Level Virtual Machine) - Compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](orange-paper.md) is the mathematical specification (IR); the implementation is **validated against** it via [formal verification](../consensus/formal-verification.md) (blvm-spec-lock), not generated or transformed from the IR. Similar to how LLVM provides compiler infrastructure, BLVM provides Bitcoin implementation infrastructure.
 
-**Orange Paper** - Mathematical specification of Bitcoin's consensus protocol, serving as the "intermediate representation" (IR) in BLVM's compiler-like architecture. Transformed through [optimization passes](../consensus/architecture.md#optimization-passes) into optimized code. See [Orange Paper](orange-paper.md).
+**Orange Paper** - Mathematical specification of Bitcoin's consensus protocol, serving as the "intermediate representation" (IR) in BLVM's compiler-like architecture. The implementation is **validated against** this spec via formal verification; code is not generated or transformed from the IR. See [Orange Paper](orange-paper.md).
 
-**Optimization Passes** - Runtime optimization passes in [blvm-consensus](../consensus/overview.md) that transform the [Orange Paper](orange-paper.md) specification into optimized code: Pass 2 (Constant Folding), Pass 3 (Memory Layout Optimization), Pass 5 (SIMD Vectorization), plus bounds check optimization, dead code elimination, and inlining hints. See [Optimization Passes](../consensus/architecture.md#optimization-passes).
+**Optimization Passes** - Runtime optimizations applied to the [blvm-consensus](../consensus/overview.md) implementation (e.g. constant folding, memory layout, SIMD vectorization, bounds check optimization, dead code elimination). They optimize the implementation code; the implementation is validated against the Orange Paper, not generated from it. See [Optimization Passes](../consensus/architecture.md#optimization-passes).
 
-**blvm-consensus** - Optimized mathematical implementation of Bitcoin consensus rules with [formal verification](../consensus/formal-verification.md). Includes [optimization passes](../consensus/architecture.md#optimization-passes) that transform the [Orange Paper](orange-paper.md) specification into production-ready code. Foundation layer with no dependencies. See [Consensus Overview](../consensus/overview.md).
+**blvm-primitives** - Shared foundation crate: Bitcoin types, serialization, crypto, opcodes, constants. Used by blvm-consensus and blvm-protocol; consensus re-exports for API compatibility. See [API Index](api-index.md#foundation-blvm-primitives).
 
-**blvm-protocol** - Protocol abstraction layer for multiple Bitcoin variants (mainnet, testnet, regtest) while maintaining consensus compatibility. See [Protocol Overview](../protocol/overview.md).
+**blvm-consensus** - Optimized mathematical implementation of Bitcoin consensus rules with [formal verification](../consensus/formal-verification.md). Builds on **blvm-primitives**; block/script logic in `block/` and `script/` submodules. See [Consensus Overview](../consensus/overview.md).
+
+**blvm-protocol** - Protocol abstraction layer for multiple Bitcoin variants (mainnet, testnet, regtest) while maintaining consensus compatibility. Uses **blvm-primitives**. See [Protocol Overview](../protocol/overview.md).
 
 **blvm-node** - Bitcoin node implementation with [storage](../node/storage-backends.md), [networking](../node/transport-abstraction.md), [RPC](../node/rpc-api.md), and [mining](../node/mining.md) capabilities. Production-ready reference implementation. See [Node Overview](../node/overview.md).
 
-**blvm-sdk** - Developer toolkit providing [governance cryptographic primitives](../governance/overview.md), [module composition framework](../architecture/module-system.md), and CLI tools for key management and signing. See [SDK Overview](../sdk/overview.md).
+**blvm-sdk** - Developer toolkit: [governance primitives](../governance/overview.md), [node module authoring](../sdk/module-development.md) (macros, `run_module!`, `node` feature), [composition](../architecture/module-system.md), and CLI tools (keygen, sign, compose, etc.). See [SDK Overview](../sdk/overview.md).
 
 ## Governance
 
@@ -37,7 +39,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Spec Drift Detection** - Automated detection when implementation code diverges from the [Orange Paper](orange-paper.md) mathematical specification.
 
-**Compiler-Like Architecture** - Architecture where [Orange Paper](orange-paper.md) (IR) → [optimization passes](../consensus/architecture.md#optimization-passes) → [blvm-consensus](../consensus/overview.md) → [blvm-node](../node/overview.md), similar to source code → IR → optimization passes → machine code in compilers. See [System Overview](../architecture/system-overview.md).
+**Compiler-Like Architecture** - The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** the spec via [formal verification](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [System Overview](../architecture/system-overview.md).
 
 **Process Isolation** - [Module system](../architecture/module-system.md) design where each module runs in a separate process with isolated memory, preventing failures from propagating to the base node.
 
@@ -45,7 +47,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## Storage & Networking
 
-**Storage Backends** - Database backends for blockchain data: **redb** (default, production-ready), **sled** (beta, fallback), **auto** (auto-select based on availability). See [Storage Backends](../node/storage-backends.md).
+**Storage Backends** - Database backends for blockchain data. **`database_backend = auto`** selects by build features (RocksDB when enabled, then TidesDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
 
 **Pruning** - Storage optimization that removes old block data while keeping the UTXO set. Configurable to keep last N blocks.
 
@@ -75,10 +77,6 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **RPC** (Remote Procedure Call) - [JSON-RPC 2.0 interface](../node/rpc-api.md) for interacting with the node. BLVM implements Bitcoin Core-compatible methods.
 
-## Governance Phases
+## Governance Status
 
-**Phase 1** (Infrastructure Building) - All core components are implemented. Governance is not activated. Test keys are used.
-
-**Phase 2** (Governance Activation) - Governance rules are enforced with real cryptographic keys and keyholder onboarding.
-
-**Phase 3** (Full Operation) - Mature, stable system with battle-tested governance and production deployment.
+**Governance activation** - Governance rules are not yet activated; test keys are used. When activated, real cryptographic keys and keyholder onboarding enforce governance. The system is experimental until then. See [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md).
