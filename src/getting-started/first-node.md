@@ -1,55 +1,88 @@
-# First Node Setup
+# First Node Setup (regtest)
 
-Complete guide for setting up and configuring your first BLVM node.
+**This guide is regtest-only from top to bottom** — local chain, no public seeds, default RPC `127.0.0.1:18332`. You are not syncing mainnet here.
 
-## Step-by-Step Setup
+Optional later: [Configuration examples](#configuration-examples) include testnet and mainnet. Ignore those until you intentionally switch networks.
 
-### Step 1: Create Configuration Directory
+---
+
+## Regtest: step-by-step
+
+### Step 1: Create configuration directory
 
 ```bash
 mkdir -p ~/.config/blvm
 cd ~/.config/blvm
 ```
 
-### Step 2: Create Basic Configuration
+### Step 2: Create `blvm.toml` (regtest)
 
-Create a configuration file `blvm.toml`:
+Create `~/.config/blvm/blvm.toml`:
 
 ```toml
-# Regtest for safe development
-listen_addr = "127.0.0.1:18444"
+# --- regtest (local dev) ---
+transport_preference = "tcponly"
+# BLVM P2P listen — use a port other than 18444 if Bitcoin Core -regtest runs here (Core uses 18444).
+listen_addr = "127.0.0.1:18445"
 protocol_version = "Regtest"
 
 [storage]
 data_dir = "~/.local/share/blvm"
-database_backend = "auto"  # Selects by build features: RocksDB when rocksdb enabled, then TidesDB, Redb, Sled
+database_backend = "auto"
 
 [logging]
-level = "info"  # info, debug, trace, warn, error
+level = "info"
 ```
 
-**RPC address** is set via `--rpc-addr` (default `127.0.0.1:18332` for regtest) or `BLVM_RPC_ADDR`. Not in config file.
+- **`transport_preference`** is required. If TOML parse fails, the node never applies `protocol_version = "Regtest"` — fix the file before continuing.
+- **P2P port:** `18444` is Bitcoin Core’s default regtest listen. Give BLVM a different port (e.g. `18445`) whenever Core and BLVM run on the same host; point `persistent_peers` at Core’s `127.0.0.1:18444` when you want IBD from Core.
+- **RPC** is not in this file: use defaults (`127.0.0.1:18332`) or `--rpc-addr` / `BLVM_RPC_ADDR`.
 
-### Step 3: Start the Node
+### Step 2b: Validate the file
+
+From any directory, using the same `blvm` binary you will run:
 
 ```bash
-blvm --config ~/.config/blvm/blvm.toml
-# Or: blvm -n regtest -d ~/.local/share/blvm
+/path/to/blvm config validate --path ~/.config/blvm/blvm.toml
 ```
 
-**Expected Output:**
-```
-[INFO] Starting BLVM node
-[INFO] Network: regtest
-[INFO] Data directory: ~/.local/share/blvm
-[INFO] RPC server listening on 127.0.0.1:18332
-[INFO] Connecting to network...
-[INFO] Connected to 0 peers
+You should see **`Configuration file is valid`**. If not, fix the TOML; do not start sync until this passes.
+
+### Step 3: Start the regtest node
+
+Same binary as validate. Clear mainnet IBD env vars if your shell still has them from other work:
+
+```bash
+env -u BLVM_ASSUME_VALID_HEIGHT -u BLVM_ASSUMEVALID \
+  /path/to/blvm --config ~/.config/blvm/blvm.toml --verbose
 ```
 
-### Step 4: Verify Node is Running
+**Confirm regtest in the first log lines:**
 
-In another terminal, check the node status:
+- `Configuration loaded successfully from file`
+- **`Network: Regtest`**
+- `Data directory:` matches your `[storage].data_dir`
+
+**No config file** (still regtest):
+
+```bash
+env -u BLVM_ASSUME_VALID_HEIGHT -u BLVM_ASSUMEVALID \
+  /path/to/blvm -n regtest -d ~/.local/share/blvm --verbose
+```
+
+Example lines:
+
+```
+[INFO] blvm: Network: Regtest
+[INFO] blvm: Data directory: /home/you/.local/share/blvm
+[INFO] blvm_node::rpc: Starting TCP RPC server on 127.0.0.1:18332
+```
+
+**Peers on regtest:** there are no public DNS seeds. **`0 peers`** and “skipping DNS seed discovery” are normal. To sync blocks you need another regtest peer (e.g. second `blvm`, or Bitcoin Core `-regtest`) and `persistent_peers` / a local harness — that is still regtest, not mainnet.
+
+### Step 4: Verify regtest RPC
+
+In another terminal (regtest RPC port **18332**):
 
 ```bash
 curl -X POST http://localhost:18332 \
@@ -77,12 +110,15 @@ curl -X POST http://localhost:18332 \
 }
 ```
 
-## Configuration Examples
+## Configuration examples (other networks)
 
-### Development Node (Regtest)
+The steps above are **regtest**. Below are copy-paste starting points if you leave regtest.
+
+### Development node (regtest, extended)
 
 ```toml
-listen_addr = "127.0.0.1:18444"
+transport_preference = "tcponly"
+listen_addr = "127.0.0.1:18445"
 protocol_version = "Regtest"
 
 [storage]
@@ -97,11 +133,12 @@ max_mempool_mb = 100
 min_relay_fee_rate = 1
 ```
 
-Start with: `blvm -n regtest -d ~/.local/share/blvm` (RPC defaults to `127.0.0.1:18332`)
+Start with: `blvm -n regtest -d ~/.local/share/blvm` (RPC defaults to `127.0.0.1:18332`).
 
-### Testnet Node
+### Testnet node
 
 ```toml
+transport_preference = "tcponly"
 listen_addr = "127.0.0.1:18333"
 protocol_version = "Testnet3"
 
@@ -120,9 +157,10 @@ eviction_strategy = "lowest_fee_rate"
 
 Start with: `blvm -n testnet -d ~/.local/share/blvm-testnet -r 127.0.0.1:18332`
 
-### Production Mainnet Node
+### Production mainnet node
 
 ```toml
+transport_preference = "tcponly"
 listen_addr = "0.0.0.0:8333"
 protocol_version = "BitcoinV1"
 
@@ -156,22 +194,78 @@ See [Node Configuration](../node/configuration.md) for complete configuration op
 
 The node stores blockchain data (blocks, UTXO set, chain state, and indexes) in the configured data directory. See [Storage Backends](../node/storage-backends.md) for configuration options.
 
-## Network Connection
+## Peers and sync (regtest vs public networks)
 
-The node automatically discovers peers, connects to the network, syncs blockchain state, and relays transactions and blocks.
+- **Regtest:** No wide-area peer discovery. You only get blocks from peers you configure (`persistent_peers`, local second node, or Core `-regtest`). Staying at height 0 with 0 peers is expected until you add that.
+- **Mainnet / testnet:** DNS seeds and addr relay apply; IBD pulls from the public network.
 
-## RPC Interface
+## Regtest: how you get past genesis (`height > 0`)
 
-Once running, interact with the node via JSON-RPC:
+You need **a peer that already has blocks**, or a **datadir that already contains** those blocks. A lone BLVM on regtest with no peers stays at genesis — that is not “missing a feature,” it is how regtest is defined (no public seeds).
+
+**1. Bitcoin Core regtest (the usual way to create blocks)**
+
+Run Core on default regtest P2P **`127.0.0.1:18444`**, mine some blocks, then run BLVM on a **different** local P2P port and peer **outbound** to Core. Example Core side:
 
 ```bash
-# Get blockchain info (mainnet uses port 8332, testnet/regtest use 18332)
-curl -X POST http://localhost:8332 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
+bitcoind -regtest -daemon
+bitcoin-cli -regtest createwallet w
+ADDR=$(bitcoin-cli -regtest getnewaddress)
+bitcoin-cli -regtest generatetoaddress 200 "$ADDR"
 ```
 
-See [RPC API Reference](../node/rpc-api.md) for complete API documentation.
+BLVM TOML (listen on `18445`, sync from Core on `18444`; matches `local/regtest-two-node-seed-bootstrap.toml`):
+
+```toml
+transport_preference = "tcponly"
+listen_addr = "127.0.0.1:18445"
+protocol_version = "Regtest"
+
+persistent_peers = ["127.0.0.1:18444"]
+
+[storage]
+data_dir = "~/.local/share/blvm-regtest-from-core"
+database_backend = "auto"
+
+[ibd]
+mode = "parallel"
+preferred_peers = ["127.0.0.1:18444"]
+
+[logging]
+level = "info"
+```
+
+Start BLVM with that config (or pass `--listen-addr 127.0.0.1:18445` if your file is merged with other settings); IBD should pull blocks until it matches Core’s tip.
+
+**2. Two BLVM nodes**
+
+Works once the **seed** already has `height > 0` (from (1), or from copying a populated seed `data_dir`). A **follower** then syncs from the seed over `persistent_peers`. If both nodes start from an empty datadir, both stay at genesis — add blocks with (1) first, or reuse a filled datadir.
+
+**3. Reuse a populated data directory**
+
+Copy/sync the configured `[storage].data_dir` from a machine that already completed regtest sync for the same network.
+
+**4. `submitblock` on a running BLVM node**
+
+On a normal node (RPC server wired with `NetworkManager`), `submitblock` checks that the block’s `prev_block_hash` matches the **current tip**, then **queues the block for the same run-loop processing as P2P-received blocks**, so a valid next block can extend your local chain. You still have to **produce** that block (for example `getblocktemplate` plus a miner); BLVM does not offer Core’s `generatetoaddress` yet.
+
+If `MiningRpc` is used without a network manager (some tests or minimal tooling), `submitblock` remains **validation-only** and does not advance the chain.
+
+If you use the workspace **local harness** (`BitcoinCommons/local/regtest-two-blvm.sh`), `regtest-two-node-seed-bootstrap.toml` is wired for Core on **:18444** and seed P2P on **:18445**. After Core has blocks, run **`./local/regtest-two-blvm.sh start-seed-bootstrap`**, then **`start-follower`** (or **`start-both`** after the seed has height > 0) as documented in the script header.
+
+## RPC interface (regtest)
+
+Default listen in this guide: **`127.0.0.1:18332`**.
+
+```bash
+curl -s -X POST http://127.0.0.1:18332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"getblockchaininfo","params":[],"id":1}'
+```
+
+Mainnet uses port **8332** by default; do not use that for the regtest flow above.
+
+See [RPC API Reference](../node/rpc-api.md) for the full API.
 
 ## See Also
 

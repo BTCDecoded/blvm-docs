@@ -10,7 +10,7 @@ The node supports multiple Bitcoin protocol variants: **Regtest** (default, regr
 
 **CLI > ENV > config file > defaults**
 
-Environment variables (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`) override config file values. See the project `docs/ENV_VARIABLES.md` (in the main repo or workspace root) for the full list. Some options (relay, fibre, dandelion) are config-file-only; use CLI flags like `--enable-dandelion` for common overrides.
+Environment variables (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`) override config file values. See [Environment variables](../reference/configuration-reference.md#environment-variables) in the configuration reference for the full list. Some options (relay, fibre, dandelion) are config-file-only; use CLI flags like `--enable-dandelion` for common overrides.
 
 ## Path Expansion
 
@@ -65,7 +65,7 @@ headers_timeout_secs = 30
 headers_max_failures = 10
 ```
 
-See `BLVM_IBD_*` in the project's `ENV_VARIABLES.md` for overrides.
+See [Environment variables](../reference/configuration-reference.md#environment-variables) for IBD-related `BLVM_*` overrides.
 
 ## Protocol Limits
 
@@ -93,7 +93,7 @@ export BLVM_NETWORK_TARGET_PEER_COUNT=125
 
 **Common ENV vars:** `BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`, `BLVM_LOG_LEVEL`, `BLVM_NODE_MAX_PEERS`, `BLVM_IBD_*`, `BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_REQUEST_*`, `BLVM_MODULE_MAX_*`, `RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`.
 
-See the project's `docs/ENV_VARIABLES.md` for the complete list.
+See [Environment variables](../reference/configuration-reference.md#environment-variables) for the complete list.
 
 ## Command Line Options
 
@@ -128,7 +128,7 @@ blvm config show
 blvm status --rpc-addr 127.0.0.1:8332
 ```
 
-See `docs/CLI_OPTIONS.md` for the complete CLI reference.
+See [Command-line arguments](../reference/configuration-reference.md#command-line-arguments) in the configuration reference for the full CLI tables, or run `blvm --help`.
 
 ## Storage Backends
 
@@ -289,7 +289,6 @@ See [Module System](../architecture/module-system.md) for module configuration d
 
 ## See Also
 
-- [CLI Options](../../../../docs/CLI_OPTIONS.md) - Full command-line reference
 - [Node Overview](overview.md) - Node features and architecture
 - [Node Operations](operations.md) - Running and managing your node
 - [Storage Backends](storage-backends.md) - Detailed storage backend information

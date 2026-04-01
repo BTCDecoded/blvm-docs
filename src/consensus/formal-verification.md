@@ -153,9 +153,7 @@ cargo +nightly miri test --test consensus_property_tests
 
 ### Mathematical Specifications
 
-Multiple functions have complete formal documentation
-
-**Location**: `docs/MATHEMATICAL_SPECIFICATIONS_COMPLETE.md`
+Multiple functions have formal documentation aligned with the Orange Paper and consensus crate sources (there is no separate shipped `MATHEMATICAL_SPECIFICATIONS_COMPLETE.md` in this book).
 
 **Documented Functions**:
 - Economic: `get_block_subsidy`, `total_supply`, `calculate_fee`

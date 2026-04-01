@@ -442,7 +442,7 @@ blvm --network mainnet --data-dir /var/lib/blvm
 blvm config show
 ```
 
-See `docs/CLI_OPTIONS.md` for the complete CLI reference.
+CLI behavior is documented in this section; run `blvm --help` for the full generated flag list.
 
 ## Environment Variables
 
@@ -458,7 +458,7 @@ export BLVM_NETWORK_TARGET_PEER_COUNT=125
 
 **Key ENV categories:** Node (`BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`), Network timing (`BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_NETWORK_PEER_CONNECTION_DELAY`), Request timeouts (`BLVM_REQUEST_ASYNC_TIMEOUT`, etc.), Module limits (`BLVM_MODULE_MAX_*`), IBD (`BLVM_IBD_*`), Storage (`BLVM_DBCACHE_MB`, `BLVM_ROCKSDB_*`), External (`RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`).
 
-See `docs/ENV_VARIABLES.md` for the complete reference.
+Additional or experimental `BLVM_*` names may exist; use `blvm --help` and the node’s config schema as the source of truth in this repository.
 
 ## Configuration Precedence
 
@@ -481,7 +481,6 @@ Common validation errors:
 
 ## See Also
 
-- [CLI Options](../../../../docs/CLI_OPTIONS.md) - Full command-line reference
 - [Node Configuration](../node/configuration.md) - Quick start guide
 - [Storage Backends](../node/configuration.md#storage-backends) - Backend selection details
 - [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer) - Transport options
