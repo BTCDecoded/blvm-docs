@@ -72,8 +72,8 @@ dig docs.thebitcoincommons.org CNAME
 ## Common Issues
 
 ### Site shows 404
-- **Cause**: DNS not propagated or GitHub Pages not enabled
-- **Fix**: Wait for DNS propagation, verify GitHub Pages settings
+- **Cause**: DNS not propagated, GitHub Pages not enabled, or **Deploy Documentation** workflow failed (no artifact uploaded)
+- **Fix**: Confirm **Settings → Pages → Source: GitHub Actions**, check the latest **Actions** run for `mdbook build` errors (missing files, bad `{{#include}}` paths), and verify DNS CNAME per [SETUP.md](SETUP.md)
 
 ### Included content not showing
 - **Cause**: `{{#include}}` directives pointing to incorrect paths

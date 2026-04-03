@@ -13,13 +13,13 @@ create-missing = true
 default-theme = "navy"
 preferred-dark-theme = "navy"
 git-repository-url = "https://github.com/BTCDecoded/blvm-docs"
-git-repository-icon = "fa-github"
+git-repository-icon = "fab-github"
 edit-url-template = "https://github.com/BTCDecoded/blvm-docs/edit/main/{path}"
 additional-css = ["custom.css"]
 
 [output.html.search]
 enable = true
-limit = 30
+limit-results = 30
 teaser-word-count = 30
 use-boolean-and = true
 boost-title = 2

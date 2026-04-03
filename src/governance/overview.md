@@ -2,7 +2,7 @@
 
 The governance system enforces development processes cryptographically across Bitcoin Commons repositories. See [Governance Model](governance-model.md) for details.
 
-{{#include ../../../modules/governance/README.md}}
+{{#include ../../modules/governance/README.md}}
 
 ## Attack Path Interception
 

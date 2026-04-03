@@ -32,7 +32,7 @@ The module system provides comprehensive janitorial and maintenance events that 
 **Purpose**: Notify modules that node is fully operational
 **Payload**:
 - `duration_ms`: u64 - Startup duration
-- `components`: Vec<String> - Components that were initialized
+- `components`: `Vec<String>` - Components that were initialized
 
 **Module Action**:
 - Initialize connections
@@ -48,8 +48,8 @@ The module system provides comprehensive janitorial and maintenance events that 
 - `operation`: String - "flush", "cleanup", or "both"
 - `urgency`: String - "low", "medium", or "high"
 - `reason`: String - "periodic", "shutdown", "low_disk", "manual"
-- `target_age_days`: Option<u64> - Target age for cleanup (if operation includes cleanup)
-- `timeout_seconds`: Option<u64> - Timeout for high urgency operations
+- `target_age_days`: `Option<u64>` - Target age for cleanup (if operation includes cleanup)
+- `timeout_seconds`: `Option<u64>` - Timeout for high urgency operations
 
 **Module Action**:
 - **Flush**: Write pending data to disk
@@ -68,7 +68,7 @@ The module system provides comprehensive janitorial and maintenance events that 
 **Purpose**: Allow modules to prepare for maintenance
 **Payload**:
 - `maintenance_type`: String - "backup", "cleanup", "prune"
-- `estimated_duration_seconds`: Option<u64> - Estimated duration
+- `estimated_duration_seconds`: `Option<u64>` - Estimated duration
 
 **Module Action**:
 - Pause non-critical operations
@@ -81,7 +81,7 @@ The module system provides comprehensive janitorial and maintenance events that 
 - `maintenance_type`: String - Maintenance type
 - `success`: bool - Success status
 - `duration_ms`: u64 - Duration in milliseconds
-- `results`: Option<String> - Results/statistics (optional JSON)
+- `results`: `Option<String>` - Results/statistics (optional JSON)
 
 **Module Action**:
 - Resume normal operations
@@ -93,7 +93,7 @@ The module system provides comprehensive janitorial and maintenance events that 
 **Payload**:
 - `check_type`: String - "periodic", "manual", "startup"
 - `node_healthy`: bool - Node health status
-- `health_report`: Option<String> - Health report (optional JSON)
+- `health_report`: `Option<String>` - Health report (optional JSON)
 
 **Module Action**:
 - Report module health status

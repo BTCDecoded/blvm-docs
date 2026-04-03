@@ -34,8 +34,19 @@ jobs:
           mdbook-version: 'latest'
 
       - name: Build book
-        run: mdbook build
-        
+        run: |
+          set -o pipefail
+          mdbook build 2>&1 | tee mdbook-build.log
+          mdbook_status=${PIPESTATUS[0]}
+          if [ "$mdbook_status" -ne 0 ]; then
+            echo "::error::mdbook build exited with status $mdbook_status"
+            exit "$mdbook_status"
+          fi
+          if grep -qE '^ERROR |^ERROR\]' mdbook-build.log || grep -q 'Failed to deserialize' mdbook-build.log; then
+            echo "::error::mdBook reported configuration or include errors (see log above)"
+            exit 1
+          fi
+
       - name: Add .nojekyll to deployment root
         run: touch book/.nojekyll
       
