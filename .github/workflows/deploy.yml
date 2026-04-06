@@ -33,6 +33,19 @@ jobs:
         with:
           mdbook-version: 'latest'
 
+      - name: Fetch mdBook include sources (Orange Paper, governance)
+        run: |
+          set -eux
+          mkdir -p modules
+          if [ ! -f modules/blvm-spec/THE_ORANGE_PAPER.md ]; then
+            rm -rf modules/blvm-spec
+            git clone --depth 1 https://github.com/BTCDecoded/blvm-spec.git modules/blvm-spec
+          fi
+          if [ ! -f modules/governance/README.md ] || [ ! -f modules/governance/GOVERNANCE.md ]; then
+            rm -rf modules/governance
+            git clone --depth 1 https://github.com/BTCDecoded/governance.git modules/governance
+          fi
+
       - name: Build book
         run: |
           set -o pipefail

@@ -1,5 +1,7 @@
 # Configuration System
 
+> **Accuracy:** This chapter describes the *intended* governance configuration architecture (YAML source of truth, tier rules, fallbacks). On current `blvm-commons` `main`, YAML is loaded through **`src/config/loader.rs`** (`GovernanceConfigFiles` and related types). Older doc links to `src/governance/config_registry.rs`, `config_reader.rs`, `yaml_loader.rs`, and similar files **do not exist** in that form; use **loader.rs** and the **[governance](https://github.com/BTCDecoded/governance) repo** `config/` tree as the live references.
+
 ## Overview
 
 The Bitcoin Commons configuration system provides a unified, type-safe interface for all governance-controlled parameters. The system uses **YAML files as the source of truth** with a database-backed registry for governance-controlled changes and a comprehensive fallback chain.
@@ -32,7 +34,7 @@ The `ConfigRegistry` stores all governance-controlled configuration parameters i
 - Complete audit trail of all changes
 - Automatic sync from YAML on startup
 
-**Code**: [config_registry.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_registry.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ### 3. ConfigReader (Unified Interface)
 
@@ -44,7 +46,7 @@ The `ConfigReader` provides a type-safe interface for reading configuration valu
 - Automatic cache invalidation on changes
 - Fallback chain support
 
-**Code**: [config_reader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_reader.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ## Fallback Chain
 
@@ -60,7 +62,7 @@ The system uses a four-tier fallback chain for configuration values:
 4. Hardcoded Defaults (safety fallback)
 ```
 
-**Implementation**: ```76:110:blvm-commons/src/governance/config_reader.rs```
+**Implementation**: See `src/config/loader.rs` in **blvm-commons**
 
 ## Sync Mechanisms
 
@@ -78,13 +80,13 @@ This process:
 3. Compares with database values
 4. Updates database if no governance history exists (preserves governance-approved changes)
 
-**Code**: [config_registry.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_registry.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ### sync_to_yaml()
 
 When governance-approved changes are activated, the system can write changes back to YAML files. Full bidirectional sync is planned.
 
-**Code**: [config_registry.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_registry.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ## Configuration Categories
 
@@ -117,7 +119,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 
 **Total**: 87+ variables
 
-**Code**: [config_defaults.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_defaults.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ### Action Tier Thresholds (15 variables)
 
@@ -139,12 +141,12 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `tier_5_signatures_total` | 5 | Tier 5: Total signatures available |
 | `tier_5_review_period_days` | 180 | Tier 5: Review period (days) |
 
-**Code**: [config_defaults.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_defaults.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 | `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Mining hashpower for support (%) |
 | `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Economic activity for support (%) |
 
-**Code**: [config_defaults.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_defaults.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ### Commons Contributor Thresholds (8 variables)
 
@@ -157,7 +159,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `commons_contributor_weight_formula` | "linear" | Weight calculation formula |
 | `commons_contributor_weight_cap` | 0.10 | Maximum weight per contributor (10%) |
 
-**Code**: [config_defaults.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_defaults.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ### Governance Phase Thresholds (11 variables)
 
@@ -172,7 +174,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `phase_mature_min_blocks` | 200000 | Mature phase: Minimum blocks |
 | `phase_mature_min_contributors` | 100 | Mature phase: Minimum contributors |
 
-**Code**: [config_defaults.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_defaults.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ### Repository Layer Thresholds (9 variables)
 
@@ -191,14 +193,14 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `layer_5_signatures_total` | 5 | Layer 5: Total signatures |
 | `layer_5_review_period_days` | 180 | Layer 5: Review period (days) |
 
-**Code**: [config_defaults.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_defaults.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ### Complete Reference
 
 For the complete list of all 87+ variables with descriptions and default values, see:
 - **YAML Source**: `governance/config/FORKABLE_VARIABLES.md`
 - **Default Values**: `governance/config/DEFAULT_VALUES_REFERENCE.md`
-- **Implementation**: `blvm-commons/src/governance/config_defaults.rs`
+- **Implementation**: `blvm-commons/src/config/loader.rs` and YAML under **governance**/config/
 
 ## Governance Change Workflow
 
@@ -210,7 +212,7 @@ Changing a configuration parameter requires Tier 5 governance approval:
 5. **Activation**: Change activated in database via `activate_change()`
 6. **Sync**: Change optionally synced back to YAML files
 
-**Code**: [config_registry.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_registry.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ## Usage Examples
 
@@ -263,7 +265,7 @@ let (req, total) = validator.get_tier_threshold(3).await?;
   - Manual via `clear_cache()` or `invalidate_key()`
 - **Cache Storage**: In-memory `HashMap<String, serde_json::Value>`
 
-**Code**: [config_reader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/config_reader.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ## YAML Structure
 
@@ -285,7 +287,7 @@ tiers:
 
 The `YamlConfigLoader` extracts values from these files into a flat key-value structure for the registry.
 
-**Code**: [yaml_loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/yaml_loader.rs)
+**Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
 ## Initialization
 

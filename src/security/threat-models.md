@@ -152,7 +152,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Fuzzing with sanitizers (ASAN, UBSAN, MSAN)
 - Runtime assertions
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ### Integer Overflow
 
@@ -164,7 +164,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Property-based testing
 - Runtime assertions
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ### Supply Chain Attacks
 

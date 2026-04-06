@@ -273,6 +273,6 @@ The storage layer handles backend failures gracefully:
 
 - [Node Configuration](configuration.md) - Storage configuration options
 - [Node Operations](operations.md) - Storage operations and maintenance
-- [Pruning](pruning.md) - Pruning configuration and usage
+- [Pruning](#pruning-support) — pruning configuration on this page; see also [Node configuration](configuration.md)
 
 

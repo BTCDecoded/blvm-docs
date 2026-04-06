@@ -87,7 +87,7 @@ The governance application deduplicates messages:
 - **Sender Tracking**: Tracks message origin
 - **Timestamp**: Prevents replay attacks
 
-**Code**: [message_dedup.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/message_dedup.rs)
+**Code**: [governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/handlers/governance.rs) (`governance` feature)
 
 ## P2P Receiver
 
@@ -100,7 +100,7 @@ The governance application receives messages via P2P receiver:
 - **Storage**: Stores messages in database
 - **Processing**: Processes governance actions
 
-**Code**: [p2p_receiver.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/governance/p2p_receiver.rs)
+**Code**: [governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/handlers/governance.rs)
 
 ## Network Integration
 

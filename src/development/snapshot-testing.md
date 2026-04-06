@@ -13,7 +13,7 @@ Snapshot testing serves to:
 - **Document Behavior**: Snapshots serve as documentation of expected behavior
 - **Review Changes**: Interactive review of snapshot changes
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/mod.rs)
+**Code**: [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs) (`insta` snapshots; inline `mod validation_snapshot_tests`)
 
 ## Architecture
 
@@ -59,7 +59,7 @@ fn test_content_hash_snapshot() {
 }
 ```
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
+**Code**: [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs)
 
 #### Directory Hash Snapshot
 
@@ -84,7 +84,7 @@ fn test_directory_hash_snapshot() {
 }
 ```
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
+**Code**: [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs)
 
 #### Version Format Snapshot
 
@@ -102,7 +102,7 @@ fn test_version_format_snapshot() {
 }
 ```
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
+**Code**: [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs)
 
 ## Running Snapshot Tests
 
@@ -262,7 +262,7 @@ Tests for validation functions:
 - Version format generation
 - Version parsing
 
-**Code**: [validation_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/validation_snapshot_tests.rs)
+**Code**: [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs)
 
 ### GitHub Snapshots
 
@@ -272,7 +272,7 @@ Tests for GitHub integration:
 - Status check formatting
 - Webhook processing
 
-**Code**: [github_snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot/github_snapshot_tests.rs)
+**Code**: [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs)
 
 ## See Also
 

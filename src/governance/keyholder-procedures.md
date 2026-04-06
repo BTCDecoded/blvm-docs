@@ -35,7 +35,7 @@ blvm-keygen --output maintainer.key --format pem
 
 ### Key Rotation
 
-Keys can be rotated through the governance process. See [MAINTAINER_GUIDE.md](../../modules/governance/guides/MAINTAINER_GUIDE.md) for detailed procedures.
+Keys can be rotated through the governance process. See [MAINTAINER_GUIDE.md](https://github.com/BTCDecoded/governance/blob/main/guides/MAINTAINER_GUIDE.md) for detailed procedures.
 
 ## Emergency Keyholders
 
@@ -51,7 +51,7 @@ Emergency keyholders (5-of-7) can activate emergency mode for critical situation
 ![Release Pipeline Gate Strength](../images/release-pipeline-gate-strength.png)
 *Figure: Gate strength across the release pipeline. Each gate requires specific signatures and review periods based on the change tier.*
 
-For detailed maintainer procedures, see [MAINTAINER_GUIDE.md](../../modules/governance/guides/MAINTAINER_GUIDE.md).
+For detailed maintainer procedures, see [MAINTAINER_GUIDE.md](https://github.com/BTCDecoded/governance/blob/main/guides/MAINTAINER_GUIDE.md).
 
 ## See Also
 

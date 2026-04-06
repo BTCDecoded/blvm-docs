@@ -127,21 +127,22 @@ The `blvm-commons` repository provides reusable workflows that other repositorie
 
 ## Workflow Dependencies and Ordering
 
-Builds follow a strict dependency order:
+Builds follow **Cargo’s dependency graph** (simplified view):
 
 ```
-1. blvm-consensus (L2) - No dependencies
+1. blvm-primitives — foundation types/crypto shared by consensus & protocol
    ↓
-2. blvm-protocol (L3) - Depends on blvm-consensus
+2. blvm-consensus — depends on primitives
    ↓
-3. blvm-node (L4) - Depends on blvm-protocol + blvm-consensus
+3. blvm-protocol — depends on consensus + primitives
    ↓
-4. blvm (main) - Depends on blvm-node
+4. blvm-node — depends on protocol + consensus
+   ↓
+5. blvm (CLI) — depends on blvm-node
 
-Parallel:
-5. blvm-sdk - No dependencies
+blvm-sdk — depends on blvm-protocol + blvm-consensus (and optionally blvm-node); not a separate “no-deps” lane
    ↓
-6. blvm-commons - Depends on blvm-sdk
+blvm-commons — depends on blvm-sdk + blvm-protocol
 ```
 
 **Security Gates**: Consensus verification (tests + optional BLVM Specification Lock) must pass before downstream builds proceed.
@@ -298,7 +299,7 @@ PRs require all status checks to pass before merging:
 ### When CI Fails
 
 1. **Don't panic**: CI failures are normal during development
-2. **Read the logs**: Error messages are usually clear
+2. **Read the logs**: Errors name the failing step or crate
 3. **Reproduce locally**: Fix the issue, then push again
 4. **Ask for help**: If stuck, ask in discussions or PR comments
 

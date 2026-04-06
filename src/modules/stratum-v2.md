@@ -134,7 +134,7 @@ For detailed information about the Stratum V2 protocol, see [Stratum V2 Mining P
 **Merge mining is NOT part of the Stratum V2 module.** It is available as a separate paid plugin module (`blvm-merge-mining`) that integrates with the Stratum V2 module.
 
 For merge mining functionality, see:
-- [blvm-merge-mining README](../../blvm-merge-mining/README.md) - Merge mining module documentation
+- [blvm-merge-mining README](https://github.com/BTCDecoded/blvm-merge-mining/blob/main/README.md) — merge mining module documentation (repository; optional checkout beside `blvm-docs`)
 - [Stratum V2 + Merge Mining](../node/mining-stratum-v2.md) - How merge mining integrates with Stratum V2
 
 ## Usage

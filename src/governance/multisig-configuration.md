@@ -60,7 +60,7 @@ When both layer and tier apply, the system uses **"most restrictive wins"** rule
 ![Governance Signature Thresholds](../images/governance-signature-thresholds.png)
 *Figure: Signature thresholds by layer showing the graduated security model.*
 
-For configuration details, see the [governance configuration files](../../modules/governance/config/).
+For configuration details, see the [governance `config/` directory](https://github.com/BTCDecoded/governance/tree/main/config) in the governance repository.
 
 ## See Also
 

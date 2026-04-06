@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons implements formal mathematical specifications for all critical consensus functions. These specifications provide precise mathematical definitions that serve as the source of truth for consensus behavior.
+Bitcoin Commons documents **Orange Paper–aligned** mathematical specifications for consensus behavior. The Rust code implements this spec, checked by tests and **BLVM Specification Lock** on spec-locked functions. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Specification Format
 
@@ -30,10 +30,10 @@ Mathematical specifications use formal notation to define consensus rules:
 - Empty chains are rejected
 - Chain work is always non-negative
 
-**Verified Functions**:
-- `should_reorganize`: Proves longest chain selection
-- `calculate_chain_work`: Verifies cumulative work calculation
-- `expand_target`: Handles difficulty target edge cases
+**Key functions:**
+- `should_reorganize`: Longest-work selection
+- `calculate_chain_work`: Cumulative work calculation
+- `expand_target`: Difficulty target edge cases (see also PoW specs)
 
 **Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
@@ -64,7 +64,7 @@ Mathematical specifications use formal notation to define consensus rules:
 - Total supply is bounded (≤ 21 * 10^6 * 10^8 satoshis)
 - Total supply converges to 21 million BTC
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ### Difficulty Adjustment
 
@@ -79,7 +79,7 @@ timespan_clamped = clamp(timespan, expected/4, expected*4)
 - Timespan is clamped to [expected/4, expected*4]
 - Difficulty adjustment is deterministic
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ### Consensus Threshold
 
@@ -94,7 +94,7 @@ consensus_met ⟺ agreement_count >= required_agreement_count
 - `agreement_count >= required` ⟺ `ratio >= threshold`
 - Integer comparison is deterministic
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ### Median Calculation
 
@@ -111,7 +111,7 @@ median(tips) = {
 - Median is deterministic
 - Checkpoint = max(0, median - safety_margin)
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ## Specification Coverage
 
@@ -129,7 +129,7 @@ Multiple functions have formal mathematical specifications:
 - Consensus threshold (`find_consensus`)
 - Median calculation (`determine_checkpoint_height`)
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Mathematical Protections
 
@@ -145,7 +145,7 @@ if agreement_count >= required_agreement_count {
 }
 ```
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ### Runtime Assertions
 
@@ -156,7 +156,7 @@ Runtime assertions verify mathematical invariants:
 - Median calculation bounds
 - Checkpoint bounds
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ### Checked Arithmetic
 
@@ -174,20 +174,15 @@ let median_tip = if sorted_tips.len() % 2 == 0 {
 };
 ```
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ## Formal Verification
 
 ### Z3 Proofs
 
-Z3 proofs (via BLVM Specification Lock) verify mathematical specifications:
+**BLVM Specification Lock** uses Z3 to prove spec-locked functions against Orange Paper contracts. The symbolic specs above are not each a separate Z3 theorem; see [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
-- **Threshold Calculation**: Verifies integer-based threshold correctness
-- **Median Calculation**: Verifies median bounds
-- **Consensus Result**: Verifies consensus result invariants
-- **Economic Rules**: Verifies subsidy and supply calculations
-
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ### Property-Based Tests
 
@@ -198,18 +193,16 @@ Property-based tests verify invariants:
 - Discover edge cases
 - Test mathematical correctness
 
-**Code**: [MATHEMATICAL_PROTECTIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/MATHEMATICAL_PROTECTIONS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ## Documentation
 
 ### Specification Documents
 
-Mathematical specifications are documented in:
+Mathematical specifications and verification are documented in the consensus repository (see [docs/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)):
 
-- **MATHEMATICAL_SPECIFICATIONS_COMPLETE.md**: Complete formal specifications
-- **VERIFICATION.md**: Verification methodology
-- **MATHEMATICAL_PROTECTIONS.md**: Protection mechanisms
-- **PROTECTION_COVERAGE.md**: Coverage statistics
+- **[VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)** — how to run verification and what is in scope
+- **[PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)** — proof bounds, coverage, and protections beyond formal verification
 
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)
 
@@ -221,10 +214,10 @@ The mathematical specifications system includes:
 - Integer-based arithmetic (prevents floating-point bugs)
 - Runtime assertions (verify invariants)
 - Checked arithmetic (prevents overflow)
-- Z3 proofs (formal verification via BLVM Specification Lock)
+- BLVM Specification Lock / Z3 where enabled on annotated functions
 - Property-based tests (invariant verification)
 
-**Location**: `blvm-consensus/docs/VERIFICATION.md`, `blvm-consensus/docs/MATHEMATICAL_SPECIFICATIONS_COMPLETE.md`, `blvm-consensus/docs/MATHEMATICAL_PROTECTIONS.md`
+**Location**: `blvm-consensus/docs/VERIFICATION.md`, `blvm-consensus/docs/PROOF_LIMITATIONS.md`, `blvm-consensus/docs/README.md` (index)
 
 ## See Also
 

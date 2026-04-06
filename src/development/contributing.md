@@ -10,7 +10,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- **Rust 1.70 or later** - Check with `rustc --version`
+- **Rust 1.83 or later** (recommended; some crates require at least **1.82** per `Cargo.toml` `rust-version`) — check with `rustc --version`
 - **Git** - For version control
 - **Cargo** - Included with Rust
 - **Text editor or IDE** - Your choice

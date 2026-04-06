@@ -66,22 +66,13 @@ BLVM uses [Semantic Versioning](https://semver.org/):
 
 ### Dependency Order
 
-The build follows Cargo's dependency graph:
+Publishing and local builds follow each crate’s **Cargo** dependency graph (not a single linear list). In practice:
 
-```
-1. blvm-consensus (no dependencies)
-   ↓
-2. blvm-protocol (depends on blvm-consensus)
-   ↓
-3. blvm-node (depends on blvm-protocol + blvm-consensus)
-   ↓
-4. blvm (depends on blvm-node)
+- **Foundation**: **blvm-primitives** is shared by **blvm-consensus** and **blvm-protocol**.
+- **Core node path**: **blvm-consensus** → **blvm-protocol** → **blvm-node** → **`blvm`** CLI binary (the `blvm` crate depends on `blvm-node`).
+- **SDK / governance**: **blvm-sdk** depends on **blvm-protocol** and **blvm-consensus** (and optionally **blvm-node** via features). **blvm-commons** depends on **blvm-sdk** and **blvm-protocol**.
 
-Parallel:
-5. blvm-sdk (no dependencies)
-   ↓
-6. blvm-commons (depends on blvm-sdk)
-```
+So `blvm-sdk` is **not** a leaf with “no dependencies”; it sits beside the node stack and pulls protocol/consensus crates.
 
 ### Build Variants
 
@@ -89,14 +80,14 @@ Each release includes two variants:
 
 #### Base Variant
 
-**Purpose**: Stable, production-ready
+**Purpose**: Default **stable** build (standard optimizations, no experimental-only features)
 
 **Features**:
 - Core functionality
-- Production optimizations
-- All standard Bitcoin features
+- Production-oriented optimizations
+- Standard Bitcoin-compatible feature set for the variant
 
-**Use for**: Production deployments
+**Use for**: Production-style deployments **after** you apply your own security review, monitoring, and hardening—not a blanket “certified production” artifact.
 
 #### Experimental Variant
 
@@ -225,11 +216,15 @@ Releases are created in the `blvm` repository as the primary release point for t
 
 To avoid compiling all dependencies when building the final `blvm` binary, all library dependencies are published to [crates.io](https://crates.io) as part of the release process.
 
-**Publishing Order**:
-1. **blvm-consensus** (no dependencies) → Published first
-2. **blvm-protocol** (depends on blvm-consensus) → Published after
-3. **blvm-node** (depends on blvm-protocol) → Published after
-4. **blvm-sdk** (no dependencies) → Published in parallel
+**Publishing Order** (respect Cargo edges; automation can batch steps):
+
+1. **blvm-primitives** (shared foundation)
+2. **blvm-consensus** (depends on primitives)
+3. **blvm-protocol** (depends on consensus + primitives)
+4. **blvm-node** (depends on protocol + consensus)
+5. **blvm-sdk** (depends on protocol + consensus; optional **blvm-node** via features)—**not** independent of the consensus stack
+6. **blvm-commons** (depends on sdk + protocol)
+7. **`blvm`** binary crate (depends on **blvm-node**) when publishing the CLI
 
 ### Publishing Process
 
@@ -307,7 +302,7 @@ For deterministic build verification:
 
 ### Release Announcements
 
-Releases may be announced via:
+Announce releases through:
 - GitHub release notes
 - Project website
 - Community channels (if configured)

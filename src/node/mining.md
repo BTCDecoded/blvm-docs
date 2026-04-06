@@ -4,7 +4,7 @@ The reference node includes mining coordination functionality as part of the Bit
 
 ## Block Template Generation
 
-Block templates are created using a formally verified algorithm from `blvm-consensus` that ensures correctness per Orange Paper Section 12.4.
+Block templates are built from **`blvm-consensus`** helpers (e.g. template construction) aligned with Orange Paper Section 12.4, with tests and spec-lock proofs on the relevant consensus paths.
 
 ### Algorithm Overview
 
@@ -68,7 +68,7 @@ pub struct Block {
 
 The `getblocktemplate` RPC method generates a block template:
 
-1. Uses formally verified `create_block_template` from `blvm-consensus`
+1. Uses `create_block_template` (or equivalent) from **`blvm-consensus`**, covered by tests and upstream verification policy
 2. Converts to JSON-RPC format (BIP 22/23)
 3. Returns template ready for mining
 
@@ -115,7 +115,7 @@ Optional Stratum V2 protocol support provides:
 - **Multiplexed Channels**: QUIC stream multiplexing
 - **Merge Mining**: Simultaneous mining of multiple chains
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2/mod.rs)
+**Code**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) (module); node listener: [stratum_v2_listener.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2_listener.rs)
 
 ## Configuration
 

@@ -234,5 +234,5 @@ fn test_invalid_signature() {
 
 - [Security Controls System](security-controls.md)
 - [Threat Models](threat-models.md)
-- [Security Review Checklist](https://github.com/BTCDecoded/BTCDecoded/blob/main/.github/SECURITY_REVIEW_CHECKLIST.md) (in main repo)
+- [blvm-node SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md) (reference node security practices)
 

@@ -30,12 +30,12 @@ graph TB
 ## BLVM Stack Architecture
 
 ![BLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
-*Figure: BLVM architecture showing blvm-spec (Orange Paper) as the foundation, blvm-consensus as the core implementation with verification (BLVM Specification Lock, property-based tests, spec drift detection), and dependent components (blvm-protocol, blvm-node, blvm-sdk) building on the verified consensus layer.*
+*Figure: BLVM stack (marketing image): Orange Paper / blvm-spec as the foundation, blvm-consensus with verification tooling, then blvm-protocol, blvm-node, blvm-sdk, and governance enforcement (blvm-commons). The numbered 6-tier diagram above is the canonical layer list.*
 
 ## Tiered Architecture
 
 ![Tiered Architecture](../images/tier-architecture.png)
-*Figure: Tiered architecture: Tier 1 = Orange Paper + Consensus Proof (mathematical foundation); Tier 2 = Protocol Engine (protocol abstraction); Tier 3 = Reference Node (complete implementation); Tier 4 = Developer SDK + Governance (developer toolkit + governance enforcement).*
+*Figure: High-level tiered view (simplified graphic). **Canonical numbering** is the six layers in the mermaid diagram and section headings above (Orange Paper → consensus → protocol → node → SDK → blvm-commons); this image simplifies the stack for layout.*
 
 ## Component Overview
 
@@ -61,7 +61,7 @@ graph TB
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md)
 
 ### Tier 4: [blvm-node](../node/overview.md) (Node Implementation)
-- Minimal, production-ready Bitcoin node
+- Reference full node (non-consensus infrastructure: storage, P2P, RPC, modules); operational hardening required for real deployments
 - [Storage layer](../node/storage-backends.md) (database abstraction with multiple backends)
 - Network manager ([multi-transport](../node/transport-abstraction.md): TCP, QUIC, Iroh)
 - [RPC server](../node/rpc-api.md) (JSON-RPC 2.0 with Bitcoin Core compatibility)
@@ -95,17 +95,17 @@ graph TB
 
 1. **Orange Paper** provides mathematical consensus specifications
 2. **blvm-consensus** directly implements mathematical functions
-3. **blvm-protocol** wraps blvm-consensus with protocol-specific parameters
+3. **blvm-protocol** layers protocol parameters and network behavior on **blvm-consensus** types and validation
 4. **blvm-node** uses blvm-protocol and blvm-consensus for validation
 5. **blvm-sdk** provides governance primitives
-6. **blvm-commons** uses blvm-sdk for cryptographic operations
+6. **blvm-commons** uses **blvm-sdk** and **blvm-protocol** for governance enforcement and shared types
 
 ## Cross-Layer Validation
 
-- Dependencies between layers are strictly enforced
-- Consensus rule modifications are prevented in application layers
-- Equivalence proofs required between Orange Paper and blvm-consensus
-- Version coordination ensures compatibility across layers
+- Dependencies between layers are strictly enforced in the **crate graph** (application layers do not reimplement consensus).
+- Consensus rule modifications are prevented in application layers by design (validation calls into **blvm-consensus**).
+- The [Orange Paper](../reference/orange-paper.md) is the specification; **blvm-consensus** is checked with [formal verification](../consensus/formal-verification.md), tests, and review—not a single proof of the entire spec in one step.
+- Version coordination (Cargo / release sets) keeps compatible crate versions together.
 
 ## Key Features
 
@@ -121,8 +121,8 @@ graph TB
 - BIP implementations (BIP152, BIP157, BIP158)
 - Protocol evolution support
 
-### Production Ready
-- Bitcoin node functionality
+### Node and operational features
+- Full Bitcoin node–style functionality (when configured and secured appropriately)
 - [Performance optimizations](../node/performance.md) (PGO, parallel validation)
 - [Multiple storage backends](../node/storage-backends.md) with automatic fallback
 - [Multi-transport networking](../node/transport-abstraction.md) (TCP, QUIC, Iroh)

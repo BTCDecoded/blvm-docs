@@ -18,7 +18,7 @@ For full Rust type/signature documentation, build `cargo doc --open` in each cra
 
 ### Foundation (blvm-primitives)
 
-Shared types, serialization, and crypto used by blvm-consensus and blvm-protocol. Consensus re-exports these for compatibility; protocol and node may use primitives directly.
+Shared types, serialization, and crypto live in **blvm-primitives**. **blvm-consensus** depends on primitives and re-exports many types; **blvm-protocol** and **blvm-node** use those types through the Cargo dependency graph on consensus and protocol crates—not ad hoc duplicated definitions.
 
 **Key areas:** types (Transaction, Block, BlockHeader, UTXO, Script, etc.), serialization, cryptographic operations, opcodes, constants.
 
@@ -252,12 +252,12 @@ let signature = sign_message(&keypair.secret_key_bytes(), &message.to_signing_by
 ## API Stability
 
 **Stable APIs:**
-- Consensus layer (`blvm-consensus`) - Stable, formally verified
+- Consensus layer (`blvm-consensus`) - Stable API; validated with tests and spec-lock proofs
 - Protocol layer (`blvm-protocol`) - Stable, Bitcoin-compatible
 - Node storage APIs - Stable
 
 **Development APIs:**
-- Module system APIs - Stable interface, implementation may evolve
+- Module system APIs - Stable interface; implementation evolves with releases
 - Composition framework - Active development
 - Experimental features - Subject to change
 

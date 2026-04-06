@@ -1,6 +1,6 @@
 # Protocol Specifications
 
-Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical BIPs are [formally verified](../consensus/formal-verification.md). See [Formal Verification](../consensus/formal-verification.md) for verification details.
+Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical behavior lives in **`blvm-consensus`** with tests, review, and **BLVM Specification Lock** proofs. See [Formal Verification](../consensus/formal-verification.md).
 
 ## Consensus-Critical BIPs
 

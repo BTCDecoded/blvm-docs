@@ -290,11 +290,11 @@ proptest! {
 
 ## Integration with Formal Verification
 
-Property tests complement Z3 proofs:
+Property tests complement **BLVM Specification Lock** (Z3 proofs on spec-locked code):
 
-- **BLVM Specification Lock (Z3)**: Proves correctness for all inputs (bounded)
-- **Property Tests**: Verifies invariants with random inputs (unbounded)
-- **Combined**: Comprehensive verification coverage
+- **Spec-lock**: Formal proofs tied to Orange Paper contracts
+- **Proptest**: Randomized invariant sampling over strategies
+- **Together**: Complementary layers; see [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Components
 

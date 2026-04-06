@@ -16,7 +16,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **blvm-protocol** - Protocol abstraction layer for multiple Bitcoin variants (mainnet, testnet, regtest) while maintaining consensus compatibility. Uses **blvm-primitives**. See [Protocol Overview](../protocol/overview.md).
 
-**blvm-node** - Bitcoin node implementation with [storage](../node/storage-backends.md), [networking](../node/transport-abstraction.md), [RPC](../node/rpc-api.md), and [mining](../node/mining.md) capabilities. Production-ready reference implementation. See [Node Overview](../node/overview.md).
+**blvm-node** - Bitcoin node implementation with [storage](../node/storage-backends.md), [networking](../node/transport-abstraction.md), [RPC](../node/rpc-api.md), and [mining](../node/mining.md) capabilities. Intended as the reference full node; treat production deployment like any consensus-adjacent system (hardening, monitoring, [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md)). See [Node Overview](../node/overview.md).
 
 **blvm-sdk** - Developer toolkit: [governance primitives](../governance/overview.md), [node module authoring](../sdk/module-development.md) (macros, `run_module!`, `node` feature), [composition](../architecture/module-system.md), and CLI tools (keygen, sign, compose, etc.). See [SDK Overview](../sdk/overview.md).
 
@@ -33,13 +33,13 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## Technical Concepts
 
-**Formal Verification** - Mathematical proof of code correctness. BLVM uses formal verification for critical consensus paths.
+**Formal Verification** - **BLVM Specification Lock**: Z3-backed proofs tying spec-locked consensus code to Orange Paper contracts. See [Formal Verification](../consensus/formal-verification.md).
 
-**Proofs Locked to Code** - [Formal verification](../consensus/formal-verification.md) proofs are embedded in the code itself, ensuring correctness is maintained as code changes.
+**Proofs Locked to Code** - Spec-lock proofs live with the functions they verify; code changes require proof updates. See [Formal Verification](../consensus/formal-verification.md).
 
 **Spec Drift Detection** - Automated detection when implementation code diverges from the [Orange Paper](orange-paper.md) mathematical specification.
 
-**Compiler-Like Architecture** - The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** the spec via [formal verification](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [System Overview](../architecture/system-overview.md).
+**Compiler-Like Architecture** - The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** that spec through tests, review, and [BLVM Specification Lock](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [System Overview](../architecture/system-overview.md).
 
 **Process Isolation** - [Module system](../architecture/module-system.md) design where each module runs in a separate process with isolated memory, preventing failures from propagating to the base node.
 

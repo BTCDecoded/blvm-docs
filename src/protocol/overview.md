@@ -92,7 +92,7 @@ Supports Bitcoin P2P protocol messages:
 - `GetFilteredBlock`, `FilteredBlock` - Spam-filtered blocks
 - `GetBanList`, `BanList` - Distributed ban list sharing
 
-**Code**: [messages.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network/messages.rs)
+**Code**: [`network.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network.rs) (`NetworkMessage`), [`wire/mod.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs) (command names and serialization)
 
 ### Service Flags
 
@@ -111,7 +111,7 @@ Service flags indicate node capabilities:
 - `NODE_DANDELION` - Dandelion++ privacy relay
 - `NODE_PACKAGE_RELAY` - BIP331 package relay
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/service_flags/mod.rs)
+**Code**: [service_flags.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/service_flags.rs)
 
 ### Validation Rules
 
@@ -122,7 +122,7 @@ Protocol-specific validation rules:
 - **Fee Rules**: Minimum and maximum fee rates
 - **DoS Protection**: Message size limits, address count limits
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/validation/mod.rs)
+**Code**: [validation.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/validation.rs)
 
 ## Commons-Specific Extensions
 
@@ -133,7 +133,7 @@ Protocol messages for [UTXO set synchronization](../consensus/utxo-commitments.m
 - `GetUTXOSet` - Request UTXO set at specific height
 - `UTXOSet` - UTXO set response with merkle proof
 
-**Code**: [utxo_commitments.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons/utxo_commitments.rs)
+**Code**: [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (message structs); [utxo_commitments/mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/mod.rs) (UTXO commitment protocol)
 
 ### Filtered Blocks
 
@@ -142,7 +142,7 @@ Spam-filtered block relay for efficient syncing:
 - `GetFilteredBlock` - Request filtered block
 - `FilteredBlock` - Filtered block with spam transactions removed
 
-**Code**: [filtered_blocks.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons/filtered_blocks.rs)
+**Code**: [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (`GetFilteredBlockMessage`, `FilteredBlockMessage`)
 
 ### Ban List Sharing
 
@@ -151,7 +151,7 @@ Distributed ban list management:
 - `GetBanList` - Request ban list
 - `BanList` - Ban list response with signatures
 
-**Code**: [ban_list.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons/ban_list.rs)
+**Code**: [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (`GetBanListMessage`, `BanListMessage`)
 
 ## BIP Support
 
@@ -163,7 +163,7 @@ Implemented Bitcoin Improvement Proposals:
 - **BIP173/350/351**: Bech32/Bech32m Address Encoding
 - **BIP70**: Payment Protocol
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/bip157/mod.rs)
+**Code**: [bip157.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/bip157.rs)
 
 ## Protocol Evolution
 

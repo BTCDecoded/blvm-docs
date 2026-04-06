@@ -96,7 +96,7 @@ blvm --version  # Verify installation
 blvm --help     # View available options
 ```
 
-The node connects to the P2P network, syncs blockchain state, accepts [RPC commands](rpc-api.md) on port 8332 (mainnet default) or 18332 (testnet/regtest), and can [mine blocks](mining.md) if configured.
+The node connects to the P2P network, syncs blockchain state, accepts [RPC commands](../node/rpc-api.md) on port 8332 (mainnet default) or 18332 (testnet/regtest), and can [mine blocks](../node/mining.md) if configured.
 
 ## Using the SDK
 

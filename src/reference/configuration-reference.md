@@ -2,7 +2,7 @@
 
 Reference for BLVM node configuration options. Configuration can be provided via TOML file, JSON file, command-line arguments, or environment variables. See [Node Configuration](../node/configuration.md) for usage examples.
 
-**Precedence:** CLI > ENV > config file > defaults. **Canonical defaults:** This reference is the single source of truth for default values; other docs (e.g. first-node, storage-backends) may show examples and should point here for authoritative defaults.
+**Precedence:** CLI > ENV > config file > defaults. **Canonical defaults:** This reference is the source of truth; other docs (e.g. first-node, storage-backends) give examples—use this page when you need exact defaults.
 
 **Path expansion:** Path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, `ibd.snapshot_dir`) expand `~` to the home directory when loading from file.
 

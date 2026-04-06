@@ -1,6 +1,6 @@
 # Formal Verification
 
-The consensus layer implements formal verification for Bitcoin consensus rules using a multi-layered approach combining mathematical specifications, symbolic verification, and property-based testing.
+**blvm-consensus** combines the Orange Paper (normative math spec), **BLVM Specification Lock** (Z3-backed proofs on spec-locked consensus code), and a large automated test suite. Proof scope and limits: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Verification Stack
 
@@ -17,7 +17,7 @@ graph TB
     subgraph "Layer 2: Symbolic Verification"
         SPECLOCK[BLVM Specification Lock<br/>Tiered Execution]
         SPEC[Math Specifications<br/>Orange Paper]
-        SSE[State Space Exploration<br/>All Execution Paths]
+        SSE[State Space Exploration<br/>Contract-Checked Paths]
     end
     
     subgraph "Layer 3: CI Enforcement"
@@ -47,25 +47,25 @@ graph TB
 ```
 
 ### Layer 1: Empirical Testing
-- **Unit tests**: Comprehensive test coverage for all consensus functions
+- **Unit tests**: Broad coverage across consensus modules and public APIs
 - **Property-based tests**: Randomized testing with `proptest` to discover edge cases
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification
-- **BLVM Specification Lock**: Formal verification tool using Z3 SMT solver with tiered execution
-- **Mathematical specifications**: Formal documentation of consensus rules
-- **State space exploration**: Verification of all possible execution paths
+- **BLVM Specification Lock**: Z3-backed proofs on spec-locked functions; tiered execution (strong/medium/slow)
+- **Mathematical specifications**: Orange Paper and inline consensus specs
+- **State space exploration**: Paths relevant to spec-lock contracts
 
 ### Layer 3: CI Enforcement
-- **Automated testing**: All tests must pass before merge
-- **Formal proofs**: Run separately with tiered execution (strong/medium/slow tiers)
-- **OpenTimestamps audit logging**: Immutable proof of verification artifacts
+- **Automated testing**: Required for merge
+- **BLVM Specification Lock**: Tiered runs; policy in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- **OpenTimestamps audit logging**: Optional timestamps of verification artifacts
 
 ## Verification Statistics
 
 ### Formal Proofs
 
-All critical consensus functions are verified across multiple files with tiered execution system (strong/medium/slow tiers).
+**BLVM Specification Lock** checks spec-locked functions in tiers (strong/medium/slow). Current inventory and policy: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 **Verification Command**:
 ```bash
@@ -166,6 +166,8 @@ Multiple functions have formal documentation aligned with the Orange Paper and c
 
 ## Mathematical Specifications
 
+The formulas and **invariants** below state intended consensus behavior from the Orange Paper. **Key functions** tie this spec to the implementation through tests and **BLVM Specification Lock** where those functions are spec-locked. Coverage: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+
 ### Chain Selection (`src/reorganization.rs`)
 
 **Mathematical Specification:**
@@ -179,10 +181,10 @@ Multiple functions have formal documentation aligned with the Orange Paper and c
 - Empty chains are rejected
 - Chain work is always non-negative
 
-**Verified Functions:**
-- `should_reorganize`: Proves longest chain selection
-- `calculate_chain_work`: Verifies cumulative work calculation
-- `expand_target`: Handles difficulty target edge cases
+**Key functions:**
+- `should_reorganize` — longest-work chain selection
+- `calculate_chain_work` — cumulative work
+- `expand_target` — difficulty target edge cases
 
 ### Block Subsidy (`src/economic.rs`)
 
@@ -197,10 +199,10 @@ Multiple functions have formal documentation aligned with the Orange Paper and c
 - Subsidy is always non-negative
 - Total supply approaches 21M BTC asymptotically
 
-**Verified Functions:**
-- `get_block_subsidy`: Verifies halving schedule
-- `total_supply`: Proves monotonic increase
-- `validate_supply_limit`: Ensures supply cap compliance
+**Key functions:**
+- `get_block_subsidy` — halving schedule
+- `total_supply` — supply monotonicity
+- `validate_supply_limit` — supply cap
 
 ### Proof of Work (`src/pow.rs`)
 
@@ -231,12 +233,11 @@ Multiple functions have formal documentation aligned with the Orange Paper and c
 - Difficulty adjustment respects bounds [0.25, 4.0]
 - Work calculation is deterministic
 
-**Verified Functions:**
-- `check_proof_of_work`: Verifies hash < target
-- `expand_target`: Handles compact target representation
-- `compress_target`: Implements Bitcoin Core GetCompact() exactly
-- `target_expand_compress_round_trip`: **Formally verified** - proves significant bits preserved
-- `get_next_work_required`: Respects difficulty bounds
+**Key functions:**
+- `check_proof_of_work` — hash vs target
+- `expand_target` / `compress_target` — compact difficulty encoding
+- `target_expand_compress_round_trip` — compact round-trip properties
+- `get_next_work_required` — difficulty adjustment bounds
 
 ### Transaction Validation (`src/transaction.rs`)
 
@@ -256,10 +257,10 @@ Multiple functions have formal documentation aligned with the Orange Paper and c
 - Transaction size respects limits
 - Coinbase transactions have special validation rules
 
-**Verified Functions:**
-- `check_transaction`: Validates structure rules
-- `check_tx_inputs`: Handles coinbase correctly
-- `is_coinbase`: Correctly identifies coinbase transactions
+**Key functions:**
+- `check_transaction` — structural validity
+- `check_tx_inputs` — input checks including coinbase
+- `is_coinbase` — coinbase detection
 
 ### Block Connection (`src/block/mod.rs`)
 
@@ -279,22 +280,22 @@ Multiple functions have formal documentation aligned with the Orange Paper and c
 - Coinbase output respects economic rules
 - Transaction application is atomic
 
-**Verified Functions:**
-- `connect_block`: Validates complete block
-- `apply_transaction`: Preserves UTXO consistency
-- `calculate_tx_id`: Deterministic transaction identification
+**Key functions:**
+- `connect_block` — full block validation
+- `apply_transaction` — UTXO updates
+- `calculate_tx_id` — transaction id
 
 ## Verification Tools
 
 ### BLVM Specification Lock
 
-**Purpose**: Formal verification tool using Z3 SMT solver for mathematical proof of correctness
+**Purpose**: Z3-backed **BLVM Specification Lock** proofs for spec-locked Rust functions against Orange Paper contracts.
 
 **Usage**: `cargo spec-lock verify`
 
-**Coverage**: All functions with `#[spec_locked]` attributes
+**Coverage**: Spec-locked functions (`#[spec_locked]` and related tooling).
 
-**Strategy**: Links Rust code to Orange Paper specifications and verifies contracts using Z3
+**Details**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ### Proptest Property Testing
 
@@ -302,7 +303,7 @@ Multiple functions have formal documentation aligned with the Orange Paper and c
 
 **Usage**: `cargo test` (runs automatically)
 
-**Coverage**: All `proptest!` macros
+**Coverage**: Property tests using `proptest!` and related harnesses in the crate
 
 **Strategy**: Generates random inputs within specified bounds
 
@@ -321,17 +322,17 @@ proptest! {
 
 ### Verification Workflow
 
-The `.github/workflows/verify.yml` workflow enforces verification:
+The `.github/workflows/verify.yml` workflow runs verification jobs such as:
 
 1. **Unit & Property Tests** (required)
    - `cargo test --all-features`
    - Must pass for CI to succeed
 
-2. **BLVM Specification Lock Verification** (release verification)
+2. **BLVM Specification Lock Verification** (release- or tier-gated)
    - `cargo spec-lock verify`
-   - Verifies all Z3 proofs for functions with `#[spec_locked]` attributes
+   - Z3 obligations for `#[spec_locked]` functions in the workflow
    - Full verification run before each release
-   - Slower runs may be deferred between major releases
+   - Slower tiers can be deferred between major releases
    - Not required for merge
 
 3. **OpenTimestamps Audit** (non-blocking)
@@ -359,24 +360,22 @@ cargo spec-lock verify --proof <function_name>
 
 ## Verification Coverage
 
-Critical consensus functions are formally verified or property-tested across economic rules, proof of work, transaction validation, block validation, script execution, chain reorganization, cryptographic operations, mempool, SegWit, and serialization, using formal proofs, property tests, runtime assertions, and fuzz targets.
+Consensus combines **BLVM Specification Lock**, property tests, fuzzing, and integration tests across economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization. [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md) documents what formal proofs do and do not cover.
 
 ## Network Protocol Verification
 
-Network protocol message parsing, serialization, and processing are formally verified using BLVM Specification Lock, extending verification beyond consensus to the network layer.
+**blvm-protocol** can use the same **BLVM Specification Lock** machinery for wire messages: headers, checksums, size limits, and round-trip properties for the message types in scope.
 
-**Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
+**Proof targets**: Header layout (magic, command, length, checksum), checksum validation, size limits, `parse(serialize(msg)) == msg` for covered messages.
 
-**Verified Messages**: Tier 1: Version, VerAck, Ping, Pong. Tier 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
+**Message tiers:** Tier 1: Version, VerAck, Ping, Pong. Tier 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
 
-**Mathematical Specifications**: Round-trip property `∀ msg: parse(serialize(msg)) = msg`, checksum validation rejects invalid checksums, size limits enforced for all messages.
-
-Verification runs automatically in CI. Proofs excluded from release builds via `verify` feature.
+Use the `verify` feature for full protocol verification builds; see **blvm-protocol** crate docs.
 
 ## Consensus Coverage Comparison
 
 ![Consensus Coverage Comparison](https://thebitcoincommons.org/assets/images/Consensus-Coverage-Comparison.png)
-*Figure: Consensus coverage comparison: Bitcoin Core achieves coverage through testing alone. Bitcoin Commons achieves formal verification coverage (Z3 proofs via BLVM Specification Lock) plus comprehensive test coverage. Commons uses consensus-focused test files with extensive test functions compared to Core's total files. The mathematical specification enables both formal verification and comprehensive testing.*
+*Figure: Consensus coverage comparison: Bitcoin Core relies primarily on tests and review. Bitcoin Commons adds **BLVM Specification Lock** and the Orange Paper–driven methodology on top of broad tests.*
 
 ## Proof Maintenance Cost
 
@@ -388,18 +387,7 @@ Verification runs automatically in CI. Proofs excluded from release builds via `
 ![Spec Drift vs Test Coverage](../images/spec-drift-vs-test-coverage.png)
 *Figure: Spec drift decreases as test coverage increases. Higher test coverage reduces the likelihood of specification drift over time.*
 
-## Network Protocol Verification
-
-Network protocol message parsing, serialization, and processing are formally verified using BLVM Specification Lock, extending verification beyond consensus to the network layer. See [Network Protocol](../protocol/network-protocol.md) for transport details.
-
-**Verified Properties**: Message header parsing (magic, command, length, checksum), checksum validation, size limit enforcement, round-trip properties (`parse(serialize(msg)) == msg`).
-
-**Verified Messages**: Tier 1: Version, VerAck, Ping, Pong. Tier 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
-
-**Mathematical Specifications**: Round-trip property `∀ msg: parse(serialize(msg)) = msg`, checksum validation rejects invalid checksums, size limits enforced for all messages.
-
-Verification runs automatically in CI. Proofs excluded from release builds via `verify` feature.
-
+See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 
 ## See Also
 

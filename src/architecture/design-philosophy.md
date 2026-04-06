@@ -8,8 +8,8 @@ BLVM is built on core principles that guide all design decisions.
 
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
 - No interpretation or approximation
-- Formal verification ensures correctness
-- Pure functions with no side effects
+- **BLVM Specification Lock**, tests, and review validate consensus-critical code against the Orange Paper
+- Pure functions with no side effects (where the design allows)
 
 ### 2. Layered Architecture
 
@@ -58,11 +58,10 @@ Layered architecture provides:
 
 ### Why Formal Verification?
 
-Formal verification ensures:
-- **Correctness**: Mathematical proofs of correctness
-- **Security**: Prevents consensus violations
-- **Confidence**: High assurance in critical code
-- **Auditability**: Immutable proof of verification
+**BLVM Specification Lock** adds Z3-checked proofs on spec-locked consensus code, alongside tests and review:
+- **Correctness**: Machine-checked linkage to Orange Paper contracts ([PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md))
+- **Defense in depth**: Fuzzing and integration tests exercise behavior; spec-lock discharges proofs on spec-locked functions
+- **Auditability**: CI and optional OpenTimestamps on verification artifacts
 
 ### Why Cryptographic Governance?
 

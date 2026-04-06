@@ -104,7 +104,7 @@ blvm-verify --help
 
 ## Building from Source (Advanced)
 
-Building from source requires Rust 1.70+ and is primarily for development. Clone the [blvm repository](https://github.com/BTCDecoded/blvm) and follow the build instructions in its README.
+Building from source is primarily for development. Crates in this stack declare `rust-version` **1.82** or **1.83** in their `Cargo.toml` (for example `blvm-consensus` and `blvm-spec-lock` use **1.83**; `blvm-node` and `blvm-protocol` use **1.82**). Use **Rust 1.83 or later** unless you are working only in a crate with a lower MSRV. Clone the [blvm repository](https://github.com/BTCDecoded/blvm) and follow the build instructions in its README.
 
 ## Next Steps
 

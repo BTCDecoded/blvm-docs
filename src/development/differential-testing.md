@@ -139,7 +139,7 @@ Bitcoin Core test vectors are integrated:
 - **Script Vectors**: `script_valid.json`, `script_invalid.json`
 - **Block Vectors**: `block_valid.json`, `block_invalid.json`
 
-**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ### Test Execution
 
@@ -150,7 +150,7 @@ Test vectors are executed:
 - **Pass/Fail Reporting**: Report test results
 - **Graceful Handling**: Handle missing test data gracefully
 
-**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Mainnet Block Tests
 
@@ -163,7 +163,7 @@ Real Bitcoin mainnet blocks are used:
 - **Taproot Activation**: Taproot activation block validation
 - **Historical Blocks**: Blocks from all consensus eras
 
-**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Historical Consensus Tests
 
@@ -178,7 +178,7 @@ Historical consensus validation tests:
 - **Halving Points**: Historical block subsidy calculations
 - **Difficulty Adjustment**: Historical difficulty adjustment tests
 
-**Code**: [BLINDSPOT_COVERAGE_REPORT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/BLINDSPOT_COVERAGE_REPORT.md)
+**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Usage
 

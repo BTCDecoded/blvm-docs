@@ -117,7 +117,7 @@ Uses Bitcoin message signing standards:
 1. **Governance Crypto is Reusable**: Clean library API for external consumers
 2. **No GitHub Logic**: SDK is pure cryptography + composition, not enforcement
 3. **Bitcoin-Compatible**: Uses Bitcoin message signing standards
-4. **Test Everything**: Governance crypto needs 100% test coverage
+4. **Test coverage**: Treat governance crypto as security-critical—target exhaustive unit and integration tests before release
 5. **Document for Consumers**: Governance app developers are the customer
 
 ## What This Is NOT

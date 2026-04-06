@@ -1,37 +1,40 @@
 # Mathematical Correctness
 
-The consensus layer implements mathematical correctness through formal verification and comprehensive testing.
+The consensus layer uses the Orange Paper, **BLVM Specification Lock**, tests, and code review together. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md), [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 ## Verification Approach
 
 Our verification approach follows: **"Rust + Tests + Math Specs = Source of Truth"**
 
 ### Layer 1: Empirical Testing (Required, Must Pass)
-- **Unit tests**: Comprehensive test coverage for all consensus functions
+- **Unit tests**: Broad coverage across consensus modules
 - **[Property-based tests](../development/property-based-testing.md)**: Randomized testing with `proptest` to discover edge cases
 - **Integration tests**: Cross-system validation between consensus components
 
-### Layer 2: Symbolic Verification (Required, Must Pass)
-- **[BLVM Specification Lock](formal-verification.md)**: Bounded symbolic verification with mathematical invariants using Z3
+### Layer 2: Symbolic Verification
+- **[BLVM Specification Lock](formal-verification.md)**: Z3-backed proofs on spec-locked consensus functions
 - **Mathematical specifications**: Formal documentation of consensus rules
-- **State space exploration**: Verification of all possible execution paths
+- **State space exploration**: Paths checked under spec-lock contracts
 
-### Layer 3: CI Enforcement (Required, Blocks Merge)
-- **Automated verification**: All tests and proofs must pass before merge
-- **OpenTimestamps audit logging**: Immutable proof of verification artifacts
-- **No human override**: Technical correctness is non-negotiable
+### Layer 3: CI Enforcement
+- **Automated testing**: Required for merge
+- **BLVM Specification Lock**: Tiered runs; merge/release policy in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- **OpenTimestamps audit logging**: Optional transparency for verification artifacts
 
-## Verified Functions
+## Primary verification areas
 
-✅ **Chain Selection**: `should_reorganize`, `calculate_chain_work` verified  
-✅ **Block Subsidy**: `get_block_subsidy` halving schedule verified  
-✅ **Proof of Work**: `check_proof_of_work`, target expansion verified  
-✅ **Transaction Validation**: `check_transaction` structure rules verified  
-✅ **Block Connection**: `connect_block` UTXO consistency verified  
+- **Chain selection**: `should_reorganize`, `calculate_chain_work`
+- **Block subsidy**: `get_block_subsidy` halving schedule
+- **Proof of work**: `check_proof_of_work`, target expansion
+- **Transaction validation**: `check_transaction` structure rules
+- **Block connection**: `connect_block`, UTXO consistency
 
-## Protection Coverage
+## Protection coverage
 
-{{#include ../../modules/blvm-consensus/docs/PROTECTION_COVERAGE.md}}
+Proof bounds and related limits upstream:
+
+- **[PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)**
+- **[VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)**
 
 ## See Also
 

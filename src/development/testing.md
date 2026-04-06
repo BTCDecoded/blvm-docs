@@ -2,23 +2,19 @@
 
 ## Overview
 
-Bitcoin Commons uses a multi-layered testing strategy combining [formal verification](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](fuzzing.md), integration tests, and runtime assertions. This approach ensures correctness across consensus-critical code.
+Bitcoin Commons uses [BLVM Specification Lock](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](fuzzing.md), integration tests, runtime assertions, and MIRI. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Testing Strategy
 
 ### Layered Verification
 
-The testing strategy uses multiple complementary techniques:
-
-1. **[Formal Verification](../consensus/formal-verification.md)**: Proves correctness for all inputs (bounded)
-2. **[Property-Based Testing](property-based-testing.md) (Proptest)**: Verifies invariants with random inputs (unbounded)
-3. **[Fuzzing](fuzzing.md) (libFuzzer)**: Discovers edge cases through random generation
-4. **Integration Tests**: Verifies end-to-end correctness
-5. **Unit Tests**: Tests individual functions
-6. **Runtime Assertions**: Catches violations during execution
-7. **MIRI Integration**: Detects undefined behavior
-
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
+1. **[Formal Verification](../consensus/formal-verification.md)**: Z3 proofs via **BLVM Specification Lock** on spec-locked consensus code
+2. **[Property-Based Testing](property-based-testing.md) (Proptest)**: Randomized invariant checks
+3. **[Fuzzing](fuzzing.md) (libFuzzer)**: Random input exploration
+4. **Integration Tests**: End-to-end scenarios
+5. **Unit Tests**: Per-function tests
+6. **Runtime Assertions**: Optional invariant checks (feature-gated)
+7. **MIRI**: Undefined-behavior detection on selected tests
 
 ## Test Types
 
@@ -30,7 +26,7 @@ Unit tests verify individual functions in isolation:
 - **Coverage**: Public functions
 - **Examples**: Transaction validation, block validation, script execution
 
-**Code**: [estimate_test_coverage.py](https://github.com/BTCDecoded/blvm-consensus/blob/main/estimate_test_coverage.py)
+**Code**: [scripts/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/scripts/README.md) (test data helpers); [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) (verification workflows)
 
 ### Property-Based Tests
 
@@ -62,33 +58,18 @@ Fuzz tests discover edge cases through random generation:
 
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/README.md)
 
-### Formal Verification
+### Formal Verification (spec-lock)
 
-[Formal verification](../consensus/formal-verification.md) verifies correctness for all inputs:
+[Formal verification](../consensus/formal-verification.md) uses **blvm-spec-lock** / **BLVM Specification Lock** in **blvm-consensus**:
 
-- **Location**: `src/` and `tests/` directories
-- **Formal Verification**: Proofs with tiered execution system
-- **Coverage**: Critical consensus functions
-- **Tool**: Formal verification tooling
+- **Location**: `src/`, `tests/`
+- **Command**: `cargo spec-lock verify` (tiered: strong / medium / slow)
+- **Inventory**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- **Tool**: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)
+
+**See also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification)
 
 **Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
-
-### Spec-Lock Formal Verification
-
-blvm-spec-lock provides formal verification of consensus and UTXO operations:
-
-- **Coverage**: Functions with `#[spec_locked("section")]` annotations
-- **Tool**: blvm-spec-lock (Z3-based)
-- **Mathematical Specifications**: Verifies compliance with Orange Paper sections
-
-**Verified Properties** (via spec-lock):
-- Consensus rules (transaction, block, script validation)
-- UTXO set operations where annotated
-- Cryptographic primitives
-
-**Code**: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)
-
-**See Also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Verification workflow
 
 ### Runtime Assertions
 
@@ -96,8 +77,6 @@ Runtime assertions catch violations during execution:
 
 - **Coverage**: Critical paths with runtime assertions
 - **Production**: Available via feature flag
-
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
 
 ### MIRI Integration
 
@@ -107,39 +86,22 @@ MIRI detects undefined behavior:
 - **Coverage**: Property tests and critical unit tests
 - **Tool**: MIRI interpreter
 
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
-
 ## Coverage Statistics
 
 ### Overall Coverage
 
 | Verification Technique | Status |
 |----------------------|--------|
-| **Formal Proofs** | ✅ Critical functions |
-| **Property Tests** | ✅ All mathematical invariants |
-| **Runtime Assertions** | ✅ All critical paths |
-| **Fuzz Targets** | ✅ Edge case discovery |
-| **MIRI Integration** | ✅ Undefined behavior detection |
-| **Mathematical Specs** | ✅ Complete formal documentation |
-
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
+| **Formal Proofs (spec-lock)** | ✅ Tiered Z3 proofs on spec-locked code |
+| **Property Tests** | ✅ Broad invariant coverage |
+| **Runtime Assertions** | ✅ Feature-gated on selected paths |
+| **Fuzz Targets** | ✅ Critical validation surfaces |
+| **MIRI Integration** | ✅ UB checks on selected tests |
+| **Mathematical Specs** | ✅ Orange Paper + docs |
 
 ### Coverage by Consensus Area
 
-Verification coverage includes all major consensus areas:
-
-- **Economic Rules**: Formal proofs, property tests, runtime assertions, and fuzz targets
-- **Proof of Work**: Formal proofs, property tests, runtime assertions, and fuzz targets
-- **Transaction Validation**: Formal proofs, property tests, runtime assertions, and fuzz targets
-- **Block Validation**: Formal proofs, property tests, runtime assertions, and fuzz targets
-- **Script Execution**: Formal proofs, property tests, runtime assertions, and fuzz targets
-- **Chain Reorganization**: Formal proofs, property tests, and runtime assertions
-- **Cryptographic**: Formal proofs, property tests, and runtime assertions
-- **Mempool**: Formal proofs, runtime assertions, and fuzz targets
-- **SegWit**: Formal proofs, runtime assertions, and fuzz targets
-- **Serialization**: Formal proofs, runtime assertions, and fuzz targets
-
-**Code**: [EXACT_VERIFICATION_COUNTS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/EXACT_VERIFICATION_COUNTS.md)
+Economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization are covered by unit, property, integration, and fuzz tests, with **BLVM Specification Lock** on critical spec-locked paths. Details: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 ## Running Tests
 
@@ -175,7 +137,7 @@ cargo +nightly miri test
 ### Run blvm-spec-lock Proofs
 
 ```bash
-cargo blvm-spec-lock
+cargo spec-lock verify
 ```
 
 **Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
@@ -191,22 +153,7 @@ cargo spec-lock verify --crate-path .
 
 ### Target Coverage
 
-- **blvm-spec-lock Proofs**: All critical consensus functions
-- **Property Tests**: All mathematical invariants
-- **Fuzz Targets**: All critical validation paths
-- **Runtime Assertions**: All critical code paths
-- **Integration Tests**: All major workflows
-
-### Current Status
-
-All coverage goals met:
-- ✅ Formal proofs covering all critical functions
-- ✅ Property test functions covering all invariants
-- ✅ Fuzz targets covering all critical paths
-- ✅ Runtime assertions in all critical paths
-- ✅ Comprehensive integration test suite
-
-**Code**: [CONSENSUS_COVERAGE_ASSESSMENT.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/CONSENSUS_COVERAGE_ASSESSMENT.md)
+Ongoing expansion of spec-lock coverage, property tests, fuzz corpora, runtime assertions, and integration scenarios. Status: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Test Organization
 
@@ -214,7 +161,7 @@ All coverage goals met:
 
 ```
 blvm-consensus/
-├── src/                    # Source code with blvm-spec-lock proofs
+├── src/                    # Source; spec-lock on marked functions
 ├── tests/
 │   ├── consensus_property_tests.rs  # Main property tests
 │   ├── integration/         # Integration tests
@@ -225,7 +172,7 @@ blvm-consensus/
     └── fuzz_targets/        # Fuzz targets
 ```
 
-**Code**: [](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/)
+**Code**: [tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests)
 
 ## Edge Case Coverage
 
@@ -273,7 +220,7 @@ All tests run in CI:
 - **Runtime Assertions**: Multiple assertions (`assert!` and `debug_assert!`)
 - **Fuzz Targets**: Multiple fuzz targets
 
-**Code**: [EXACT_VERIFICATION_COUNTS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/EXACT_VERIFICATION_COUNTS.md)
+**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ## Components
 

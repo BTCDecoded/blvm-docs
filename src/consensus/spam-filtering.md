@@ -48,7 +48,7 @@ Detects transactions with suspiciously large witness data:
 Detects transactions with suspiciously low fee rates:
 
 - **Detection**: Low fee rate relative to transaction size
-- **Indication**: Non-monetary transactions often pay minimal fees
+- **Indication**: Non-monetary transactions pay minimal fees
 - **Threshold**: Default 1 sat/vbyte (configurable)
 - **Configuration**: `SpamFilterConfig::min_fee_rate`
 - **Status**: **Disabled by default** (can be too aggressive)
@@ -275,7 +275,7 @@ spam_ban_duration_seconds = 3600  # 1 hour
 
 Spam filtering is used in UTXO commitment processing to reduce bandwidth during sync:
 
-- **Location**: `blvm-consensus/src/utxo_commitments/initial_sync.rs`
+- **Location**: `blvm-protocol/src/utxo_commitments/initial_sync.rs`
 - **Usage**: Filters outputs when processing blocks for UTXO commitments
 - **Benefit**: 40-60% bandwidth reduction during ongoing sync
 

@@ -160,7 +160,7 @@ blvm-verify-binary \
   --pubkey maintainer.pub
 ```
 
-For more examples, see the [blvm-sdk examples](../../blvm-sdk/examples/) directory.
+For more examples, see the [blvm-sdk examples](../../../blvm-sdk/examples/) directory.
 
 ## Node module example (hello-module)
 

@@ -251,7 +251,7 @@ The UTXO Commitments module includes blvm-spec-lock proofs verifying:
 
 **Location**: `blvm-protocol/src/utxo_commitments/`
 
-Storage correctness for UTXO set operations is covered by tests and, where applicable, blvm-spec-lock verification in the consensus and protocol crates. The UTXO commitments implementation in blvm-protocol (merkle tree, verification, peer consensus) is the reference for commitment-related logic.
+Storage correctness for UTXO set operations is covered by tests and blvm-spec-lock verification in the consensus and protocol crates. The UTXO commitments implementation in blvm-protocol (merkle tree, verification, peer consensus) is the reference for commitment-related logic.
 
 ## Usage
 

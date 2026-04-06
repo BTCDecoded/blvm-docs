@@ -12,6 +12,7 @@ This repository aggregates documentation from all BLVM source repositories into 
 
 - `book.toml` - mdBook configuration
 - `src/` - Documentation source files and navigation structure
+- `modules/` - External sources included into the book (Orange Paper, governance); see Local Development
 - `.github/workflows/` - Automated build and deployment
 
 ## Local Development
@@ -27,27 +28,45 @@ This repository aggregates documentation from all BLVM source repositories into 
    git clone https://github.com/BTCDecoded/blvm-docs.git
    ```
 
-2. Serve the documentation locally:
+2. **Wire `modules/` includes** (required for `mdbook build`). Some pages use `{{#include}}` to embed:
+   - `modules/blvm-spec/THE_ORANGE_PAPER.md`
+   - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md`
+
+   If you keep sibling clones (e.g. `blvm-spec` and `governance` next to `blvm-docs`), symlink from `blvm-docs/modules/`:
+   ```bash
+   cd blvm-docs/modules
+   ln -sf ../../blvm-spec blvm-spec
+   ln -sf ../../governance governance
+   ```
+   Adjust paths for your checkout. CI should populate `modules/` the same way before running `mdbook build`.
+
+3. Serve the documentation locally:
    ```bash
    mdbook serve
    ```
 
    The documentation will be available at `http://localhost:3000`
 
-3. Build the documentation:
+4. Build the documentation:
    ```bash
    mdbook build
    ```
 
    Output will be in the `book/` directory.
 
-## Documentation Sources
+### `modules/blvm` submodule
 
-Documentation is aggregated from source repositories using `{{#include}}` directives that fetch content from GitHub. Documentation is maintained in source repositories alongside code.
+The optional **`modules/blvm`** git submodule is the **meta-repo** umbrella (`blvm`). Its `docs/` tree covers release/CI workflows for that repo. The **canonical** narrative for [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org) lives in **`src/`** in this repository.
+
+## Documentation sources
+
+- **`src/`** — primary book content and `SUMMARY.md` navigation.
+- **`{{#include}}`** — pulls Orange Paper and governance files from **`modules/`** at build time (local files, not downloaded from GitHub during `mdbook build`).
+- **Upstream crates** — consensus, protocol, node, SDK docs live in their repositories; this book links to them where needed.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to documentation.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [Contributing to BLVM Documentation](src/appendices/contributing-docs.md) (in the built book: *Appendices → Contributing to Documentation*).
 
 ## Deployment
 
@@ -56,4 +75,3 @@ Documentation is automatically built and deployed to GitHub Pages on every push 
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-

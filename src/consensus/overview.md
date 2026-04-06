@@ -128,14 +128,14 @@ Optimization passes optimize the implementation (the implementation is validated
 
 ## Mathematical Lock
 
-Implementation is mathematically locked to the Orange Paper:
+The Orange Paper **specifies** consensus rules; **blvm-consensus** **implements** them, checked by tests, review, and **BLVM Specification Lock** on spec-locked code.
 
-**Chain of Trust**:
+**Chain of trust:**
 ```
-Orange Paper (Math Spec) → BLVM Specification Lock (Z3 Proof) → Implementation → Bitcoin Consensus
+Orange Paper → blvm-consensus → tests + spec-lock → deployment & operations
 ```
 
-Every function implements a mathematical specification, every critical function has a Z3 proof (via BLVM Specification Lock), and all proofs reference Orange Paper sections.
+Details: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Dependencies
 

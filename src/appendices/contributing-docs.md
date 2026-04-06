@@ -88,17 +88,32 @@ Before submitting changes:
    git clone https://github.com/BTCDecoded/blvm-docs.git
    ```
 
-2. Serve locally:
+2. **Includes for Orange Paper and governance** — `mdbook build` fails if these paths are missing:
+   - `modules/blvm-spec/THE_ORANGE_PAPER.md` (included from [Orange Paper](../reference/orange-paper.md))
+   - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md` (included from [Governance Overview](../governance/overview.md) and [Governance Model](../governance/governance-model.md))
+
+   With sibling repo checkouts, from `blvm-docs/modules/`:
+   ```bash
+   ln -sf ../../blvm-spec blvm-spec
+   ln -sf ../../governance governance
+   ```
+   Point the targets at your local `blvm-spec` and `governance` clones (paths may differ).
+
+3. Serve locally:
    ```bash
    mdbook serve
    ```
 
-3. Review changes at `http://localhost:3000`
+4. Review changes at `http://localhost:3000`
 
-4. Check for broken links:
+5. Check for broken links:
    ```bash
    mdbook test
    ```
+
+### `modules/blvm` submodule
+
+The **`modules/blvm`** submodule is the **meta-repo** (`blvm` build/orchestration tree). Its `docs/` tree is for umbrella workflows and release tooling, **not** the same as this book’s `src/`. Prefer editing cross-cutting narrative in **`blvm-docs/src/`** unless the change belongs to meta-repo CI or release docs only.
 
 ## Review Process
 
@@ -114,7 +129,7 @@ When refreshing docs for a release or large refactor, explicitly verify (not onl
 |------|-----|
 | **SDK / modules** | Are `blvm-sdk` **module** APIs documented? (`#[module]`, `run_module!`, prelude, `blvm-sdk-macros`) |
 | **User CLI** | Do modules that register CLI document **`blvm <group> …`** and that the module must be loaded? |
-| **New crates** | Is every user-facing crate in stack overview, glossary, and **api-index** where appropriate? |
+| **New crates** | Is every user-facing crate listed in stack overview, glossary, and **api-index**? |
 | **First-class modules** | Does each shipped module have a book page (not only a GitHub link)? |
 | **Composition** | Is **`blvm-compose`** still accurately described if the composition API changed? |
 | **Node config** | Do defaults (IBD, storage, pruning) match code and **configuration-reference**? |

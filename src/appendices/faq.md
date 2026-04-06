@@ -16,15 +16,15 @@ No. Neither BLVM nor Bitcoin Commons forks Bitcoin's blockchain or consensus rul
 
 ### Is the system production ready?
 
-BLVM provides a complete Bitcoin node implementation with all core components. The system includes formal verification, comprehensive testing, and production-ready features. For production deployment, ensure proper security hardening, RPC authentication, and monitoring are configured. See [Node Configuration](../node/configuration.md) and [Security](../security/security-controls.md) for production considerations.
+BLVM provides a complete node implementation with core components, formal verification tooling, and broad tests. **Readiness depends on your deployment**: governance is not universally activated, and you must apply your own security review, hardening, RPC authentication, and monitoring. See [Node Configuration](../node/configuration.md), [Security](../security/security-controls.md), and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md).
 
 ### How do BLVM and Bitcoin Commons work together?
 
-BLVM provides the mathematical foundation and compiler-like architecture (Orange Paper as spec/IR; implementation validated against it via formal verification). Bitcoin Commons provides the governance framework (coordination without civil war). The modular architecture is where both meet: BLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. You can't have safe alternative implementations without BLVM's mathematical rigor, and you can't have coordination without Commons' governance framework.
+BLVM provides the mathematical foundation and compiler-like architecture (Orange Paper as spec/IR; implementation validated against it). Bitcoin Commons provides the governance framework (coordination without civil war). The modular architecture is where both meet: BLVM supplies the spec and verification stack; Commons supplies governance. Production deployments need engineering and operations like any node.
 
 ### What are the two innovations?
 
-**BLVM (Bitcoin Low-Level Virtual Machine)**: Technical innovation providing mathematical rigor through the [Orange Paper](../reference/orange-paper.md) (mathematical specification), [formal verification](../consensus/formal-verification.md) ([Z3 proofs via BLVM Specification Lock](../consensus/formal-verification.md)), proofs locked to code, and a compiler-like architecture. This ensures correctness. See [Introduction](../introduction.md) and [Consensus Overview](../consensus/overview.md) for details.
+**BLVM (Bitcoin Low-Level Virtual Machine)**: Technical innovation combining the [Orange Paper](../reference/orange-paper.md) (normative math spec), [formal verification](../consensus/formal-verification.md) (**BLVM Specification Lock** / Z3), and a compiler-like split between spec and implementation. See [Introduction](../introduction.md) and [Consensus Overview](../consensus/overview.md).
 
 **Bitcoin Commons (Cryptographic Commons)**: Governance innovation providing forkable governance through Ostrom's principles, cryptographic enforcement, [5-tier governance model](../governance/layer-tier-model.md), and [transparent audit trails](../governance/audit-trails.md). This ensures coordination. See [Governance Overview](../governance/overview.md) for details.
 
@@ -54,19 +54,19 @@ Elinor Ostrom's Nobel Prize-winning research identified 8 principles for managin
 
 ### Why do you need both BLVM and Bitcoin Commons?
 
-BLVM solves the technical problem (mathematical rigor, safe alternative implementations). Bitcoin Commons solves the governance problem (coordination without civil war). You can't have safe alternatives without BLVM's mathematical foundation, and you can't have coordination without Commons' governance framework. They enable each other.
+BLVM addresses the technical problem (shared Orange Paper spec, layered verification, alternative implementations). Bitcoin Commons addresses the governance problem (coordination without civil war). They are designed to work together.
 
 ### How does the modular architecture combine both innovations?
 
-The modular architecture has three layers: (1) Mandatory Consensus (BLVM ensures correctness), (2) Optional Modules (Commons enables competition), (3) Economic Coordination (module marketplace funds infrastructure). BLVM ensures correctness through architectural enforcement; Commons ensures coordination through governance rules. The architecture is where both meet.
+The modular architecture has three layers: (1) **Mandatory Consensus** (shared **blvm-consensus** rules and verification policy), (2) **Optional Modules** (Commons enables competition), (3) **Economic Coordination** (module marketplace funds infrastructure). Consensus stays in one layer; Commons coordinates changes and releases. The architecture is where both meet.
 
 ### Can you use BLVM without Bitcoin Commons governance?
 
-Technically yes: BLVM is a technical stack that can be used independently. However, without Bitcoin Commons governance, you'd still have the governance capture problem. The innovations are designed to work together: BLVM enables safe alternatives, Commons enables coordination between alternatives.
+Yes. BLVM is a technical stack usable on its own. Without Bitcoin Commons governance you do not get this project’s governance model. BLVM supplies the spec and implementation stack; Commons supplies coordination between alternatives.
 
 ### Can you use Bitcoin Commons governance without BLVM?
 
-The governance framework could theoretically be applied to other implementations, but BLVM's mathematical rigor (Orange Paper, formal verification) is what makes alternative implementations safe. Without BLVM, you'd have governance but still risk consensus bugs from informal implementations.
+The governance framework can apply to other implementations. BLVM’s Orange Paper and verification stack give a shared spec and Z3-backed proofs on spec-locked code; any codebase still needs correct implementation and review to stay aligned with mainnet.
 
 ### What happens if governance is captured?
 
@@ -82,7 +82,7 @@ Merge mining is available as a separate paid plugin module (`blvm-merge-mining`)
 
 ### What features does BLVM provide?
 
-Orange Paper complete, blvm-consensus with formal proofs, blvm-protocol, blvm-node, and blvm-sdk all implemented. All 6 tiers are functional and production-ready.
+The Orange Paper, blvm-consensus (with formal verification tooling), blvm-protocol, blvm-node, blvm-sdk, and blvm-commons (governance enforcement) exist as implemented layers. **Governance rules are not yet activated in production**; treat the stack as experimental until your deployment’s activation criteria are met. See [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) and [Governance Overview](../governance/overview.md).
 
 ### How is Bitcoin Commons governance implemented?
 
@@ -114,45 +114,45 @@ Bitcoin's codebase is a commons: a shared resource that benefits everyone but no
 
 ### How does this relate to cypherpunk philosophy?
 
-Cypherpunks focused on eliminating trusted third parties in transactions. Bitcoin Commons extends this to development: eliminate trusted parties in governance through cryptographic enforcement, transparency, and forkability. BLVM extends this to implementation: eliminate trusted implementations through mathematical proof.
+Cypherpunks focused on eliminating trusted third parties in transactions. Bitcoin Commons extends this to development: reduce reliance on trusted parties in governance through cryptographic enforcement, transparency, and forkability. BLVM extends this to implementation: open specs, tests, review, and **BLVM Specification Lock** where applied—not a single blanket proof of every line.
 
 ## Technical Questions
 
 ### What is BLVM?
 
-BLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations. It includes: (1) Orange Paper - complete mathematical specification serving as the IR (intermediate representation), (2) blvm-consensus - implementation that is **validated against** the Orange Paper via formal verification (blvm-spec-lock), not generated from it, (3) Optimization passes - runtime optimizations applied to the implementation code, (4) blvm-protocol - Bitcoin abstraction layer, (5) blvm-node - full node implementation, (6) blvm-sdk - developer toolkit.
+BLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations. It includes: (1) Orange Paper—complete mathematical specification serving as the IR (intermediate representation), (2) **blvm-consensus**—implementation **validated against** that spec (not generated from the IR), (3) optimization passes—runtime optimizations on the implementation, (4) **blvm-protocol**—Bitcoin abstraction layer, (5) **blvm-node**—full node implementation, (6) **blvm-sdk**—developer toolkit.
 
 ### What is the Orange Paper?
 
-The Orange Paper is a complete mathematical specification of Bitcoin's consensus protocol, extracted from Bitcoin Core using AI-assisted analysis. It serves as the "intermediate representation" (IR) in BLVM's compiler-like architecture. The implementation is **validated against** this spec (not generated from it). It enables safe alternative implementations by providing formal, verifiable consensus rules that can be mathematically proven correct.
+The Orange Paper is a complete mathematical specification of Bitcoin's consensus protocol, extracted from Bitcoin Core using AI-assisted analysis. It serves as the "intermediate representation" (IR) in BLVM's compiler-like architecture. The implementation is **validated against** this spec (not generated from it). **blvm-consensus** implements those rules with tests, review, and **BLVM Specification Lock** proofs on spec-locked code.
 
 ### How does formal verification work in BLVM?
 
-BLVM uses BLVM Specification Lock (with Z3) to formally verify consensus-critical code. The Orange Paper provides the mathematical specification; blvm-consensus implements it with proofs locked to code. All consensus decisions flow through verified functions, and the dependency chain prevents bypassing verification. This provides mathematical proof of correctness, not just testing.
+BLVM uses **BLVM Specification Lock** (Z3) for formal proofs on spec-locked consensus functions, together with tests and review. The Orange Paper is the specification; **blvm-consensus** implements it. See [Formal Verification](../consensus/formal-verification.md).
 
 ### How is BLVM different from Bitcoin Core?
 
-Bitcoin Core embeds consensus rules in 350,000+ lines of C++ with no mathematical specification. BLVM provides: (1) Mathematical specification (Orange Paper), (2) Formal verification (Z3 proofs via BLVM Specification Lock), (3) Proofs locked to code, (4) Compiler-like architecture enabling safe alternative implementations. BLVM doesn't replace Bitcoin Core; it enables safe alternatives.
+Bitcoin Core embeds consensus rules in a large C++ codebase without a single companion IR like the Orange Paper. BLVM provides: (1) mathematical specification (Orange Paper), (2) **BLVM Specification Lock** (Z3 proofs on spec-locked code), (3) proofs co-located with code, (4) a compiler-like split (spec vs implementation) for alternative implementations. BLVM does not replace Bitcoin Core; it is a different development and verification stack.
 
 ### What does "compiler-like architecture" mean?
 
-Like a compiler has a spec (IR) and implementation (machine code), BLVM has the Orange Paper as the spec (IR) and blvm-consensus as the implementation. The implementation is **validated against** the Orange Paper via formal verification (blvm-spec-lock)—it is not generated or transformed from the IR. Optimization passes optimize the implementation code. Multiple Bitcoin implementations can target the same Orange Paper specification. This enables implementation diversity while maintaining consensus correctness through shared mathematical foundations.
+Like a compiler has a spec (IR) and implementation (machine code), BLVM has the Orange Paper as the spec (IR) and **blvm-consensus** as the implementation. The implementation is **validated against** the Orange Paper—it is not generated or transformed from the IR. Optimization passes optimize the implementation code. Multiple implementations can target the same Orange Paper; operating on mainnet also requires sound deployment and operations.
 
 ### What is formal verification in BLVM?
 
-BLVM uses BLVM Specification Lock (with Z3) to mathematically prove code correctness. The Orange Paper provides the specification; blvm-consensus implements it with proofs. All consensus decisions flow through verified functions. This provides mathematical proof, not just testing.
+**BLVM Specification Lock** produces Z3 proofs for spec-locked functions against Orange Paper contracts. The Orange Paper remains the normative spec for the full rule set. See [Formal Verification](../consensus/formal-verification.md).
 
 ### How many formal proofs does BLVM have?
 
-BLVM has comprehensive formal proofs in the source code, providing formal verification coverage of consensus-critical functions. The proofs are embedded directly in the codebase and verified continuously.
+The set of spec-locked functions grows over time. Run `cargo spec-lock verify` in **blvm-consensus** or see [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 ### What does "proofs locked to code" mean?
 
-Formal verification proofs are embedded in the code itself, not separate documentation. The proofs verify that the code matches the Orange Paper specification. If code changes, proofs must be updated, ensuring correctness is maintained.
+Spec-lock proofs live next to the functions they verify. Changing those functions requires updating proofs. Full proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ### How does BLVM prevent consensus bugs?
 
-Through multiple layers: (1) Orange Paper provides mathematical specification, (2) Formal verification proves implementation matches spec, (3) Proofs locked to code prevent drift, (4) Dependency chain forces all consensus through verified functions, (5) Spec drift detection alerts if code diverges from spec.
+Through multiple layers: (1) Orange Paper specifies the rules, (2) Tests and integration catch regressions, (3) **BLVM Specification Lock** proves spec-locked consensus code against those rules, (4) Consensus logic lives in **blvm-consensus** so the node does not reimplement rules, (5) Review and tooling catch what automation misses. See [Formal Verification](../consensus/formal-verification.md).
 
 ### How does cryptographic enforcement work?
 

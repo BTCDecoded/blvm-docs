@@ -1,6 +1,6 @@
 # Node Implementation Overview
 
-The node implementation (`blvm-node`) is a minimal, production-ready Bitcoin node that adds only non-consensus infrastructure to the consensus and protocol layers. Consensus logic comes from [blvm-consensus](../consensus/overview.md), and protocol abstraction from [blvm-protocol](../protocol/overview.md).
+The node implementation (`blvm-node`) is a minimal **reference** Bitcoin node: it adds only non-consensus infrastructure on top of the consensus and protocol layers. Treat mainnet and high-value deployments like any consensus-adjacent system—hardening, monitoring, and review are required. Consensus logic comes from [blvm-consensus](../consensus/overview.md), and protocol abstraction from [blvm-protocol](../protocol/overview.md).
 
 ## Architecture
 
@@ -126,7 +126,7 @@ graph TB
 1. **Zero Consensus Re-implementation**: All consensus logic delegated to [blvm-consensus](../consensus/overview.md)
 2. **Protocol Abstraction**: Uses [blvm-protocol](../protocol/overview.md) for variant support (mainnet, testnet, regtest)
 3. **Pure Infrastructure**: Adds storage, networking, RPC, orchestration only
-4. **Production Ready**: Full Bitcoin node functionality with [performance optimizations](performance.md)
+4. **Feature-complete infrastructure**: Full node–style behavior (storage, P2P, RPC, modules) with [performance optimizations](performance.md); not a substitute for operational security review before production
 
 ## Features
 

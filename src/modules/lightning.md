@@ -91,7 +91,7 @@ provider = "stub"
 
 | Feature | LNBits | LDK | Stub |
 |---------|--------|-----|------|
-| **Status** | ✅ Production-ready | ✅ Fully implemented | ✅ Testing |
+| **Status** | Operational (REST) | Operational (Rust/LDK) | Stub / dev |
 | **API Type** | REST (HTTP) | Rust-native (lightning-invoice) | None |
 | **Real Lightning** | ✅ Yes | ✅ Yes | ❌ No |
 | **External Service** | ✅ Yes | ❌ No | ❌ No |
