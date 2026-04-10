@@ -64,18 +64,25 @@ pub struct RequestMessage {
 }
 ```
 
-**Request Types**:
-- `GetBlock` - Get block by hash
-- `GetBlockHeader` - Get block header by hash
-- `GetTransaction` - Get transaction by hash
-- `GetChainTip` - Get current chain tip
-- `GetBlockHeight` - Get current block height
-- `GetUTXO` - Get UTXO by outpoint
-- `SubscribeEvents` - Subscribe to node events
-- `GetMempoolTransactions` - Get mempool transaction hashes
-- `GetNetworkStats` - Get network statistics
-- `GetNetworkPeers` - Get connected peers
-- `GetChainInfo` - Get chain information
+**Request types (representative)**:
+
+Reads and subscriptions include `GetBlock`, `GetBlockHeader`, `GetTransaction`, `GetChainTip`, `GetBlockHeight`, `GetUTXO`, `SubscribeEvents`, `GetMempoolTransactions`, `GetNetworkStats`, `GetNetworkPeers`, `GetChainInfo`, and many others (mining, storage, RPC, timers, …).
+
+**P2P serve policy & sync (module → node):**
+
+| `MessageType` | Role |
+|-----------------|------|
+| `MergeBlockServeDenylist` | Add block hashes that must not receive full `block` on `getdata` (`notfound` instead). |
+| `GetBlockServeDenylistSnapshot` | Bounded snapshot of the block denylist. |
+| `ClearBlockServeDenylist` / `ReplaceBlockServeDenylist` | Clear or replace the full set. |
+| `MergeTxServeDenylist` | Same pattern for full `tx` on `getdata`. |
+| `GetTxServeDenylistSnapshot` | Bounded snapshot of the tx denylist. |
+| `ClearTxServeDenylist` / `ReplaceTxServeDenylist` | Clear or replace the tx set. |
+| `GetSyncStatus` | Sync coordinator status (`SyncStatus`). |
+| `BanPeer` | Ban peer by address; optional duration. |
+| `SetBlockServeMaintenanceMode` | Refuse all full-block `getdata` answers when enabled. |
+
+These affect **relay/serving only**, not consensus validation. See [`NodeAPI`](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the Rust surface.
 
 **Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
@@ -88,10 +95,7 @@ pub struct ResponseMessage {
 }
 ```
 
-**Response Types**:
-- `Success` - Request succeeded with data
-- `Error` - Request failed with error details
-- `NotFound` - Resource not found
+**Response payload** variants carry typed data (blocks, templates, snapshots, booleans, errors, etc.); denylist merges return dedicated merged/snapshot payloads where applicable.
 
 **Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 

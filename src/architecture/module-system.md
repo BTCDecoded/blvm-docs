@@ -100,9 +100,10 @@ Modules run in separate processes via `ModuleProcessSpawner`:
 Modules communicate with the base node via Unix domain sockets (Unix) or named pipes (Windows):
 
 - Request/response protocol
-- Event subscription system
+- Event subscription system (`SubscribeEvents` / `EventType` — node → module notifications)
 - Correlation IDs for async operations
 - Type-safe message serialization
+- **Targeted node control** (module → node): `NodeAPI` / IPC also exposes bounded **writes** that are not consensus changes — e.g. P2P **serve denylists** (block/tx `getdata` policy), **`get_sync_status`**, **`ban_peer`**, and **block-serve maintenance mode**. Details: [Module IPC Protocol](module-ipc-protocol.md), [Module development](../sdk/module-development.md#querying-node-data).
 
 **Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 

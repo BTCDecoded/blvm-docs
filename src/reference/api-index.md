@@ -84,8 +84,11 @@ pub trait NodeAPI {
     async fn get_block_height(&self) -> Result<u64, ModuleError>;
     async fn get_utxo(&self, outpoint: &OutPoint) -> Result<Option<UTXO>, ModuleError>;
     async fn subscribe_events(&self, event_types: Vec<EventType>) -> Result<Receiver<ModuleMessage>, ModuleError>;
+    // … plus P2P serve denylists, get_sync_status, ban_peer, maintenance mode — see trait.
 }
 ```
+
+The full **`NodeAPI`** surface includes **events** (`subscribe_events`) and **targeted writes** for P2P policy (block/tx `getdata` denylists), **sync status**, **peer ban**, and **maintenance mode**; see [Module development](../sdk/module-development.md#querying-node-data).
 
 **Event Types:**
 **Core Blockchain Events:**

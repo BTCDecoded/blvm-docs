@@ -362,6 +362,29 @@ let response = client.send_request(request).await?;
 - `get_network_stats()` - Get network statistics
 - `get_network_peers()` - Get list of connected peers
 
+**P2P serve policy & sync (read + targeted writes):**
+
+These calls affect **what the node serves on the Bitcoin P2P wire** (`getdata` responses) and **sync introspection**. They do **not** change consensus validation; withheld blocks/transactions are still validated if present locally. Use with care: broad denylists or bans affect relay and peer relationships.
+
+- **Block `getdata` denylist** — additive merge, bounded snapshot, clear, or replace full-hash sets. Peers requesting a denied block hash get `notfound` instead of a full `block` message.
+  - `merge_block_serve_denylist(hashes)`
+  - `get_block_serve_denylist_snapshot()`
+  - `clear_block_serve_denylist()`
+  - `replace_block_serve_denylist(hashes)`
+- **Transaction `getdata` denylist** — same pattern for full `tx` serves on `getdata`.
+  - `merge_tx_serve_denylist(hashes)`
+  - `get_tx_serve_denylist_snapshot()`
+  - `clear_tx_serve_denylist()`
+  - `replace_tx_serve_denylist(hashes)`
+- **Sync status** — finer-grained view than `get_chain_info()` alone (coordinator phase / progress); see `SyncStatus` in the trait.
+  - `get_sync_status()`
+- **Operational maintenance** — when enabled, the node refuses **all** full-block answers on `getdata` (coarse knob for degraded operation).
+  - `set_block_serve_maintenance_mode(enabled)`
+- **Peer ban** — request a ban by peer address string; optional duration (`None` = permanent). High-impact; subject to node policy and review.
+  - `ban_peer(peer_addr, ban_duration_seconds)`
+
+Corresponding IPC `MessageType` / `RequestPayload` names match the `NodeAPI` methods (see [Module IPC Protocol](../architecture/module-ipc-protocol.md)). Implementation: [`traits.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs), [`getdata_serve.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/getdata_serve.rs).
+
 **Storage API:**
 - `storage_open_tree(name)` - Open a storage tree (isolated per module)
 - `storage_insert(tree_id, key, value)` - Insert a key-value pair
@@ -408,11 +431,14 @@ let response = client.send_request(request).await?;
 - `get_payment_state(payment_id)` - Get payment state by payment ID
 
 **Network Integration API:**
-- `send_mesh_packet_to_module(module_id, packet_data, peer_addr)` - Send mesh packet to a module
+- `send_mesh_packet_to_peer(peer_addr, packet_data)` — send a mesh packet to a peer (supported path for IPC modules).
+- `send_mesh_packet_to_module(module_id, packet_data, peer_addr)` — may be **unimplemented** for out-of-process modules (`NodeApiIpc`); use peer-targeted sends where available.
 
 For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs).
 
-### Subscribing to Events
+### Subscribing to events
+
+Modules subscribe with `SubscribeEvents` and receive `EventType` / `EventPayload` streams (chain, mempool, network, payments, mining, governance, maintenance, etc.). Events are **notifications**; changing serve policy or sync-adjacent behavior uses the **NodeAPI** methods above (denylists, maintenance mode, bans), not events alone.
 
 Modules can subscribe to real-time node events. The approach depends on which integration method you're using:
 

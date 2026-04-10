@@ -36,6 +36,7 @@ Exact flags vary by build; use `blvm sync-policy --help` when the module is load
 ## Implementation notes
 
 - Built with the [SDK declarative style](../sdk/module-development.md#sdk-declarative-style-recommended): `#[module]`, `#[command]`, `run_module!`.
+- **Withholding and P2P serve policy:** policy logic can merge **block hashes** (and related sets) into the node’s **`merge_block_serve_denylist`** path via `NodeAPI` so that, after IBD gates, `getdata` for those hashes does not serve full `block` messages to peers (`notfound`), while consensus validation behavior remains unchanged. Transaction-level withholding uses the parallel **`merge_tx_serve_denylist`** surface when enabled for the build. See [Module development](../sdk/module-development.md#querying-node-data) (P2P serve policy & sync) and [Module IPC Protocol](../architecture/module-ipc-protocol.md).
 - Repository: [blvm-selective-sync](https://github.com/BTCDecoded/blvm-selective-sync).
 
 ## See also
