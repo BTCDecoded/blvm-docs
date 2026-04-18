@@ -61,7 +61,7 @@ max_descendant_count = 50
 
 ## Standard Node Configuration
 
-For general-purpose nodes with Bitcoin Core compatibility:
+For general-purpose nodes using conventional mempool defaults:
 
 ```toml
 [rbf]
@@ -81,7 +81,7 @@ mempool_expiry_hours = 336
 
 **Why This Configuration:**
 - **Standard RBF**: BIP125-compliant with 10% fee increase
-- **Bitcoin Core Defaults**: Matches Bitcoin Core mempool settings
+- **Conventional defaults**: Matches common mainnet mempool parameters
 - **Balanced**: Good for most use cases
 
 ## Testing RBF Configuration

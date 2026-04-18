@@ -103,7 +103,7 @@ Initial block download uses parallel IBD only. **`[ibd]`** (top-level): chunk_si
 - **Default**: `"auto"`
 - **Options**:
   - `"auto"` - Select by build features: RocksDB when `rocksdb` feature enabled (typical default), else TidesDB, else Redb, else Sled
-  - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature, Bitcoin Core compatible)
+  - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
   - `"redb"` - Use redb database (production-ready)
   - `"sled"` - Use sled database (beta, fallback option)
   - `"tidesdb"` - Use TidesDB (if available)
@@ -331,7 +331,7 @@ module_socket_max_attempts = 50
 
 ```toml
 [network_timing]
-target_peer_count = 8                    # Target number of peers (Bitcoin Core uses 8-125)
+target_peer_count = 8                    # Target outbound peers (typical deployments use a similar range)
 peer_connection_delay_seconds = 2         # Wait before connecting to database peers
 addr_relay_min_interval_seconds = 8640   # Min interval between addr broadcasts (2.4 hours)
 max_addresses_per_addr_message = 1000   # Max addresses per addr message

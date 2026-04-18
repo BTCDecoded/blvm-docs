@@ -120,6 +120,7 @@ use blvm_sdk::module::prelude::*;
   - Methods with **`ctx: &InvocationContext`** (and no `#[rpc_method]` / `#[on_event]`) become **CLI subcommands**. Use **`#[command]`** to mark them explicitly. Parameters can use **`#[arg(long)]`**, **`#[arg(short = 'n')]`**, **`#[arg(default = "value")]`** for CLI parsing.
   - **`#[rpc_method]`** / **`#[rpc_method(name = "method_name")]`** marks **RPC endpoints**.
   - **`#[on_event(NewBlock, NewTransaction)]`** marks **event handlers**; use with **`#[event_handlers]`** on the impl to generate `event_types()` and `dispatch_event()`.
+  - **Payload injection:** For event types listed in **`blvm-sdk-macros`** `event_payload_map` (same field names as `EventPayload` in `blvm-node`), a handler can take **payload fields by name** plus optional **`ctx: &InvocationContext`** instead of only `&EventMessage`. The match is on **`&event.payload`**, so use **reference** types (e.g. `packet_data: &[u8], peer_addr: &str`). Example: `#[on_event(MeshPacketReceived)]` with `(packet_data: &[u8], peer_addr: &str, ctx: &InvocationContext)`. The **`_ctx`** / **`_context`** names are also recognized for the legacy `(&event, ctx)` style.
 
 **Migrations:** **`#[migration(version = N)]`** on a function; use with `db.run_migrations(&[(1, up_initial), ...])` or via `#[module(migrations = (...))]`.
 

@@ -137,7 +137,7 @@ let response_str = String::from_utf8(response)?;
 
 ## Limitations
 
-- **Bitcoin Core Compatibility**: Bitcoin Core only supports TCP RPC
+- **Ecosystem tooling**: Most off-the-shelf JSON-RPC clients assume TCP HTTP to port 8332/18332
 - **Client Support**: Requires QUIC-capable clients
 - **Certificate Management**: Self-signed certs need proper handling for production
 - **Network Requirements**: Some networks may block UDP/QUIC
@@ -163,7 +163,7 @@ let response_str = String::from_utf8(response)?;
 
 ## When Not to Use
 
-- **Bitcoin Core Compatibility**: Need compatibility with Bitcoin Core tooling
+- **Legacy clients**: Need scripts or apps that only speak TCP HTTP RPC
 - **Legacy Clients**: Clients that only support TCP/HTTP
 - **Simple Use Cases**: TCP RPC is simpler and sufficient for most cases
 

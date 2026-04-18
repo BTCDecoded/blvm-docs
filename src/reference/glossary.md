@@ -75,7 +75,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Capabilities** - Permissions system for modules. Capabilities use snake_case in `module.toml` and map to `Permission` enum variants. Core capabilities include: `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `send_transactions`, `read_mempool`, `read_network`, `network_access`, `read_lightning`, `read_payment`, `read_storage`, `write_storage`, `manage_storage`, `read_filesystem`, `write_filesystem`, `manage_filesystem`, `register_rpc_endpoint`, `manage_timers`, `report_metrics`, `read_metrics`, `discover_modules`, `publish_events`, `call_module`, `register_module_api`. See [Permission System](../architecture/module-system.md#permission-system) for complete list.
 
-**RPC** (Remote Procedure Call) - [JSON-RPC 2.0 interface](../node/rpc-api.md) for interacting with the node. BLVM implements Bitcoin Core-compatible methods.
+**RPC** (Remote Procedure Call) - [JSON-RPC 2.0 interface](../node/rpc-api.md) for interacting with the node. Methods follow conventions widely used by Bitcoin node RPC documentation.
 
 ## Governance Status
 

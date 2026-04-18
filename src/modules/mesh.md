@@ -355,6 +355,10 @@ Specialized modules can be built to use `blvm-mesh` for:
 - **Mining Pool Coordination**: Decentralized mining pool operations via mesh
 - **P2P Messaging**: Payment-gated messaging over mesh network
 
+### Edge adapters (Meshtastic, Reticulum, other radios)
+
+Commons Mesh does not embed non–Bitcoin transports. For **LoRa / Meshtastic**, **Reticulum**, or similar, use a **separate adapter process** (MQTT, serial, or RNS) that maps frames to bytes your node already accepts, and use **`MeshClient`** / **`blvm-bridge`** patterns rather than duplicating mesh policy in the adapter. See the upstream [blvm-mesh `docs/edge-adapters.md`](https://github.com/BTCDecoded/blvm-mesh/blob/main/docs/edge-adapters.md) in the mesh repository.
+
 ### Integration Pattern
 
 Any module can integrate with `blvm-mesh` by:

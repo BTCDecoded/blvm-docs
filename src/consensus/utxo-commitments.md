@@ -59,7 +59,7 @@ Peers are selected for diversity across:
 - **ASN (Autonomous System Number)**: Maximum 2 peers per ASN
 - **Country**: Geographic distribution
 - **Subnet**: /16 subnet distribution
-- **Implementation**: Different Bitcoin implementations (Bitcoin Core, btcd, etc.)
+- **Implementation**: Different Bitcoin implementations may adopt commitment schemes independently
 
 **Code**: [peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs)
 

@@ -313,6 +313,6 @@ The property-based testing system includes:
 
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques
 - [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
-- [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
+- [Differential Testing](differential-testing.md) - Cross-check vs reference RPC
 - [Formal Verification](../consensus/formal-verification.md) - BLVM Specification Lock verification
 - [Contributing](contributing.md) - Testing requirements for contributions

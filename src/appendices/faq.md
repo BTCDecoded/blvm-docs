@@ -6,9 +6,9 @@
 
 Bitcoin Commons is a project that solves Bitcoin's governance asymmetry through two complementary innovations: [BLVM](../introduction.md) (the technical stack providing mathematical rigor) and Bitcoin Commons (the governance framework providing coordination without civil war). Together, they enable safe alternative Bitcoin implementations with forkable governance. See [Introduction](../introduction.md) and [Governance Overview](../governance/overview.md) for details.
 
-### How is this different from Bitcoin Core?
+### How does this relate to other Bitcoin implementations?
 
-Bitcoin Core is a single implementation with informal governance. Bitcoin Commons provides: (1) BLVM - Mathematical rigor enabling safe alternatives, (2) Commons - Forkable governance enabling coordination. Bitcoin Core has excellent consensus security; Bitcoin Commons adds governance security and implementation diversity.
+The widely deployed reference stack is one mature codebase and informal governance. Bitcoin Commons adds: (1) BLVM — mathematical rigor and a normative Orange Paper, (2) Commons — forkable governance. The goals are implementation diversity and verifiable specs alongside strong consensus testing.
 
 ### Is this a fork of Bitcoin?
 
@@ -70,7 +70,7 @@ The governance framework can apply to other implementations. BLVM’s Orange Pap
 
 ### What happens if governance is captured?
 
-Forkable governance means users can fork to a better governance model. This creates exit competition: captured governance loses users to better-governed implementations. The threat of forking prevents capture. Unlike Bitcoin Core, you can fork the governance rules, not just the code.
+Forkable governance means users can fork to a better governance model. This creates exit competition: captured governance loses users to better-governed implementations. The threat of forking prevents capture. Here you can fork **governance rules**, not only application code.
 
 ### How does economic alignment work?
 
@@ -124,15 +124,15 @@ BLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for B
 
 ### What is the Orange Paper?
 
-The Orange Paper is a complete mathematical specification of Bitcoin's consensus protocol, extracted from Bitcoin Core using AI-assisted analysis. It serves as the "intermediate representation" (IR) in BLVM's compiler-like architecture. The implementation is **validated against** this spec (not generated from it). **blvm-consensus** implements those rules with tests, review, and **BLVM Specification Lock** proofs on spec-locked code.
+The Orange Paper is a complete mathematical specification of Bitcoin's consensus protocol, produced from analysis of the widely deployed implementation using AI-assisted extraction. It serves as the "intermediate representation" (IR) in BLVM's compiler-like architecture. The implementation is **validated against** this spec (not generated from it). **blvm-consensus** implements those rules with tests, review, and **BLVM Specification Lock** proofs on spec-locked code.
 
 ### How does formal verification work in BLVM?
 
 BLVM uses **BLVM Specification Lock** (Z3) for formal proofs on spec-locked consensus functions, together with tests and review. The Orange Paper is the specification; **blvm-consensus** implements it. See [Formal Verification](../consensus/formal-verification.md).
 
-### How is BLVM different from Bitcoin Core?
+### How is BLVM different from a typical full-node codebase?
 
-Bitcoin Core embeds consensus rules in a large C++ codebase without a single companion IR like the Orange Paper. BLVM provides: (1) mathematical specification (Orange Paper), (2) **BLVM Specification Lock** (Z3 proofs on spec-locked code), (3) proofs co-located with code, (4) a compiler-like split (spec vs implementation) for alternative implementations. BLVM does not replace Bitcoin Core; it is a different development and verification stack.
+Many deployments embed consensus in a large C++ codebase without a single companion IR like the Orange Paper. BLVM provides: (1) mathematical specification (Orange Paper), (2) **BLVM Specification Lock** (Z3 proofs on spec-locked code), (3) proofs co-located with code, (4) a compiler-like split (spec vs implementation) for alternative implementations. BLVM is a **different** development and verification stack, not a drop-in replacement for any one node.
 
 ### What does "compiler-like architecture" mean?
 
@@ -164,7 +164,7 @@ BLVM implements numerous Bitcoin Improvement Proposals. See [Protocol Specificat
 
 ### What storage backends are supported?
 
-The node supports multiple storage backends. With `database_backend = "auto"` (default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. Options include **rocksdb** (Bitcoin Core compatible), **redb**, **sled**, and **tidesdb**. See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](../reference/configuration-reference.md) for details.
+The node supports multiple storage backends. With `database_backend = "auto"` (default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. Options include **rocksdb** (can read common LevelDB-format chain state and `blk*.dat` layouts), **redb**, **sled**, and **tidesdb**. See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](../reference/configuration-reference.md) for details.
 
 ### What transport protocols are supported?
 
@@ -184,7 +184,7 @@ Configuration can be done via config file (`blvm.toml`), environment variables, 
 
 ### What RPC methods are available?
 
-The node implements numerous Bitcoin Core-compatible JSON-RPC methods across blockchain, raw transaction, mempool, network, mining, control, address, transaction, and payment categories. See [RPC API Reference](../node/rpc-api.md) for the complete list of all available methods.
+The node implements many JSON-RPC methods aligned with widely documented Bitcoin node RPC conventions across blockchain, raw transaction, mempool, network, mining, control, address, transaction, and payment categories. See [RPC API Reference](../node/rpc-api.md) for the list.
 
 ### How does the module system work?
 

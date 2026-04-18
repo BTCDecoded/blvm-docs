@@ -108,7 +108,7 @@ Uses Bitcoin message signing standards:
 - **Message Format**: Bitcoin message signing format
 - **Signature Algorithm**: secp256k1 ECDSA
 - **Hash Function**: Double SHA256
-- **Compatibility**: Compatible with Bitcoin Core signing
+- **Compatibility**: Works with common PSBT/signing workflows used across the ecosystem
 
 **Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs)
 

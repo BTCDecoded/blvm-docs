@@ -126,7 +126,7 @@ pub struct ModuleContext {
 
 #### RPC API
 
-**RPC Methods:** Bitcoin Core-compatible JSON-RPC methods. See [RPC API Reference](../node/rpc-api.md) for complete list.
+**RPC Methods:** JSON-RPC methods aligned with widely documented Bitcoin node APIs. See [RPC API Reference](../node/rpc-api.md) for the list.
 
 **Key Categories:**
 - Blockchain methods (8): `getblockchaininfo`, `getblock`, `getblockhash`, `getblockheader`, `getbestblockhash`, `getblockcount`, `getdifficulty`, `gettxoutsetinfo`, `verifychain`

@@ -12,12 +12,12 @@ The benchmarking infrastructure is maintained in a separate repository (`blvm-be
 
 - Runs performance benchmarks across all BLVM components
 - Parallel benchmark execution for efficient testing
-- Differential testing infrastructure (comparing against Bitcoin Core)
+- Differential testing infrastructure (optional cross-check vs a reference full node)
 - FIBRE protocol performance benchmarks
 - Generates benchmark reports and visualizations
 - Publishes results to `benchmarks.thebitcoincommons.org`
 - Tracks performance over time
-- Compares performance with Bitcoin Core
+- Optional A/B comparisons when a second implementation is available in your bench setup
 
 ### Automated Benchmark Generation
 
@@ -152,13 +152,12 @@ Benchmarks report:
 - **Memory**: Memory usage per operation
 - **CPU**: CPU utilization
 
-### Comparison with Bitcoin Core
+### Comparisons
 
-Benchmarks include comparisons with Bitcoin Core:
+When configured, benches may compare runs against a **reference build** or historical BLVM baselines:
 
-- **Relative Performance**: Speedup/slowdown vs Bitcoin Core
-- **Feature Parity**: Functional equivalence verification
-- **Optimization Impact**: Performance impact of optimizations
+- **Relative performance**: Speedup/slowdown vs baseline
+- **Regression detection**: Catch performance cliffs across commits
 
 ### Historical Trends
 
@@ -185,7 +184,7 @@ Workflows generate:
 
 - **Benchmark Reports**: Detailed performance reports
 - **Visualizations**: Charts and graphs
-- **Comparison Data**: Bitcoin Core comparisons
+- **Comparison data**: Baseline vs current (when enabled)
 - **Historical Data**: Performance trends
 
 ## Performance Targets
@@ -232,7 +231,7 @@ The benchmarking infrastructure includes:
 - Automated benchmark generation (GitHub Actions)
 - Benchmark website (benchmarks.thebitcoincommons.org)
 - Performance tracking and visualization
-- Bitcoin Core comparisons
+- Optional external baselines when wired in blvm-bench
 - Historical performance trends
 
 **Location**: `blvm-bench` repository, benchmark results at [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org)

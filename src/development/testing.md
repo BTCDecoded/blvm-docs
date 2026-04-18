@@ -48,15 +48,9 @@ Integration tests verify end-to-end correctness:
 
 **Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/mod.rs)
 
-### Fuzz Tests
+### Fuzz tests
 
-Fuzz tests discover edge cases through random generation:
-
-- **Location**: `fuzz/fuzz_targets/` directory
-- **Tool**: libFuzzer
-- **Coverage**: Critical consensus functions
-
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/README.md)
+Coverage-guided fuzzing (libFuzzer / cargo-fuzz). Inventory: `fuzz/Cargo.toml` in each fuzz crate—see [Fuzzing](fuzzing.md).
 
 ### Formal Verification (spec-lock)
 
@@ -124,8 +118,8 @@ cargo test --test consensus_property_tests
 # Integration tests
 cargo test --test integration
 
-# Fuzz tests
-cargo +nightly fuzz run transaction_validation
+# Fuzz (example; target name from fuzz/Cargo.toml)
+cd fuzz && cargo +nightly fuzz run <target_name>
 ```
 
 ### Run with MIRI
@@ -189,13 +183,12 @@ Edge cases beyond blvm-spec-lock proof bounds are covered by:
 
 ## Differential Testing
 
-### Bitcoin Core Comparison
+### Cross-implementation checks
 
-Differential tests compare behavior with Bitcoin Core:
+Differential tests compare **blvm-consensus** with an independent full node over RPC (see [Differential testing](differential-testing.md)).
 
-- **Location**: `tests/integration/differential_tests.rs`
-- **Purpose**: Verify consistency with Bitcoin Core
-- **Coverage**: Critical consensus functions
+- **Location**: `tests/integration/differential_tests.rs` (skeleton); full harnesses in **blvm-bench**
+- **Purpose**: Catch consensus divergences empirically
 
 **Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs)
 
@@ -232,7 +225,7 @@ The testing infrastructure includes:
 - blvm-spec-lock proofs for formal verification
 - Runtime assertions for execution-time checks
 - MIRI integration for undefined behavior detection
-- Differential tests for Bitcoin Core comparison
+- Differential tests (see [differential-testing.md](differential-testing.md))
 
 **Location**: `blvm-consensus/tests/`, `blvm-consensus/fuzz/`, `blvm-consensus/src/`
 
@@ -240,7 +233,7 @@ The testing infrastructure includes:
 
 - [Property-Based Testing](property-based-testing.md) - Verify mathematical invariants
 - [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
-- [Differential Testing](differential-testing.md) - Compare with Bitcoin Core
+- [Differential Testing](differential-testing.md) - Cross-check vs reference RPC
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification
 - [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking

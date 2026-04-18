@@ -1,10 +1,10 @@
 # RPC API Reference
 
-BLVM node provides both a JSON-RPC 2.0 interface (Bitcoin Core compatible) and a modern REST API for interacting with the node.
+BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surface) and a modern REST API for interacting with the node.
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Bitcoin Core-compatible interface
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs
   - Mainnet: `http://localhost:8332` (default)
   - Testnet/Regtest: `http://localhost:18332` (default)
 - **REST API**: Modern RESTful interface at `http://localhost:8080/api/v1/`
@@ -159,7 +159,7 @@ curl -X POST http://localhost:8332 \
 
 ## Error Codes
 
-The RPC API uses Bitcoin Core-compatible JSON-RPC 2.0 error codes:
+The RPC API uses conventional JSON-RPC 2.0 error codes (same families as common Bitcoin node docs):
 
 ### Standard JSON-RPC Errors
 
@@ -294,7 +294,7 @@ Responses are returned in the same order as requests.
 
 ## Implementation Status
 
-The RPC API implements Bitcoin Core-compatible JSON-RPC 2.0 methods. See the [Available Methods](#available-methods) section above for a complete list of implemented methods.
+The RPC API implements JSON-RPC 2.0 methods documented in the [Available Methods](#available-methods) section above.
 
 ## REST API
 

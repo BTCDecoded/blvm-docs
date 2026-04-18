@@ -64,7 +64,7 @@ graph TB
 - Reference full node (non-consensus infrastructure: storage, P2P, RPC, modules); operational hardening required for real deployments
 - [Storage layer](../node/storage-backends.md) (database abstraction with multiple backends)
 - Network manager ([multi-transport](../node/transport-abstraction.md): TCP, QUIC, Iroh)
-- [RPC server](../node/rpc-api.md) (JSON-RPC 2.0 with Bitcoin Core compatibility)
+- [RPC server](../node/rpc-api.md) (JSON-RPC 2.0, conventional Bitcoin RPC surface)
 - [Module system](../architecture/module-system.md) (process-isolated runtime modules)
 - Payment processing with CTV (CheckTemplateVerify) support
 - RBF and mempool policies (4 configurable modes)

@@ -111,28 +111,13 @@ Runtime assertions provide invariant checking during execution.
 
 **Verification**: Runtime assertions execute during debug builds and can be enabled in production with `--features runtime-invariants`.
 
-### Fuzz Targets (libFuzzer)
+### Fuzz targets (libFuzzer)
 
-Fuzz targets include:
-1. `block_validation.rs`
-2. `compact_block_reconstruction.rs`
-3. `differential_fuzzing.rs`
-4. `economic_validation.rs`
-5. `mempool_operations.rs`
-6. `pow_validation.rs`
-7. `script_execution.rs`
-8. `script_opcodes.rs`
-9. `segwit_validation.rs`
-10. `serialization.rs`
-11. `transaction_validation.rs`
-12. `utxo_commitments.rs`
+Harnesses live under `fuzz/fuzz_targets/`; names are registered in `fuzz/Cargo.toml`. Overview: [Fuzzing](../development/fuzzing.md).
 
-**Location**: `fuzz/fuzz_targets/`
-
-**Verification Command**:
 ```bash
 cd fuzz
-cargo +nightly fuzz run transaction_validation
+cargo +nightly fuzz run <target_name>
 ```
 
 ### MIRI Runtime Checks
@@ -375,12 +360,12 @@ Use the `verify` feature for full protocol verification builds; see **blvm-proto
 ## Consensus Coverage Comparison
 
 ![Consensus Coverage Comparison](https://thebitcoincommons.org/assets/images/Consensus-Coverage-Comparison.png)
-*Figure: Consensus coverage comparison: Bitcoin Core relies primarily on tests and review. Bitcoin Commons adds **BLVM Specification Lock** and the Orange Paper–driven methodology on top of broad tests.*
+*Figure: Baseline: broad tests and review. Bitcoin Commons adds **BLVM Specification Lock** and Orange Paper–driven methodology on top.*
 
 ## Proof Maintenance Cost
 
 ![Proof Maintenance Cost](../images/proof-maintenance-cost.png)
-*Figure: Proof maintenance cost: proofs changed per change by area; highlights refactor hotspots; Commons aims for lower proof churn than Core.*
+*Figure: Proof maintenance cost: proofs changed per change by area; highlights refactor hotspots.*
 
 ## Spec Drift vs Test Coverage
 

@@ -127,7 +127,7 @@ Then open a Pull Request on GitHub. See the [PR Process](pr-process.md) for deta
 
 **Critical**: This code implements Bitcoin consensus rules. Any changes must:
 
-- **Match Bitcoin Core behavior exactly** - No deviations
+- **Match mainnet consensus rules** — no undocumented deviations in consensus code
 - **Not deviate from the [Orange Paper](../reference/orange-paper.md) specifications** - Mathematical correctness required
 - **Handle all edge cases correctly** - Consensus code must be bulletproof
 - **Maintain mathematical precision** - No approximations
@@ -178,7 +178,7 @@ Before submitting your PR, ensure:
 Reviewers will check:
 
 - **Correctness** - Does the code work as intended?
-- **Consensus compliance** - Does it match Bitcoin Core? (for consensus code)
+- **Consensus compliance** — Does it match the Orange Paper and observed mainnet behavior? (for consensus code)
 - **Test coverage** - Are all cases covered?
 - **Performance** - No regressions?
 - **Documentation** - Is it clear and complete?
@@ -209,7 +209,7 @@ See [Testing Infrastructure](testing.md) for testing documentation. Key points:
 - **Integration tests** - Test cross-module functionality
 - **[Property-based testing](property-based-testing.md)** - Test with generated inputs
 - **[Fuzzing](fuzzing.md)** - Find edge cases automatically
-- **[Differential testing](differential-testing.md)** - Compare with Bitcoin Core behavior
+- **[Differential testing](differential-testing.md)** — Cross-check against a reference full node when applicable
 
 ## CI/CD Workflows
 

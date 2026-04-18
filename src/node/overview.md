@@ -140,7 +140,7 @@ graph TB
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (redb, sled, rocksdb)
-- [Bitcoin Core compatibility](storage-backends.md#rocksdb-optional-bitcoin-core-compatible) via RocksDB backend
+- [Common on-disk chain layouts](storage-backends.md#rocksdb-optional-common-on-disk-layouts) via RocksDB backend
 - Automatic backend fallback on failure
 - Pruning support
 - [Advanced transaction indexing](transaction-indexing.md) (address and value range indexes)

@@ -29,25 +29,25 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 **Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (redb/sled backends)
 
-### rocksdb (Optional, Bitcoin Core Compatible)
+### rocksdb (Optional, common on-disk layouts)
 
-**rocksdb** is an optional high-performance backend with Bitcoin Core compatibility:
+**rocksdb** is an optional high-performance backend that can interoperate with **typical** Bitcoin chain on-disk layouts:
 
-- **Bitcoin Core Compatibility**: Uses RocksDB to read Bitcoin Core's LevelDB databases (RocksDB has backward compatibility with LevelDB format)
-- **Automatic Detection**: Automatically detects and uses Bitcoin Core data if present
-- **Block File Access**: Direct access to Bitcoin Core block files (`blk*.dat`)
-- **Format Parsing**: Parses Bitcoin Core's internal data formats
-- **High Performance**: Optimized for large-scale blockchain data
-- **System Dependency**: Requires `libclang` for build
-- **Feature Flag**: `rocksdb` (optional, not enabled by default)
+- **LevelDB-format chain state**: RocksDB can read LevelDB-format databases used by common reference deployments
+- **Automatic detection**: Detects and uses existing data directories when present
+- **Block files**: Direct access to raw block files (`blk*.dat`) where supported
+- **Format parsing**: Parsers for common internal key layouts
+- **High performance**: Optimized for large-scale blockchain data
+- **System dependency**: Requires `libclang` for build
+- **Feature flag**: `rocksdb` (optional, not enabled by default)
 
-**Bitcoin Core Integration**:
-- Automatically detects Bitcoin Core data directories
-- **Uses RocksDB to read LevelDB databases**: Bitcoin Core uses LevelDB, but we use RocksDB (which can read LevelDB format) to access the data
+**Interop notes**:
+- Detects standard data directory conventions
+- Uses RocksDB (not LevelDB directly) with LevelDB-format compatibility where applicable
 - Accesses block files (`blk*.dat`) with lazy indexing
 - Supports mainnet, testnet, regtest, and signet networks
 
-**Important**: We use **RocksDB** (not LevelDB directly). RocksDB provides backward compatibility with LevelDB format, allowing us to read Bitcoin Core's LevelDB databases.
+**Important**: Deployment-specific paths and formats vary; verify against your data source.
 
 **Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs), [bitcoin_core_storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_storage.rs)
 
@@ -64,7 +64,7 @@ When `database_backend = "auto"`, the node chooses the backend by **build featur
 
 At least one backend feature must be enabled at build time. If the chosen backend fails to open (e.g. missing data dir or lock), the node may fall back to another enabled backend where implemented.
 
-**Bitcoin Core compatibility:** When RocksDB is enabled, the node can also detect and use existing Bitcoin Core data (LevelDB format readable via RocksDB). That is separate from the `auto` selection order above.
+**Interop:** When RocksDB is enabled, the node may detect and use existing LevelDB-format chain data. That is separate from the `auto` selection order above.
 
 **Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`default_backend()`, `fallback_backend()`), [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
 
@@ -185,8 +185,8 @@ cargo build --features rocksdb
 - On Arch: `sudo pacman -S clang`
 - On macOS: `brew install llvm`
 
-**Bitcoin Core Detection**:
-The system automatically detects Bitcoin Core data directories:
+**Default data directories** (common layouts):
+The system can detect typical Bitcoin-style data directories:
 - Mainnet: `~/.bitcoin/` or `~/Library/Application Support/Bitcoin/`
 - Testnet: `~/.bitcoin/testnet3/` or `~/Library/Application Support/Bitcoin/testnet3/`
 - Regtest: `~/.bitcoin/regtest/` or `~/Library/Application Support/Bitcoin/regtest/`

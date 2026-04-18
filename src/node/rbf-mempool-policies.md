@@ -109,7 +109,7 @@ BIP125-compliant RBF with standard fee requirements.
 **Use Cases:**
 - General purpose nodes
 - Default configuration
-- Bitcoin Core compatibility
+- Familiar defaults for operators coming from common node configs
 
 **Configuration:**
 ```toml
@@ -201,7 +201,7 @@ Evicts transactions with the lowest fee rate first. Maximizes average fee rate o
 **Best for:**
 - Mining pools
 - Nodes prioritizing fee revenue
-- Bitcoin Core compatibility
+- Familiar defaults for operators coming from common node configs
 
 ```toml
 [mempool]
@@ -357,9 +357,9 @@ max_descendant_count = 25
 3. **General Users**: Use standard/default settings
 4. **High-Throughput Nodes**: Increase size limits and use aggressive eviction
 
-## Bitcoin Core Compatibility
+## Default policy alignment
 
-Default values match Bitcoin Core defaults:
+These defaults match widely used mainnet mempool parameters:
 - `max_mempool_mb`: 300 MB
 - `min_relay_fee_rate`: 1 sat/vB
 - `max_ancestor_count`: 25

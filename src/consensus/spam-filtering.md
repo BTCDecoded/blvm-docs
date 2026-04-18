@@ -206,7 +206,7 @@ The mempool also enforces stricter standard transaction checks:
 
 #### OP_RETURN Limits
 
-- **Maximum OP_RETURN size**: 80 bytes (Bitcoin Core standard, configurable)
+- **Maximum OP_RETURN size**: 80 bytes (common policy default, configurable)
 - **Multiple OP_RETURN rejection**: By default, transactions with more than 1 OP_RETURN output are rejected
 - **Configuration**: `MempoolConfig::max_op_return_size`, `max_op_return_outputs`, `reject_multiple_op_return`
 
