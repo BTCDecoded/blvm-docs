@@ -33,14 +33,31 @@ jobs:
         with:
           mdbook-version: 'latest'
 
-      - name: Fetch mdBook include sources (Orange Paper, governance)
+      - name: Fetch Orange Paper (blvm-spec)
+        run: |
+          set -euo pipefail
+          REPO_ROOT="${GITHUB_WORKSPACE}"
+          DEST="$REPO_ROOT/modules/blvm-spec"
+          REPO_URL="https://github.com/BTCDecoded/blvm-spec.git"
+          mkdir -p "$(dirname "$DEST")"
+          echo "Ensuring blvm-spec at: $DEST"
+          if [ -d "$DEST" ]; then
+            if [ ! -f "$DEST/THE_ORANGE_PAPER.md" ] && [ ! -f "$DEST/PROTOCOL.md" ]; then
+              echo "Removing incomplete blvm-spec at $DEST"
+              rm -rf "$DEST"
+            fi
+          fi
+          if [ -d "$DEST" ] && [ -n "$(ls -A "$DEST" 2>/dev/null || true)" ]; then
+            echo "blvm-spec already present at $DEST"
+            exit 0
+          fi
+          git clone --depth 1 "$REPO_URL" "$DEST"
+          echo "blvm-spec ready at $DEST"
+
+      - name: Fetch governance sources for mdBook
         run: |
           set -eux
           mkdir -p modules
-          if [ ! -f modules/blvm-spec/THE_ORANGE_PAPER.md ]; then
-            rm -rf modules/blvm-spec
-            git clone --depth 1 https://github.com/BTCDecoded/blvm-spec.git modules/blvm-spec
-          fi
           if [ ! -f modules/governance/README.md ] || [ ! -f modules/governance/GOVERNANCE.md ]; then
             rm -rf modules/governance
             git clone --depth 1 https://github.com/BTCDecoded/governance.git modules/governance
