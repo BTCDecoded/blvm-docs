@@ -512,7 +512,7 @@ while let Some(event) = event_receiver.recv().await {
 - `DataMaintenance`, `MaintenanceStarted`, `MaintenanceCompleted`, `HealthCheck`, `DiskSpaceLow`, `ResourceLimitWarning`
 
 **Governance Events:**
-- `GovernanceProposalCreated`, `GovernanceProposalVoted`, `GovernanceProposalMerged`, `EconomicNodeRegistered`, `EconomicNodeVeto`, `VetoThresholdReached`
+- `GovernanceProposalCreated`, `GovernanceProposalVoted`, `GovernanceProposalMerged`, `WebhookSent`, `WebhookFailed`, `GovernanceForkDetected`
 
 **Consensus Events:**
 - `BlockValidationStarted`, `BlockValidationCompleted`, `ScriptVerificationStarted`, `ScriptVerificationCompleted`, `DifficultyAdjusted`, `SoftForkActivated`

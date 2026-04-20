@@ -6,7 +6,7 @@ Bitcoin Commons maintains immutable audit trails of all governance decisions usi
 
 The governance system maintains tamper-evident audit logs that record:
 
-- **All Governance Decisions**: Every PR merge, signature, and veto
+- **All Governance Decisions**: Every PR merge and maintainer signature milestone
 - **Maintainer Actions**: Key generation, rotation, and usage
 - **Emergency Activations**: Emergency mode activations and deactivations
 

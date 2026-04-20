@@ -115,11 +115,10 @@ graph TB
 **Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/payment/mod.rs)
 
 ### Governance Integration
-- P2P governance message relay
-- Webhook handlers for governance events
-- User signaling support
+- Optional `[governance]` configuration (e.g. Commons URL, relay toggles) and **`NODE_GOVERNANCE`** P2P capability for extensions such as **ban list sharing**
+- Module-visible governance **events** (proposal lifecycle, webhooks, fork detection) for optional out-of-process modules
 
-**Code**: [network/handlers/governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/handlers/governance.rs), [config/governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/governance.rs)
+**Code**: [config/governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/governance.rs), [network/peer_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/peer_manager.rs) (`governance` feature), [P2P governance extensions](../governance/p2p-governance-messages.md)
 
 ## Design Principles
 

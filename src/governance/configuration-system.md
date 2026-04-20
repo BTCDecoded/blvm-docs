@@ -18,7 +18,6 @@ YAML configuration files in the `governance/config/` directory serve as the auth
 - `action-tiers.yml` - Tier definitions and signature requirements
 - `repository-layers.yml` - Layer definitions and requirements
 - `emergency-tiers.yml` - Emergency tier definitions
-- `commons-contributor-thresholds.yml` - Commons contributor thresholds
 - `governance-fork.yml` - Governance fork configuration
 - `maintainers/*.yml` - Maintainer configurations by layer
 - `repos/*.yml` - Repository-specific configurations
@@ -93,7 +92,7 @@ When governance-approved changes are activated, the system can write changes bac
 Configuration parameters are organized into categories:
 
 - **FeatureFlags**: Feature toggles (e.g., `feature_governance_enforcement`)
-- **Thresholds**: Signature and veto thresholds (e.g., `tier_3_signatures_required`)
+- **Thresholds**: Maintainer signature thresholds (e.g., `tier_3_signatures_required`)
 - **TimeWindows**: Review periods and time limits (e.g., `tier_3_review_period_days`)
 - **Limits**: Size and count limits (e.g., `max_pr_size_bytes`)
 - **Network**: Network-related parameters
@@ -143,8 +142,8 @@ The system manages 87+ governance-controlled configuration variables, organized 
 
 **Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
-| `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Mining hashpower for support (%) |
-| `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Economic activity for support (%) |
+| `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Fork signaling — mining / hashpower share (%) |
+| `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Fork signaling — participation-weight share (%) |
 
 **Code**: [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)
 
@@ -197,10 +196,7 @@ The system manages 87+ governance-controlled configuration variables, organized 
 
 ### Complete Reference
 
-For the complete list of all 87+ variables with descriptions and default values, see:
-- **YAML Source**: `governance/config/FORKABLE_VARIABLES.md`
-- **Default Values**: `governance/config/DEFAULT_VALUES_REFERENCE.md`
-- **Implementation**: `blvm-commons/src/config/loader.rs` and YAML under **governance**/config/
+Authoritative defaults and forkable parameters live in the **[governance](https://github.com/BTCDecoded/governance)** repository under `config/` (YAML) and `ruleset-export-template*.y`. Use **`blvm-commons/src/config/loader.rs`** for what the node loads today.
 
 ## Governance Change Workflow
 
@@ -233,7 +229,6 @@ let config = Arc::new(ConfigReader::with_yaml_loader(
 
 // Read a value (with fallback)
 let review_period = config.get_i32("tier_3_review_period_days", 90).await?;
-let veto_threshold = config.get_f64("veto_tier_3_mining_percent", 30.0).await?;
 let enabled = config.get_bool("feature_governance_enforcement", false).await?;
 ```
 
@@ -243,8 +238,6 @@ let enabled = config.get_bool("feature_governance_enforcement", false).await?;
 // Get tier signatures
 let (required, total) = config.get_tier_signatures(3).await?;
 
-// Get Commons contributor threshold (with YAML fallback)
-let threshold = config.get_commons_contributor_threshold("zaps").await?;
 ```
 
 ### Integration with Validators
@@ -306,10 +299,8 @@ All configuration keys follow a naming convention:
 
 - Tier configs: `tier_{n}_{property}`
 - Layer configs: `layer_{n}_{property}`
-- Veto configs: `veto_tier_{n}_{type}_percent`
-- Commons contributor: `commons_contributor_threshold_{type}`
 
-**Complete Reference**: See `governance/config/DEFAULT_VALUES_REFERENCE.md` for all keys and default values.
+See the governance repo `config/` tree for the live key set.
 
 ## Benefits
 

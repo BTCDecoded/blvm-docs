@@ -1,146 +1,34 @@
-# P2P Governance Messages
+# P2P governance-related extensions
 
 ## Overview
 
-Bitcoin Commons nodes relay governance messages through the P2P network, enabling decentralized governance communication without requiring direct connection to the governance infrastructure. Nodes forward governance messages to other peers and optionally to the governance application.
+The node can advertise **governance-related P2P capability** via the `NODE_GOVERNANCE` service bit in `Version.services`. Peers use that flag to identify nodes that participate in **Commons-oriented extensions** (for example **ban list sharing**: `getbanlist` / `banlist`). Relay and forwarding behavior are implemented in `blvm-node` networking code and gated by node configuration.
 
 ## Architecture
 
-### Message Flow
+### Capability and peers
 
-```
-Node
-    │
-    ├─→ P2P Network (Bitcoin Protocol)
-    │   │
-    │   ├─→ Node A (relays to peers)
-    │   ├─→ Node B (relays to peers)
-    │   └─→ Node C (relays to peers)
-    │
-    └─→ Governance Application (blvm-commons)
-        (if governance relay enabled)
-```
+- Nodes set **`NODE_GOVERNANCE`** when configured to advertise this capability (see service flags / node config).
+- **`PeerManager`** can track peers that advertised the governance bit for features that need governance-capable peers (e.g. ban-list gossip).
 
-### Two-Mode Operation
+### Concrete protocol surface today
 
-1. **Gossip Mode**: Messages relayed to governance-enabled peers only
-2. **Relay Mode**: Messages forwarded to governance application via VPN/API
-
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
-
-## Governance Message Types
-
-
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
-
-## Gossip Protocol
-
-### Peer Selection
-
-Nodes gossip governance messages to:
-- Governance-enabled peers only
-- Excluding the sender
-- Using Bitcoin P2P protocol
-
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
-
-### Message Serialization
-
-Messages are serialized using JSON for gossip:
-
-```rust
-let msg_json = serde_json::to_vec(msg)?;
-peer.send_message(msg_json).await?;
-```
-
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
-
-## Governance Relay
+- **Ban list sharing**: `GetBanList` / `BanList` (and the corresponding framed command strings) are part of the shared protocol stack.
+- Other P2P commands follow the node’s **allowlisted** command set in `network/protocol.rs` and `blvm-protocol`’s `node_tcp` / wire layers.
 
 ### Configuration
 
-```toml
-[governance]
-enabled = true
-commons_url = "https://commons.example.com/api"
-vpn_enabled = true
-```
+Optional `[governance]` settings in the node (e.g. `commons_url`, relay toggles) control whether the node forwards or integrates with **blvm-commons**-side HTTP APIs. Exact fields change over time; see the live [configuration reference](../reference/configuration-reference.md) and `blvm-node` `config` sources.
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs)
+## Code references
 
-### Relay Process
+| Area | Location |
+|------|----------|
+| Service flag | `blvm-protocol` / `blvm-node` `NODE_GOVERNANCE` |
+| Framed commands & `ProtocolMessage` | `blvm-node/src/network/protocol.rs`, `blvm-protocol/src/node_tcp.rs` |
+| Peer selection for governance bit | `blvm-node/src/network/peer_manager.rs` (`governance` feature) |
 
-1. **Receive Message**: Node receives governance message from peer
-2. **Check Configuration**: Verify governance relay enabled
-3. **Forward to Commons**: Send message to governance application via API
-4. **Gossip to Peers**: Also gossip message to other governance-enabled peers
+## See also
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
-
-## Message Deduplication
-
-### Duplicate Detection
-
-The governance application deduplicates messages:
-
-- **Message ID**: Unique identifier per message
-- **Sender Tracking**: Tracks message origin
-- **Timestamp**: Prevents replay attacks
-
-**Code**: [governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/handlers/governance.rs) (`governance` feature)
-
-## P2P Receiver
-
-### Message Processing
-
-The governance application receives messages via P2P receiver:
-
-- **HTTP Endpoint**: Receives forwarded messages
-- **Validation**: Validates message structure
-- **Storage**: Stores messages in database
-- **Processing**: Processes governance actions
-
-**Code**: [governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/handlers/governance.rs)
-
-## Network Integration
-
-### Protocol Messages
-
-Governance messages are integrated into Bitcoin P2P protocol:
-
-- **Message Types**: New protocol message types for governance
-- **Backward Compatible**: Non-governance nodes ignore messages
-- **Service Flags**: Nodes advertise governance capability
-
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs)
-
-### Peer Management
-
-Nodes track governance-enabled peers:
-
-- **Service Flags**: Identify governance-capable peers
-- **Peer List**: Maintain list of governance peers
-- **Connection Management**: Handle peer connections/disconnections
-
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
-
-## Benefits
-
-1. **Decentralization**: Governance messages flow through P2P network
-2. **Resilience**: No single point of failure
-3. **Privacy**: Messages relayed without revealing origin
-4. **Scalability**: Gossip protocol scales to many nodes
-5. **Backward Compatibility**: Non-governance nodes unaffected
-
-## Components
-
-The P2P governance message system includes:
-- Governance message types (registration, veto, status, fork decision)
-- Gossip protocol for peer-to-peer relay
-- Governance relay to application
-- Message deduplication
-- P2P receiver in governance application
-- Network protocol integration
-
-**Location**: `blvm-node/src/network/mod.rs`, `blvm-node/src/network/protocol.rs`, `blvm-commons/src/governance/p2p_receiver.rs`, `blvm-commons/src/governance/message_dedup.rs`
-
+- [Node overview](../node/overview.md) — networking and configuration entry points
+- [Module system](../architecture/module-system.md#event-system) — `EventType` / governance-related **events** (proposal lifecycle, webhooks, fork detection)

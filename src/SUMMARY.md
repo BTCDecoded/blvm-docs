@@ -87,7 +87,6 @@
 - [Configuration System](governance/configuration-system.md)
 - [Governance Fork System](governance/governance-fork.md)
 - [P2P Governance Messages](governance/p2p-governance-messages.md)
-- [Privacy-Preserving Voting](governance/privacy-preserving-voting.md)
 - [OpenTimestamps Integration](governance/opentimestamps-integration.md)
 - [Nostr Integration](governance/nostr-integration.md)
 - [Multisig Configuration](governance/multisig-configuration.md)
