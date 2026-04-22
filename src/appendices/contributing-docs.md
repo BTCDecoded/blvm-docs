@@ -25,7 +25,7 @@ Documentation is maintained in **source repositories** alongside code. This repo
 - **Paths** — Code links must use actual paths: `block/`, `script/` (dirs), `node/parallel_ibd/` (dir), blvm-protocol for spam_filter/utxo_commitments; no `block.rs`, `script.rs`, `parallel_ibd.rs` as single files, no utxostore_proofs.
 - **Brittle links** — Prefer file or module links without line-number anchors (`#L123`). Line numbers break as code changes; use them only when pointing to a stable, narrow section and prefer "see `path/to/file.rs`" when the exact line is not critical.
 
-When in doubt, see [DOC_UPDATE_PROPOSAL.md](https://github.com/BTCDecoded/blvm-docs/blob/main/DOC_UPDATE_PROPOSAL.md) (§1–3, §9–10) for editor context and checklist.
+When in doubt, follow the **Content principles** subsection above and the [Contributing](../development/contributing.md) chapter.
 
 ### Markdown Format
 
@@ -92,12 +92,12 @@ Before submitting changes:
    - `modules/blvm-spec/THE_ORANGE_PAPER.md` (included from [Orange Paper](../reference/orange-paper.md))
    - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md` (included from [Governance Overview](../governance/overview.md) and [Governance Model](../governance/governance-model.md))
 
-   With sibling repo checkouts, from `blvm-docs/modules/`:
+   Clone from GitHub if needed (`https://github.com/BTCDecoded/blvm-spec`, `https://github.com/BTCDecoded/governance`). With sibling checkouts, from `blvm-docs/modules/`:
    ```bash
    ln -sf ../../blvm-spec blvm-spec
    ln -sf ../../governance governance
    ```
-   Point the targets at your local `blvm-spec` and `governance` clones (paths may differ).
+   Point the targets at your local clones (paths may differ).
 
 3. Serve locally:
    ```bash

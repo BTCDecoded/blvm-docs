@@ -63,7 +63,7 @@ Coverage-guided fuzzing (libFuzzer / cargo-fuzz). Inventory: `fuzz/Cargo.toml` i
 
 **See also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification)
 
-**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
+**Code**: [formal-verification.md](../consensus/formal-verification.md)
 
 ### Runtime Assertions
 
@@ -134,7 +134,7 @@ cargo +nightly miri test
 cargo spec-lock verify
 ```
 
-**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
+**Code**: [formal-verification.md](../consensus/formal-verification.md)
 
 ### Run Spec-Lock Verification
 
@@ -205,7 +205,7 @@ All tests run in CI:
 - **blvm-spec-lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
-**Code**: [formal-verification.md](https://github.com/BTCDecoded/blvm-docs/blob/main/src/consensus/formal-verification.md)
+**Code**: [formal-verification.md](../consensus/formal-verification.md)
 
 ## Test Metrics
 

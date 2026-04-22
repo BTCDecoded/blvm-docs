@@ -32,7 +32,7 @@ This repository aggregates documentation from all BLVM source repositories into 
    - `modules/blvm-spec/THE_ORANGE_PAPER.md`
    - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md`
 
-   If you keep sibling clones (e.g. `blvm-spec` and `governance` next to `blvm-docs`), symlink from `blvm-docs/modules/`:
+   Clone sources if needed: [blvm-spec](https://github.com/BTCDecoded/blvm-spec), [governance](https://github.com/BTCDecoded/governance). If you keep them as sibling directories next to `blvm-docs`, symlink from `blvm-docs/modules/`:
    ```bash
    cd blvm-docs/modules
    ln -sf ../../blvm-spec blvm-spec
