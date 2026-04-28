@@ -33,7 +33,7 @@ Documentation is maintained in source repositories alongside code and is aggrega
 
 ## Getting Help
 
-Report bugs or request features via GitHub Issues, ask questions in GitHub Discussions, or report security issues to security@btcdecoded.org.
+Report bugs or request features via GitHub Issues, ask questions in GitHub Discussions, or report security issues to security@thebitcoincommons.org.
 
 ## License
 

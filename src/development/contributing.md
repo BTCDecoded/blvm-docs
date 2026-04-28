@@ -164,6 +164,8 @@ Before submitting your PR, ensure:
 
 ## Review Process
 
+**Canonical review docs** (maintainer expectations vs AI “review intelligence”) live in the [governance](https://github.com/BTCDecoded/governance) repository; this book summarizes PR mechanics only. See [Review standards](../governance/review-standards.md) in the Governance section for links.
+
 ### What Happens After You Submit a PR
 
 1. **Automated CI runs** - Tests, linting, and checks run automatically

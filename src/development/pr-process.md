@@ -2,6 +2,8 @@
 
 This document explains the PR review process, governance tiers, signature requirements, and how to get your PR reviewed and merged.
 
+For **human maintainer expectations** and the **AI review intelligence** operating document (alternative implementation vs Core fork, flags, Compact alignment), see [Review standards](../governance/review-standards.md).
+
 ## Overview
 
 BLVM uses a **5-tier constitutional governance model** with cryptographic signatures to ensure secure, transparent, and accountable code changes. Every PR is automatically classified into a governance tier based on the scope and impact of the changes.

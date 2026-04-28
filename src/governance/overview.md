@@ -11,6 +11,7 @@ The governance system enforces development processes cryptographically across Bi
 
 ## See Also
 
+- [Review standards](review-standards.md) — Human review expectations and AI review intelligence (links to `governance` repo)
 - [Governance Model](governance-model.md) - Governance architecture and rules
 - [Multisig Configuration](multisig-configuration.md) - Configuring multisig thresholds
 - [Keyholder Procedures](keyholder-procedures.md) - Maintainer responsibilities

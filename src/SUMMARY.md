@@ -81,6 +81,7 @@
 # Governance
 
 - [Overview](governance/overview.md)
+- [Review standards](governance/review-standards.md)
 - [blvm-commons](governance/blvm-commons.md)
 - [Governance Model](governance/governance-model.md)
 - [Layer-Tier Model](governance/layer-tier-model.md)

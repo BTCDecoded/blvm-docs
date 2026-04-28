@@ -31,7 +31,8 @@ The system uses multiple bot identities for different purposes:
 [nostr.bots.gov]
 nsec_path = "env:GOV_BOT_NSEC"  # or file path
 npub = "npub1..."
-lightning_address = "gov@bitcoincommons.org"
+# Placeholder LN address (RFC 2606); use a real address in production.
+lightning_address = "gov@example.org"
 
 [nostr.bots.gov.profile]
 name = "@BTCCommons_Gov"
@@ -165,7 +166,8 @@ governance_config = "commons_mainnet"
 [nostr.bots.gov]
 nsec_path = "env:GOV_BOT_NSEC"
 npub = "npub1..."
-lightning_address = "gov@bitcoincommons.org"
+# Placeholder LN address (RFC 2606); use a real address in production.
+lightning_address = "gov@example.org"
 ```
 
 **Code**: [config.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config.rs)
