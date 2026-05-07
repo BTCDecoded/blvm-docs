@@ -32,11 +32,6 @@ graph TB
 ![BLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
 *Figure: BLVM stack (marketing image): Orange Paper / blvm-spec as the foundation, blvm-consensus with verification tooling, then blvm-protocol, blvm-node, blvm-sdk, and governance enforcement (blvm-commons). The numbered 6-tier diagram above is the canonical layer list.*
 
-## Tiered Architecture
-
-![Tiered Architecture](../images/tier-architecture.png)
-*Figure: High-level tiered view (simplified graphic). **Canonical numbering** is the six layers in the mermaid diagram and section headings above (Orange Paper → consensus → protocol → node → SDK → blvm-commons); this image simplifies the stack for layout.*
-
 ## Component Overview
 
 ### Tier 1: [Orange Paper](../reference/orange-paper.md) (Mathematical Foundation)

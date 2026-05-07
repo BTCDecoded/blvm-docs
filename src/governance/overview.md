@@ -4,11 +4,6 @@ The governance system enforces development processes cryptographically across Bi
 
 {{#include ../../modules/governance/README.md}}
 
-## Attack Path Interception
-
-![Attack Path Interception Map](../images/attack-path-interception-map.png)
-*Figure: Risk interception points across GitHub, Nostr, and OpenTimestamps. Multiple layers of verification prevent single points of failure.*
-
 ## See Also
 
 - [Review standards](review-standards.md) — Human review expectations and AI review intelligence (links to `governance` repo)
