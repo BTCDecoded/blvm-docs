@@ -7,7 +7,7 @@ Pre-built packages for Linux and Windows. Each release ships with a SHA-256 chec
 **Current release:** [v0.1.0 on GitHub →](https://github.com/BTCDecoded/blvm-node/releases/tag/v0.1.0)  
 **All builds:** [GitHub Releases (latest)](https://github.com/BTCDecoded/blvm-node/releases/latest)
 
-Each artifact ships with a `.sha256` file and a detached GPG signature (`.sig`). See the [signature verification guide](https://docs.thebitcoincommons.org/nodes/verification.html).
+Each artifact ships with a `.sha256` file and a detached GPG signature (`.sig`). See the [signature verification guide](https://docs.thebitcoincommons.org/getting-started/installation.html).
 
 ## Pre-built packages
 
@@ -91,7 +91,7 @@ Available in the Umbrel App Store as "Bitcoin Commons". Runs on a Raspberry Pi o
 1. Wait for initial sync to complete; this may take several hours on first run.
 1. Access node settings and RPC credentials from the app detail page.
 
-- [Full documentation](https://docs.thebitcoincommons.org/nodes/umbrel.html)
+- [Full documentation](https://docs.thebitcoincommons.org/getting-started/installation.html)
 - [Umbrel support](https://community.getumbrel.com)
 
 ### Docker
@@ -103,12 +103,12 @@ Run blvm in a container on any platform that supports Docker or Podman. The offi
 1. Run the node: docker run -d --name blvm -v blvm-data:/data -p 8333:8333 -p 8332:8332 btccommons/blvm:0.1.0
 1. Check logs: docker logs -f blvm
 
-- [Full documentation](https://docs.thebitcoincommons.org/nodes/docker.html)
-- [Docker Hub →](https://hub.docker.com/r/btccommons/blvm)
+- [Full documentation](https://docs.thebitcoincommons.org/getting-started/installation.html)
+- [GitHub Releases →](https://github.com/BTCDecoded/blvm-node/releases/latest)
 
 ## Build from source
 
-For other architectures or development, see [build instructions](https://docs.thebitcoincommons.org/nodes/build.html).
+For other architectures or development, see [build instructions](https://github.com/BTCDecoded/blvm-node).
 
 ## Next steps
 

@@ -3,8 +3,8 @@
   "page": {
     "title": "Install blvm",
     "lead": "Pre-built packages for Linux and Windows. Each release ships with a SHA-256 checksum and a detached GPG signature. Verify before running.",
-    "verificationGuideUrl": "https://docs.thebitcoincommons.org/nodes/verification.html",
-    "buildFromSourceUrl": "https://docs.thebitcoincommons.org/nodes/build.html"
+    "verificationGuideUrl": "https://docs.thebitcoincommons.org/getting-started/installation.html",
+    "buildFromSourceUrl": "https://github.com/BTCDecoded/blvm-node"
   },
   "release": {
     "tag": "v0.1.0",
@@ -61,7 +61,7 @@
         "Wait for initial sync to complete; this may take several hours on first run.",
         "Access node settings and RPC credentials from the app detail page."
       ],
-      "docsLink": "https://docs.thebitcoincommons.org/nodes/umbrel.html",
+      "docsLink": "https://docs.thebitcoincommons.org/getting-started/installation.html",
       "supportLink": "https://community.getumbrel.com",
       "supportLinkLabel": "Umbrel support"
     },
@@ -75,9 +75,9 @@
         "Run the node: docker run -d --name blvm -v blvm-data:/data -p 8333:8333 -p 8332:8332 btccommons/blvm:0.1.0",
         "Check logs: docker logs -f blvm"
       ],
-      "docsLink": "https://docs.thebitcoincommons.org/nodes/docker.html",
-      "supportLink": "https://hub.docker.com/r/btccommons/blvm",
-      "supportLinkLabel": "Docker Hub →"
+      "docsLink": "https://docs.thebitcoincommons.org/getting-started/installation.html",
+      "supportLink": "https://github.com/BTCDecoded/blvm-node/releases/latest",
+      "supportLinkLabel": "GitHub Releases →"
     }
   ],
   "markdownDoc": {
