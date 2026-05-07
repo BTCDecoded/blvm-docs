@@ -57,6 +57,10 @@ transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
 
 The **protocol adapter** serializes between blvm-consensus `NetworkMessage` types and transport-specific wire formats. The **message bridge** processes messages and generates responses. Default is TCP-only; enable Iroh via `iroh` feature flag.
 
+## Bitcoin wire and framing (blvm-protocol)
+
+**blvm-protocol** owns Bitcoin **P2P message** framing (message type, length, payload, checksum) and related helpers. For TCP, entry points such as **[`node_tcp`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/node_tcp.rs)** tie that logic to the node’s socket path. Exact layering may evolve—treat **`blvm-protocol` `src/`** as the source of truth rather than this summary.
+
 ## See Also
 
 - [Protocol Architecture](architecture.md) - Protocol layer design

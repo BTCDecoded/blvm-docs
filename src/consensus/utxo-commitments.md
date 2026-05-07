@@ -2,7 +2,7 @@
 
 ## Overview
 
-UTXO Commitments enable fast synchronization of the Bitcoin UTXO set without requiring full blockchain download. The system uses cryptographic Merkle tree commitments with peer consensus verification, achieving 98% bandwidth savings compared to traditional full block download.
+UTXO Commitments enable fast synchronization of the Bitcoin UTXO set without requiring a naïve full-block replay of the entire chain. The system uses cryptographic Merkle tree commitments with peer consensus verification. **Reported savings are scenario-dependent** (chain size, filter usage, peer set); treat order-of-magnitude comparisons as **illustrations**, not guarantees.
 
 ## Architecture
 
@@ -102,17 +102,14 @@ pub struct ConsensusConfig {
 
 **Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs)
 
-### Bandwidth Savings
+### Bandwidth savings (illustrative)
 
-The fast sync protocol achieves 98% bandwidth savings by:
-- **Headers Only**: Download headers instead of full blocks (~80 bytes vs ~1 MB per block)
-- **Filtered Blocks**: Download only relevant transactions (~2% of block size)
-- **Incremental Updates**: Only download UTXO changes, not full set
+Fast sync aims for **far less** downloaded data than replaying **every full block** for all heights. A typical illustration compares **headers plus filtered / incremental payloads** against **full blocks** at rough historical chain sizes; **actual** GiB and percentage depend on tip height, peer behavior, and configuration. **Do not treat** the round numbers below as audited benchmarks.
 
-**Calculation**:
-- Traditional: ~500 GB (full blockchain)
-- Fast Sync: ~10 GB (headers + filtered blocks)
-- **Savings**: 98%
+Conceptually:
+- **Headers only** vs **full blocks** per height reduces volume dramatically
+- **Filtered blocks** and incremental updates avoid re-downloading the entire chain as raw blocks
+- **Illustrative** napkin math (non-binding): a naïve full-block archive may be **two orders of magnitude larger** than a headers + filters + incremental path at comparable tip—**verify on your deployment**
 
 ## Spam Filtering Integration
 
@@ -126,12 +123,10 @@ When processing blocks for UTXO commitments, spam filtering is applied:
 
 - **Location**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs)
 - **Process**: All transactions are processed, but spam outputs are filtered out
-- **Benefit**: 40-60% bandwidth reduction during ongoing sync
+- **Benefit**: Additional bandwidth reduction during ongoing sync in some configurations (illustrative ranges appear in deployment-specific analyses—treat as non-binding)
 - **Critical Design**: INPUTS are always removed (maintains UTXO consistency), OUTPUTS are filtered (bandwidth savings)
 
-### Bandwidth Savings
-
-- **40-60% bandwidth reduction** during ongoing sync
+### Effect on bandwidth (spam filtering)
 - Maintains consensus correctness
 - Enables efficient UTXO commitment synchronization
 
@@ -305,7 +300,7 @@ update_commitments_after_block(
 
 ## Benefits
 
-1. **Fast Sync**: 98% bandwidth savings vs full blockchain download
+1. **Fast sync**: Substantially less data than naïve full-block replay (see illustrative discussion under [Bandwidth savings](#bandwidth-savings-illustrative))
 2. **Security**: N-of-M peer consensus prevents single peer attacks
 3. **Efficiency**: Incremental updates, no full set download
 4. **Flexibility**: Multiple sync modes and verification levels

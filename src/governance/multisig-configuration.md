@@ -62,6 +62,10 @@ When both layer and tier apply, the system uses **"most restrictive wins"** rule
 
 For configuration details, see the [governance `config/` directory](https://github.com/BTCDecoded/governance/tree/main/config) in the governance repository.
 
+## Nested multisig (SDK)
+
+Flat **N-of-M** thresholds above describe maintainer rules per layer. The [SDK overview](../sdk/overview.md) also documents **nested multisig** for team-based and hierarchical governance setups using **`blvm-sdk`** primitives—see that chapter for APIs beyond a single flat quorum.
+
 ## See Also
 
 - [Layer-Tier Model](layer-tier-model.md) - How layers and tiers combine

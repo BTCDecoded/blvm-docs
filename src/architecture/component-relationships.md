@@ -44,7 +44,7 @@ flowchart LR
 ### Tier 2: [Consensus Layer](../consensus/overview.md) (blvm-consensus)
 - **Purpose**: Pure mathematical implementation of [Orange Paper](../reference/orange-paper.md) functions
 - **Type**: Rust library (pure functions, no side effects)
-- **Dependencies**: **[blvm-primitives](https://github.com/BTCDecoded/blvm-primitives)** (shared types, serialization, consensus crypto); pinned transitive crates as in `Cargo.toml`
+- **Dependencies**: **[blvm-primitives](https://github.com/BTCDecoded/blvm-primitives)** (shared types, serialization, consensus crypto); version constraints **as declared in `Cargo.toml`**
 - **Governance**: Layer 2 (Constitutional - 6-of-7 maintainers, 180 days, see [Layer-Tier Model](../governance/layer-tier-model.md))
 - **Key Functions**: CheckTransaction, ConnectBlock, EvalScript, VerifyScript
 
@@ -58,7 +58,7 @@ flowchart LR
 ### Tier 4: [Node Implementation](../node/overview.md) (blvm-node)
 - **Purpose**: Minimal reference **full node**—non-consensus infrastructure only; deploy with [security hardening](../security/security-controls.md) and check [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) for governance and maturity
 - **Type**: Rust binaries (full node)
-- **Dependencies**: [blvm-protocol](../protocol/overview.md), [blvm-consensus](../consensus/overview.md) (exact versions)
+- **Dependencies**: [blvm-protocol](../protocol/overview.md), [blvm-consensus](../consensus/overview.md) (version ranges per **`Cargo.toml`**)
 - **Governance**: Layer 4 (Application - 3-of-5 maintainers, 60 days, see [Layer-Tier Model](../governance/layer-tier-model.md))
 - **Components**: Block validation, [storage](../node/storage-backends.md), [P2P networking](../node/transport-abstraction.md), [RPC](../node/rpc-api.md), [mining](../node/mining.md)
 

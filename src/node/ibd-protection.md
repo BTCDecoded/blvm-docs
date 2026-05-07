@@ -128,6 +128,10 @@ emergency_throttle_percent = 50
 **Protection**: First request always allowed, reasonable limits accommodate legitimate sync
 **Result**: Allowed to sync within limits
 
+## Resource pressure during IBD (memory and queues)
+
+The limits above address **bandwidth** and fair **serving** to peers. Initial block download can also stress **RAM** and **internal queues** when blocks arrive quickly (parallel fetch, fast sync paths). If the process **OOM**s, stalls, or thrashes despite healthy bandwidth settings, check **`blvm-node`** configuration and release notes for **IBD / sync** resource behavior—not only the bandwidth counters in this chapter.
+
 ## Integration
 
 The IBD protection is automatically integrated into the network manager:

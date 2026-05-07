@@ -171,7 +171,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 **Threat**: Malicious dependencies compromise node
 
 **Mitigations**:
-- Dependency pinning (exact versions)
+- **Version constraints** and lockfiles as defined per repository (`Cargo.toml`; use **`--locked`** when a lockfile is part of that project’s workflow)
 - Regular security audits (cargo audit)
 - Minimal dependency set
 - Trusted dependency sources
@@ -184,7 +184,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 
 - Fix signature verification with real transaction hashes
 - Implement proper Bitcoin double SHA256 hashing
-- Pin all dependencies to exact versions
+- Review **Cargo.toml** dependency constraints and run **`cargo audit`**
 - Add network protocol input validation
 - Replace sled with redb (production-ready database)
 - Add DoS protection mechanisms

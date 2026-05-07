@@ -165,7 +165,7 @@ All workflows run on **self-hosted Linux x64 runners**:
 
 All builds use deterministic build practices:
 
-- **Locked Dependencies**: `cargo build --locked` ensures exact dependency versions
+- **Locked builds**: When a **lockfile** is part of the workflow, `cargo build --locked` (or equivalent) resolves dependencies exactly as locked. **Root `Cargo.lock` policy differs by repository**—see each crate’s `CONTRIBUTING.md`.
 - **Toolchain Pinning**: Per-repo `rust-toolchain.toml` defines exact Rust version
 - **Artifact Hashing**: All outputs hashed to `SHA256SUMS`
 - **Verification**: Optional deterministic verification (rebuild and compare hashes)
@@ -262,8 +262,8 @@ CI runs in a clean environment:
 - **Solution**: Make tests more robust, check for race conditions
 
 **Issue**: Build works locally but fails in CI
-- **Cause**: Dependency version mismatch
-- **Solution**: Ensure `Cargo.lock` is committed, use `--locked` flag
+- **Cause**: Dependency version mismatch, different lockfile, or different feature set
+- **Solution**: Follow **that repository’s** `CONTRIBUTING.md` and `.github/workflows/`. Many BLVM crates **do not commit** a root `Cargo.lock` (see `.gitignore`); CI may still run `cargo … --locked` when it generates or checks in a lockfile for that job. When a lockfile is present for your workflow, keep local resolution aligned (e.g. regenerate with `cargo generate-lockfile` where the project documents it).
 
 **Issue**: Coverage calculation fails
 - **Cause**: Coverage tool issues
@@ -348,7 +348,7 @@ Cache `target/` directories for dependencies across workflow runs:
 #### Cache Key Strategy
 
 Use deterministic cache keys based on:
-- `Cargo.lock` hash (for dependency changes)
+- Dependency inputs: often a **`Cargo.lock` hash** when the workflow commits or restores one; otherwise **manifest hashes** (`Cargo.toml` / workspace definition) plus toolchain
 - Rust toolchain version (for toolchain changes)
 - Combined key: `${DEPS_KEY}-${TOOLCHAIN}`
 

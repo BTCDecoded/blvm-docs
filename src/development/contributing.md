@@ -10,7 +10,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- **Rust 1.83 or later** (recommended; some crates require at least **1.82** per `Cargo.toml` `rust-version`) — check with `rustc --version`
+- **Rust toolchain**: Each repository sets a minimum in **`Cargo.toml`** (`rust-version`). Use **`rustc --version`** and satisfy the **`rust-version`** of the **crate you are building** (values differ between **blvm-consensus**, **blvm-node**, and other crates).
 - **Git** - For version control
 - **Cargo** - Included with Rust
 - **Text editor or IDE** - Your choice
@@ -133,7 +133,7 @@ Then open a Pull Request on GitHub. See the [PR Process](pr-process.md) for deta
 - **Maintain mathematical precision** - No approximations
 
 **Additional requirements**:
-- **Exact Version Pinning**: All consensus-critical dependencies must be pinned to exact versions
+- **Dependencies**: Follow the canonical [`blvm-consensus` `Cargo.toml`](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml). Other **BLVM** crates are typically pulled with **pre-1.0 semver ranges** on crates.io; many **third-party** crates use **`=`** pins where listed. This is **not** “every dependency exact-pinned.”
 - **Pure Functions**: All functions must remain side-effect-free
 - **Testing**: All mathematical functions must be thoroughly tested (see [Testing Infrastructure](testing.md))
 - **Formal Verification**: Consensus-critical changes may require Z3 proofs (via BLVM Specification Lock)
@@ -149,6 +149,11 @@ Then open a Pull Request on GitHub. See the [PR Process](pr-process.md) for deta
 - **Consensus Integrity**: Never modify consensus rules (use blvm-consensus for that)
 - **Production Readiness**: Consider production deployment implications
 - **Performance**: Maintain reasonable performance characteristics
+- **CI vs optional features**: Default **CI** usually matches **`cargo test`** with **default features**, not **`--all-features`**. Full feature matrices and large integration suites can be **much heavier** (compile time, RAM). See **[`blvm-node` CONTRIBUTING](https://github.com/BTCDecoded/blvm-node/blob/main/CONTRIBUTING.md)** (section on CI parity and optional features).
+
+### Resource-intensive builds (any repository)
+
+`cargo test --all-features`, broad integration tests, or large workspace builds can exceed the resource profile of default CI. Read the **target repository’s** **`CONTRIBUTING.md`** before assuming your laptop or CI tier is sufficient.
 
 ## Pull Request Checklist
 

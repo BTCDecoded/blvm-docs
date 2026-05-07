@@ -110,15 +110,12 @@ The module publishes the following events:
 
 ## Stratum V2 Protocol
 
-The module implements the Stratum V2 protocol specification, providing:
+The Stratum V2 **specification** defines binary TLV framing, optional encryption, and (in some deployments) multiplexed transports. In **blvm-node**, the usual integration is a **TCP listener** that reads **Stratum V2 TLV** frames and routes them into the node ([Stratum V2 mining](../node/mining-stratum-v2.md)). **TLS**, **QUIC**, or QUIC stream multiplexing apply only if **your deployment** and module build actually use those stacks—do not assume the reference listener path uses QUIC.
 
-- **Binary Protocol**: 50-66% bandwidth savings compared to Stratum V1
-- **TLV Encoding**: Tag-Length-Value encoding for efficient message serialization
-- **Encrypted Communication**: TLS/QUIC encryption for secure connections
-- **Multiplexed Channels**: QUIC stream multiplexing for multiple mining streams
-- **Template Distribution**: Efficient block template distribution
-- **Share Submission**: Optimized share submission protocol
-- **Channel Management**: Multiple mining channels per connection
+Stratum V2 features commonly discussed in spec materials:
+
+- **Binary / TLV framing** — compact binary messages vs Stratum V1 text
+- **Template and share flow** — template distribution, share submission, channels (see upstream [Stratum V2](https://stratumprotocol.org/) docs)
 
 ### Protocol Components
 

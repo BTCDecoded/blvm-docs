@@ -26,9 +26,10 @@ The blvm-protocol sits between the pure mathematical consensus rules (blvm-conse
 - **Validation Rules**: Protocol-specific size limits and validation logic
 
 ### Protocol Evolution
-- **Version Support**: Bitcoin V1, V2 (planned), and experimental variants
-- **Feature Management**: Enable/disable features based on protocol version
-- **Breaking Changes**: Track and manage protocol evolution
+- **Network variants**: Mainnet, testnet, and regtest share the same consensus surface with different parameters (see variants below).
+- **Feature management**: Protocol features (SegWit, Taproot, RBF, and related flags) are toggled by the protocol engine and build configuration.
+- **Wire and transport**: P2P message formats and Bitcoin-compatible peer behavior live in **blvm-protocol**; the reference node delivers them over [transports](../node/transport-abstraction.md) (TCP by default; optional QUIC-based paths where features enable them). Treat **encrypted Bitcoin P2P (BIP324)** and other transport experiments as **build- and release-specific**—see **`blvm-protocol`** and **`blvm-node`** features and release notes rather than assuming one global default.
+- **Breaking changes**: Tracked per crate semver and release notes.
 
 ## Core Components
 

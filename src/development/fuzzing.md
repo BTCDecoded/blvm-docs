@@ -9,7 +9,11 @@ Harness names and crate wiring live in each repo’s **`fuzz/Cargo.toml`** (`[[b
 | Crate | Location |
 |-------|----------|
 | blvm-consensus | [`blvm-consensus/fuzz`](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz) |
+| blvm-protocol | [`blvm-protocol/fuzz`](https://github.com/BTCDecoded/blvm-protocol/tree/main/fuzz) |
 | blvm-node | [`blvm-node/fuzz`](https://github.com/BTCDecoded/blvm-node/tree/main/fuzz) |
+| blvm-sdk | [`blvm-sdk/fuzz`](https://github.com/BTCDecoded/blvm-sdk/tree/main/fuzz) |
+
+Local monorepo checkouts often use **`[patch.crates-io]`** in **`fuzz/Cargo.toml`** so fuzz crates resolve **path** dependencies; **continuous integration** may build fuzz targets against **crates.io** instead (see comments in each repo’s **`fuzz/Cargo.toml`**—for example **`blvm-consensus/fuzz`** and **`blvm-protocol/fuzz`**).
 
 ## Quick start (consensus)
 

@@ -43,7 +43,7 @@ graph TB
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) functions
 - [Formal proofs](../consensus/formal-verification.md) verify mathematical correctness
 - Side-effect-free, deterministic functions
-- Consensus-critical dependencies pinned to exact versions
+- Consensus-critical dependencies and transitive pins follow **`Cargo.toml`** (BLVM crates use **published ranges**; many third-party crates use **`=`** where pinned)
 
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/README.md)
 

@@ -67,7 +67,7 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 1. **Pure Functions**: All functions are deterministic and side-effect-free
 2. **Mathematical Accuracy**: Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
 3. **Optimization Passes**: [Optimization passes](architecture.md#optimization-passes) (e.g. constant folding, batch script verification) optimize the implementation; the implementation is validated against the spec, not generated from it
-4. **Exact Version Pinning**: All consensus-critical dependencies pinned to exact versions
+4. **Controlled dependencies**: Declare **BLVM** and third-party crates with the **version ranges and pins in `Cargo.toml`** (ranges for many **blvm-*** crates on crates.io; **`=`** where the manifest pins a revision)
 5. **Comprehensive Testing**: Extensive test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
 7. **Formal Verification**: [BLVM Specification Lock](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
@@ -139,14 +139,17 @@ Details: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/mai
 
 ## Dependencies
 
-All consensus-critical dependencies are pinned to exact versions:
+**Source of truth**: [`blvm-consensus` `Cargo.toml`](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml).
+
+- **BLVM crates** (e.g. **`blvm-primitives`**, **`blvm-spec-lock`**) use **published semver ranges** (typically **pre-1.0** `>= …, <1` with crate-specific lower bounds).
+- **Third-party crates** often use **`=`** pins where reproducibility matters; others use compatible ranges.
+- **`secp256k1`** and crypto backends follow the manifest (default production paths may use **`blvm-secp256k1`**—read **`Cargo.toml`**, not this page, for current lines).
+
+**Illustrative excerpt** (may drift—verify upstream):
 
 ```toml
-# Consensus-critical cryptography - EXACT VERSIONS
-secp256k1 = "=0.28.2"
-sha2 = "=0.10.9"
+blvm-primitives = { version = ">=0.1, <1", default-features = false }
 ripemd = "=0.1.3"
-bitcoin_hashes = "=0.11.0"
 ```
 
 **Code**: [Cargo.toml](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml)
