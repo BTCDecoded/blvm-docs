@@ -33,6 +33,9 @@ jobs:
         with:
           mdbook-version: 'latest'
 
+      - name: Regenerate installation.md from install-content.json
+        run: node scripts/render-installation.mjs
+
       - name: Fetch mdBook include sources (Orange Paper, governance)
         run: |
           set -eux

@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "page": {
+    "title": "Install blvm",
+    "lead": "Pre-built packages for Linux and Windows. Each release ships with a SHA-256 checksum and a detached GPG signature. Verify before running.",
+    "verificationGuideUrl": "https://docs.thebitcoincommons.org/nodes/verification.html",
+    "buildFromSourceUrl": "https://docs.thebitcoincommons.org/nodes/build.html"
+  },
+  "release": {
+    "tag": "v0.1.0",
+    "releasesLatestUrl": "https://github.com/BTCDecoded/blvm-node/releases/latest",
+    "releasesTagUrl": "https://github.com/BTCDecoded/blvm-node/releases/tag/v0.1.0"
+  },
+  "packages": [
+    {
+      "id": "deb",
+      "label": "Debian / Ubuntu",
+      "ext": ".deb",
+      "icon": "fa-brands fa-linux",
+      "filename": "blvm_0.1.0_amd64.deb",
+      "description": "Ubuntu 22.04+, Debian 11+, and any dpkg-based distro.",
+      "installCmd": "sudo dpkg -i blvm_0.1.0_amd64.deb\nsudo apt-get install -f    # pull in any missing deps",
+      "verify": "sha256sum --check blvm_0.1.0_amd64.deb.sha256"
+    },
+    {
+      "id": "rpm",
+      "label": "Fedora / RHEL",
+      "ext": ".rpm",
+      "icon": "fa-brands fa-linux",
+      "filename": "blvm-0.1.0-1.x86_64.rpm",
+      "description": "Fedora 38+, RHEL 9, CentOS Stream 9, and RPM-based distros.",
+      "installCmd": "sudo rpm -i blvm-0.1.0-1.x86_64.rpm\n# or via dnf:\nsudo dnf install ./blvm-0.1.0-1.x86_64.rpm",
+      "verify": "sha256sum --check blvm-0.1.0-1.x86_64.rpm.sha256"
+    },
+    {
+      "id": "exe",
+      "label": "Windows",
+      "ext": ".exe",
+      "icon": "fa-brands fa-windows",
+      "filename": "blvm-setup-0.1.0.exe",
+      "description": "Windows 10 / 11 (64-bit). Signed installer: blvm registers as a background service via the Windows Service Manager.",
+      "installCmd": "# Run the installer, accept the UAC prompt, choose your data directory.\n# blvm registers itself as a Windows service and starts automatically on boot.",
+      "verify": "# PowerShell checksum verify:\n(Get-FileHash blvm-setup-0.1.0.exe -Algorithm SHA256).Hash"
+    }
+  ],
+  "managed": {
+    "summaryTitle": "Managed installs",
+    "badge": "Not ready yet",
+    "summaryHint": "Umbrel & Docker · click to preview planned steps",
+    "banner": "These paths are not live yet. Use the packages above or build from source until Umbrel listing and Docker image publish.",
+    "intro": "Prefer a one-click install? blvm is planned as a managed package on Umbrel and as an official Docker image."
+  },
+  "platforms": [
+    {
+      "name": "Umbrel",
+      "icon": "fa-solid fa-plug",
+      "description": "Available in the Umbrel App Store as \"Bitcoin Commons\". Runs on a Raspberry Pi or any Linux machine with a one-click node stack.",
+      "steps": [
+        "Open your Umbrel dashboard and go to the App Store.",
+        "Search for \"Bitcoin Commons\" and click Install.",
+        "Wait for initial sync to complete; this may take several hours on first run.",
+        "Access node settings and RPC credentials from the app detail page."
+      ],
+      "docsLink": "https://docs.thebitcoincommons.org/nodes/umbrel.html",
+      "supportLink": "https://community.getumbrel.com",
+      "supportLinkLabel": "Umbrel support"
+    },
+    {
+      "name": "Docker",
+      "icon": "fa-brands fa-docker",
+      "description": "Run blvm in a container on any platform that supports Docker or Podman. The official image is planned for Docker Hub as btccommons/blvm.",
+      "steps": [
+        "Pull the image: docker pull btccommons/blvm:0.1.0",
+        "Create a persistent data volume: docker volume create blvm-data",
+        "Run the node: docker run -d --name blvm -v blvm-data:/data -p 8333:8333 -p 8332:8332 btccommons/blvm:0.1.0",
+        "Check logs: docker logs -f blvm"
+      ],
+      "docsLink": "https://docs.thebitcoincommons.org/nodes/docker.html",
+      "supportLink": "https://hub.docker.com/r/btccommons/blvm",
+      "supportLinkLabel": "Docker Hub →"
+    }
+  ],
+  "markdownDoc": {
+    "extraSectionsAfterPackages": "## Next steps\n\n- [Quick Start](../getting-started/quick-start.md) for running your first node\n- [Node configuration](../node/configuration.md) for detailed setup\n\n## See also\n\n- [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest) for downloads\n"
+  }
+}

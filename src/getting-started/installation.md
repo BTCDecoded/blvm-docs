@@ -1,122 +1,120 @@
+<!-- Generated from src/install/install-content.json. Do not edit by hand. Run: node scripts/render-installation.mjs -->
+
 # Installation
 
-This guide covers installing BLVM from pre-built binaries available on GitHub releases.
+Pre-built packages for Linux and Windows. Each release ships with a SHA-256 checksum and a detached GPG signature. Verify before running.
 
-## Prerequisites
+**Current release:** [v0.1.0 on GitHub →](https://github.com/BTCDecoded/blvm-node/releases/tag/v0.1.0)  
+**All builds:** [GitHub Releases (latest)](https://github.com/BTCDecoded/blvm-node/releases/latest)
 
-Pre-built binaries are available for Linux, macOS, and Windows on common platforms. No Rust installation required - binaries are pre-compiled and ready to use.
+Each artifact ships with a `.sha256` file and a detached GPG signature (`.sig`). See the [signature verification guide](https://docs.thebitcoincommons.org/nodes/verification.html).
 
-## Installing blvm-node
+## Pre-built packages
 
-The reference node is the main entry point for running a BLVM node.
+### Debian / Ubuntu (`.deb`)
 
-### Quick Start
+Ubuntu 22.04+, Debian 11+, and any dpkg-based distro.
 
-1. **Download the latest release** from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases)
+**Download:** get `blvm_0.1.0_amd64.deb` from [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest).
 
-2. **Extract the archive** for your platform:
-   ```bash
-   # Linux
-   tar -xzf blvm-*-linux-x86_64.tar.gz
-   
-   # macOS
-   tar -xzf blvm-*-macos-x86_64.tar.gz
-   
-   # Windows
-   # Extract the .zip file using your preferred tool
-   ```
-
-3. **Move the binary to your PATH** (optional but recommended):
-   ```bash
-   # Linux/macOS
-   sudo mv blvm /usr/local/bin/
-   
-   # Or add to your local bin directory
-   mkdir -p ~/.local/bin
-   mv blvm ~/.local/bin/
-   export PATH="$HOME/.local/bin:$PATH"  # Add to ~/.bashrc or ~/.zshrc
-   ```
-
-4. **Verify installation**:
-   ```bash
-   blvm --version
-   ```
-
-### Release Variants
-
-Releases include two variants:
-
-#### Base Variant (`blvm-{version}-{platform}.tar.gz`)
-
-Stable, minimal release with core Bitcoin node functionality, production optimizations, standard [storage backends](../node/storage-backends.md), and process sandboxing. Use for production deployments prioritizing stability.
-
-#### Experimental Variant (`blvm-experimental-{version}-{platform}.tar.gz`)
-
-Full-featured build with experimental features: [UTXO commitments](../consensus/utxo-commitments.md), BIP119 CTV, [Dandelion++](../node/privacy-relay.md), BIP158, [Stratum V2](../node/mining-stratum-v2.md), and enhanced signature operations counting. See [Protocol Specifications](../reference/protocol-specifications.md#experimental-features) for details.
-
-Use for development, testing, or when experimental capabilities are required.
-
-## Installing blvm-sdk Tools
-
-The SDK tools (`blvm-keygen`, `blvm-sign`, `blvm-verify`) are included in the blvm-node release archives.
-
-After extracting the release archive, you'll find:
-- `blvm` - Bitcoin reference node
-- `blvm-keygen` - Generate governance keypairs
-- `blvm-sign` - Sign governance messages
-- `blvm-verify` - Verify signatures and multisig thresholds
-
-All tools are in the same directory. Move them to your PATH as described above.
-
-## Platform-Specific Notes
-
-### Linux
-
-- **x86_64**: Standard 64-bit Linux
-- **ARM64**: For ARM-based systems (Raspberry Pi, AWS Graviton, etc.)
-- **glibc 2.31+**: Required for Linux binaries
-
-### macOS
-
-- **x86_64**: Intel Macs
-- **ARM64**: Apple Silicon (M1/M2/M3)
-- **macOS 11.0+**: Required for macOS binaries
-
-### Windows
-
-- **x86_64**: 64-bit Windows
-- Extract the `.zip` file and run `blvm.exe` from the extracted directory
-- Add the directory to your PATH for command-line access
-
-## Verifying Installation
-
-After installation, verify everything works:
+**Install:**
 
 ```bash
-# Check blvm-node version
-blvm --version
-
-# Check SDK tools
-blvm-keygen --help
-blvm-sign --help
-blvm-verify --help
+sudo dpkg -i blvm_0.1.0_amd64.deb
+sudo apt-get install -f    # pull in any missing deps
 ```
 
-## Building from Source (Advanced)
+**Verify checksum:**
 
-Building from source is primarily for development. Crates in this stack declare `rust-version` **1.82** or **1.83** in their `Cargo.toml` (for example `blvm-consensus` and `blvm-spec-lock` use **1.83**; `blvm-node` and `blvm-protocol` use **1.82**). Use **Rust 1.83 or later** unless you are working only in a crate with a lower MSRV. Clone the [blvm repository](https://github.com/BTCDecoded/blvm) and follow the build instructions in its README.
+```bash
+sha256sum --check blvm_0.1.0_amd64.deb.sha256
+```
 
-## Next Steps
+Detached signature: `blvm_0.1.0_amd64.deb.sig`.
 
-- See [Quick Start](quick-start.md) for running your first node
-- See [Node Configuration](../node/configuration.md) for detailed setup options
+### Fedora / RHEL (`.rpm`)
 
-## See Also
+Fedora 38+, RHEL 9, CentOS Stream 9, and RPM-based distros.
 
-- [Quick Start](quick-start.md) - Run your first node
-- [First Node Setup](first-node.md) - Complete setup guide
-- [Node Configuration](../node/configuration.md) - Configuration options
-- [Node Overview](../node/overview.md) - Node features and capabilities
-- [Release Process](../development/release-process.md) - How releases are created
-- [GitHub Releases](https://github.com/BTCDecoded/blvm/releases) - Download releases
+**Download:** get `blvm-0.1.0-1.x86_64.rpm` from [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest).
 
+**Install:**
+
+```bash
+sudo rpm -i blvm-0.1.0-1.x86_64.rpm
+# or via dnf:
+sudo dnf install ./blvm-0.1.0-1.x86_64.rpm
+```
+
+**Verify checksum:**
+
+```bash
+sha256sum --check blvm-0.1.0-1.x86_64.rpm.sha256
+```
+
+Detached signature: `blvm-0.1.0-1.x86_64.rpm.sig`.
+
+### Windows (`.exe`)
+
+Windows 10 / 11 (64-bit). Signed installer: blvm registers as a background service via the Windows Service Manager.
+
+**Download:** get `blvm-setup-0.1.0.exe` from [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest).
+
+**Install:**
+
+```bash
+# Run the installer, accept the UAC prompt, choose your data directory.
+# blvm registers itself as a Windows service and starts automatically on boot.
+```
+
+**Verify checksum:**
+
+```bash
+# PowerShell checksum verify:
+(Get-FileHash blvm-setup-0.1.0.exe -Algorithm SHA256).Hash
+```
+
+Detached signature: `blvm-setup-0.1.0.exe.sig`.
+
+## Managed installs (Not ready yet)
+
+> These paths are not live yet. Use the packages above or build from source until Umbrel listing and Docker image publish.
+
+Prefer a one-click install? blvm is planned as a managed package on Umbrel and as an official Docker image.
+
+### Umbrel
+
+Available in the Umbrel App Store as "Bitcoin Commons". Runs on a Raspberry Pi or any Linux machine with a one-click node stack.
+
+1. Open your Umbrel dashboard and go to the App Store.
+1. Search for "Bitcoin Commons" and click Install.
+1. Wait for initial sync to complete; this may take several hours on first run.
+1. Access node settings and RPC credentials from the app detail page.
+
+- [Full documentation](https://docs.thebitcoincommons.org/nodes/umbrel.html)
+- [Umbrel support](https://community.getumbrel.com)
+
+### Docker
+
+Run blvm in a container on any platform that supports Docker or Podman. The official image is planned for Docker Hub as btccommons/blvm.
+
+1. Pull the image: docker pull btccommons/blvm:0.1.0
+1. Create a persistent data volume: docker volume create blvm-data
+1. Run the node: docker run -d --name blvm -v blvm-data:/data -p 8333:8333 -p 8332:8332 btccommons/blvm:0.1.0
+1. Check logs: docker logs -f blvm
+
+- [Full documentation](https://docs.thebitcoincommons.org/nodes/docker.html)
+- [Docker Hub →](https://hub.docker.com/r/btccommons/blvm)
+
+## Build from source
+
+For other architectures or development, see [build instructions](https://docs.thebitcoincommons.org/nodes/build.html).
+
+## Next steps
+
+- [Quick Start](../getting-started/quick-start.md) for running your first node
+- [Node configuration](../node/configuration.md) for detailed setup
+
+## See also
+
+- [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest) for downloads

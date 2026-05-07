@@ -58,6 +58,18 @@ This repository aggregates documentation from all BLVM source repositories into 
 
 The optional **`modules/blvm`** git submodule is the **meta-repo** umbrella (`blvm`). Its `docs/` tree covers release/CI workflows for that repo. The **canonical** narrative for [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org) lives in **`src/`** in this repository.
 
+## Installation page (shared with BTCDecoded website)
+
+Canonical copy for install instructions lives in **`src/install/install-content.json`**. The book chapter **`src/getting-started/installation.md`** is **generated** from that file; do not edit the markdown by hand.
+
+After changing the JSON:
+
+```bash
+node scripts/render-installation.mjs
+```
+
+CI runs this before `mdbook build`. The [BTCDecoded website](https://github.com/BTCDecoded/website) copies the same JSON into `website/data/` during `npm run build` so [`/install`](https://btcdecoded.org/install/) stays aligned with the docs.
+
 ## Documentation sources
 
 - **`src/`** — primary book content and `SUMMARY.md` navigation.
