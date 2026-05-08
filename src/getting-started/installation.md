@@ -4,8 +4,8 @@
 
 Pre-built packages for Linux and Windows. Each release ships with a SHA-256 checksum and a detached GPG signature. Verify before running.
 
-**Current release:** [v0.1.0 on GitHub →](https://github.com/BTCDecoded/blvm-node/releases/tag/v0.1.0)  
-**All builds:** [GitHub Releases (latest)](https://github.com/BTCDecoded/blvm-node/releases/latest)
+**Current release:** [v0.1.0 on GitHub →](https://github.com/BTCDecoded/blvm/releases/tag/v0.1.0)  
+**All builds:** [GitHub Releases (latest)](https://github.com/BTCDecoded/blvm/releases/latest)
 
 Each artifact ships with a `.sha256` file and a detached GPG signature (`.sig`). See the [signature verification guide](https://docs.thebitcoincommons.org/getting-started/installation.html).
 
@@ -15,7 +15,7 @@ Each artifact ships with a `.sha256` file and a detached GPG signature (`.sig`).
 
 Ubuntu 22.04+, Debian 11+, and any dpkg-based distro.
 
-**Download:** get `blvm_0.1.0_amd64.deb` from [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest).
+**Download:** get `blvm_0.1.0_amd64.deb` from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest).
 
 **Install:**
 
@@ -36,7 +36,7 @@ Detached signature: `blvm_0.1.0_amd64.deb.sig`.
 
 Fedora 38+, RHEL 9, CentOS Stream 9, and RPM-based distros.
 
-**Download:** get `blvm-0.1.0-1.x86_64.rpm` from [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest).
+**Download:** get `blvm-0.1.0-1.x86_64.rpm` from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest).
 
 **Install:**
 
@@ -58,7 +58,7 @@ Detached signature: `blvm-0.1.0-1.x86_64.rpm.sig`.
 
 Windows 10 / 11 (64-bit). Signed installer: blvm registers as a background service via the Windows Service Manager.
 
-**Download:** get `blvm-setup-0.1.0.exe` from [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest).
+**Download:** get `blvm-setup-0.1.0.exe` from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest).
 
 **Install:**
 
@@ -104,11 +104,11 @@ Run blvm in a container on any platform that supports Docker or Podman. The offi
 1. Check logs: docker logs -f blvm
 
 - [Full documentation](https://docs.thebitcoincommons.org/getting-started/installation.html)
-- [GitHub Releases →](https://github.com/BTCDecoded/blvm-node/releases/latest)
+- [GitHub Releases →](https://github.com/BTCDecoded/blvm/releases/latest)
 
 ## Build from source
 
-For other architectures or development, see [build instructions](https://github.com/BTCDecoded/blvm-node).
+For other architectures or development, see [build instructions](https://github.com/BTCDecoded/blvm).
 
 ## Next steps
 
@@ -117,4 +117,4 @@ For other architectures or development, see [build instructions](https://github.
 
 ## See also
 
-- [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest) for downloads
+- [GitHub Releases (`blvm` binary / packages)](https://github.com/BTCDecoded/blvm/releases/latest) for downloads

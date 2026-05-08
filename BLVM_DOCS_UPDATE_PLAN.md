@@ -1,11 +1,11 @@
 # BLVM documentation update plan
 
-**Status (2026-05-07):** Book updates for **P0–P2** (§3–§5) are **landed** in [`src/`](src/); `mdbook build` succeeded. Submodule rename (**§6**) and infra backlog (**§9**) remain.
+**Status (2026-05-07):** Book updates for **P0–P2** (§3–§5) are **landed** in [`src/`](src/); **P2-3** install URLs now point at the **`blvm`** binary repo; **`blvm-node/CONTRIBUTING.md`** and **`blvm-consensus/README.md`** dependency/lockfile text aligned with **`Cargo.toml`** / **`.gitignore`**. Submodule rename (**§6**) and infra backlog (**§9**) remain.
 
 **Location:** Repository root: [`BLVM_DOCS_UPDATE_PLAN.md`](BLVM_DOCS_UPDATE_PLAN.md) (this file)  
 **Primary target:** published book sources in [`src/`](src/)  
 **Secondary:** [`modules/blvm/`](modules/blvm/) (meta-repo submodule; naming drift)  
-**Last revised:** 2026-05-07 (rationale precision + fact-check + implementation).
+**Last revised:** 2026-05-07 (validation sweep + install upstream + CONTRIBUTING fix).
 
 ---
 
@@ -25,7 +25,7 @@
 | Grep `blvm-docs/src` for `Cargo.lock`, `V2 (planned)`, `BIP324`, `bllvm` | Targets map to §3 rows; **`bllvm`** absent from `src/`. |
 | `rust-version` / `Cargo.toml` in **node** vs **consensus** | Snapshot: **consensus `rust-version`** and **node `rust-version`** differ — **book must not freeze one global MSRV**; send readers to **`rust-version` in the crate they edit** (**P2-2**, **§11**). |
 | **`modules/blvm`** / `bllvm` | Heavy stale **`bllvm-*`** naming in submodule docs/scripts — §6 only. |
-| **`mining-stratum-v2.md`** vs **`modules/stratum-v2.md`** | Tone mismatch on transport (TCP listener path vs generic QUIC/TLS benefits) — **P2-1**. |
+| **`mining-stratum-v2.md`** vs **`modules/stratum-v2.md`** | **P2-1:** `modules/stratum-v2.md` documents **TCP TLV** default path vs optional transports (**qualifying language landed**). |
 | **`contributing-docs.md`** style vs **`utxo-commitments.md`** | Numbers (98%, ~500 GB) vs “no unsubstantiated numbers” — **P2-4**. |
 
 **Re-run after book edits:**
@@ -35,13 +35,13 @@ rg -n 'Cargo\.lock|V2 \(planned\)|BIP324|bllvm' blvm-docs/src
 rg -n 'bllvm' blvm-docs/modules/blvm --glob '*.md' | head
 ```
 
-### 2.1 Assertion checklist (targets still present until fixed)
+### 2.1 Assertion checklist — **re-validated 2026-05-07**
 
-| ID | Predicate |
-|----|-----------|
-| P0-1 | `protocol/architecture.md` contains **Bitcoin V1, V2 (planned)**. |
-| P0-2 | `development/ci-cd-workflows.md` advises committing **`Cargo.lock`** universally; cache-key text references **`Cargo.lock` hash**. |
-| P0-3 | `development/fuzzing.md` lists only **consensus** + **node** fuzz crates. |
+| ID | Result |
+|----|--------|
+| P0-1 | **Resolved:** `protocol/architecture.md` has **no** “Bitcoin V1, V2 (planned)” line; uses network **variants** + conditional BIP324 sentence. |
+| P0-2 | **Resolved in book:** `ci-cd-workflows.md` states **per-repo** lockfile policy + manifest/toolchain cache keys. **Upstream:** `blvm-node/CONTRIBUTING.md` updated to match **`.gitignore`** (root `Cargo.lock` not tracked). |
+| P0-3 | **Resolved:** `development/fuzzing.md` table lists **consensus, protocol, node, sdk** fuzz crates. |
 
 ---
 
@@ -123,10 +123,11 @@ Coordinate with **`blvm` meta-repo** default branch if doing (1).
 
 ## 10. Sign-off
 
-- [ ] P0–P1 done; §2 greps clean for resolved items.  
+- [x] P0–P1 done; §2 assertion checklist updated (**2026-05-07**).  
 - [ ] `mdbook test` (with **blvm-spec** + **governance** includes per [`appendices/contributing-docs.md`](src/appendices/contributing-docs.md)).  
-- [ ] Published links valid.  
-- [ ] Optional: **`blvm-node`** issue — **`Cargo.lock`** / **CONTRIBUTING** / **`.gitignore`** alignment.
+- [x] **`mdbook build`** succeeded after install render.  
+- [x] **`blvm-node`** **`CONTRIBUTING.md`** — **`Cargo.lock`** / **`.gitignore`** alignment (no longer says “committed”).  
+- [x] **`blvm-consensus` README** — removed stale exact-pin TOML block; **`rust-version`** text matches **`Cargo.toml`**.
 
 ---
 
@@ -169,6 +170,6 @@ Coordinate with **`blvm` meta-repo** default branch if doing (1).
 | P1-1 **AddrV2** in **node** + protocol | Yes |
 | P1-2 **`node_tcp.rs`** present | Yes |
 | P1-5 **Node CONTRIBUTING** has **CI vs all-features**, **no GiB** | Yes |
-| **Node** `Cargo.lock` **untracked**, **ignored**, CONTRIBUTING says “commit” | Yes (upstream inconsistency) |
+| **Node** `Cargo.lock` **untracked**, **ignored**, CONTRIBUTING says “commit” | Fixed in **`blvm-node/CONTRIBUTING.md`** (**2026-05-07**) |
 
 **Conclusion:** Priority table **Facts** columns are the source of truth; §13 is an **audit trail** only.

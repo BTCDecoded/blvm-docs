@@ -4,12 +4,12 @@
     "title": "Install blvm",
     "lead": "Pre-built packages for Linux and Windows. Each release ships with a SHA-256 checksum and a detached GPG signature. Verify before running.",
     "verificationGuideUrl": "https://docs.thebitcoincommons.org/getting-started/installation.html",
-    "buildFromSourceUrl": "https://github.com/BTCDecoded/blvm-node"
+    "buildFromSourceUrl": "https://github.com/BTCDecoded/blvm"
   },
   "release": {
     "tag": "v0.1.0",
-    "releasesLatestUrl": "https://github.com/BTCDecoded/blvm-node/releases/latest",
-    "releasesTagUrl": "https://github.com/BTCDecoded/blvm-node/releases/tag/v0.1.0"
+    "releasesLatestUrl": "https://github.com/BTCDecoded/blvm/releases/latest",
+    "releasesTagUrl": "https://github.com/BTCDecoded/blvm/releases/tag/v0.1.0"
   },
   "packages": [
     {
@@ -76,11 +76,11 @@
         "Check logs: docker logs -f blvm"
       ],
       "docsLink": "https://docs.thebitcoincommons.org/getting-started/installation.html",
-      "supportLink": "https://github.com/BTCDecoded/blvm-node/releases/latest",
+      "supportLink": "https://github.com/BTCDecoded/blvm/releases/latest",
       "supportLinkLabel": "GitHub Releases →"
     }
   ],
   "markdownDoc": {
-    "extraSectionsAfterPackages": "## Next steps\n\n- [Quick Start](../getting-started/quick-start.md) for running your first node\n- [Node configuration](../node/configuration.md) for detailed setup\n\n## See also\n\n- [GitHub Releases](https://github.com/BTCDecoded/blvm-node/releases/latest) for downloads\n"
+    "extraSectionsAfterPackages": "## Next steps\n\n- [Quick Start](../getting-started/quick-start.md) for running your first node\n- [Node configuration](../node/configuration.md) for detailed setup\n\n## See also\n\n- [GitHub Releases (`blvm` binary / packages)](https://github.com/BTCDecoded/blvm/releases/latest) for downloads\n"
   }
 }
