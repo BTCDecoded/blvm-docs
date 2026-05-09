@@ -68,7 +68,7 @@ After changing the JSON:
 node scripts/render-installation.mjs
 ```
 
-CI runs this before `mdbook build`. The [BTCDecoded website](https://github.com/BTCDecoded/website) copies the same JSON into `website/data/` during `npm run build` so [`/install`](https://btcdecoded.org/install/) stays aligned with the docs.
+CI runs this before `mdbook build`. The [BTCDecoded website](https://github.com/BTCDecoded/website) **build** refreshes its `data/install-content.json` via **`fetch-blvm-release.mjs`** ( **`blvm` GitHub Releases** ), so [`/install`](https://btcdecoded.org/install/) stays aligned with **released artifacts**. Developers may instead run **`sync-install-data`** against a sibling **blvm-docs** checkout to preview book JSON locally; the **book** remains canonical for narrative generated from this file.
 
 ## Documentation sources
 
