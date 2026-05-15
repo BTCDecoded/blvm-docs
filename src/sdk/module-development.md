@@ -531,7 +531,9 @@ Module system is configured in node config (see [Node Configuration](../node/con
 enabled = true
 modules_dir = "modules"
 data_dir = "data/modules"
-enabled_modules = []  # Empty = auto-discover all
+socket_dir = "data/modules/sockets"
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+enabled_modules = ["blvm-miniscript", "blvm-zmq"]  # default: bootstrap if missing; [] = discover on-disk only
 
 [modules.module_configs.my-module]
 setting1 = "value1"
