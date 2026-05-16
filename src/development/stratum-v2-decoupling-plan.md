@@ -2,7 +2,7 @@
 
 **Scope:** Miner-facing **dedicated TCP** lives in **`blvm-stratum-v2`**. **`blvm-node`** keeps P2P ingress (TLV demux → `StratumV2MessageReceived`), chain APIs, and **`NodeAPI::send_peer_transport_payload`** for opaque bytes to peers.
 
-**Location:** **Canonical** (this book): `development/stratum-v2-decoupling-plan.md`. **Mirror:** **`blvm`** binary repository, `docs/STRATUM_V2_DECOUPLING_PLAN.md`. **No new crate** — **`NodeAPI`** stays on **`blvm-node`**; Stratum protocol code stays in **`blvm-stratum-v2`**.
+**Location:** This book, `development/stratum-v2-decoupling-plan.md`. **No new crate** — **`NodeAPI`** stays on **`blvm-node`**; Stratum protocol code stays in **`blvm-stratum-v2`**.
 
 ---
 
