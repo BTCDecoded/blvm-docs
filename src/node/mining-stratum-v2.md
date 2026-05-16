@@ -24,7 +24,7 @@ The Stratum V2 mining stack is implemented primarily in the **`blvm-stratum-v2`*
 
 ### Dedicated miner TCP (module)
 
-Miners connect to **`blvm-stratum-v2`**’s configured `listen_addr`. The node does **not** run `stratum_v2_listener`; parity framing is documented in the umbrella **`docs/STRATUM_V2_DECOUPLING_PLAN.md`**.
+Miners connect to **`blvm-stratum-v2`**’s configured `listen_addr`. The node does **not** run an in-process `stratum_v2_listener`; TLV framing matches the module’s **`protocol`** / **`messages`** implementation.
 
 ### P2P ingress
 
