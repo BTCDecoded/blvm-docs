@@ -11,7 +11,7 @@ The Stratum V2 module (`blvm-stratum-v2`) implements [Stratum V2 mining protocol
 - **Stratum V2 Server**: Full Stratum V2 protocol server implementation
 - **Mining Pool Management**: Manages connections to mining pools
 - **Mining Job Distribution**: Distributes mining jobs to connected miners
-- **Network Integration**: Fully integrated with node network layer (messages routed automatically)
+- **Network integration**: Uses **`NodeAPI`** and node events; optional P2P Stratum TLV demux surfaces **`StratumV2MessageReceived`** (see [Stratum V2 mining](../node/mining-stratum-v2.md)); dedicated miner TCP is served by this module
 
 ## Installation
 
@@ -110,7 +110,7 @@ The module publishes the following events:
 
 ## Stratum V2 Protocol
 
-The Stratum V2 **specification** defines binary TLV framing, optional encryption, and (in some deployments) multiplexed transports. In **blvm-node**, the usual integration is a **TCP listener** that reads **Stratum V2 TLV** frames and routes them into the node ([Stratum V2 mining](../node/mining-stratum-v2.md)). **TLS**, **QUIC**, or QUIC stream multiplexing apply only if **your deployment** and module build actually use those stacks—do not assume the reference listener path uses QUIC.
+The Stratum V2 **specification** defines binary TLV framing, optional encryption, and (in some deployments) multiplexed transports. In this stack, **`blvm-stratum-v2`** binds **`listen_addr`** for **miner TCP**; **`blvm-node`** may **demux Stratum-shaped TLV on P2P** into **`StratumV2MessageReceived`** when the `stratum-v2` feature is enabled ([Stratum V2 mining](../node/mining-stratum-v2.md)). **TLS**, **QUIC**, or stream multiplexing apply only if **your deployment** actually uses those stacks.
 
 Stratum V2 features commonly discussed in spec materials:
 
@@ -136,17 +136,18 @@ For merge mining functionality, see:
 
 ## Usage
 
-Once installed and configured, the module automatically:
+Once installed and configured, the module typically:
 
 1. Subscribes to mining-related events from the node
-2. Receives Stratum V2 messages via the node's network layer (automatic routing)
-3. Creates and distributes mining jobs to connected miners
-4. Manages mining pool connections (if configured)
-5. Tracks mining rewards and publishes mining events
+2. Accepts **miner connections** on **`listen_addr`** (module-owned TCP) and parses Stratum V2 TLV frames locally
+3. Optionally handles **P2P-delivered** Stratum-shaped traffic when the node publishes **`StratumV2MessageReceived`** (`stratum-v2` feature on the node)
+4. Creates and distributes mining jobs to connected miners
+5. Manages mining pool connections (if configured)
+6. Tracks mining rewards and publishes mining events
 
 **Note**: Merge mining is handled by a separate module (`blvm-merge-mining`) that integrates with this module.
 
-The node's network layer automatically detects Stratum V2 messages (via TLV format) and routes them to this module via the event system. No additional network configuration is required.
+**P2P path**: With the node’s `stratum-v2` feature, the network layer may classify inbound bytes as Stratum V2 TLV and dispatch **`StratumV2MessageReceived`**; that path does **not** replace the module’s miner listener. Firewalls and `listen_addr` still matter for miners connecting to the module.
 
 ### Integration with Other Modules
 

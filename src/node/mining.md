@@ -115,7 +115,7 @@ Optional Stratum V2 protocol support provides:
 - **Multiplexed Channels**: QUIC stream multiplexing
 - **Merge Mining**: Simultaneous mining of multiple chains
 
-**Code**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) (module); node listener: [stratum_v2_listener.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/stratum_v2_listener.rs)
+**Code**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) (module — dedicated miner TCP); node: P2P demux in [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), `NodeAPI::send_peer_transport_payload`
 
 ## Configuration
 
@@ -132,6 +132,7 @@ mining_threads = 1
 ```toml
 [stratum_v2]
 enabled = true
+# Informational / merge-mining; does not start an in-node miner listener (use blvm-stratum-v2 listen_addr)
 listen_addr = "0.0.0.0:3333"
 ```
 

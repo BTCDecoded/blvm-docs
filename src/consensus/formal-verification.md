@@ -67,11 +67,22 @@ graph TB
 
 **BLVM Specification Lock** checks spec-locked functions in tiers (strong/medium/slow). Current inventory and policy: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
-**Verification Command**:
+**Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
+
 ```bash
-# Run BLVM Specification Lock verification
-cargo spec-lock verify
+# Install CLI (matches library floor; picks latest published 0.1.x)
+cargo install blvm-spec-lock --version '>=0.1.3, <0.2' --locked --features z3
+
+export SPEC_LOCK_STRICT=1   # same strictness as blvm-consensus CI when --strict is not passed
+cargo spec-lock check-drift \
+  --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md \
+  --crate-path .
+cargo spec-lock verify \
+  --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md \
+  --crate-path . --timeout 120
 ```
+
+CI runs **`check-drift`** before **`verify`** and uploads artifacts for attestation. Release metadata may count **`Status: PASSED`** lines in the **`verify` log**; that tally is **not** a stable proxy for “number of functions” or “number of contracts” if output formatting or per-function contract counts change—see **`SPEC_LOCK_DEPENDENCY.md`** (“Attestation and `verify` log shape”).
 
 For tiered execution:
 ```bash

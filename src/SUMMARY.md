@@ -104,6 +104,7 @@
 
 # Development
 
+- [Stratum V2 decoupling plan](development/stratum-v2-decoupling-plan.md)
 - [Contributing](development/contributing.md)
 - [CI/CD Workflows](development/ci-cd-workflows.md)
 - [PR Process](development/pr-process.md)

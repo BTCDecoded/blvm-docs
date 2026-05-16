@@ -450,7 +450,7 @@ client.subscribe_events(event_types).await?;
 **Additional Event Categories:**
 - Dandelion++ Events (DandelionStemStarted, DandelionStemAdvanced, DandelionFluffed, etc.)
 - Compact Blocks Events (CompactBlockReceived, BlockReconstructionStarted, etc.)
-- FIBRE Events (FibreBlockEncoded, FibreBlockSent, FibrePeerRegistered)
+- FIBRE Events (FibreBlockEncoded, FibreBlockSent, CompanionUdpPeerRegistered / CompanionUdpPeerUnregistered for NODE_FIBRE companion UDP)
 - Package Relay Events (PackageReceived, PackageRejected)
 - UTXO Commitments Events (UtxoCommitmentReceived, UtxoCommitmentVerified)
 - Ban List Sharing Events (BanListShared, BanListReceived)
