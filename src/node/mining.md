@@ -101,7 +101,7 @@ The `MiningCoordinator` manages mining operations:
 
 - **Template Generation**: Creates block templates from mempool
 - **Mining Loop**: Continuously generates and mines blocks
-- **Stratum V2 Integration**: Coordinates with Stratum V2 protocol
+- **Stratum V2**: Pool/miner TCP and protocol server live in the **`blvm-stratum-v2`** module; the node exposes P2P demux and `NodeAPI` hooks
 - **Merge Mining**: Available via optional `blvm-merge-mining` module (paid plugin)
 
 **Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
@@ -119,24 +119,13 @@ Optional Stratum V2 protocol support provides:
 
 ## Configuration
 
-### Mining Configuration
+There is **no** `[mining]` table on `NodeConfig`. Mining uses RPC (`getblocktemplate`, `submitblock`), optional **`blvm-stratum-v2`** for Stratum traffic, and optional **`blvm-merge-mining`**.
 
-```toml
-[mining]
-enabled = false
-mining_threads = 1
-```
+### Stratum V2 (node + module)
 
-### Stratum V2 Configuration
+See [Stratum V2 + Merge Mining](mining-stratum-v2.md) for split **node** vs **module** `config.toml` examples and **`p2p_stratum_demux`**.
 
-```toml
-[stratum_v2]
-enabled = true
-# Informational / merge-mining; does not start an in-node miner listener (use blvm-stratum-v2 listen_addr)
-listen_addr = "0.0.0.0:3333"
-```
-
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs)
+**Code**: [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs), [StratumV2Config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/rpc.rs)
 
 ## See Also
 

@@ -46,14 +46,13 @@ NetworkManager
 
 ### Transport Selection
 
-Configure transport via [node configuration](../node/configuration.md):
+Configure transport via **`blvm.toml`** (top-level `NodeConfig` keys — there is **no** `[network]` table). See [Node configuration](../node/configuration.md).
 
 ```toml
-[network]
-transport_preference = "tcp_only"  # or "iroh_only", "hybrid"
+transport_preference = "tcponly"  # file: tcponly | irohonly | quinnonly | hybrid | all
 ```
 
-**Modes**: `tcp_only` (default, Bitcoin compatible), `iroh_only` (experimental), `hybrid` (both simultaneously)
+**CLI / ENV** (e.g. `BLVM_NODE_TRANSPORT`) still accept human-readable forms like `tcp_only`, `iroh_only`, `hybrid`.
 
 The **protocol adapter** serializes between blvm-consensus `NetworkMessage` types and transport-specific wire formats. The **message bridge** processes messages and generates responses. Default is TCP-only; enable Iroh via `iroh` feature flag.
 

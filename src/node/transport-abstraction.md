@@ -197,34 +197,18 @@ The `NetworkManager` supports multiple transports:
 
 ### Configuration
 
+`NodeConfig` uses **top-level** keys (see [`config/mod.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs), [`TransportPreferenceConfig`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs)). Example:
+
 ```toml
-[network]
-transport_preference = "Hybrid"  # or "TcpOnly" or "IrohOnly"
-
-[network.tcp]
-enabled = true
 listen_addr = "0.0.0.0:8333"
-
-[network.iroh]
-enabled = true
-node_id = "..."
+transport_preference = "hybrid"   # TOML serde: tcponly | irohonly | quinnonly | hybrid | all
 ```
+
+P2P listen address is **`listen_addr`**, not a nested `[network.tcp]` table. **`quinn`** / **`iroh`** must be enabled in the binary for non-TCP preferences to work.
 
 ### Code Example
 
-```rust
-use blvm_node::network::{NetworkManager, TransportAddr, TransportType};
-
-let network_manager = NetworkManager::new(config);
-
-// Connect via TCP
-let tcp_addr = TransportAddr::tcp("127.0.0.1:8333".parse()?);
-network_manager.connect(tcp_addr).await?;
-
-// Connect via Iroh
-let iroh_addr = TransportAddr::iroh(pubkey_bytes);
-network_manager.connect(iroh_addr).await?;
-```
+[`TransportAddr`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs) wraps TCP / optional Quinn / optional Iroh addresses. Wire-up is via [`NetworkManager`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) and the running node — see crate examples and integration tests rather than copying a minimal `new`/`connect` snippet here.
 
 ## Components
 

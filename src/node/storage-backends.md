@@ -2,21 +2,36 @@
 
 ## Overview
 
-The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. See [Configuration Reference](../reference/configuration-reference.md) for the full `database_backend` options. The system falls back gracefully if the preferred backend is unavailable.
+The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. **Official `blvm` / `blvm-node` default features include `rocksdb`**, so **`auto` usually means RocksDB** unless you build with `--no-default-features` or a custom feature set. See [Configuration Reference](../reference/configuration-reference.md) for the full `database_backend` options. The system falls back gracefully if the preferred backend is unavailable.
 
 ## Supported Backends
 
-### redb
+### rocksdb (typical default via `auto`)
 
-**redb** is a production-ready embedded database (selected by `auto` when the `redb` feature is enabled and RocksDB/TidesDB are not):
+**RocksDB** is the **first choice** when `database_backend = "auto"` and the `rocksdb` cargo feature is enabled (true for default `blvm-node` / `blvm` release builds):
+
+- **High performance** for large chain state
+- **Interop**: Can work with **typical** LevelDB-format chain state and `blk*.dat` layouts where supported
+- **Build**: Requires system **libclang** / LLVM for the `librocksdb-sys` stack
+- **Feature**: `rocksdb` (on by default in `blvm-node` / `blvm` default features)
+
+**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs), [bitcoin_core_storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_storage.rs)
+
+**Note**: RocksDB and **erlay** features are mutually exclusive in this tree (dependency conflicts).
+
+### redb (pure Rust)
+
+**redb** is a production-ready embedded database. It is chosen by **`auto` only when** RocksDB and TidesDB are **not** in the build (or you set `database_backend = "redb"`):
 
 - **Pure Rust**: No C dependencies
 - **ACID Compliance**: Full ACID transactions
-- **Production Ready**: Stable, well-tested
-- **Performance**: Optimized for read-heavy workloads
-- **Storage**: Efficient key-value storage
+- **Typical use**: `--no-default-features` / minimal builds that omit RocksDB, or explicit operator choice
 
 **Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs)
+
+### tidesdb
+
+**TidesDB** is optional; in **`auto`** it is preferred over Redb/Sled **only when** RocksDB is not enabled. See crate features and [Configuration Reference](../reference/configuration-reference.md).
 
 ### sled (Fallback)
 
@@ -27,31 +42,7 @@ The node supports multiple database backends for persistent storage of blocks, U
 - **Performance**: Good for development and testing
 - **Storage**: Key-value storage with B-tree indexing
 
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (redb/sled backends)
-
-### rocksdb (Optional, common on-disk layouts)
-
-**rocksdb** is an optional high-performance backend that can interoperate with **typical** Bitcoin chain on-disk layouts:
-
-- **LevelDB-format chain state**: RocksDB can read LevelDB-format databases used by common reference deployments
-- **Automatic detection**: Detects and uses existing data directories when present
-- **Block files**: Direct access to raw block files (`blk*.dat`) where supported
-- **Format parsing**: Parsers for common internal key layouts
-- **High performance**: Optimized for large-scale blockchain data
-- **System dependency**: Requires `libclang` for build
-- **Feature flag**: `rocksdb` (optional, not enabled by default)
-
-**Interop notes**:
-- Detects standard data directory conventions
-- Uses RocksDB (not LevelDB directly) with LevelDB-format compatibility where applicable
-- Accesses block files (`blk*.dat`) with lazy indexing
-- Supports mainnet, testnet, regtest, and signet networks
-
-**Important**: Deployment-specific paths and formats vary; verify against your data source.
-
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs), [bitcoin_core_storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_storage.rs)
-
-**Note**: RocksDB requires the `rocksdb` feature flag. RocksDB and erlay features are mutually exclusive due to dependency conflicts (both require libclang/LLVM).
+**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs)
 
 ## Backend Selection
 
@@ -159,7 +150,7 @@ Transaction indexing:
 ```toml
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto"  # or "redb", "sled", "rocksdb", "tidesdb"
+database_backend = "auto"  # typical release: RocksDB; or "rocksdb" | "tidesdb" | "redb" | "sled"
 ```
 
 **Options**:
@@ -173,10 +164,10 @@ database_backend = "auto"  # or "redb", "sled", "rocksdb", "tidesdb"
 
 ### RocksDB Configuration
 
-Enable RocksDB with the `rocksdb` feature:
+The **`rocksdb`** feature is **enabled by default** in `blvm-node` / `blvm`; you only need flags when building a **minimal** tree without RocksDB:
 
 ```bash
-cargo build --features rocksdb
+cargo build -p blvm-node --features rocksdb
 ```
 
 **System Requirements**:
@@ -210,11 +201,15 @@ header_cache_mb = 10
 
 ### redb Backend
 
+- **When**: Explicit `database_backend = "redb"` or `auto` without RocksDB/TidesDB in the build
 - **Read Performance**: Excellent for sequential and random reads
 - **Write Performance**: Good for batch writes
-- **Storage Efficiency**: Efficient key-value storage
-- **Memory Usage**: Moderate memory footprint
-- **Production Ready**: Recommended for production
+- **Production**: A solid **pure-Rust** choice when you are not using RocksDB
+
+### RocksDB Backend
+
+- **When**: Default **`auto`** path in standard `blvm` builds
+- **Read/Write**: Tuned for large chain-state workloads; see upstream RocksDB characteristics
 
 ### sled Backend
 
@@ -242,10 +237,7 @@ All backends support pruning:
 
 ```toml
 [storage.pruning]
-[storage.pruning.mode]
-type = "normal"
-keep_from_height = 0
-min_recent_blocks = 288  # Keep last 288 blocks (~2 days)
+mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
 auto_prune = true
 auto_prune_interval = 144
 ```
@@ -256,7 +248,7 @@ auto_prune_interval = 144
 - **Aggressive**: Prune with UTXO commitments (requires utxo-commitments feature)
 - **Custom**: Fine-grained control over what to keep
 
-**Code**: [pruning.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/pruning.rs)
+**Code**: [PruningConfig in `config/storage.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/storage.rs), [runtime pruning logic](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/pruning.rs)
 
 ## Error Handling
 

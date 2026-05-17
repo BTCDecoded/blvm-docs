@@ -164,7 +164,7 @@ BLVM implements numerous Bitcoin Improvement Proposals. See [Protocol Specificat
 
 ### What storage backends are supported?
 
-The node supports multiple storage backends. With `database_backend = "auto"` (default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. Options include **rocksdb** (can read common LevelDB-format chain state and `blk*.dat` layouts), **redb**, **sled**, and **tidesdb**. See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](../reference/configuration-reference.md) for details.
+The node supports multiple storage backends. With `database_backend = "auto"` (default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. **Default `blvm` / `blvm-node` release builds enable `rocksdb`, so `auto` is usually RocksDB on disk.** Options include **rocksdb** (can read common LevelDB-format chain state and `blk*.dat` layouts), **redb**, **sled**, and **tidesdb**. See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](../reference/configuration-reference.md) for details.
 
 ### What transport protocols are supported?
 
@@ -176,7 +176,7 @@ Pre-built binaries are available from [GitHub Releases](https://github.com/BTCDe
 
 ### What experimental features are available?
 
-The experimental build variant includes: UTXO commitments, BIP119 CTV (CheckTemplateVerify), Dandelion++ privacy relay, BIP158, Stratum V2 mining protocol, and enhanced signature operations counting. See [Installation](../getting-started/installation.md#experimental-variant) for details.
+The experimental build variant adds compile-time features such as: UTXO commitments, BIP119 CTV (CheckTemplateVerify), Dandelion++ privacy relay, Stratum V2 (`stratum-v2`), and enhanced signature operations counting. **BIP158 compact block filter support** is included in **default** builds as well (CLI/ENV “BIP158” flags record preference; there is no `bip158` Cargo feature). See [Installation](../getting-started/installation.md#experimental-variant) for details.
 
 ### How do I configure the node?
 

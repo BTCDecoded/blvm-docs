@@ -15,7 +15,7 @@ Configuration files support both TOML (`.toml`) and JSON (`.json`) formats. TOML
 ```toml
 # blvm.toml
 listen_addr = "127.0.0.1:8333"
-transport_preference = "tcp_only"
+transport_preference = "tcponly"  # TOML: tcponly | irohonly | quinnonly | hybrid | all
 max_peers = 100
 protocol_version = "BitcoinV1"
 
@@ -44,9 +44,11 @@ rate_limit_burst = 100
 rate_limit_rate = 10
 ```
 
-## Core Configuration
+## Primary settings
 
-### Network Settings
+This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` configuration model). It is **not** a description of **Bitcoin Core**’s `bitcoin.conf`; Core uses different option names and file format. For mapping from Core, see [Bitcoin Core bitcoin.conf versus BLVM](../node/configuration.md#bitcoin-core-bitcoinconf-versus-blvm).
+
+### Network settings
 
 #### `listen_addr`
 - **Type**: `SocketAddr` (e.g., `"127.0.0.1:8333"`)
@@ -56,13 +58,15 @@ rate_limit_rate = 10
 
 #### `transport_preference`
 - **Type**: `string` (enum)
-- **Default**: `"tcp_only"`
-- **Options**:
-  - `"tcp_only"` - Use only TCP transport (Bitcoin P2P compatible, default)
-  - `"quinn_only"` - Use only Quinn/QUIC transport (requires `quinn` feature)
-  - `"iroh_only"` - Use only Iroh transport (requires `iroh` feature, experimental)
-  - `"hybrid"` - Use both TCP and Iroh simultaneously (requires `iroh` feature)
-  - `"all"` - Use all available transports (requires both `quinn` and `iroh` features)
+- **Default** (library): TCP-only
+- **TOML / JSON file**: serde uses **concatenated lowercase** variant names, e.g. **`tcponly`**, **`irohonly`**, **`quinnonly`**, **`hybrid`**, **`all`** (see `TransportPreferenceConfig` in `blvm-node`).
+- **`blvm` CLI / `BLVM_NODE_TRANSPORT`**: human-readable forms such as **`tcp_only`**, **`iroh_only`**, **`hybrid`**.
+- **Options** (semantic):
+  - TCP-only — Bitcoin P2P compatible (default)
+  - Quinn-only — requires `quinn` feature
+  - Iroh-only — requires `iroh` feature
+  - Hybrid — TCP + Iroh; requires `iroh` feature
+  - All — requires both `quinn` and `iroh` features
 - **Description**: Transport protocol selection. See [Transport Abstraction](../node/transport-abstraction.md) for details.
 
 #### `max_peers`
@@ -104,7 +108,7 @@ Initial block download uses parallel IBD only. **`[ibd]`** (top-level): chunk_si
 - **Options**:
   - `"auto"` - Select by build features: RocksDB when `rocksdb` feature enabled (typical default), else TidesDB, else Redb, else Sled
   - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
-  - `"redb"` - Use redb database (production-ready)
+  - `"redb"` - Use redb (pure Rust; common when building **without** RocksDB)
   - `"sled"` - Use sled database (beta, fallback option)
   - `"tidesdb"` - Use TidesDB (if available)
 - **Description**: Database backend selection. System automatically falls back if preferred backend fails.
@@ -216,7 +220,7 @@ Fine-grained control over what data to keep:
 - `keep_headers`: Keep block headers (always required, default: `true`)
 - `keep_bodies_from_height`: Keep block bodies from this height onwards
 - `keep_commitments`: Keep UTXO commitments (if feature enabled)
-- `keep_filters`: Keep BIP158 filters (if feature enabled)
+- `keep_filters`: Keep BIP158 filters when pruning (requires filter data on disk)
 - `keep_filtered_blocks`: Keep spam-filtered blocks
 - `keep_witnesses`: Keep witness data (for SegWit verification)
 - `keep_tx_index`: Keep transaction index
@@ -233,9 +237,9 @@ generate_before_prune = true
 max_commitment_age_days = 0  # 0 = keep forever
 ```
 
-### BIP158 Filter Pruning (Experimental)
+### BIP158 Filter Pruning
 
-**Requires**: `bip158` feature enabled.
+**Requires**: BIP158 filter data (always available in default node builds).
 
 ```toml
 [storage.pruning.bip158_filters]
@@ -417,12 +421,17 @@ max_stem_hops = 2                       # Max stem hops before forced fluff
 ```toml
 [stratum_v2]
 enabled = false
-pool_url = "tcp://pool.example.com:3333"  # Pool URL for miner mode
-listen_addr = "127.0.0.1:3333"            # Listen address for server mode
-transport_preference = "tcp_only"
+# Optional pool / upstream URL for merge-mining or related orchestration (not the miner-facing TCP bind)
+pool_url = "tcp://pool.example.com:3333"
+# Informational on the node config only — dedicated miner TCP is bound by the blvm-stratum-v2 module
+listen_addr = "127.0.0.1:3333"
+p2p_stratum_demux = true                   # false = disable P2P Stratum TLV demux (module miner TCP unchanged)
+transport_preference = "tcponly"
 merge_mining_enabled = false
 secondary_chains = []
 ```
+
+**Note:** `transport_preference` inside `[stratum_v2]` follows the same serde rules as the top-level field; in TOML prefer `tcponly` / variants per `TransportPreferenceConfig`.
 
 ## Command-Line Arguments
 
@@ -432,7 +441,7 @@ Configuration can be overridden via command-line arguments. CLI overrides ENV an
 
 **Advanced:** `--assumevalid`, `--noassumevalid`, `--assumeutxo`, `--target-peer-count`, `--async-request-timeout`, `--module-max-cpu-percent`, `--module-max-memory-bytes`
 
-**Feature flags:** `--enable-stratum-v2`, `--enable-bip158`, `--enable-dandelion`, `--enable-sigop` and `--disable-*` counterparts
+**Feature flags:** `--enable-stratum-v2`, `--enable-dandelion`, `--enable-sigop` and `--disable-*` counterparts (each requires the matching **compile-time** feature in the `blvm` / `blvm-node` binary). **`--enable-bip158` / `--disable-bip158`** only record **logged** preference—BIP158 filter code is **always** included in default builds (no `bip158` Cargo feature).
 
 **Commands:** `start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `rpc`
 

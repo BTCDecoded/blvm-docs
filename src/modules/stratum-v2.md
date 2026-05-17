@@ -49,7 +49,7 @@ cargo blvm-module install blvm-stratum-v2
 
 ## Configuration
 
-Create a `config.toml` file in the module directory:
+Create a `config.toml` file **in the module’s directory** (this `[stratum_v2]` table is read by **`blvm-stratum-v2`**, not a substitute for the node’s top-level `blvm.toml` schema — avoid copying into the node file without reading [Stratum V2 mining](../node/mining-stratum-v2.md)).
 
 ```toml
 [stratum_v2]

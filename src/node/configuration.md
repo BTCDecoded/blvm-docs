@@ -18,37 +18,49 @@ Config path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, e
 
 ## Configuration File
 
-Create a `blvm.toml` configuration file:
+Create a `blvm.toml` configuration file. Keys are **top-level** or in nested tables such as `[storage]` — there is **no** `[network]` wrapper.
+
+**RPC bind address** is set by the **`blvm`** binary (`--rpc-addr` / `BLVM_RPC_ADDR`), not by a `port`/`host` table. The optional **`[rpc]`** table holds **RPC server limits** only (e.g. `max_request_size_bytes`, IP rate limits). **Auth** uses **`[rpc_auth]`**. See the [configuration reference](../reference/configuration-reference.md).
 
 ```toml
-[network]
-listen_addr = "127.0.0.1:8333"   # Network listening address (default: 127.0.0.1:8333)
-protocol_version = "BitcoinV1"    # Protocol version: "BitcoinV1" (mainnet), "Testnet3" (testnet), "Regtest" (regtest)
-transport_preference = "tcp_only" # Transport preference (default: "tcp_only")
-max_peers = 100                   # Maximum number of peers (default: 100)
-enable_self_advertisement = true  # Send own address to peers (default: true)
+# P2P listen address (NodeConfig default in library: 127.0.0.1:8333; `blvm` CLI default listen: 0.0.0.0:8333)
+listen_addr = "127.0.0.1:8333"
+
+# TOML uses serde enum tags (lowercase, no underscore): tcponly, irohonly, quinnonly, hybrid, all
+# The `blvm` CLI and BLVM_NODE_TRANSPORT accept forms like tcp_only
+transport_preference = "tcponly"
+
+max_peers = 100
+protocol_version = "BitcoinV1"  # mainnet-style; use "Regtest" / Testnet3 naming per protocol variant docs
+enable_self_advertisement = true
 
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto"  # Selects by build features: RocksDB when rocksdb enabled, then TidesDB, Redb, Sled
+database_backend = "auto"  # auto | rocksdb | tidesdb | redb | sled — see storage docs
 
-[rpc]
-enabled = true
-port = 8332
-host = "127.0.0.1"    # Bind address
-
-[mining]
-enabled = false
+# Optional: RPC limits only (not bind address)
+# [rpc]
+# max_request_size_bytes = 1048576
 ```
 
-**Default Values**:
-- `listen_addr`: `127.0.0.1:8333` (localhost, mainnet port)
-- `protocol_version`: `"BitcoinV1"` (Bitcoin mainnet)
-- `transport_preference`: `"tcp_only"` (TCP transport only)
-- `max_peers`: `100` (maximum peer connections)
-- `enable_self_advertisement`: `true` (advertise own address to peers)
+**Defaults (two layers)**:
+- **`blvm` operator binary** (no config file): `--network regtest`, `--rpc-addr 127.0.0.1:18332`, `--listen-addr 0.0.0.0:8333`. That RPC port is **not** Bitcoin Core’s usual regtest port; override `--rpc-addr` / `BLVM_RPC_ADDR` to match your deployment.
+- **`NodeConfig` library default** (used when embedding `blvm-node`): `listen_addr` localhost `8333`, `protocol_version` `"BitcoinV1"`, `transport_preference` TCP-only, `max_peers` 100.
 
-Configuration is organized in logical sections (network, storage, rpc, mempool, ibd, governance, etc.) in the node codebase. Initial block download uses parallel IBD only.
+Configuration is organized in logical sections (`storage`, `ibd`, `modules`, optional `[stratum_v2]`, etc.) in the node codebase. Initial block download uses parallel IBD only.
+
+## Bitcoin Core bitcoin.conf versus BLVM
+
+**BLVM does not read `bitcoin.conf`.** Runtime configuration is **`blvm.toml` / JSON**, **`blvm` CLI**, and **`BLVM_*`** environment variables.
+
+| Bitcoin Core (`bitcoin.conf` or CLI) | BLVM |
+|--------------------------------------|------|
+| `rpcuser` / `rpcpassword` | **`[rpc_auth]`** — `tokens`, `token_file`, or `RPC_AUTH_TOKENS`; HTTP **`Authorization: Bearer …`** (not HTTP basic user/password) |
+| `rpcbind` / `rpcport` | **`blvm --rpc-addr`** / **`BLVM_RPC_ADDR`** |
+| `port` (P2P) | **`listen_addr`** (top-level TOML) or **`--listen-addr`** |
+| `addnode=` | **`persistent_peers`** or the **`addnode`** RPC after startup |
+
+To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-core <path/to/bitcoin.conf>`** (or the **`convert-bitcoin-core-config`** shell/Rust tools in the **`blvm-node`** repo). **Review and normalize** the output: those tools may still emit **legacy** shapes (`[network]`, **`[rpc_auth]`** username/password, nested **`[transport_preference]`**) that valid **`NodeConfig`** TOML must not keep — see the [blvm-node Integration Guide — Migrating from `bitcoin.conf`](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#migrating-from-bitcoinconf). Always wire **`--rpc-addr`**, use **`[rpc_auth].tokens`** (Bearer auth), and set **`storage.data_dir`** separately. Converters are **not** a substitute for the [configuration reference](../reference/configuration-reference.md).
 
 ## IBD Configuration
 
@@ -86,6 +98,7 @@ You can also configure via environment variables (ENV overrides config file):
 ```bash
 export BLVM_NETWORK=testnet
 export BLVM_DATA_DIR=/var/lib/blvm
+# Use the RPC socket your node binds (mainnet-style 8332 here; CLI default without overrides is 127.0.0.1:18332)
 export BLVM_RPC_ADDR=127.0.0.1:8332
 export BLVM_IBD_EVICTION=dynamic
 export BLVM_NETWORK_TARGET_PEER_COUNT=125
@@ -112,7 +125,9 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 
 ### Feature Flags
 
-`--enable-stratum-v2`, `--enable-bip158`, `--enable-dandelion`, `--enable-sigop` and corresponding `--disable-*` flags.
+`--enable-stratum-v2`, `--enable-dandelion`, `--enable-sigop` and corresponding `--disable-*` flags (each requires that **compile-time** feature in the binary).
+
+**BIP158:** `--enable-bip158` / `--disable-bip158` adjust **logged** preference only—compact block filter support is **always** built into default `blvm-node` releases (there is no `bip158` Cargo feature flag).
 
 ### Advanced Options
 
@@ -137,23 +152,25 @@ The node uses multiple [storage backends](storage-backends.md) with automatic fa
 ### Database Backends
 
 - **auto** (default): Resolve by build features—RocksDB when `rocksdb` feature enabled, then TidesDB, Redb, Sled (see [Configuration Reference](../reference/configuration-reference.md))
-- **redb**, **rocksdb**, **sled**, **tidesdb**: Force a specific backend (see [Storage Backends](storage-backends.md))
+- **rocksdb**, **tidesdb**, **redb**, **sled**: Force a specific backend (see [Storage Backends](storage-backends.md)); **`auto`** matches `default_backend()` order in code
 
 ### Storage Configuration
 
 ```toml
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto"  # or "redb", "sled", "rocksdb", "tidesdb"
+database_backend = "auto"  # or "rocksdb", "tidesdb", "redb", "sled"
 
 [storage.cache]
 block_cache_mb = 100
 utxo_cache_mb = 50
 header_cache_mb = 10
 
+# Pruning uses PruningConfig — see configuration reference. Example: normal mode with ~288 recent blocks
 [storage.pruning]
-enabled = false
-keep_blocks = 288  # Keep last 288 blocks (2 days)
+mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
+auto_prune = true
+min_blocks_to_keep = 144
 ```
 
 ### Backend Selection
@@ -167,18 +184,14 @@ Storage cache sizes can be configured:
 
 ### Pruning
 
-Pruning reduces storage requirements by removing old block data:
+Pruning reduces storage requirements by trimming old block data. **`PruningConfig`** defaults in code use an **aggressive-style** mode with UTXO-commitment expectations; **validate** your build features (`utxo-commitments` for aggressive) or choose **`type = "normal"`** / **`type = "disabled"`** explicitly. See [configuration reference](../reference/configuration-reference.md) and `blvm-node` pruning examples.
 
 ```toml
 [storage.pruning]
-enabled = true
-keep_blocks = 288  # Keep last 288 blocks (2 days)
+mode = { type = "disabled" }
+auto_prune = false
+min_blocks_to_keep = 144
 ```
-
-**Pruning Modes:**
-- **Disabled** (default): Keep all blocks (full archival node)
-- **Light client**: Keep last N blocks (configurable)
-- **Full pruning**: Remove all blocks, keep only UTXO set (planned)
 
 **Note**: Pruning reduces storage but limits ability to serve historical blocks to peers.
 
@@ -186,19 +199,23 @@ keep_blocks = 288  # Keep last 288 blocks (2 days)
 
 ### Transport Options
 
-Configure transport selection (see [Transport Abstraction](transport-abstraction.md)):
+Configure transport selection at the **top level** of `blvm.toml` (see [Transport Abstraction](transport-abstraction.md)):
 
 ```toml
-[network]
-transport_preference = "tcp_only"  # Options: "tcp_only" (default), "iroh_only" (requires iroh feature), "quinn_only" (requires quinn feature), "hybrid" (requires iroh feature), "all" (requires both iroh and quinn features)
+# File (TOML): serde tags — tcponly | irohonly | quinnonly | hybrid | all
+transport_preference = "tcponly"
 ```
 
+**Mapping (CLI / ENV vs config file)**:
+- **TOML/JSON** on `NodeConfig`: lowercase enum tags as above (`tcponly`, …).
+- **`blvm` flags / `BLVM_NODE_TRANSPORT`:** e.g. `tcp_only`, `iroh_only`, `hybrid` (see `blvm --help`).
+
 **Available Transport Options**:
-- `"tcp_only"` - TCP transport only (default, Bitcoin P2P compatible)
-- `"iroh_only"` - Iroh QUIC transport only (requires `iroh` feature)
-- `"quinn_only"` - Quinn QUIC transport only (requires `quinn` feature)
-- `"hybrid"` - TCP + Iroh hybrid mode (requires `iroh` feature)
-- `"all"` - All transports enabled (requires both `iroh` and `quinn` features)
+- **TCP-only** (`tcponly` in file) — default, Bitcoin P2P compatible
+- **Iroh-only** (`irohonly`) — requires `iroh` feature
+- **Quinn-only** (`quinnonly`) — requires `quinn` feature
+- **Hybrid** (`hybrid`) — TCP + Iroh; requires `iroh` feature
+- **All** (`all`) — requires both `quinn` and `iroh` features
 
 **Feature Requirements**:
 - `iroh` feature: Enables Iroh QUIC transport with NAT traversal
@@ -272,17 +289,18 @@ socket_dir = "data/modules/sockets"  # Directory for IPC sockets (default: "data
 enabled_modules = ["blvm-lightning", "blvm-mesh"]  # List of enabled modules (empty = auto-discover all)
 ```
 
-**Module Resource Limits** (optional):
+**Module resource limits** (optional) use the **`[module_resource_limits]`** table on **`NodeConfig`**, not `[modules.resource_limits]`:
+
 ```toml
-[modules.resource_limits]
-default_max_cpu_percent = 50              # Max CPU usage per module (default: 50%)
-default_max_memory_bytes = 536870912      # Max memory per module (default: 512 MB)
-default_max_file_descriptors = 256        # Max file descriptors per module (default: 256)
-default_max_child_processes = 10          # Max child processes per module (default: 10)
-module_startup_wait_millis = 100          # Wait time for module startup (default: 100ms)
-module_socket_timeout_seconds = 5         # IPC socket timeout (default: 5s)
-module_socket_check_interval_millis = 100 # Socket check interval (default: 100ms)
-module_socket_max_attempts = 50           # Max socket connection attempts (default: 50)
+[module_resource_limits]
+default_max_cpu_percent = 50
+default_max_memory_bytes = 536870912
+default_max_file_descriptors = 256
+default_max_child_processes = 10
+module_startup_wait_millis = 100
+module_socket_timeout_seconds = 5
+module_socket_check_interval_millis = 100
+module_socket_max_attempts = 50
 ```
 
 See [Module System](../architecture/module-system.md) for module configuration details.

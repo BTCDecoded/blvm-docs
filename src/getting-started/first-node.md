@@ -144,7 +144,7 @@ protocol_version = "Testnet3"
 
 [storage]
 data_dir = "~/.local/share/blvm-testnet"
-database_backend = "redb"
+database_backend = "auto"  # default builds: resolves to RocksDB when `rocksdb` feature is on
 
 [rbf]
 mode = "standard"
@@ -166,7 +166,7 @@ protocol_version = "BitcoinV1"
 
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "redb"
+database_backend = "auto"  # same as omitting key; use "redb" only to force pure-Rust backend
 
 [storage.cache]
 # Example values; canonical defaults in [Configuration Reference](../reference/configuration-reference.md)
@@ -204,6 +204,8 @@ The node stores blockchain data (blocks, UTXO set, chain state, and indexes) in 
 You need **a peer that already has blocks**, or a **datadir that already contains** those blocks. A lone BLVM on regtest with no peers stays at genesis — that is not “missing a feature,” it is how regtest is defined (no public seeds).
 
 **1. Second regtest full node (typical way to create blocks)**
+
+The commands below use **Bitcoin Core** (`bitcoind` / `bitcoin-cli`) **only** as a separate regtest peer to generate blocks. They are **not** BLVM configuration: your BLVM node still uses **`blvm.toml`** and the **`blvm`** binary, and **must not** copy Core’s **`rpcuser`** / **`rpcpassword`** into BLVM (**`[rpc_auth]`** uses tokens / Bearer auth instead).
 
 Run a reference regtest daemon on default P2P **`127.0.0.1:18444`**, mine some blocks, then run BLVM on a **different** local P2P port and peer **outbound** to it. Example using the common `bitcoind` / `bitcoin-cli` CLI:
 

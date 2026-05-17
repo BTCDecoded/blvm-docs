@@ -4,31 +4,28 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs
-  - Mainnet: `http://localhost:8332` (default)
-  - Testnet/Regtest: `http://localhost:18332` (default)
-- **REST API**: Modern RESTful interface at `http://localhost:8080/api/v1/`
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`** (default `127.0.0.1:18332` for all networks unless you override).
+  - Common setups: mainnet-style `127.0.0.1:8332`, testnet `127.0.0.1:18332`.
+- **REST API** (optional): Served only when **`blvm-node`** is built with the **`rest-api`** feature and your runner enables it with a bind address. There is **no** separate fixed port in a minimal **`blvm`** deployment; examples below use `http://localhost:8080` only as an illustration.
 
-Both APIs provide access to the same functionality, with the REST API offering better type safety, clearer error messages, and improved developer experience.
+JSON-RPC is the portable operator surface. REST availability depends on build and wiring.
 
 ## Connection
 
-Default RPC endpoints:
-- Mainnet: `http://localhost:8332`
-- Testnet/Regtest: `http://localhost:18332`
-
-RPC ports are configurable. See [Node Configuration](configuration.md) for details.
+Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. Common examples are `http://127.0.0.1:8332` (many mainnet setups) or `http://127.0.0.1:18332` (common for testnet or the **`blvm`** default listen). There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
 
 ## Authentication
 
-For production use, configure RPC authentication:
+For production use, configure RPC authentication with **`[rpc_auth]`** (tokens, optional `token_file` / `certificates`) — not username/password tables:
 
 ```toml
-[rpc]
-enabled = true
-username = "rpcuser"
-password = "rpcpassword"
+[rpc_auth]
+required = true
+tokens = ["your-long-random-token"]
+# token_file = "/etc/blvm/rpc_tokens.txt"
 ```
+
+Pass the token on each request: `Authorization: Bearer <token>` (or `RPC_AUTH_TOKENS` for multiple comma-separated tokens). **`[rpc]`** in `NodeConfig` is only for **limits / rate limits**, not credentials.
 
 ## Example Requests
 
@@ -300,22 +297,18 @@ The RPC API implements JSON-RPC 2.0 methods documented in the [Available Methods
 
 ### Overview
 
-The REST API provides a modern, developer-friendly interface alongside the JSON-RPC API. It uses standard HTTP methods and status codes, with JSON request/response bodies.
+The REST API provides a modern, developer-friendly interface alongside JSON-RPC when enabled. It uses standard HTTP methods and status codes, with JSON request/response bodies.
 
-**Base URL**: `http://localhost:8080/api/v1/`
+**Base URL** (illustrative bind): `http://localhost:8080/api/v1/` — replace host/port with your REST bind address.
 
 **Code**: [rest/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/mod.rs)
 
 ### Authentication
 
-REST API authentication works the same as JSON-RPC:
+REST uses the same **`RpcAuthConfig`** manager as JSON-RPC when enabled:
 
 ```bash
-# Token-based authentication
 curl -H "Authorization: Bearer <token>" http://localhost:8080/api/v1/node/uptime
-
-# Basic authentication (if configured)
-curl -u username:password http://localhost:8080/api/v1/node/uptime
 ```
 
 ### Rate Limiting

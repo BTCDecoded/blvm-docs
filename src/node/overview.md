@@ -138,7 +138,7 @@ graph TB
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
 
 ### Storage Features
-- [Multiple database backends](storage-backends.md) with abstraction layer (redb, sled, rocksdb)
+- [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → RocksDB** in typical release builds; optional redb, sled, tidesdb)
 - [Common on-disk chain layouts](storage-backends.md#rocksdb-optional-common-on-disk-layouts) via RocksDB backend
 - Automatic backend fallback on failure
 - Pruning support

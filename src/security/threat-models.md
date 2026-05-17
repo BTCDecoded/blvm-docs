@@ -186,7 +186,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Implement proper Bitcoin double SHA256 hashing
 - Review **Cargo.toml** dependency constraints and run **`cargo audit`**
 - Add network protocol input validation
-- Replace sled with redb (production-ready database)
+- Prefer **`database_backend = "auto"`** with supported backends over ad-hoc defaults; use **redb** when omitting RocksDB for pure-Rust deployments
 - Add DoS protection mechanisms
 - Add RPC authentication
 - Implement rate limiting
@@ -302,9 +302,9 @@ Eclipse attack prevention:
 
 Storage layer security:
 
-- **redb Default**: Production-ready database (pure Rust, ACID)
-- **sled Fallback**: Available as fallback (beta quality)
-- **Database Abstraction**: Allows switching backends
+- **`auto` / RocksDB**: Default path in typical builds (performance + common layout interop; see storage docs)
+- **redb / sled / tidesdb**: Alternative backends with different trust and build surfaces; **redb** is pure Rust when RocksDB is not used
+- **Database Abstraction**: Allows switching backends explicitly
 - **Storage Bounds**: Storage bounds checking
 
 **Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)

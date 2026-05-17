@@ -28,7 +28,7 @@ Miners connect to **`blvm-stratum-v2`**’s configured `listen_addr`. The node d
 
 ### P2P ingress
 
-When the `stratum-v2` feature is enabled, the network layer may detect Stratum V2 TLV on P2P bytes and emit **`NetworkMessage::StratumV2MessageReceived`** for dispatch to modules.
+When the `stratum-v2` feature is enabled and **`[stratum_v2].p2p_stratum_demux`** is **`true`** (default), the network layer may detect Stratum V2 TLV on P2P bytes and emit **`NetworkMessage::StratumV2MessageReceived`** for dispatch to modules. Set **`p2p_stratum_demux = false`** to disable that path (miner TCP on **`blvm-stratum-v2`** is unchanged).
 
 **Code**: [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), [network_message_dispatch.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_message_dispatch.rs), [network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (message variants)
 
@@ -52,12 +52,27 @@ Mining traffic uses the same transport stack as P2P; see [Transport abstraction]
 
 ## Configuration
 
+**Node `blvm.toml`** (merge-mining / pool-related fields and P2P demux — **does not** open miner TCP):
+
 ```toml
 [stratum_v2]
 enabled = true
-pool_url = "tcp://pool.example.com:3333"  # or "iroh://<nodeid>"
-# Dedicated miner TCP: set on the module; same key in node config is merge-mining / informational
+pool_url = "tcp://pool.example.com:3333"  # optional upstream / orchestration
+# listen_addr here is informational on the node; miners connect to the module’s listen_addr
 listen_addr = "0.0.0.0:3333"
+p2p_stratum_demux = true   # false = disable P2P Stratum TLV demux only
+transport_preference = "tcponly"
+merge_mining_enabled = false
+secondary_chains = []
+```
+
+**Module `config.toml`** (inside the `blvm-stratum-v2` module directory — **this** is where miners connect):
+
+```toml
+[stratum_v2]
+enabled = true
+listen_addr = "0.0.0.0:3333"
+pool_url = "stratum+tcp://pool.example.com:3333"  # optional pool mode
 ```
 
 **Code**: [StratumV2Config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/rpc.rs)
