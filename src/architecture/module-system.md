@@ -268,8 +268,8 @@ author = "Alice <alice@example.com>"
 [governance]
 tier = "application"
 maintainers = ["alice", "bob", "charlie"]
-threshold = "2-of-3"
-review_period_days = 14
+threshold = "[[gov:layer_5_signatures]]"
+review_period_days = [[gov:layer_5_review_days]]
 
 # Signatures
 [signatures]
@@ -277,7 +277,7 @@ maintainers = [
     { name = "alice", key = "02abc...", signature = "..." },
     { name = "bob", key = "03def...", signature = "..." }
 ]
-threshold = "2-of-3"
+threshold = "[[gov:layer_5_signatures]]"
 
 # Binary
 [binary]

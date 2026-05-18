@@ -70,7 +70,7 @@ Follow these guidelines when making changes:
 - **Write tests for all new functionality** - See [Testing Infrastructure](testing.md) for details
 - **Ensure existing tests continue to pass** - Run `cargo test` before committing
 - **Add integration tests** for complex features
-- **Aim for high test coverage** - Consensus-critical code requires >95% coverage
+- **Aim for high test coverage** — consensus code is exercised by unit tests, integration tests, fuzzing, and (where applicable) BLVM Specification Lock; **CI does not enforce a single numeric coverage floor on every PR** (optional coverage workflows exist per repository). Add tests that cover new behavior and edge cases; follow each crate’s CI and `CONTRIBUTING` for what must pass before merge.
 
 #### Documentation
 
@@ -174,10 +174,10 @@ Before submitting your PR, ensure:
 ### What Happens After You Submit a PR
 
 1. **Automated CI runs** - Tests, linting, and checks run automatically
-2. **Governance tier classification** - Your PR is automatically classified into a [governance tier](../governance/layer-tier-model.md)
+2. **Governance classification** — Your PR is assigned a **governance tier** and evaluated on a **repository layer**; effective rules combine both (see [Layer-Tier Model](../governance/layer-tier-model.md))
 3. **Maintainers review** - Code review by project maintainers
 4. **Signatures required** - Maintainers must cryptographically sign approval (see [PR Process](pr-process.md))
-5. **Review period** - Tier-specific review period must elapse (see [PR Process](pr-process.md) for details)
+5. **Review period** — The effective **layer + tier** review period must elapse (see [PR Process](pr-process.md))
 6. **Merge** - Once all requirements are met, your PR is merged
 
 ### Review Criteria
@@ -193,20 +193,24 @@ Reviewers will check:
 
 ### Getting Your PR Reviewed
 
-- **Be patient** - Review periods vary by tier (7-180 days)
+- **Be patient** — effective wait times follow **layer + tier** (see [Layer-Tier Model](../governance/layer-tier-model.md)); they are not always the tier-only numbers ([[gov:tier_1_review_days]]–[[gov:tier_5_review_days]] days).
 - **Respond to feedback** - Address review comments promptly
 - **Keep PRs small** - Smaller PRs are reviewed faster
 - **Update PR description** - Keep it current as you make changes
 
-## Governance Tiers
+## Governance tiers and review time
 
-Your PR will be automatically classified into a governance tier based on the changes. See [PR Process](pr-process.md) for detailed information about:
+Your PR gets a **governance tier** (what kind of change) and applies on a **repository layer** (which repo). **Signature requirements and review clocks use the more restrictive of layer vs tier** (“most restrictive wins”). See [Layer-Tier Model](../governance/layer-tier-model.md) and [PR Process](pr-process.md).
 
-- **Tier 1: Routine Maintenance** - Bug fixes, documentation, performance optimizations (7 day review, see [Layer-Tier Model](../governance/layer-tier-model.md))
-- **Tier 2: Feature Changes** - New RPC methods, P2P changes, wallet features (30 day review)
-- **Tier 3: Consensus-Adjacent** - Changes affecting consensus validation code (90 day review)
-- **Tier 4: Emergency Actions** - Critical security patches (0 day review)
-- **Tier 5: Governance Changes** - Changes to governance rules (180 day review)
+The list below is **tier-only** review-period floors **when the repository layer does not impose something stricter** (the matrix in the Layer-Tier Model shows combined results—for example, **Tier 1** in **Layer 3** can still be **[[gov:matrix_3_1_review_days]] days**).
+
+- **Tier 1: Routine maintenance** — bug fixes, documentation, performance optimizations in non-consensus areas; **[[gov:tier_1_review_days]] days** tier floor
+- **Tier 2: Feature changes** — new RPC, P2P, wallet, SDK features; **[[gov:tier_2_review_days]] days** tier floor
+- **Tier 3: Consensus-adjacent** — changes affecting consensus validation paths; **[[gov:tier_3_review_days]] days** tier floor
+- **Tier 4: Emergency actions** — critical security / network-threatening PR path; **[[gov:tier_4_review_days]] days** once requirements met
+- **Tier 5: Governance changes** — rules that change governance itself; **[[gov:tier_5_review_days]] days** tier floor
+
+**Emergency response classes** (critical / urgent / elevated incidents, **[[gov:emergency_critical_activation]] keyholder activation**) are separate from these PR tiers; see [PR Process → Emergency Procedures](pr-process.md#emergency-procedures).
 
 ## Testing Your Changes
 
@@ -233,7 +237,7 @@ See [CI/CD Workflows](ci-cd-workflows.md) for detailed information about what ru
 
 - **Discussions** - Use GitHub Discussions for questions
 - **Issues** - Use GitHub Issues for bugs and feature requests
-- **Security** - Use private channels for security issues (see SECURITY.md in each repo)
+- **Security** — report to **security@thebitcoincommons.org** and follow **SECURITY.md** in the relevant repository for disclosure details
 
 ## Recognition
 

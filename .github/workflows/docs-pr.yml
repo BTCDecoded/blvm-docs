@@ -1,0 +1,92 @@
+name: Documentation PR
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'book.toml'
+      - 'custom.css'
+      - 'mdbook-governance-vars/**'
+      - 'scripts/**'
+      - 'docs/**'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/docs-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-book:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache governance-vars crate
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/
+            ~/.cargo/git/
+            mdbook-governance-vars/target/
+          key: ${{ runner.os }}-gov-vars-${{ hashFiles('mdbook-governance-vars/Cargo.lock') }}
+
+      - name: Fetch mdBook include sources (Orange Paper, governance)
+        run: |
+          set -eux
+          mkdir -p modules
+          if [ ! -f modules/blvm-spec/THE_ORANGE_PAPER.md ]; then
+            rm -rf modules/blvm-spec
+            git clone --depth 1 https://github.com/BTCDecoded/blvm-spec.git modules/blvm-spec
+          fi
+          need_governance_clone=false
+          if [ ! -f modules/governance/README.md ] || [ ! -f modules/governance/GOVERNANCE.md ]; then
+            need_governance_clone=true
+          fi
+          if [ ! -f modules/governance/config/action-tiers.yml ] \
+            || [ ! -f modules/governance/config/repository-layers.yml ] \
+            || [ ! -f modules/governance/config/emergency-tiers.yml ]; then
+            need_governance_clone=true
+          fi
+          if [ "$need_governance_clone" = true ]; then
+            rm -rf modules/governance
+            git clone --depth 1 https://github.com/BTCDecoded/governance.git modules/governance
+          fi
+
+      - name: Verify book inputs (includes + governance config)
+        run: ./scripts/verify-book-inputs.sh
+
+      - name: Check governance policy literals use [[gov:…]]
+        run: ./scripts/check-governance-literals.sh
+
+      - name: Test governance-vars (allowlist + YAML vs threshold.rs drift)
+        run: cargo test --locked --manifest-path mdbook-governance-vars/Cargo.toml
+
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: '0.4.43'
+
+      - name: Install governance-vars preprocessor
+        run: cargo install --locked --path mdbook-governance-vars
+
+      - name: Build book
+        run: |
+          set -o pipefail
+          mdbook build 2>&1 | tee mdbook-build.log
+          mdbook_status=${PIPESTATUS[0]}
+          if [ "$mdbook_status" -ne 0 ]; then
+            echo "::error::mdbook build exited with status $mdbook_status"
+            exit "$mdbook_status"
+          fi
+          if grep -qE '^ERROR |^ERROR\]' mdbook-build.log || grep -q 'Failed to deserialize' mdbook-build.log; then
+            echo "::error::mdBook reported configuration or include errors (see log above)"
+            exit 1
+          fi

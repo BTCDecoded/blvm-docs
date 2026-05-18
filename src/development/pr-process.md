@@ -32,11 +32,11 @@ Maintainers review your code and cryptographically sign approval:
 
 Each tier has a specific review period that must elapse:
 
-- **Tier 1**: 7 days
-- **Tier 2**: 30 days
-- **Tier 3**: 90 days
-- **Tier 4**: 0 days (immediate)
-- **Tier 5**: 180 days
+- **Tier 1**: [[gov:lifecycle_tier1_days]] days
+- **Tier 2**: [[gov:lifecycle_tier2_days]] days
+- **Tier 3**: [[gov:lifecycle_tier3_days]] days
+- **Tier 4**: [[gov:lifecycle_tier4_days]] days (immediate)
+- **Tier 5**: [[gov:lifecycle_tier5_days]] days
 
 The review period starts when the PR is opened and all required signatures are collected.
 
@@ -56,8 +56,8 @@ The PR can be merged.
 **Scope**: Bug fixes, documentation, performance optimizations
 
 **Requirements**:
-- **Signatures**: 3-of-5 maintainers
-- **Review Period**: 7 days
+- **Signatures**: [[gov:tier_1_signatures]] maintainers
+- **Review Period**: [[gov:tier_1_review_days]] days
 - **Restriction**: Non-consensus changes only
 
 **Examples**:
@@ -71,8 +71,8 @@ The PR can be merged.
 **Scope**: New RPC methods, P2P changes, wallet features
 
 **Requirements**:
-- **Signatures**: 4-of-5 maintainers
-- **Review Period**: 30 days
+- **Signatures**: [[gov:tier_2_signatures]] maintainers
+- **Review Period**: [[gov:tier_2_review_days]] days
 - **Requirement**: Must include technical specification
 
 **Examples**:
@@ -86,8 +86,8 @@ The PR can be merged.
 **Scope**: Changes affecting consensus validation code
 
 **Requirements**:
-- **Signatures**: 5-of-5 maintainers
-- **Review Period**: 90 days
+- **Signatures**: [[gov:tier_3_signatures]] maintainers
+- **Review Period**: [[gov:tier_3_review_days]] days
 - **Requirement**: Formal verification (BLVM Specification Lock) required
 
 **Examples**:
@@ -102,14 +102,14 @@ The PR can be merged.
 **Scope**: Critical security patches, network-threatening bugs
 
 **Requirements**:
-- **Signatures**: 4-of-5 maintainers
-- **Review Period**: 0 days (immediate)
+- **Signatures**: [[gov:tier_4_signatures]] maintainers
+- **Review Period**: [[gov:tier_4_review_days]] days (immediate)
 - **Requirement**: Post-mortem required
 
-**Sub-tiers**:
-- **Critical Emergency**: Network-threatening (7 day maximum duration)
-- **Urgent Security**: Security issues (30 day maximum duration)
-- **Elevated Priority**: Important fixes (90 day maximum duration)
+**Severity classes** (incident path; see [Emergency Procedures](#emergency-procedures)):
+- **Critical** — network-threatening (short maximum duration once activated)
+- **Urgent security** — serious issues (intermediate duration cap)
+- **Elevated priority** — important but not critical (longer cap)
 
 **Examples**:
 - Critical security vulnerability
@@ -121,8 +121,8 @@ The PR can be merged.
 **Scope**: Changes to governance rules themselves
 
 **Requirements**:
-- **Signatures**: Special process (5-of-7 maintainers + 2-of-3 emergency keyholders)
-- **Review Period**: 180 days
+- **Signatures**: Special process (5-of-7 maintainers + 2-of-3 emergency keyholders) — see [governance `GOVERNANCE.md`](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md) and [`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md) (not the `action-tiers.yml` row alone)
+- **Review Period**: [[gov:tier_5_review_days]] days
 
 **Examples**:
 - Changing signature requirements
@@ -140,10 +140,10 @@ When both apply, the system uses **"most restrictive wins"** rule:
 
 | Example | Layer | Tier | Final Signatures | Final Review | Source |
 |---------|-------|------|------------------|--------------|---------|
-| Bug fix in Protocol Engine | 3 | 1 | 4-of-5 | 90 days | Layer 3 |
-| New feature in Developer SDK | 5 | 2 | 4-of-5 | 30 days | Tier 2 |
-| Consensus change in Orange Paper | 1 | 3 | 6-of-7 | 180 days | Layer 1 |
-| Emergency fix in Reference Node | 4 | 4 | 4-of-5 | 0 days | Tier 4 |
+| Bug fix in Protocol Engine | 3 | 1 | [[gov:matrix_3_1_signatures]] | [[gov:matrix_3_1_review_days]] days | [[gov:matrix_3_1_source]] |
+| New feature in Developer SDK | 5 | 2 | [[gov:matrix_5_2_signatures]] | [[gov:matrix_5_2_review_days]] days | [[gov:matrix_5_2_source]] |
+| Consensus change in Orange Paper | 1 | 3 | [[gov:matrix_1_3_signatures]] | [[gov:matrix_1_3_review_days]] days | [[gov:matrix_1_3_source]] |
+| Emergency fix in Reference Node | 4 | 4 | [[gov:matrix_4_4_signatures]] | [[gov:matrix_4_4_review_days]] days | [[gov:matrix_4_4_source]] |
 
 See [Layer-Tier Model](../governance/layer-tier-model.md) for the complete decision matrix.
 
@@ -151,10 +151,10 @@ See [Layer-Tier Model](../governance/layer-tier-model.md) for the complete decis
 
 In addition to tier requirements, layers have their own signature requirements:
 
-- **Layer 1-2 (Constitutional)**: 6-of-7 maintainers, 180 days (365 for consensus changes)
-- **Layer 3 (Implementation)**: 4-of-5 maintainers, 90 days
-- **Layer 4 (Application)**: 3-of-5 maintainers, 60 days
-- **Layer 5 (Extension)**: 2-of-3 maintainers, 14 days
+- **Layer 1–2 (Constitutional)**: [[gov:layer_1_signatures]] maintainers, [[gov:layer_1_review_days]] days ([[gov:layer_1_consensus_review_days]] days for consensus changes)
+- **Layer 3 (Implementation)**: [[gov:layer_3_signatures]] maintainers, [[gov:layer_3_review_days]] days
+- **Layer 4 (Application)**: [[gov:layer_4_signatures]] maintainers, [[gov:layer_4_review_days]] days
+- **Layer 5 (Extension)**: [[gov:layer_5_signatures]] maintainers, [[gov:layer_5_review_days]] days
 
 The most restrictive requirement (layer or tier) applies.
 
@@ -184,26 +184,30 @@ The Governance App cryptographically verifies each signature:
 
 ## Emergency Procedures
 
-The system includes a three-tiered emergency response system:
+The numbered **governance tiers** (Tier 1–5) above describe normal pull-request classification. **Emergency response classes** are a separate axis: when incident handling is escalated, parameters follow the [governance](https://github.com/BTCDecoded/governance) repo's `config/emergency-tiers.yml` (activation by **[[gov:emergency_critical_activation]] emergency keyholders**, then the thresholds below). **Do not confuse "Critical emergency" here with governance Tier 1**, which means routine maintenance PRs.
 
-### Tier 1: Critical Emergency (Network-threatening)
+**Governance Tier 4** (PR classification for emergency merges) remains **[[gov:tier_4_signatures]]** maintainers and **[[gov:tier_4_review_days]]-day** review as in the Tier 4 section above. The classes below describe **post-activation** incident governance on the wider maintainer pool where the YAML specifies **7** eligible signers.
 
-- **Review period**: 0 days
-- **Signatures**: 4-of-7 maintainers
-- **Activation**: 5-of-7 emergency keyholders required
-- **Maximum duration**: 7 days
+### Critical emergency (network-threatening)
 
-### Tier 2: Urgent Security Issue
+- **Review period**: [[gov:emergency_critical_review_days]] days
+- **Maintainer signatures**: [[gov:emergency_critical_signature]] (per `emergency-tiers.yml`)
+- **Activation**: [[gov:emergency_critical_activation]] emergency keyholders
+- **Maximum duration**: [[gov:emergency_critical_max_days]] days
 
-- **Review period**: 7 days
-- **Signatures**: 5-of-7 maintainers
-- **Maximum duration**: 30 days
+### Urgent security issue
 
-### Tier 3: Elevated Priority
+- **Review period**: [[gov:emergency_urgent_review_days]] days
+- **Maintainer signatures**: [[gov:emergency_urgent_signature]]
+- **Activation**: [[gov:emergency_urgent_activation]] emergency keyholders
+- **Maximum duration**: [[gov:emergency_urgent_max_days]] days
 
-- **Review period**: 30 days
-- **Signatures**: 6-of-7 maintainers
-- **Maximum duration**: 90 days
+### Elevated priority
+
+- **Review period**: [[gov:emergency_elevated_review_days]] days
+- **Maintainer signatures**: [[gov:emergency_elevated_signature]]
+- **Activation**: [[gov:emergency_elevated_activation]] emergency keyholders
+- **Maximum duration**: [[gov:emergency_elevated_max_days]] days
 
 ## How to Get Your PR Reviewed
 
@@ -216,12 +220,13 @@ The system includes a three-tiered emergency response system:
 
 ### 2. Be Patient
 
-Review periods vary by tier:
-- **Tier 1**: 7 days minimum
-- **Tier 2**: 30 days minimum
-- **Tier 3**: 90 days minimum
-- **Tier 4**: 0 days (immediate)
-- **Tier 5**: 180 days minimum
+Effective review time is set by **combining [repository layer](../governance/layer-tier-model.md) and governance tier** (most restrictive wins). The bullets below are **tier-only** floors where the layer does not impose something stricter—for example, a **Tier 1** change in a **Layer 3** repository can still require **[[gov:matrix_3_1_review_days]] days** (see the matrix in the Layer-Tier Model).
+
+- **Tier 1**: [[gov:tier_1_review_days]] days minimum when layer allows
+- **Tier 2**: [[gov:tier_2_review_days]] days minimum when layer allows
+- **Tier 3**: [[gov:tier_3_review_days]] days minimum when layer allows
+- **Tier 4**: [[gov:tier_4_review_days]] days (immediate once signatures and checks are met)
+- **Tier 5**: [[gov:tier_5_review_days]] days minimum when layer allows
 
 ### 3. Respond to Feedback
 
@@ -257,7 +262,7 @@ The Governance App automatically classifies your PR. You'll see the tier in the 
 
 ### Can I speed up the review process?
 
-No. Review periods are fixed by tier to ensure adequate scrutiny. However, you can:
+No. Effective review periods are fixed by **layer + tier** rules to ensure adequate scrutiny. However, you can:
 - Ensure your PR is ready (all checks pass)
 - Respond to feedback quickly
 - Keep PRs small and focused

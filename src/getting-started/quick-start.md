@@ -123,7 +123,7 @@ blvm-verify release \
   --version v1.0.0 \
   --commit abc123 \
   --signatures sig1.txt,sig2.txt,sig3.txt \
-  --threshold 3-of-5 \
+  --threshold [[gov:tier_1_signatures]] \
   --pubkeys keys.json
 ```
 

@@ -2,48 +2,50 @@
 
 Bitcoin Commons uses multisig thresholds for governance decisions, with different thresholds based on the layer and tier of the change. See [Layer-Tier Model](layer-tier-model.md) for details.
 
+Policy numbers below are expanded from governance YAML at book build time. **Action tiers** (PR classification 1–5) are documented separately in [governance `docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md) and [`config/action-tiers.yml`](https://github.com/BTCDecoded/governance/blob/main/config/action-tiers.yml).
+
 ## Layer-Based Thresholds
 
 ### Constitutional Layers (Layer 1-2)
-- **Orange Paper** (Layer 1): 6-of-7 maintainers, 180 days (365 for consensus changes)
-- **blvm-consensus** (Layer 2): 6-of-7 maintainers, 180 days (365 for consensus changes)
+- **Orange Paper** (Layer 1): [[gov:layer_1_signatures]] maintainers, [[gov:layer_1_review_days]] days ([[gov:layer_1_consensus_review_days]] days for consensus changes)
+- **blvm-consensus** (Layer 2): [[gov:layer_2_signatures]] maintainers, [[gov:layer_2_review_days]] days ([[gov:layer_2_consensus_review_days]] days for consensus changes)
 
 ### Implementation Layer (Layer 3)
-- **blvm-protocol**: 4-of-5 maintainers, 90 days
+- **blvm-protocol**: [[gov:layer_3_signatures]] maintainers, [[gov:layer_3_review_days]] days
 
 ### Application Layer (Layer 4)
-- **blvm-node**: 3-of-5 maintainers, 60 days
+- **blvm-node**: [[gov:layer_4_signatures]] maintainers, [[gov:layer_4_review_days]] days
 
 ### Extension Layer (Layer 5)
-- **blvm-sdk**: 2-of-3 maintainers, 14 days
-- **governance**: 2-of-3 maintainers, 14 days
-- **blvm-commons**: 2-of-3 maintainers, 14 days
+- **blvm-sdk**: [[gov:layer_5_signatures]] maintainers, [[gov:layer_5_review_days]] days
+- **governance**: [[gov:layer_5_signatures]] maintainers, [[gov:layer_5_review_days]] days
+- **blvm-commons**: [[gov:layer_5_signatures]] maintainers, [[gov:layer_5_review_days]] days
 
 ## Tier-Based Thresholds
 
 ### Tier 1: Routine Maintenance
-- **Signatures**: 3-of-5 maintainers
-- **Review Period**: 7 days
+- **Signatures**: [[gov:tier_1_signatures]] maintainers
+- **Review Period**: [[gov:tier_1_review_days]] days
 - **Scope**: Bug fixes, documentation, performance optimizations
 
 ### Tier 2: Feature Changes
-- **Signatures**: 4-of-5 maintainers
-- **Review Period**: 30 days
+- **Signatures**: [[gov:tier_2_signatures]] maintainers
+- **Review Period**: [[gov:tier_2_review_days]] days
 - **Scope**: New RPC methods, P2P changes, wallet features
 
 ### Tier 3: Consensus-Adjacent
-- **Signatures**: 5-of-5 maintainers
-- **Review Period**: 90 days
+- **Signatures**: [[gov:tier_3_signatures]] maintainers
+- **Review Period**: [[gov:tier_3_review_days]] days
 - **Scope**: Changes affecting consensus validation code
 
 ### Tier 4: Emergency Actions
-- **Signatures**: 4-of-5 maintainers
-- **Review Period**: 0 days (immediate)
+- **Signatures**: [[gov:tier_4_signatures]] maintainers
+- **Review Period**: [[gov:tier_4_review_days]] days (immediate)
 - **Scope**: Critical security patches, network-threatening bugs
 
 ### Tier 5: Governance Changes
-- **Signatures**: 5-of-5 maintainers (special process)
-- **Review Period**: 180 days
+- **Signatures**: Special process — see [governance `GOVERNANCE.md`](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md) (not the `tier_5_governance` row in `action-tiers.yml` alone)
+- **Review Period**: [[gov:tier_5_review_days]] days
 - **Scope**: Changes to governance rules themselves
 
 ## Combined Model

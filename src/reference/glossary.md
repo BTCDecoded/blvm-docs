@@ -24,7 +24,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Bitcoin Commons** - Forkable governance framework applying Elinor Ostrom's commons management principles through cryptographic enforcement. See [Governance Overview](../governance/overview.md).
 
-**5-Tier Governance Model** - Constitutional governance system with graduated signature thresholds (3-of-5 to 6-of-7) and review periods (7 days to 365 days) based on change impact. See [Layer-Tier Model](../governance/layer-tier-model.md).
+**5-Tier Governance Model** - Constitutional governance system with graduated signature thresholds ([[gov:tier_1_signatures]] to [[gov:layer_1_signatures]]) and review periods ([[gov:tier_1_review_days]] days to [[gov:layer_1_consensus_review_days]] days on constitutional layers) based on change impact. See [Layer-Tier Model](../governance/layer-tier-model.md).
 
 **Forkable Governance** - Governance rules can be forked by users if they disagree with decisions, creating exit competition and preventing capture. See [Governance Fork](../governance/governance-fork.md).
 

@@ -28,8 +28,8 @@ security_controls:
     description: "Proper genesis blocks"
     files:
       - "blvm-protocol/**/*.rs"
-    required_signatures: "7-of-7"
-    review_period_days: 180
+    required_signatures: "[[gov:security_critical_signatures]]"
+    review_period_days: [[gov:security_critical_review_days]]
     requires_security_audit: true
     requires_formal_verification: true
     requires_cryptography_expert: false

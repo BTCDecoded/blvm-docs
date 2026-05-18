@@ -4,7 +4,7 @@ Thank you for your interest in improving BLVM documentation!
 
 ## Documentation Philosophy
 
-Documentation is maintained in **source repositories** alongside code. This repository (`blvm-docs`) aggregates that documentation into a unified site. 
+The public book is built from **`blvm-docs`**: most content is authored in **`src/`**. A **small, explicit** set of pages uses mdBook **`{{#include}}`** to embed files from a local **`modules/`** checkout (Orange Paper, governance narrative, and governance **config YAML** verified in deploy CI). Crate-specific documentation (e.g. `blvm-consensus/docs/`) stays in those repositories; this book **links** to them or summarizes them unless you add another include.
 
 **Where to contribute:**
 - Component-specific documentation → Edit in the source repository (e.g., `blvm-consensus/docs/`)
@@ -18,6 +18,7 @@ Documentation is maintained in **source repositories** alongside code. This repo
 - **Current state only** — Describe how things work and where things live now. Do not describe what was removed, refactored, or "we recently changed X."
 - **No plan artifacts** — No task IDs, "Phase 2", "we removed X", or references to internal plans or WIP.
 - **No unsubstantiated numbers** — Do not claim specific speedups (e.g. "10-50x faster") unless citing published benchmarks. Describe optimizations and point to benchmarks.thebitcoincommons.org or local runs.
+- **Governance policy numbers** — Tier, layer, emergency, and matrix thresholds use **`[[gov:KEY]]`** placeholders (expanded at build from [governance](https://github.com/BTCDecoded/governance) `config/*.yml`). Wired chapters include PR process, contributing, layer–tier model, multisig configuration, keyholder procedures, governance fork/model, component relationships, module system, SDK overview/getting-started/examples/api-reference, quick-start, security controls, FAQ/glossary, and related captions. CI runs `scripts/check-governance-literals.sh` on those files. **Do not hand-edit** `N-of-M` literals; change YAML upstream and add allowlisted keys in `mdbook-governance-vars` if needed. Tier 5 special process remains prose + links to `GOVERNANCE.md` / `ACTION_TIERS.md`.
 - **Accurate feature status** — Do not label features as "deprecated" when they are actively reimplemented (e.g. BIP70).
 - **IR vs implementation** — The Orange Paper is the spec (IR). The implementation is **validated against** it (e.g. blvm-spec-lock). Do not say the IR is "transformed" or "generated" into code.
 - **API reference** — The canonical API reference is this book ([API Index](../reference/api-index.md), [SDK API Reference](../sdk/api-reference.md)). Do not point users to docs.rs as the primary API docs; link in-book or docs.thebitcoincommons.org.
@@ -64,7 +65,7 @@ repository-root/
 1. Fork the source repository (e.g., `blvm-consensus`)
 2. Make documentation improvements
 3. Submit a pull request to the source repository
-4. After merge, changes will appear in the unified documentation site (via `{{#include}}` directives)
+4. After merge, the canonical prose lives in **that** repository; it appears on the documentation site when **blvm-docs** is updated (new or edited `src/` chapters, refreshed links, or `{{#include}}` sources that point at your changes).
 
 ### For Cross-Cutting Documentation
 
@@ -89,8 +90,10 @@ Before submitting changes:
    ```
 
 2. **Includes for Orange Paper and governance** — `mdbook build` fails if these paths are missing:
+
    - `modules/blvm-spec/THE_ORANGE_PAPER.md` (included from [Orange Paper](../reference/orange-paper.md))
    - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md` (included from [Governance Overview](../governance/overview.md) and [Governance Model](../governance/governance-model.md))
+   - Deploy CI also requires `modules/governance/config/action-tiers.yml`, `repository-layers.yml`, and `emergency-tiers.yml` (policy data alongside prose).
 
    Clone from GitHub if needed (`https://github.com/BTCDecoded/blvm-spec`, `https://github.com/BTCDecoded/governance`). With sibling checkouts, from `blvm-docs/modules/`:
    ```bash

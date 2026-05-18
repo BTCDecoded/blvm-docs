@@ -1,0 +1,26 @@
+tiers:
+  tier_1_routine:
+    review_period_days: 7
+    signatures:
+      required: 3
+      total: 5
+  tier_2_features:
+    review_period_days: 30
+    signatures:
+      required: 4
+      total: 5
+  tier_3_consensus_adjacent:
+    review_period_days: 90
+    signatures:
+      required: 5
+      total: 5
+  tier_4_emergency:
+    review_period_days: 0
+    signatures:
+      required: 4
+      total: 5
+  tier_5_governance:
+    review_period_days: 180
+    signatures:
+      required: 5
+      total: 5

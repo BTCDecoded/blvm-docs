@@ -4,7 +4,7 @@ The consensus layer (`blvm-consensus`) provides a pure mathematical implementati
 
 ## Architecture Position
 
-Tier 2 of the 6-tier Bitcoin Commons architecture:
+**Stack layer 2** of the six-layer Bitcoin Commons architecture (technology stack):
 
 ```
 1. Orange Paper (mathematical foundation)

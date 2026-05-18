@@ -106,11 +106,11 @@ pub struct Multisig {
 ```
 
 **Methods:**
-- `new(threshold: usize, total: usize, public_keys: Vec<PublicKey>) -> GovernanceResult<Self>` - Create new multisig (e.g., 3-of-5)
+- `new(threshold: usize, total: usize, public_keys: Vec<PublicKey>) -> GovernanceResult<Self>` - Create new multisig (e.g., [[gov:tier_1_signatures]])
 - `verify(&self, message: &[u8], signatures: &[Signature]) -> GovernanceResult<bool>` - Verify signatures meet threshold
 - `collect_valid_signatures(&self, message: &[u8], signatures: &[Signature]) -> GovernanceResult<Vec<usize>>` - Get indices of valid signatures
-- `threshold(&self) -> usize` - Get threshold (e.g., 3)
-- `total(&self) -> usize` - Get total number of keys (e.g., 5)
+- `threshold(&self) -> usize` - Get threshold (e.g., [[gov:tier_1_sig_required]])
+- `total(&self) -> usize` - Get total number of keys (e.g., [[gov:tier_1_sig_total]])
 - `public_keys(&self) -> &[PublicKey]` - Get all public keys
 - `is_valid_signature(&self, signature: &Signature, message: &[u8]) -> GovernanceResult<Option<usize>>` - Check if signature is valid and return key index
 
@@ -118,7 +118,7 @@ pub struct Multisig {
 ```rust
 use blvm_sdk::{Multisig, PublicKey};
 
-let multisig = Multisig::new(3, 5, public_keys)?;
+let multisig = Multisig::new([[gov:tier_1_sig_required]], [[gov:tier_1_sig_total]], public_keys)?;
 let valid = multisig.verify(&message_bytes, &signatures)?;
 ```
 
@@ -374,7 +374,7 @@ blvm-verify [OPTIONS] <COMMAND>
 Options:
     -f, --format <FORMAT>    Output format (text, json) [default: text]
     -s, --signatures <SIGS>  Signature files (comma-separated)
-    --threshold <THRESHOLD>  Threshold (e.g., "3-of-5")
+    --threshold <THRESHOLD>  Threshold (e.g., "[[gov:tier_1_signatures]]")
     --pubkeys <PUBKEYS>      Public key files (comma-separated)
 
 Commands:
@@ -413,7 +413,7 @@ assert!(verified);
 ```rust
 use blvm_sdk::{GovernanceKeypair, GovernanceMessage, Multisig, sign_message};
 
-// Generate 5 keypairs for 3-of-5 multisig
+// Generate keypairs for tier-1 multisig ([[gov:tier_1_signatures]])
 let keypairs: Vec<_> = (0..5)
     .map(|_| GovernanceKeypair::generate().unwrap())
     .collect();
@@ -422,7 +422,7 @@ let public_keys: Vec<_> = keypairs.iter()
     .collect();
 
 // Create multisig
-let multisig = Multisig::new(3, 5, public_keys)?;
+let multisig = Multisig::new([[gov:tier_1_sig_required]], [[gov:tier_1_sig_total]], public_keys)?;
 
 // Create message
 let message = GovernanceMessage::Release {

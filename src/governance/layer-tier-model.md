@@ -4,19 +4,21 @@
 
 Bitcoin Commons implements dual-dimensional governance combining **Layers** (repository architecture) and **Tiers** (action classification). When both apply, the system uses the **most restrictive wins** rule, taking the highest signature requirement and longest review period.
 
+PR **action tiers** (1–5) are defined in governance [`action-tiers.yml`](https://github.com/BTCDecoded/governance/blob/main/config/action-tiers.yml) with narrative in [`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md). **Emergency classes** use [`emergency-tiers.yml`](https://github.com/BTCDecoded/governance/blob/main/config/emergency-tiers.yml) only.
+
 ## Layer System
 
 The layer system maps repository architecture to governance requirements:
 
 | Layer | Repository | Purpose | Signatures | Review Period |
 |-------|------------|---------|------------|---------------|
-| 1 | blvm-spec | Constitutional | 6-of-7 | 180 days |
-| 2 | blvm-consensus | Constitutional | 6-of-7 | 180 days |
-| 3 | blvm-protocol | Implementation | 4-of-5 | 90 days |
-| 4 | blvm-node / blvm | Application | 3-of-5 | 60 days |
-| 5 | blvm-sdk | Extension | 2-of-3 | 14 days |
+| 1 | blvm-spec | Constitutional | [[gov:layer_1_signatures]] | [[gov:layer_1_review_days]] days |
+| 2 | blvm-consensus | Constitutional | [[gov:layer_2_signatures]] | [[gov:layer_2_review_days]] days |
+| 3 | blvm-protocol | Implementation | [[gov:layer_3_signatures]] | [[gov:layer_3_review_days]] days |
+| 4 | blvm-node / blvm | Application | [[gov:layer_4_signatures]] | [[gov:layer_4_review_days]] days |
+| 5 | blvm-sdk | Extension | [[gov:layer_5_signatures]] | [[gov:layer_5_review_days]] days |
 
-**Note:** For consensus rule changes, Layer 1-2 require 365 days review period.
+**Note:** For consensus rule changes, Layer 1–2 require [[gov:layer_1_consensus_review_days]] days review period.
 
 ## Tier System
 
@@ -24,52 +26,28 @@ The tier system classifies changes by action type:
 
 | Tier | Type | Signatures | Review Period |
 |------|------|------------|---------------|
-| 1 | Routine Maintenance | 3-of-5 | 7 days |
-| 2 | Feature Changes | 4-of-5 | 30 days |
-| 3 | Consensus-Adjacent | 5-of-5 | 90 days |
-| 4 | Emergency Actions | 4-of-5 | 0 days |
-| 5 | Governance Changes | 5-of-5 | 180 days |
+| 1 | Routine Maintenance | [[gov:tier_1_signatures]] | [[gov:tier_1_review_days]] days |
+| 2 | Feature Changes | [[gov:tier_2_signatures]] | [[gov:tier_2_review_days]] days |
+| 3 | Consensus-Adjacent | [[gov:tier_3_signatures]] | [[gov:tier_3_review_days]] days |
+| 4 | Emergency Actions | [[gov:tier_4_signatures]] | [[gov:tier_4_review_days]] days |
+| 5 | Governance Changes | [[gov:tier_5_signatures]] | [[gov:tier_5_review_days]] days |
+
+Tier 5 **special process** (wider maintainer pool and emergency keyholders) is documented in [governance `GOVERNANCE.md`](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md), not in `action-tiers.yml`.
 
 ## Combination Rules
 
 When both Layer and Tier requirements apply, the system takes the **most restrictive** (highest) requirements:
 
-| Layer | Tier | Final Signatures | Final Review | Source |
-|-------|------|------------------|--------------|---------|
-| 1 | 1 | 6-of-7 | 180 days | Layer 1 |
-| 1 | 2 | 6-of-7 | 180 days | Layer 1 |
-| 1 | 3 | 6-of-7 | 180 days | Layer 1 |
-| 1 | 4 | 6-of-7 | 180 days | Layer 1 |
-| 1 | 5 | 6-of-7 | 180 days | Layer 1 |
-| 2 | 1 | 6-of-7 | 180 days | Layer 2 |
-| 2 | 2 | 6-of-7 | 180 days | Layer 2 |
-| 2 | 3 | 6-of-7 | 180 days | Layer 2 |
-| 2 | 4 | 6-of-7 | 180 days | Layer 2 |
-| 2 | 5 | 6-of-7 | 180 days | Layer 2 |
-| 3 | 1 | 4-of-5 | 90 days | Layer 3 |
-| 3 | 2 | 4-of-5 | 90 days | Layer 3 |
-| 3 | 3 | 5-of-5 | 90 days | Tier 3 |
-| 3 | 4 | 4-of-5 | 90 days | Layer 3 |
-| 3 | 5 | 5-of-5 | 180 days | Tier 5 |
-| 4 | 1 | 3-of-5 | 60 days | Layer 4 |
-| 4 | 2 | 4-of-5 | 60 days | Tier 2 |
-| 4 | 3 | 5-of-5 | 90 days | Tier 3 |
-| 4 | 4 | 4-of-5 | 60 days | Layer 4 |
-| 4 | 5 | 5-of-5 | 180 days | Tier 5 |
-| 5 | 1 | 2-of-3 | 14 days | Layer 5 |
-| 5 | 2 | 4-of-5 | 30 days | Tier 2 |
-| 5 | 3 | 5-of-5 | 90 days | Tier 3 |
-| 5 | 4 | 4-of-5 | 14 days | Layer 5 |
-| 5 | 5 | 5-of-5 | 180 days | Tier 5 |
+[[gov:combination_matrix_table]]
 
 ## Examples
 
 | Example | Layer | Tier | Result | Source |
 |---------|-------|------|--------|--------|
-| Bug fix in blvm-protocol | 3 (4-of-5, 90d) | 1 (3-of-5, 7d) | 4-of-5, 90d | Layer 3 |
-| New feature in blvm-sdk | 5 (2-of-3, 14d) | 2 (4-of-5, 30d) | 4-of-5, 30d | Tier 2 |
-| Consensus change in blvm-spec | 1 (6-of-7, 180d) | 3 (5-of-5, 90d) | 6-of-7, 180d | Layer 1 |
-| Emergency fix in blvm-node | 4 (3-of-5, 60d) | 4 (4-of-5, 0d) | 4-of-5, 0d | Tier 4 |
+| Bug fix in blvm-protocol | 3 ([[gov:layer_3_signatures]], [[gov:layer_3_review_days]]d) | 1 ([[gov:tier_1_signatures]], [[gov:tier_1_review_days]]d) | [[gov:matrix_3_1_signatures]], [[gov:matrix_3_1_review_days]]d | [[gov:matrix_3_1_source]] |
+| New feature in blvm-sdk | 5 ([[gov:layer_5_signatures]], [[gov:layer_5_review_days]]d) | 2 ([[gov:tier_2_signatures]], [[gov:tier_2_review_days]]d) | [[gov:matrix_5_2_signatures]], [[gov:matrix_5_2_review_days]]d | [[gov:matrix_5_2_source]] |
+| Consensus change in blvm-spec | 1 ([[gov:layer_1_signatures]], [[gov:layer_1_review_days]]d) | 3 ([[gov:tier_3_signatures]], [[gov:tier_3_review_days]]d) | [[gov:matrix_1_3_signatures]], [[gov:matrix_1_3_review_days]]d | [[gov:matrix_1_3_source]] |
+| Emergency fix in blvm-node | 4 ([[gov:layer_4_signatures]], [[gov:layer_4_review_days]]d) | 4 ([[gov:tier_4_signatures]], [[gov:tier_4_review_days]]d) | [[gov:matrix_4_4_signatures]], [[gov:matrix_4_4_review_days]]d | [[gov:matrix_4_4_source]] |
 
 ## Implementation
 
@@ -88,10 +66,13 @@ pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {
 
 **Test**: `cd blvm-commons && cargo test threshold`
 
+Published tables above are derived from the same max-rule at book build time (`mdbook-governance-vars`). Merge enforcement in `blvm-commons` still uses hardcoded values in `threshold.rs` until that code loads YAML (see plan backlog).
+
 ## Configuration
 
 - `config/repository-layers.yml` - Layer definitions
-- `config/action-tiers.yml` - Tier definitions
+- `config/action-tiers.yml` - Tier definitions ([`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md))
+- `config/emergency-tiers.yml` - Emergency classes (separate from action tiers)
 - `config/tier-classification-rules.yml` - PR classification
 
 ## See Also

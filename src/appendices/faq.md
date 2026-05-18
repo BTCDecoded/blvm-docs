@@ -38,7 +38,7 @@ Bitcoin Commons is a forkable governance framework that applies Elinor Ostrom's 
 
 ### How does Bitcoin Commons governance work?
 
-Bitcoin Commons uses a 5-tier constitutional governance model with graduated signature thresholds (3-of-5 for routine maintenance, up to 6-of-7 for consensus changes) and review periods (7 days to 365 days). All governance actions are cryptographically signed and transparently auditable. Users can fork governance rules if they disagree, creating exit competition.
+Bitcoin Commons uses a 5-tier constitutional governance model with graduated signature thresholds ([[gov:tier_1_signatures]] for routine maintenance, up to [[gov:layer_1_signatures]] for constitutional layers) and review periods ([[gov:tier_1_review_days]] days to [[gov:layer_1_consensus_review_days]] days for consensus changes on layers 1–2). All governance actions are cryptographically signed and transparently auditable. Users can fork governance rules if they disagree, creating exit competition.
 
 ### What makes Bitcoin Commons governance "6x harder to capture"?
 
@@ -156,7 +156,7 @@ Through multiple layers: (1) Orange Paper specifies the rules, (2) Tests and int
 
 ### How does cryptographic enforcement work?
 
-All governance actions require cryptographic signatures from maintainers. The governance-app (GitHub App) verifies signatures, enforces thresholds (e.g., 6-of-7), and blocks merges until requirements are met. This makes power visible and accountable: you can see who signed what, when.
+All governance actions require cryptographic signatures from maintainers. The governance-app (GitHub App) verifies signatures, enforces thresholds (e.g., [[gov:layer_1_signatures]] on constitutional layers), and blocks merges until requirements are met. This makes power visible and accountable: you can see who signed what, when.
 
 ### What BIPs are implemented?
 

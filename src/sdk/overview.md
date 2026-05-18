@@ -4,7 +4,7 @@ The developer SDK (`blvm-sdk`) provides governance infrastructure and a composit
 
 ## Architecture Position
 
-Tier 5 of the 6-tier Bitcoin Commons architecture:
+**Stack layer 5** of the six-layer Bitcoin Commons architecture (technology stack):
 
 ```
 1. Orange Paper (mathematical foundation)
@@ -86,7 +86,7 @@ let message = GovernanceMessage::Release {
 let signature = keypair.sign(&message.to_signing_bytes())?;
 
 // Verify with multisig
-let multisig = Multisig::new(6, 7, maintainer_keys)?;
+let multisig = Multisig::new([[gov:layer_1_sig_required]], [[gov:layer_1_sig_total]], maintainer_keys)?;
 let valid = multisig.verify(&message.to_signing_bytes(), &[signature])?;
 ```
 
@@ -94,7 +94,7 @@ let valid = multisig.verify(&message.to_signing_bytes(), &[signature])?;
 
 Threshold-based signature verification:
 
-- **N-of-M Thresholds**: Configurable signature requirements (e.g., 6-of-7, see [Multisig Configuration](../governance/multisig-configuration.md))
+- **N-of-M Thresholds**: Configurable signature requirements (policy thresholds: [Multisig Configuration](../governance/multisig-configuration.md))
 - **Key Management**: [Maintainer key registration](../governance/keyholder-procedures.md) and rotation
 - **Signature Aggregation**: Combine multiple signatures
 - **Verification**: Cryptographic verification of threshold satisfaction
@@ -147,7 +147,7 @@ blvm-verify release \
   --version v1.0.0 \
   --commit abc123 \
   --signatures sig1.txt,sig2.txt,sig3.txt,sig4.txt,sig5.txt,sig6.txt \
-  --threshold 6-of-7 \
+  --threshold [[gov:layer_1_signatures]] \
   --pubkeys keys.json
 ```
 

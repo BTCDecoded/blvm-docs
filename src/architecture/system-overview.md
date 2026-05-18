@@ -1,45 +1,45 @@
 # System Overview
 
-Bitcoin Commons is a Bitcoin implementation ecosystem with six tiers building on the [Orange Paper](../reference/orange-paper.md) mathematical specifications. blvm-consensus and blvm-protocol share the **blvm-primitives** crate for types, serialization, and crypto. The system implements consensus rules directly from the spec, provides protocol abstraction, delivers a full node implementation, and includes a developer SDK.
+Bitcoin Commons is a Bitcoin implementation ecosystem with **six stack layers** (numbered below) building on the [Orange Paper](../reference/orange-paper.md) mathematical specifications. **“Layer” here means position in the technology stack**, not [repository governance layers](../governance/layer-tier-model.md) or governance **tiers** (PR classification). blvm-consensus and blvm-protocol share the **blvm-primitives** crate for types, serialization, and crypto. The system implements consensus rules directly from the spec, provides protocol abstraction, delivers a full node implementation, and includes a developer SDK.
 
-## 6-Tier Component Architecture
+## Six-layer stack (architecture)
 
 ```mermaid
 graph TB
-    T1[Orange Paper<br/>Mathematical Foundation]
-    T2[blvm-consensus<br/>Pure Math Implementation]
-    T3[blvm-protocol<br/>Protocol Abstraction]
-    T4[blvm-node<br/>Full Node Implementation]
-    T5[blvm-sdk<br/>Developer Toolkit]
-    T6[blvm-commons<br/>Governance Enforcement]
+    L1[Orange Paper<br/>Mathematical Foundation]
+    L2[blvm-consensus<br/>Pure Math Implementation]
+    L3[blvm-protocol<br/>Protocol Abstraction]
+    L4[blvm-node<br/>Full Node Implementation]
+    L5[blvm-sdk<br/>Developer Toolkit]
+    L6[blvm-commons<br/>Governance Enforcement]
     
-    T1 -->|direct implementation| T2
-    T2 -->|protocol abstraction| T3
-    T3 -->|full node| T4
-    T4 -->|ergonomic API| T5
-    T5 -->|cryptographic governance| T6
+    L1 -->|direct implementation| L2
+    L2 -->|protocol abstraction| L3
+    L3 -->|full node| L4
+    L4 -->|ergonomic API| L5
+    L5 -->|cryptographic governance| L6
     
-    style T1 fill:#f9f,stroke:#333,stroke-width:2px
-    style T2 fill:#bbf,stroke:#333,stroke-width:2px
-    style T3 fill:#bfb,stroke:#333,stroke-width:2px
-    style T4 fill:#fbf,stroke:#333,stroke-width:2px
-    style T5 fill:#ffb,stroke:#333,stroke-width:2px
-    style T6 fill:#fbb,stroke:#333,stroke-width:2px
+    style L1 fill:#f9f,stroke:#333,stroke-width:2px
+    style L2 fill:#bbf,stroke:#333,stroke-width:2px
+    style L3 fill:#bfb,stroke:#333,stroke-width:2px
+    style L4 fill:#fbf,stroke:#333,stroke-width:2px
+    style L5 fill:#ffb,stroke:#333,stroke-width:2px
+    style L6 fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
 ## BLVM Stack Architecture
 
 ![BLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
-*Figure: BLVM stack (marketing image): Orange Paper / blvm-spec as the foundation, blvm-consensus with verification tooling, then blvm-protocol, blvm-node, blvm-sdk, and governance enforcement (blvm-commons). The numbered 6-tier diagram above is the canonical layer list.*
+*Figure: BLVM stack (marketing image): Orange Paper / blvm-spec as the foundation, blvm-consensus with verification tooling, then blvm-protocol, blvm-node, blvm-sdk, and governance enforcement (blvm-commons). The mermaid diagram above is the canonical **six stack layers** list.*
 
 ## Component Overview
 
-### Tier 1: [Orange Paper](../reference/orange-paper.md) (Mathematical Foundation)
+### Stack layer 1: [Orange Paper](../reference/orange-paper.md) (Mathematical Foundation)
 - Mathematical specifications for Bitcoin consensus rules
 - Source of truth for all implementations
 - Timeless, immutable consensus rules
 
-### Tier 2: [blvm-consensus](../consensus/overview.md) (Pure Math Implementation)
+### Stack layer 2: [blvm-consensus](../consensus/overview.md) (Pure Math Implementation)
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) functions
 - [Formal proofs](../consensus/formal-verification.md) verify mathematical correctness
 - Side-effect-free, deterministic functions
@@ -47,7 +47,7 @@ graph TB
 
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/README.md)
 
-### Tier 3: [blvm-protocol](../protocol/overview.md) (Protocol Abstraction)
+### Stack layer 3: [blvm-protocol](../protocol/overview.md) (Protocol Abstraction)
 - Bitcoin protocol abstraction for multiple variants
 - Supports mainnet, testnet, regtest
 - Commons-specific protocol extensions ([UTXO commitments](../consensus/utxo-commitments.md), ban list sharing)
@@ -55,7 +55,7 @@ graph TB
 
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md)
 
-### Tier 4: [blvm-node](../node/overview.md) (Node Implementation)
+### Stack layer 4: [blvm-node](../node/overview.md) (Node Implementation)
 - Reference full node (non-consensus infrastructure: storage, P2P, RPC, modules); operational hardening required for real deployments
 - [Storage layer](../node/storage-backends.md) (database abstraction with multiple backends)
 - Network manager ([multi-transport](../node/transport-abstraction.md): TCP, QUIC, Iroh)
@@ -71,7 +71,7 @@ graph TB
 
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-node/blob/main/README.md)
 
-### Tier 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
+### Stack layer 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
 - Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
 - CLI tools (blvm-keygen, blvm-sign, blvm-verify)
 - [Composition framework](../architecture/module-system.md) (declarative node composition)
@@ -79,7 +79,7 @@ graph TB
 
 **Code**: [README.md](https://github.com/BTCDecoded/blvm-sdk/blob/main/README.md)
 
-### Tier 6: blvm-commons (Governance Enforcement)
+### Stack layer 6: blvm-commons (Governance Enforcement)
 - GitHub App for governance enforcement
 - Cryptographic signature verification
 - Multisig threshold enforcement

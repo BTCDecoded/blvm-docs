@@ -1,0 +1,28 @@
+layers:
+  layer_1_constitutional:
+    review_period_days: 180
+    consensus_review_period_days: 365
+    signatures:
+      required: 6
+      total: 7
+  layer_2_constitutional:
+    review_period_days: 180
+    consensus_review_period_days: 365
+    signatures:
+      required: 6
+      total: 7
+  layer_3_implementation:
+    review_period_days: 90
+    signatures:
+      required: 4
+      total: 5
+  layer_4_application:
+    review_period_days: 60
+    signatures:
+      required: 3
+      total: 5
+  layer_5_extension:
+    review_period_days: 14
+    signatures:
+      required: 2
+      total: 3

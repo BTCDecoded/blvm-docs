@@ -1,0 +1,19 @@
+tiers:
+  tier_1_critical:
+    requirements:
+      review_period_days: 0
+      signature_threshold: 4-of-7
+      max_duration_days: 7
+      activation_threshold: 5-of-7
+  tier_2_urgent:
+    requirements:
+      review_period_days: 7
+      signature_threshold: 5-of-7
+      max_duration_days: 30
+      activation_threshold: 5-of-7
+  tier_3_elevated:
+    requirements:
+      review_period_days: 30
+      signature_threshold: 6-of-7
+      max_duration_days: 90
+      activation_threshold: 5-of-7

@@ -39,12 +39,12 @@ Keys can be rotated through the governance process. See [MAINTAINER_GUIDE.md](ht
 
 ## Emergency Keyholders
 
-Emergency keyholders (5-of-7) can activate emergency mode for critical situations:
+Emergency keyholders can activate **emergency response classes** defined in `emergency-tiers.yml` (see [PR Process → Emergency Procedures](../development/pr-process.md#emergency-procedures)):
 
-- **Activation**: 5-of-7 emergency keyholders required
-- **Duration**: Maximum 90 days
-- **Review Periods**: Reduced to 30 days during emergency
-- **Signature Thresholds**: Unchanged
+- **Activation** (all classes): [[gov:emergency_critical_activation]] emergency keyholders
+- **Critical class**: [[gov:emergency_critical_signature]] maintainer signatures after activation; maximum [[gov:emergency_critical_max_days]] days
+- **Urgent class**: [[gov:emergency_urgent_signature]] signatures; maximum [[gov:emergency_urgent_max_days]] days
+- **Elevated class**: [[gov:emergency_elevated_signature]] signatures; maximum [[gov:emergency_elevated_max_days]] days
 
 ## Release Pipeline Gate Strength
 

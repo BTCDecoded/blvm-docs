@@ -7,7 +7,7 @@ Bitcoin Commons implements a constitutional governance model that makes Bitcoin 
 ## Governance Signature Thresholds
 
 ![Governance Signature Thresholds](../images/governance-signature-thresholds.png)
-*Figure: Signature thresholds by layer showing the graduated security model. Constitutional layers require 6-of-7, while extension layers require 2-of-3.*
+*Figure: Signature thresholds by layer showing the graduated security model. Constitutional layers require [[gov:layer_1_signatures]], while extension layers require [[gov:layer_5_signatures]].*
 
 ## Governance Process Latency
 

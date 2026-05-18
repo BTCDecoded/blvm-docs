@@ -364,7 +364,7 @@ Consensus combines **BLVM Specification Lock**, property tests, fuzzing, and int
 
 **Proof targets**: Header layout (magic, command, length, checksum), checksum validation, size limits, `parse(serialize(msg)) == msg` for covered messages.
 
-**Message tiers:** Tier 1: Version, VerAck, Ping, Pong. Tier 2: Transaction, Block, Headers, Inv, GetData, GetHeaders.
+**Wire message groups (verification scope):** **Group A** — Version, VerAck, Ping, Pong. **Group B** — Transaction, Block, Headers, Inv, GetData, GetHeaders. (This grouping is for protocol verification only, not [governance tiers](../governance/layer-tier-model.md).)
 
 Use the `verify` feature for full protocol verification builds; see **blvm-protocol** crate docs.
 

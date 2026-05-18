@@ -24,7 +24,7 @@ let message = GovernanceMessage::Release {
 let signature = keypair.sign(&message.to_signing_bytes())?;
 
 // Verify with multisig
-let multisig = Multisig::new(6, 7, maintainer_keys)?;
+let multisig = Multisig::new([[gov:layer_1_sig_required]], [[gov:layer_1_sig_total]], maintainer_keys)?;
 let valid = multisig.verify(&message.to_signing_bytes(), &[signature])?;
 ```
 
@@ -46,7 +46,7 @@ blvm-verify release \
   --version v1.0.0 \
   --commit abc123 \
   --signatures sig1.txt,sig2.txt,sig3.txt,sig4.txt,sig5.txt,sig6.txt \
-  --threshold 6-of-7 \
+  --threshold [[gov:layer_1_signatures]] \
   --pubkeys keys.json
 ```
 

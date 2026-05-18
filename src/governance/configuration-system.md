@@ -6,6 +6,8 @@
 
 The Bitcoin Commons configuration system provides a unified, type-safe interface for all governance-controlled parameters. The system uses **YAML files as the source of truth** with a database-backed registry for governance-controlled changes and a comprehensive fallback chain.
 
+Published policy tables in this book (for example [PR Process](../development/pr-process.md), [Layer-Tier Model](layer-tier-model.md)) use **`[[gov:KEY]]`** placeholders expanded at **`mdbook build`** from `modules/governance/config/*.yml` via **`mdbook-governance-vars`**. That keeps narrative docs aligned with YAML; **merge enforcement** in `blvm-commons` may still use hardcoded thresholds until runtime YAML loading is implemented.
+
 ## Architecture
 
 The configuration system has three core components:
@@ -15,9 +17,9 @@ The configuration system has three core components:
 YAML configuration files in the `governance/config/` directory serve as the authoritative source for all configuration defaults. These files are version-controlled and human-readable.
 
 **Key Files:**
-- `action-tiers.yml` - Tier definitions and signature requirements
+- `action-tiers.yml` - PR action tier definitions (see [`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md))
 - `repository-layers.yml` - Layer definitions and requirements
-- `emergency-tiers.yml` - Emergency tier definitions
+- `emergency-tiers.yml` - Emergency response classes (**separate** from action tiers)
 - `governance-fork.yml` - Governance fork configuration
 - `maintainers/*.yml` - Maintainer configurations by layer
 - `repos/*.yml` - Repository-specific configurations
@@ -203,8 +205,8 @@ Authoritative defaults and forkable parameters live in the **[governance](https:
 Changing a configuration parameter requires Tier 5 governance approval:
 
 1. **Proposal**: Create a configuration change proposal via PR
-2. **Review**: 5-of-5 maintainer signatures required
-3. **Review Period**: 180 days review period
+2. **Review**: [[gov:tier_5_signatures]] maintainer signatures required
+3. **Review Period**: [[gov:tier_5_review_days]] days review period
 5. **Activation**: Change activated in database via `activate_change()`
 6. **Sync**: Change optionally synced back to YAML files
 

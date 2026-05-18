@@ -109,7 +109,7 @@ Forks can be merged by: consensus building, gradual migration, feature adoption,
 
 | Scenario | Type | Change | Result |
 |----------|------|--------|--------|
-| Adding signature requirement | Soft Fork | Require 4-of-5 instead of 3-of-5 | Existing users continue with 3-of-5, new users use 4-of-5 |
+| Adding signature requirement | Soft Fork | Require [[gov:tier_2_signatures]] instead of [[gov:tier_1_signatures]] | Existing users continue with [[gov:tier_1_signatures]], new users use [[gov:tier_2_signatures]] |
 | Changing signature scheme | Hard Fork | Switch from Ed25519 to Dilithium | Clean split into two governance models |
 
 ## Configuration

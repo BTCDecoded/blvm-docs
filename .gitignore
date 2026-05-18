@@ -4,6 +4,7 @@ book/
 # Rust build artifacts (if any)
 target/
 Cargo.lock
+!mdbook-governance-vars/Cargo.lock
 
 # IDE files
 .idea/

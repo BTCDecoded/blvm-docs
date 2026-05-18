@@ -32,4 +32,7 @@ heading-split-level = 3
 editable = false
 copyable = true
 
+[preprocessor.governance-vars]
+command = "mdbook-governance-vars"
+after = ["links"]
 

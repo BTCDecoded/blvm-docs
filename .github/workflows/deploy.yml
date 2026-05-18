@@ -28,14 +28,25 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Install mdBook
-        uses: peaceiris/actions-mdbook@v1
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache governance-vars crate
+        uses: actions/cache@v4
         with:
-          mdbook-version: 'latest'
+          path: |
+            ~/.cargo/registry/
+            ~/.cargo/git/
+            mdbook-governance-vars/target/
+          key: ${{ runner.os }}-gov-vars-${{ hashFiles('mdbook-governance-vars/Cargo.lock') }}
 
       - name: Regenerate installation.md from install-content.json
         run: node scripts/render-installation.mjs
 
+      # Submodules: recursive checkout may populate modules/* at pinned SHAs.
+      # This step ensures include targets and governance policy YAML exist; if
+      # the submodule checkout is incomplete or an older pin lacks files, we
+      # shallow-clone the latest default branch from GitHub (same as before).
       - name: Fetch mdBook include sources (Orange Paper, governance)
         run: |
           set -eux
@@ -44,10 +55,36 @@ jobs:
             rm -rf modules/blvm-spec
             git clone --depth 1 https://github.com/BTCDecoded/blvm-spec.git modules/blvm-spec
           fi
+          need_governance_clone=false
           if [ ! -f modules/governance/README.md ] || [ ! -f modules/governance/GOVERNANCE.md ]; then
+            need_governance_clone=true
+          fi
+          if [ ! -f modules/governance/config/action-tiers.yml ] \
+            || [ ! -f modules/governance/config/repository-layers.yml ] \
+            || [ ! -f modules/governance/config/emergency-tiers.yml ]; then
+            need_governance_clone=true
+          fi
+          if [ "$need_governance_clone" = true ]; then
             rm -rf modules/governance
             git clone --depth 1 https://github.com/BTCDecoded/governance.git modules/governance
           fi
+
+      - name: Verify book inputs (includes + governance config)
+        run: ./scripts/verify-book-inputs.sh
+
+      - name: Check governance policy literals use [[gov:…]]
+        run: ./scripts/check-governance-literals.sh
+
+      - name: Test governance-vars (allowlist + YAML vs threshold.rs drift)
+        run: cargo test --locked --manifest-path mdbook-governance-vars/Cargo.toml
+
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: '0.4.43'
+
+      - name: Install governance-vars preprocessor
+        run: cargo install --locked --path mdbook-governance-vars
 
       - name: Build book
         run: |
