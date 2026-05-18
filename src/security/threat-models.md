@@ -4,6 +4,8 @@
 
 Bitcoin Commons implements security boundaries and threat models to protect against various attack vectors. The system uses defense-in-depth principles with multiple layers of security.
 
+**Operator-facing maturity language** (required / recommended / unsupported for deployments) lives in **[Deployment posture](deployment-posture.md)** — use that page for bind addresses, RPC exposure, and QUIC × auth limitations.
+
 ## Security Boundaries
 
 ### Node Security Boundaries
@@ -45,6 +47,8 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 **Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
 
 ## Threat Model: Pre-Production Testing
+
+Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (published: [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org/security/deployment-posture.html)).
 
 ### Environment
 

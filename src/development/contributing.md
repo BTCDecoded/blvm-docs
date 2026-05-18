@@ -10,7 +10,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- **Rust toolchain**: Each repository sets a minimum in **`Cargo.toml`** (`rust-version`). Use **`rustc --version`** and satisfy the **`rust-version`** of the **crate you are building** (values differ between **blvm-consensus**, **blvm-node**, and other crates).
+- **Rust toolchain**: Each repository sets a minimum in **`Cargo.toml`** (`rust-version`). Use **`rustc --version`** and satisfy the **`rust-version`** of the **crate you are building** (values differ between **blvm-consensus**, **blvm-node**, and other crates). For a workspace that pulls multiple crates, the effective floor is roughly the **maximum** `rust-version` among packages you compile — see **[MSRV note](msrv-note.md)**.
 - **Git** - For version control
 - **Cargo** - Included with Rust
 - **Text editor or IDE** - Your choice

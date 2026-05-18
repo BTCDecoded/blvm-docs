@@ -27,6 +27,8 @@ tokens = ["your-long-random-token"]
 
 Pass the token on each request: `Authorization: Bearer <token>` (or `RPC_AUTH_TOKENS` for multiple comma-separated tokens). **`[rpc]`** in `NodeConfig` is only for **limits / rate limits**, not credentials.
 
+See **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** for TCP HTTP vs QUIC JSON-RPC vs REST and **[Deployment posture](../security/deployment-posture.md)** for operator checklist language.
+
 ## Example Requests
 
 ### Get Blockchain Info

@@ -105,6 +105,7 @@
 # Development
 
 - [Contributing](development/contributing.md)
+- [Rust MSRV vs CI toolchains](development/msrv-note.md)
 - [CI/CD Workflows](development/ci-cd-workflows.md)
 - [PR Process](development/pr-process.md)
 - [Release Process](development/release-process.md)
@@ -120,6 +121,8 @@
 
 - [Security Controls](security/security-controls.md)
 - [Threat Models](security/threat-models.md)
+- [Deployment posture](security/deployment-posture.md)
+- [RPC transport × authentication](security/rpc-transport-auth-matrix.md)
 - [Developer Security Checklist](security/DEVELOPER_SECURITY_CHECKLIST.md)
 - [Security Architecture Review Template](security/ARCHITECTURE_REVIEW_TEMPLATE.md)
 - [Security Testing Template](security/SECURITY_TESTING_TEMPLATE.md)

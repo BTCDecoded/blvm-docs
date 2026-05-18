@@ -62,6 +62,14 @@ BLVM uses [Semantic Versioning](https://semver.org/):
 - **MINOR** (0.X.0): New features, backward compatible
 - **PATCH** (0.0.X): Bug fixes, backward compatible
 
+## Release notes — deployment maturity (**D4**)
+
+Operator-facing artifacts should include **one sentence** pointing at **[Deployment posture](https://docs.thebitcoincommons.org/security/deployment-posture.html)** (RPC exposure, QUIC × auth limits) and **[RPC transport × authentication](https://docs.thebitcoincommons.org/security/rpc-transport-auth-matrix.html)**.
+
+Example:
+
+> Operators remain responsible for `[rpc_auth]` on non-loopback RPC; QUIC JSON-RPC uses HTTP/3 and shares the Bearer/`RpcAuthManager` contract with TCP HTTP — still treat the UDP QUIC listener as its own exposure surface. See Deployment posture and RPC transport × authentication in the BLVM docs.
+
 ## Build Process
 
 ### Dependency Order

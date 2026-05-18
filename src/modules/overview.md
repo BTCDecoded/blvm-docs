@@ -74,6 +74,10 @@ Modules can be:
 - **Unloaded** at runtime without affecting the base node
 - **Reloaded** (hot reload) for configuration updates
 
+## WASM modules (`wasm-modules`)
+
+When the node loads **WebAssembly** modules (**`wasm-modules`** / **`blvm-sdk`** embedding), treat guests as **trusted only if your governance policy says so**. The embedder uses **wasmtime fuel** and **store limits** (memory / instance counts) with conservative defaults; operators can override per module via **`[modules.<name>]`** keys documented in **`blvm-node/docs/CONFIGURATION_GUIDE.md`**. Third-party or internet-exposed WASM should use explicitly reviewed budgets (see workspace hardening plan **Track C**).
+
 ## See Also
 
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation

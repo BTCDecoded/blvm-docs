@@ -2,7 +2,9 @@
 
 ## Overview
 
-Bitcoin Commons optionally supports JSON-RPC over QUIC using Quinn, providing improved performance and security compared to the standard TCP RPC server. QUIC RPC is an alternative transport protocol that runs alongside the standard TCP RPC server.
+Bitcoin Commons optionally supports JSON-RPC over **HTTP/3 on QUIC** using Quinn + **`h3`**, sharing the same **`RpcServer`** / **`RpcAuthManager`** path as TCP HTTP JSON-RPC. QUIC RPC runs alongside the TCP RPC server.
+
+**Authentication:** Send **`Authorization: Bearer …`** on HTTP/3 requests; **`rpc_auth.required`** and token configuration match TCP HTTP. Read **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** before exposing QUIC RPC beyond localhost.
 
 ## Features
 
@@ -147,7 +149,7 @@ let response_str = String::from_utf8(response)?;
 ## Security Notes
 
 - **Self-Signed Certificates**: Uses self-signed certificates for development. Production deployments require proper certificate management.
-- **Authentication**: QUIC provides transport encryption but not application-level auth
+- **Authentication**: HTTP/3 carries **`Authorization`** like TCP HTTP; QUIC adds transport encryption
 - **Same Security Boundaries**: QUIC RPC has same security boundaries as TCP RPC (no wallet access)
 
 **Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)

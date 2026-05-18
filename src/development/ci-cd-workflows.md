@@ -360,6 +360,8 @@ For long-running runners, implement cache cleanup:
 - **Keep recent caches**: Maintain last N cache entries
 - **Emergency cleanup**: Check disk space and clean if >80% full
 
+**BLVM repositories:** scheduled workflows such as **`cleanup-runner-disk.yml`** (e.g. **`blvm`**, **`blvm-node`**, **`blvm-sdk`**) prune stale trees under **`/tmp/runner-cache/…`** (namespaced per repo where configured). Node CI documents **`BLVM_RUNNER_BUILD_ROOT`** / sibling purge behavior in **`blvm-node/.github/workflows/ci.yml`** — keep per-job build roots off shared parent directories unrelated to that workflow.
+
 ### Performance Improvements
 
 With proper caching optimization:

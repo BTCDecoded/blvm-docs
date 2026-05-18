@@ -6,6 +6,8 @@ Reference for BLVM node configuration options. Configuration can be provided via
 
 **Path expansion:** Path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, `ibd.snapshot_dir`) expand `~` to the home directory when loading from file.
 
+**Operator security:** Exposure classes (RPC / P2P / QUIC), **`[rpc_auth]`** expectations, and maturity language (**required / recommended / unsupported**) — **[Deployment posture](../security/deployment-posture.md)** and **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)**.
+
 ## Configuration File Format
 
 Configuration files support both TOML (`.toml`) and JSON (`.json`) formats. TOML is recommended for readability.
@@ -307,6 +309,7 @@ module_socket_max_attempts = 50
 - **Type**: `boolean`
 - **Default**: `false`
 - **Description**: Require authentication for RPC requests. Set to `true` for production.
+- **See also**: [RPC transport × authentication](../security/rpc-transport-auth-matrix.md) (TCP HTTP vs QUIC vs REST).
 
 ### `rpc_auth.tokens`
 - **Type**: `array` of `string`

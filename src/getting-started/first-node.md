@@ -186,7 +186,7 @@ max_ancestor_count = 25
 max_descendant_count = 25
 ```
 
-Start with: `blvm -n mainnet -d /var/lib/blvm -r 127.0.0.1:8332`. Use `[rpc_auth]` and `RPC_AUTH_TOKENS` for production.
+Start with: `blvm -n mainnet -d /var/lib/blvm -r 127.0.0.1:8332`. Use `[rpc_auth]` and `RPC_AUTH_TOKENS` for production. For non-loopback RPC and QUIC × auth combinations, read **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** and **[Deployment posture](../security/deployment-posture.md)**.
 
 See [Node Configuration](../node/configuration.md) for complete configuration options.
 
