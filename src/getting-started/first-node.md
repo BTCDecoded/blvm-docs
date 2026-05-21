@@ -159,6 +159,8 @@ Start with: `blvm -n testnet -d ~/.local/share/blvm-testnet -r 127.0.0.1:18332`
 
 ### Production mainnet node
 
+Start with [Mainnet initial sync](mainnet-sync.md). Custom TOML example:
+
 ```toml
 transport_preference = "tcponly"
 listen_addr = "0.0.0.0:8333"

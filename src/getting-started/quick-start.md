@@ -32,11 +32,7 @@ blvm --network testnet
 
 ### Mainnet Mode
 
-⚠️ **Warning**: Only use mainnet if you understand the risks.
-
-```bash
-blvm --network mainnet
-```
+Use [Mainnet initial sync](mainnet-sync.md) — not bare `blvm --network mainnet`.
 
 ## Basic Node Operations
 
@@ -129,7 +125,8 @@ blvm-verify release \
 
 ## Next Steps
 
-- [First Node Setup](first-node.md) - Detailed configuration guide
+- [First Node Setup (regtest)](first-node.md) - Detailed regtest configuration
+- [Mainnet initial sync](mainnet-sync.md) - Release tarball, helper script, IBD expectations
 - [Node Configuration](../node/configuration.md) - Full configuration options
 - [RPC API Reference](../node/rpc-api.md) - Interact with your node
 

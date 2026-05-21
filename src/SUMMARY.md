@@ -6,7 +6,8 @@
 
 - [Installation](getting-started/installation.md)
 - [Quick Start](getting-started/quick-start.md)
-- [First Node Setup](getting-started/first-node.md)
+- [First Node Setup (regtest)](getting-started/first-node.md)
+- [Mainnet initial sync](getting-started/mainnet-sync.md)
 
 # Examples
 

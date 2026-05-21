@@ -71,14 +71,7 @@ LAN peers start with limited trust and earn higher priority over time:
 
 ### Peer Prioritization
 
-LAN peers receive priority for block downloads during IBD:
-
-- **IBD Optimization**: LAN peers get priority chunks (first 50,000 blocks)
-- **Header Download**: LAN peers prioritized for header sync
-- **Score Multiplier**: Higher trust score for LAN peers in selection
-- **Bandwidth Allocation**: LAN peers receive more bandwidth allocation
-
-**Code**: [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
+IBD auto-prefers LAN peers; WAN-only uses one fastest peer under `parallel` mode. Override with `BLVM_IBD_PEERS` or `[ibd].preferred_peers`. See [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs).
 
 ## Security Model
 

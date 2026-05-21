@@ -95,7 +95,7 @@ This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` co
 
 ## IBD Configuration
 
-Initial block download uses parallel IBD only. **`[ibd]`** (top-level): chunk_size, download_timeout_secs, mode, eviction, max_blocks_in_transit_per_peer, headers_timeout_secs, headers_max_failures; optional: preferred_peers, max_ahead_blocks, memory_only, dump_dir, snapshot_dir, yield_interval, earliest_first, prefetch_*, utxo_prefetch_lookahead. **`[ibd_protection]`** (top-level): bandwidth limits per peer/IP/subnet. `max_concurrent_per_peer` is fixed at 64 in code (not in config). See [Node Configuration](../node/configuration.md#ibd-configuration) and [IBD Protection](../node/ibd-protection.md); ENV: `BLVM_IBD_*`.
+Parallel IBD (`[ibd]`, default `mode = "parallel"`). LAN auto-prefer and WAN single-peer behavior: [Mainnet initial sync](../getting-started/mainnet-sync.md). Bandwidth limits: `[ibd_protection]`. ENV: `BLVM_IBD_*`.
 
 ## Storage Configuration
 

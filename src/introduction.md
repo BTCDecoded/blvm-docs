@@ -22,7 +22,7 @@ BLVM is compiler-like infrastructure for Bitcoin implementations. There is a mat
 
 ## Documentation Structure
 
-- **Getting Started** – Installation, quick start, first node
+- **Getting Started** – Installation, quick start, [regtest first node](getting-started/first-node.md), [mainnet initial sync](getting-started/mainnet-sync.md)
 - **Architecture** – System design, module system, events
 - **Layers** – Consensus, protocol, node (each with overview and detailed pages)
 - **Developer SDK** – Module development, API reference, examples

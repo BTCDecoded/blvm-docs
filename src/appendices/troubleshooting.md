@@ -2,6 +2,19 @@
 
 Common issues and solutions when running BLVM nodes. See [Node Operations](../node/operations.md) for operational details.
 
+## Mainnet IBD
+
+See [Mainnet initial sync](../getting-started/mainnet-sync.md).
+
+| Symptom | Fix |
+|---------|-----|
+| Quiet 15–60s after start | Wait for peer discovery → `IBD:` lines |
+| P2P **8333** in use | Stop Core or change `listen_addr` |
+| `blvm sync` won't connect | `blvm --network mainnet --config … sync` |
+| Slow / stalled sync | Auto-LAN when Core on LAN; else `BLVM_IBD_PEERS=<ip>:8333` |
+| Slow near ~900k+ | Normal after assume-valid |
+| Lost progress | Same `--data-dir`; don't delete `rocksdb/` |
+
 ## Node Won't Start
 
 ### Port Already in Use
@@ -88,7 +101,7 @@ blvm
 **Error**: `Connection refused` when calling RPC
 
 **Solutions**:
-- Verify the process is listening on **`--rpc-addr`** (default `127.0.0.1:18332`; override as needed)
+- Verify the process is listening on **`--rpc-addr`** (mainnet default `127.0.0.1:8332`; testnet/regtest `127.0.0.1:18332` when using `blvm` without overrides)
 - Check bind address: use `0.0.0.0:8332` when exposing RPC in a container
 - Check firewall for the RPC port you configured
 

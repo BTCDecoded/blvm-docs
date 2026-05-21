@@ -4,8 +4,7 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`** (default `127.0.0.1:18332` for all networks unless you override).
-  - Common setups: mainnet-style `127.0.0.1:8332`, testnet `127.0.0.1:18332`.
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet/regtest **`127.0.0.1:18332`**.
 - **REST API** (optional): Served only when **`blvm-node`** is built with the **`rest-api`** feature and your runner enables it with a bind address. There is **no** separate fixed port in a minimal **`blvm`** deployment; examples below use `http://localhost:8080` only as an illustration.
 
 JSON-RPC is the portable operator surface. REST availability depends on build and wiring.

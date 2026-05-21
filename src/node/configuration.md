@@ -64,20 +64,20 @@ To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-c
 
 ## IBD Configuration
 
-Parallel IBD settings (ENV overrides config):
+Default **`mode = "parallel"`**. LAN peers are auto-preferred for download; WAN-only uses one fastest peer. Overrides: `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`. Release path: [Mainnet initial sync](../getting-started/mainnet-sync.md).
 
 ```toml
 [ibd]
 chunk_size = 16
 download_timeout_secs = 30
 mode = "parallel"
-eviction = "fifo"           # dynamic, fifo, lifo
+eviction = "fifo"
 max_blocks_in_transit_per_peer = 16
 headers_timeout_secs = 30
 headers_max_failures = 10
 ```
 
-See [Environment variables](../reference/configuration-reference.md#environment-variables) for IBD-related `BLVM_*` overrides.
+ENV: `BLVM_IBD_*` — see [configuration reference](../reference/configuration-reference.md#environment-variables).
 
 ## Protocol Limits
 
@@ -117,7 +117,7 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 | Option | Short | Default | Description |
 |--------|-------|---------|-------------|
 | `--network` | `-n` | `regtest` | Network: `regtest`, `testnet`, `mainnet` |
-| `--rpc-addr` | `-r` | `127.0.0.1:18332` | RPC server bind address |
+| `--rpc-addr` | `-r` | network-aware when omitted | RPC bind: mainnet `127.0.0.1:8332`; testnet/regtest `127.0.0.1:18332` |
 | `--listen-addr` | `-l` | `0.0.0.0:8333` | P2P listen address |
 | `--data-dir` | `-d` | — | Data directory (overrides ENV and config) |
 | `--config` | `-c` | — | Configuration file path (TOML or JSON) |
