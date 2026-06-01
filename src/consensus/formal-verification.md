@@ -71,7 +71,7 @@ graph TB
 
 ```bash
 # Install CLI (matches library floor; picks latest published 0.1.x)
-cargo install blvm-spec-lock --version '>=0.1.3, <0.2' --locked --features z3
+cargo install blvm-spec-lock --version '>=0.1, <1' --locked --features z3
 
 export SPEC_LOCK_STRICT=1   # same strictness as blvm-consensus CI when --strict is not passed
 cargo spec-lock check-drift \
@@ -135,7 +135,7 @@ cargo +nightly fuzz run <target_name>
 
 **Status**: Integrated in CI
 
-**Location**: `.github/workflows/verify.yml`
+**Location**: `blvm-consensus/.github/workflows/ci.yml` (Verify job; non-blocking when MIRI nightly unavailable)
 
 **Checks**:
 - Property tests under MIRI
@@ -318,23 +318,15 @@ proptest! {
 
 ### Verification Workflow
 
-The `.github/workflows/verify.yml` workflow runs verification jobs such as:
+The **Verify** / **verify** jobs in **`blvm-consensus/.github/workflows/ci.yml`**, **`blvm-node/.github/workflows/ci.yml`**, and **`blvm-protocol/.github/workflows/ci.yml`** are the authoritative **`cargo-spec-lock`** gates. Umbrella **`.github/workflows/verify.yml`** / **`verify-network.yml`** (multi-repo workspace root) are optional **`workflow_dispatch`** mirrors when checking out multiple crates together.
 
-1. **Unit & Property Tests** (required)
+1. **Unit & Property Tests** (required — see each crate **`ci.yml`**)
    - `cargo test --all-features`
-   - Must pass for CI to succeed
 
-2. **BLVM Specification Lock Verification** (release- or tier-gated)
-   - `cargo spec-lock verify`
-   - Z3 obligations for `#[spec_locked]` functions in the workflow
-   - Full verification run before each release
-   - Slower tiers can be deferred between major releases
-   - Not required for merge
+2. **BLVM Specification Lock Verification** (**required**, **consensus / node / protocol CI** where **`#[spec_locked]`** is enabled)
+   - `cargo spec-lock verify …` per **[SPEC_LOCK_DEPENDENCY.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)**
 
-3. **OpenTimestamps Audit** (non-blocking)
-   - Collect verification artifacts
-   - Timestamp proof bundle with `ots stamp`
-   - Upload artifacts for transparency
+3. **OpenTimestamps Audit** (non-blocking — consensus umbrella CI parity / monorepo only where enabled)
 
 ### Local Development
 

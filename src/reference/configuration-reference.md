@@ -274,8 +274,8 @@ max_filter_age_days = 0  # 0 = keep forever
 
 ### `modules.enabled_modules`
 - **Type**: `array` of `string`
-- **Default**: `[]` (empty = auto-discover all modules)
-- **Description**: List of module names to enable. Empty list enables all discovered modules.
+- **Default**: `["blvm-miniscript", "blvm-zmq"]` (bootstrapped on first boot when not explicitly set)
+- **Description**: List of module names to enable on startup. Set explicitly to control which modules load; an empty list `[]` disables all module bootstrapping.
 - **Example**: `enabled_modules = ["lightning-module", "mining-module"]`
 
 ### `modules.module_configs`

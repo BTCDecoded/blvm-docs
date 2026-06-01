@@ -15,7 +15,7 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 ## Supported contexts
 
 - **Regtest / local development** — **Supported** for day-to-day work when P2P and RPC are unreachable from untrusted networks (typical loopback defaults). **`rpc_auth.required = false`** is acceptable **only** while RPC stays on **`127.0.0.1`**, **`::1`**, or equivalent loopback.
-- **Testnet / signet** — Treat as **internet-adjacent**: peer set is untrusted; apply **Recommended** items below before exposing RPC beyond loopback.
+- **Testnet** — Treat as **internet-adjacent**: peer set is untrusted; apply **Recommended** items below before exposing RPC beyond loopback. (Signet is not yet a supported network in BLVM.)
 - **Mainnet** — **High assurance**: assume global attackers on P2P and opportunistic scanning on RPC-shaped ports. Meet **Required** items for any non-loopback control plane.
 
 ## Critical deployment concerns
