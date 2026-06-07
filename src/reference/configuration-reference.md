@@ -93,9 +93,106 @@ This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` co
 - **Default**: `true`
 - **Description**: Whether to advertise own address to peers. Set to `false` for privacy.
 
+## Block validation
+
+Assume-valid settings map to Bitcoin Core **`-assumevalid`** / **`-assumevalidhash`**. The node merges this table into consensus **`BlockValidationConfig`** at startup.
+
+### `block_validation.assume_valid_height`
+- **Type**: `integer` (block height)
+- **Default**: Network-dependent when unset — mainnet **912 683**, testnet **4 550 000**, regtest **0** (see `default_assume_valid_height_for_network` in `blvm-node`)
+- **Description**: Skip script/signature verification for blocks below this height during connect. Block structure, Merkle roots, and proof-of-work are still validated.
+- **Example**: `assume_valid_height = 0` (validate all scripts)
+
+### `block_validation.assume_valid_hash`
+- **Type**: `string` (32-byte block hash, hex) or omitted
+- **Default**: none
+- **Description**: When set, verify the block at **`assume_valid_height`** matches this hash before skipping ancestor script checks. Takes precedence over height-only configuration.
+
+**Environment:** **`BLVM_ASSUME_VALID_HEIGHT`** overrides **`assume_valid_height`** from file.
+
 ## IBD Configuration
 
-Parallel IBD (`[ibd]`, default `mode = "parallel"`). LAN auto-prefer and WAN single-peer behavior: [Mainnet initial sync](../getting-started/mainnet-sync.md). Bandwidth limits: `[ibd_protection]`. ENV: `BLVM_IBD_*`.
+Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default **`mode = "parallel"`**. LAN peers are auto-preferred; WAN-only **`parallel`** sync uses multi-peer work-stealing unless **`BLVM_IBD_WAN_SINGLE_PEER=1`**. Bandwidth limits when **serving** IBD to peers: **`[ibd_protection]`** — [IBD Bandwidth Protection](../node/ibd-protection.md). Optional UTXO engine: **`BLVM_IBD_ENGINE=1`** — [IBD UTXO engine](../node/ibd-engine.md).
+
+### `ibd.chunk_size`
+- **Type**: `integer`
+- **Default**: `128`
+- **Description**: Blocks requested per download chunk. ENV **`BLVM_IBD_CHUNK_SIZE`** (allowed range 16–2000).
+
+### `ibd.download_timeout_secs`
+- **Type**: `integer` (seconds)
+- **Default**: `30`
+- **Description**: Per-block download timeout. ENV **`BLVM_IBD_DOWNLOAD_TIMEOUT_SECS`**.
+
+### `ibd.mode`
+- **Type**: `string`
+- **Default**: `"parallel"`
+- **Options**: `"parallel"`, `"sequential"`, `"earliest"` (via **`BLVM_IBD_MODE`**)
+- **Description**: Download scheduler mode. **`sequential`** uses single-peer Core-like fetch.
+
+### `ibd.preferred_peers`
+- **Type**: `array` of `string` (host:port)
+- **Default**: `[]`
+- **Description**: Pin download peers. ENV **`BLVM_IBD_PEERS`** (comma-separated) overrides discovery.
+
+### `ibd.max_ahead_blocks`
+- **Type**: `integer` or omitted
+- **Default**: none (RAM-adaptive **`MemoryGuard`**)
+- **Description**: Cap blocks buffered ahead of validation. ENV **`BLVM_IBD_MAX_AHEAD`**.
+
+### `ibd.memory_only`
+- **Type**: `boolean`
+- **Default**: `false`
+- **Description**: Keep IBD UTXO state in memory only (testing / constrained disk). ENV **`BLVM_IBD_MEMORY_ONLY=1`**.
+
+### `ibd.dump_dir` / `ibd.snapshot_dir`
+- **Type**: `string` (path) or omitted
+- **Default**: none
+- **Description**: Optional dump and snapshot directories for IBD tooling. ENV **`BLVM_IBD_DUMP_DIR`**, **`BLVM_IBD_SNAPSHOT_DIR`**.
+
+### `ibd.yield_interval`
+- **Type**: `integer` (blocks)
+- **Default**: `1000`
+- **Description**: Validation loop yield cadence. ENV **`BLVM_IBD_YIELD_INTERVAL`**.
+
+### `ibd.eviction`
+- **Type**: `string`
+- **Default**: `"fifo"`
+- **Options**: `"fifo"`, `"lifo"`, `"dynamic"` (ENV **`BLVM_IBD_EVICTION`**)
+
+### `ibd.earliest_first`
+- **Type**: `boolean`
+- **Default**: `false`
+- **Description**: Assign all chunks to the fastest peer (Core-like). ENV **`BLVM_IBD_EARLIEST_FIRST=1`**.
+
+### `ibd.prefetch_workers` / `ibd.prefetch_queue_size`
+- **Type**: `integer` or omitted
+- **Default**: none (auto from RAM tier)
+- **Description**: UTXO prefetch pool sizing during legacy IBD path.
+
+### `ibd.utxo_prefetch_lookahead`
+- **Type**: `integer`
+- **Default**: `64`
+- **Description**: Blocks ahead to prefetch UTXOs for.
+
+### `ibd.max_blocks_in_transit_per_peer`
+- **Type**: `integer`
+- **Default**: `128` (must stay ≥ **`chunk_size`**)
+- **Description**: In-flight block permit count per peer. ENV **`BLVM_IBD_MAX_BLOCKS_IN_TRANSIT`**.
+
+### `ibd.headers_timeout_secs`
+- **Type**: `integer`
+- **Default**: `30`
+- **Description**: Header download timeout. ENV **`BLVM_IBD_HEADERS_TIMEOUT`**.
+
+### `ibd.headers_max_failures`
+- **Type**: `integer`
+- **Default**: `10`
+- **Description**: Header fetch failures before peer penalty. ENV **`BLVM_IBD_HEADERS_MAX_FAILURES`**.
+
+**Additional IBD environment variables** (no `[ibd]` table key): **`BLVM_IBD_ENGINE`**, **`BLVM_IBD_ENGINE_PATH`**, **`BLVM_IBD_WAN_SINGLE_PEER`**, **`BLVM_IBD_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_DEFER_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_EXPORT_HEIGHT_OVERRIDE`**, **`BLVM_IBD_MAX_PARALLEL`**, **`BLVM_IBD_PIPELINE_DEPTH`**. See [IBD UTXO engine](../node/ibd-engine.md) and [Mainnet initial sync](../getting-started/mainnet-sync.md).
+
+**Code**: [config/ibd.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/ibd.rs), [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 ## Storage Configuration
 
@@ -314,8 +411,24 @@ module_socket_max_attempts = 50
 ### `rpc_auth.tokens`
 - **Type**: `array` of `string`
 - **Default**: `[]`
-- **Description**: Valid authentication tokens for RPC access.
+- **Description**: Bearer tokens (`Authorization: Bearer …`). Read-only unless also listed in `admin_tokens`.
 - **Example**: `tokens = ["token1", "token2"]`
+
+### `rpc_auth.admin_tokens`
+- **Type**: `array` of `string`
+- **Default**: `[]`
+- **Description**: Tokens with admin privileges (`getblocktemplate`, `submitblock`, `generatetoaddress`, `stop`, etc.). Bearer tokens in `tokens` / `token_file` must appear here (or use `[rpc_auth].password` for HTTP Basic) to call admin methods; an empty list means no bearer token is admin by default.
+- **Example**: `admin_tokens = ["mining-admin-token"]`
+
+### `rpc_auth.username`
+- **Type**: `string` (optional)
+- **Default**: none
+- **Description**: HTTP Basic auth username (Bitcoin Core / ckpool `auth`). If omitted, any username is accepted when the password matches.
+
+### `rpc_auth.password`
+- **Type**: `string` (optional)
+- **Default**: none
+- **Description**: HTTP Basic auth password (ckpool `pass`, `curl -u`). Automatically registered as **admin** when set. Use only on loopback RPC or behind TLS.
 
 ### `rpc_auth.certificates`
 - **Type**: `array` of `string`
@@ -464,11 +577,14 @@ Configuration can also be set via environment variables (prefixed with `BLVM_`).
 export BLVM_NETWORK=testnet
 export BLVM_DATA_DIR=/var/lib/blvm
 export BLVM_RPC_ADDR=127.0.0.1:8332
+export BLVM_ASSUME_VALID_HEIGHT=912683
 export BLVM_IBD_EVICTION=dynamic
+export BLVM_IBD_ENGINE=1
+export BLVM_IBD_WAN_SINGLE_PEER=1
 export BLVM_NETWORK_TARGET_PEER_COUNT=125
 ```
 
-**Key ENV categories:** Node (`BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`), Network timing (`BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_NETWORK_PEER_CONNECTION_DELAY`), Request timeouts (`BLVM_REQUEST_ASYNC_TIMEOUT`, etc.), Module limits (`BLVM_MODULE_MAX_*`), IBD (`BLVM_IBD_*`), Storage (`BLVM_DBCACHE_MB`, `BLVM_ROCKSDB_*`), External (`RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`).
+**Key ENV categories:** Node (`BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`), Block validation (`BLVM_ASSUME_VALID_HEIGHT`), Network timing (`BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_NETWORK_PEER_CONNECTION_DELAY`), Request timeouts (`BLVM_REQUEST_ASYNC_TIMEOUT`, etc.), Module limits (`BLVM_MODULE_MAX_*`), IBD (`BLVM_IBD_*`, including `BLVM_IBD_ENGINE`, `BLVM_IBD_WAN_SINGLE_PEER`), Storage (`BLVM_DBCACHE_MB`, `BLVM_ROCKSDB_*`), External (`RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`).
 
 Additional or experimental `BLVM_*` names may exist; use `blvm --help` and the node’s config schema as the source of truth in this repository.
 

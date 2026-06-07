@@ -74,6 +74,7 @@ graph TB
 
 ### RPC Server
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
+- **Bearer token RBAC** (`tokens`, `admin_tokens`) and **HTTP Basic** (`username`, `password`) for ckpool / Core-style clients
 - REST API (optional feature, runs alongside JSON-RPC)
 - Optional QUIC transport support (see [QUIC RPC](quic-rpc.md))
 - Authentication and rate limiting
@@ -138,6 +139,7 @@ graph TB
 - [Package relay](package-relay.md) (BIP331)
 - [UTXO commitments](../consensus/utxo-commitments.md) support
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
+- [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with optional [IBD UTXO engine](ibd-engine.md) (`BLVM_IBD_ENGINE=1`)
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → RocksDB** in typical release builds; optional redb, sled, tidesdb)

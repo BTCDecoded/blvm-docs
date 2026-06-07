@@ -71,7 +71,7 @@ LAN peers start with limited trust and earn higher priority over time:
 
 ### Peer Prioritization
 
-IBD auto-prefers LAN peers; WAN-only uses one fastest peer under `parallel` mode. Override with `BLVM_IBD_PEERS` or `[ibd].preferred_peers`. See [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs).
+IBD auto-prefers LAN peers. On WAN-only **`parallel`** sync, multiple peers work-steal download chunks by default; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to use a single peer. Override peers with **`BLVM_IBD_PEERS`** or **`[ibd].preferred_peers`**. See [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs).
 
 ## Security Model
 

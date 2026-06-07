@@ -15,7 +15,9 @@ sha256sum -c SHA256SUMS-blvm-linux-x86_64
 # BLVM_BACKGROUND=1 ./scripts/start-ibd-mainnet.sh   # background → ~/.local/share/blvm-mainnet/ibd.log
 ```
 
-Uses bundled `blvm-mainnet-ibd.toml.example`, mainnet, and `~/.local/share/blvm-mainnet`. No `BLVM_IBD_*` env vars. LAN Core is auto-discovered; WAN-only uses one fastest peer (`parallel` mode).
+Uses bundled `blvm-mainnet-ibd.toml.example`, mainnet, and `~/.local/share/blvm-mainnet`. The bundled script does not set `BLVM_IBD_*` env vars. LAN Core is auto-discovered; on WAN-only networks, **`parallel` mode uses multi-peer work-stealing by default** — set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to force a single download peer.
+
+Optional: enable the age-tiered UTXO engine with **`BLVM_IBD_ENGINE=1`** before start (see [IBD UTXO engine](../node/ibd-engine.md)); the example TOML leaves it off.
 
 **Manual:** `blvm --config blvm-mainnet-ibd.toml.example --network mainnet --data-dir ~/.local/share/blvm-mainnet --verbose`
 
@@ -33,7 +35,9 @@ Uses bundled `blvm-mainnet-ibd.toml.example`, mainnet, and `~/.local/share/blvm-
 ## Optional overrides
 
 - `BLVM_IBD_PEERS=<ip>:8333` — pin download peer
-- `BLVM_IBD_MODE=sequential|earliest` — change mode (default `parallel`)
+- `BLVM_IBD_MODE=sequential|earliest|parallel` — change mode (default `parallel`)
+- `BLVM_IBD_WAN_SINGLE_PEER=1` — WAN-only: use one peer instead of multi-peer work-stealing
+- `BLVM_IBD_ENGINE=1` — age-tiered UTXO engine during sync ([IBD UTXO engine](../node/ibd-engine.md))
 - Port **8333** in use — stop Core or change `listen_addr`
 
 ## Troubleshooting

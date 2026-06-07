@@ -39,8 +39,9 @@ Headers are downloaded in parallel using hardcoded checkpoints at well-known blo
 
 Blocks are downloaded with deep pipelining per peer, allowing multiple outstanding block requests to hide network latency.
 
-**Configuration** (see [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs) and [IBD Configuration](../reference/configuration-reference.md#ibd-configuration)):
-- `chunk_size`: blocks per chunk (default: 16; ENV `BLVM_IBD_CHUNK_SIZE` 16–2000)
+**Configuration** (see [IBD Configuration](../reference/configuration-reference.md#ibd-configuration) and [Node Configuration](configuration.md#ibd-configuration)):
+- `chunk_size`: blocks per chunk (default: **128**; ENV **`BLVM_IBD_CHUNK_SIZE`** 16–2000)
+- `max_blocks_in_transit_per_peer`: in-flight blocks per peer (default: **128**; keep ≥ `chunk_size`)
 - `download_timeout_secs`: timeout per block in seconds (default: 30)
 - `max_concurrent_per_peer`: fixed at 64 in code (not in `[ibd]` config; see `ParallelIBDConfig`)
 
@@ -49,8 +50,8 @@ Blocks are downloaded with deep pipelining per peer, allowing multiple outstandi
 **Dynamic Work Dispatch**:
 - Uses a shared work queue instead of static chunk assignment
 - Fast peers automatically grab more work as they finish chunks
+- On WAN-only **`parallel`** sync, **multi-peer work-stealing** is default; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** for single-peer download
 - FIFO ordering ensures lowest heights are processed first
-- Natural load balancing across peers
 
 ### Streaming Validation with Reorder Buffer
 
@@ -97,19 +98,25 @@ The system tracks peer performance and filters out extremely slow peers during I
 
 ```toml
 [ibd]
-chunk_size = 16
+chunk_size = 128
 download_timeout_secs = 30
 mode = "parallel"
 eviction = "fifo"
-max_blocks_in_transit_per_peer = 16
+max_blocks_in_transit_per_peer = 128
 headers_timeout_secs = 30
 headers_max_failures = 10
 ```
 (`max_concurrent_per_peer` is fixed at 64 in the node; not in `IbdConfig`. See [Node Configuration](configuration.md#ibd-configuration) and [configuration-reference](../reference/configuration-reference.md#ibd-configuration).)
 
-**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
+**Code**: [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 Parallel headers, pipelining, streaming validation, and batch storage all contribute to faster IBD compared to a single-threaded sequential sync. See benchmarks for current measurements.
+
+## IBD UTXO engine (optional)
+
+When **`BLVM_IBD_ENGINE=1`**, validated blocks apply UTXO changes through the age-tiered engine under `storage/ibd_engine/` (checkpoints, crash-safe resume). Download still uses the parallel pipeline above.
+
+See **[IBD UTXO engine](ibd-engine.md)** for enablement, architecture, and checkpoint env vars.
 
 ## Parallel Block Validation
 
@@ -197,38 +204,38 @@ parallel_batch_size = 8
 
 **Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 
-## Assume-Valid Checkpoints
+## Assume-Valid Height
 
 ### Overview
 
-Assume-valid checkpoints skip expensive signature verification for blocks before a configured height, reducing IBD time when enabled.
+Assume-valid height skips expensive signature verification for blocks before a configured height, reducing IBD time. The node merges **`[block_validation]`** into consensus validation config at startup.
 
-**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
+**Code**: [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs) (`BlockValidationNodeConfig`), [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Safety
 
 This optimization is safe because:
 1. These blocks are already validated by the network
-2. Block structure, Merkle roots, and PoW are still validated
+2. Block structure, Merkle roots, and proof-of-work are still validated
 3. Only signature verification is skipped (the expensive operation)
-
-**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Configuration
 
 ```toml
-[performance]
-assume_valid_height = 700000  # Skip signatures before this height
+[block_validation]
+assume_valid_height = 912683   # mainnet library default when unset; use 0 for full script checks
+# assume_valid_hash = "…"      # optional: hash at assume_valid_height (-assumevalid)
 ```
 
-**Environment Variable**:
+**Environment variable** (overrides file):
+
 ```bash
-ASSUME_VALID_HEIGHT=700000
+export BLVM_ASSUME_VALID_HEIGHT=912683
 ```
 
-**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
+Network defaults when neither file nor env is set: mainnet **912 683**, testnet **4 550 000**, regtest **0**. See [configuration-reference](../reference/configuration-reference.md#block_validationassume_valid_height).
 
-Signature verification is a major cost; skipping it for pre-checkpoint blocks speeds IBD. Only signature verification is skipped; structure, Merkle, and PoW are still validated. Can be disabled (set to 0) for maximum safety.
+Signature verification is a major cost; skipping it for blocks below the threshold speeds IBD. Set **`assume_valid_height = 0`** for maximum script-validation assurance.
 
 ## Parallel Transaction Validation
 
@@ -369,7 +376,7 @@ Benchmark results are published at [benchmarks.thebitcoincommons.org](https://be
 The performance optimization system includes:
 - Parallel block validation
 - Batch UTXO operations
-- Assume-valid checkpoints
+- Assume-valid height (signature skip below threshold)
 - Parallel transaction validation
 - Advanced indexing (address, value range)
 - Runtime optimizations (constant folding, bounds checks, cache-friendly layouts)
@@ -385,4 +392,5 @@ The performance optimization system includes:
 - [Storage Backends](storage-backends.md) - Storage performance
 - [Consensus Architecture](../consensus/architecture.md) - Optimization passes
 - [UTXO Commitments](../consensus/utxo-commitments.md) - UTXO proof verification and fast sync
+- [IBD UTXO engine](ibd-engine.md) — Optional age-tiered UTXO store during sync
 - [IBD Bandwidth Protection](ibd-protection.md) - IBD bandwidth management

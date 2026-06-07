@@ -133,7 +133,7 @@ pub struct ModuleContext {
 - Raw transaction methods (7): `getrawtransaction`, `sendrawtransaction`, `testmempoolaccept`, `decoderawtransaction`, `gettxout`, `gettxoutproof`, `verifytxoutproof`
 - Mempool methods (3): `getmempoolinfo`, `getrawmempool`, `savemempool`
 - Network methods (9): `getnetworkinfo`, `getpeerinfo`, `getconnectioncount`, `ping`, `addnode`, `disconnectnode`, `getnettotals`, `clearbanned`, `setban`, `listbanned`
-- Mining methods (4): `getmininginfo`, `getblocktemplate`, `submitblock`, `estimatesmartfee`
+- Mining methods: `getmininginfo`, `getblocktemplate`, `submitblock`, `generatetoaddress`, `estimatesmartfee`, `validateaddress` (pools / solo — see [Mining Integration](../node/mining.md))
 
 **Documentation:** See [RPC API Reference](../node/rpc-api.md).
 

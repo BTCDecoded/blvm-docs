@@ -207,7 +207,7 @@ You need **a peer that already has blocks**, or a **datadir that already contain
 
 **1. Second regtest full node (typical way to create blocks)**
 
-The commands below use **Bitcoin Core** (`bitcoind` / `bitcoin-cli`) **only** as a separate regtest peer to generate blocks. They are **not** BLVM configuration: your BLVM node still uses **`blvm.toml`** and the **`blvm`** binary, and **must not** copy Core’s **`rpcuser`** / **`rpcpassword`** into BLVM (**`[rpc_auth]`** uses tokens / Bearer auth instead).
+The commands below use **Bitcoin Core** (`bitcoind` / `bitcoin-cli`) **only** as a separate regtest peer to generate blocks. They are **not** BLVM configuration: your BLVM node still uses **`blvm.toml`** and the **`blvm`** binary. Map Core **`rpcuser`** / **`rpcpassword`** to **`[rpc_auth].username`** / **`password`** (HTTP Basic) or to Bearer **`tokens`** / **`admin_tokens`** — see [RPC API — Authentication](rpc-api.md).
 
 Run a reference regtest daemon on default P2P **`127.0.0.1:18444`**, mine some blocks, then run BLVM on a **different** local P2P port and peer **outbound** to it. Example using the common `bitcoind` / `bitcoin-cli` CLI:
 
@@ -251,7 +251,7 @@ Copy/sync the configured `[storage].data_dir` from a machine that already comple
 
 **4. `submitblock` on a running BLVM node**
 
-On a normal node (RPC server wired with `NetworkManager`), `submitblock` checks that the block’s `prev_block_hash` matches the **current tip**, then **queues the block for the same run-loop processing as P2P-received blocks**, so a valid next block can extend your local chain. You still have to **produce** that block (for example `getblocktemplate` plus a miner); BLVM does not yet mirror every convenience RPC some reference stacks expose for regtest mining.
+On a normal node (RPC server wired with `NetworkManager`), `submitblock` requires an initialized chain tip, checks that the block’s `prev_block_hash` matches the **current tip**, then **queues the block for the same run-loop processing as P2P-received blocks**, so a valid next block can extend your local chain. You still have to **produce** that block (for example `getblocktemplate` plus a miner); BLVM does not yet mirror every convenience RPC some reference stacks expose for regtest mining.
 
 If `MiningRpc` is used without a network manager (some tests or minimal tooling), `submitblock` remains **validation-only** and does not advance the chain.
 

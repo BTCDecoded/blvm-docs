@@ -55,24 +55,24 @@ Configuration is organized in logical sections (`storage`, `ibd`, `modules`, opt
 
 | Bitcoin Core (`bitcoin.conf` or CLI) | BLVM |
 |--------------------------------------|------|
-| `rpcuser` / `rpcpassword` | **`[rpc_auth]`** — `tokens`, `token_file`, or `RPC_AUTH_TOKENS`; HTTP **`Authorization: Bearer …`** (not HTTP basic user/password) |
+| `rpcuser` / `rpcpassword` | **`[rpc_auth].username`** / **`password`** (HTTP Basic; password auto-granted admin), or **`tokens`** / **`admin_tokens`** with **`Authorization: Bearer …`** |
 | `rpcbind` / `rpcport` | **`blvm --rpc-addr`** / **`BLVM_RPC_ADDR`** |
 | `port` (P2P) | **`listen_addr`** (top-level TOML) or **`--listen-addr`** |
 | `addnode=` | **`persistent_peers`** or the **`addnode`** RPC after startup |
 
-To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-core <path/to/bitcoin.conf>`** (or the **`convert-bitcoin-core-config`** shell/Rust tools in the **`blvm-node`** repo). **Review and normalize** the output: those tools may still emit **legacy** shapes (`[network]`, **`[rpc_auth]`** username/password, nested **`[transport_preference]`**) that valid **`NodeConfig`** TOML must not keep — see the [blvm-node Integration Guide — Migrating from `bitcoin.conf`](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#migrating-from-bitcoinconf). Always wire **`--rpc-addr`**, use **`[rpc_auth].tokens`** (Bearer auth), and set **`storage.data_dir`** separately. Converters are **not** a substitute for the [configuration reference](../reference/configuration-reference.md).
+To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-core <path/to/bitcoin.conf>`** (or the **`convert-bitcoin-core-config`** shell/Rust tools in the **`blvm-node`** repo). **Review and normalize** the output: remove legacy **`[network]`** wrappers and nested **`[transport_preference]`** blobs. **`[rpc_auth].username`** / **`password`** are valid for HTTP Basic (map from Core **`rpcuser`** / **`rpcpassword`**), or use **`tokens`** / **`admin_tokens`** for Bearer auth — see the [blvm-node Integration Guide — Migrating from `bitcoin.conf`](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#migrating-from-bitcoinconf). Always wire **`--rpc-addr`** and set **`storage.data_dir`** separately.
 
 ## IBD Configuration
 
-Default **`mode = "parallel"`**. LAN peers are auto-preferred for download; WAN-only uses one fastest peer. Overrides: `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`. Release path: [Mainnet initial sync](../getting-started/mainnet-sync.md).
+Default **`mode = "parallel"`**. LAN peers are auto-preferred for download. On WAN-only sync, **`parallel` mode uses multi-peer work-stealing**; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to force a single download peer. Overrides: **`BLVM_IBD_PEERS`**, **`BLVM_IBD_MODE`**, **`BLVM_IBD_ENGINE`**. Release path: [Mainnet initial sync](../getting-started/mainnet-sync.md). Engine details: [IBD UTXO engine](ibd-engine.md).
 
 ```toml
 [ibd]
-chunk_size = 16
+chunk_size = 128
+max_blocks_in_transit_per_peer = 128
 download_timeout_secs = 30
 mode = "parallel"
 eviction = "fifo"
-max_blocks_in_transit_per_peer = 16
 headers_timeout_secs = 30
 headers_max_failures = 10
 ```

@@ -22,9 +22,10 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 
 ### Control plane (JSON-RPC, REST, QUIC RPC)
 
-- **Required (non-loopback):** **`[rpc_auth]`** with **`required = true`** and tokens / **`token_file`** / **`RPC_AUTH_TOKENS`** or TLS client certs as documented in **[Configuration reference](../reference/configuration-reference.md)**.
-- **Recommended:** Reverse proxy or firewall allowlists in front of RPC when operators need LAN/WAN reachability; rate limits already exist server-side but edge policy still matters.
-- **Note (QUIC):** JSON-RPC over QUIC uses **HTTP/3** (ALPN **`h3`**) and shares the same **`[rpc_auth]` / Bearer contract** as TCP HTTP when enabled — still treat the **UDP listener** as its own exposure surface (firewall, pinning, cert rotation). See **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
+- **Required (non-loopback):** **`[rpc_auth]`** with **`required = true`**. Use **Bearer tokens** (`tokens`, `admin_tokens`, `token_file`, **`RPC_AUTH_TOKENS`**) and/or **HTTP Basic** (`username`, `password` for ckpool / Core-style clients). TLS client certificates remain supported when configured. See **[Configuration reference](../reference/configuration-reference.md)** and **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
+- **Recommended:** Bind RPC to **loopback** when using HTTP Basic — credentials are cleartext on the wire. Use a reverse proxy or firewall allowlists when exposing RPC beyond localhost; server-side rate limits do not replace edge policy.
+- **Recommended:** Grant **admin** access only to operators and mining tooling (`getblocktemplate`, `submitblock`, `generatetoaddress`, destructive control methods). Bearer tokens in `tokens` alone are read-only unless also listed in `admin_tokens`; `[rpc_auth].password` is registered as admin automatically when set.
+- **Note (QUIC):** JSON-RPC over QUIC uses **HTTP/3** (ALPN **`h3`**) and shares the same **`RpcAuthManager`** as TCP HTTP (Bearer and Basic). Treat the **UDP listener** as its own exposure surface. See **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
 
 ### Peer layer (P2P)
 
@@ -49,7 +50,7 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 
 ### Secrets and logging
 
-- **Required:** Never commit **`RPC_AUTH_TOKENS`**, TLS keys, or **`token_file`** paths into config repos; restrict log forwarding so Bearer tokens are not captured in HTTP logs.
+- **Required:** Never commit **`RPC_AUTH_TOKENS`**, **`[rpc_auth].password`**, TLS keys, or **`token_file`** paths into config repos; restrict log forwarding so Bearer tokens and Basic credentials are not captured in HTTP access logs.
 - **Recommended:** Rotate tokens after operational incidents.
 
 ### Software maturity
@@ -59,7 +60,7 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 ## Minimum checklist (non-loopback RPC)
 
 1. Set **`rpc_auth.required = true`** (or equivalent env) **unless** RPC listens only on **`127.0.0.1`** / **`::1`** (loopback).
-2. Provide tokens (**`tokens`**, **`token_file`**, or **`RPC_AUTH_TOKENS`**) or TLS client certificates as documented in **[Configuration reference](../reference/configuration-reference.md)**.
+2. Provide **Bearer tokens** (`tokens`, `admin_tokens`, `token_file`, **`RPC_AUTH_TOKENS`**) and/or **HTTP Basic** (`username` / `password`) or TLS client certificates as documented in **[Configuration reference](../reference/configuration-reference.md)**.
 3. Prefer **`transport_preference = "tcponly"`** until QUIC RPC + strong auth is explicitly required — see **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
 
 ## Relationship to other docs

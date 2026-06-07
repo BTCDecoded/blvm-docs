@@ -121,6 +121,23 @@ Optional Stratum V2 protocol support provides:
 
 There is **no** `[mining]` table on `NodeConfig`. Mining uses RPC (`getblocktemplate`, `submitblock`), optional **`blvm-stratum-v2`** for Stratum traffic, and optional **`blvm-merge-mining`**.
 
+### ckpool solo (Bitaxe / Stratum V1)
+
+Stack: synced **`blvm`** node → **ckpool** (`-B` solo) → miners on `:3333`.
+
+```toml
+[rpc_auth]
+required = true
+username = "ckpool"
+password = "change-me-to-a-strong-secret"
+```
+
+```bash
+blvm --network mainnet --rpc-addr 127.0.0.1:8332
+```
+
+HTTP Basic password is auto-granted **admin** (required for `getblocktemplate` / `submitblock`). Point ckpool `btcd.url` at the RPC port with matching `auth` / `pass`. Regtest lab: seed with `generatetoaddress` before GBT. Smoke test: `blvm-node/examples/ckpool-solo/smoke-rpc.sh`. See the [blvm-node Integration Guide — ckpool](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#ckpool-solo-mining--bitaxe--stratum-v1).
+
 ### Stratum V2 (node + module)
 
 See [Stratum V2 + Merge Mining](mining-stratum-v2.md) for split **node** vs **module** `config.toml` examples and **`p2p_stratum_demux`**.

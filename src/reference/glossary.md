@@ -55,6 +55,14 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Network Variants** - Bitcoin network types: **Mainnet** (BitcoinV1, production), **Testnet3** (test network), **Regtest** (regression testing, isolated).
 
+**IBD engine** - Optional age-tiered UTXO store during initial sync when **`BLVM_IBD_ENGINE=1`**. See [IBD UTXO engine](../node/ibd-engine.md).
+
+**admin_tokens** - RPC Bearer tokens with permission to call admin methods (`getblocktemplate`, `submitblock`, destructive control). Tokens in `tokens` alone are read-only unless also listed here. **`[rpc_auth].password`** (HTTP Basic) is registered as admin when set.
+
+**HTTP Basic RPC** - `Authorization: Basic` using **`[rpc_auth].username`** / **`password`**. Used by ckpool and Bitcoin Core–style tools; bind RPC to loopback when using Basic auth.
+
+**ckpool** - Solo mining pool software that talks to the node over JSON-RPC (HTTP Basic). See [Mining Integration](../node/mining.md#ckpool-solo-bitaxe--stratum-v1).
+
 ## Consensus & Protocol
 
 **Consensus Rules** - Mathematical rules that all Bitcoin nodes must follow to maintain network consensus. Defined in the [Orange Paper](orange-paper.md) and implemented in [blvm-consensus](../consensus/overview.md).

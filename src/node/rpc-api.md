@@ -4,29 +4,44 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, regtest **`127.0.0.1:18443`**.
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet and regtest **`127.0.0.1:18332`** (not Bitcoin Core’s regtest port `18443`).
 - **REST API** (optional): Served only when **`blvm-node`** is built with the **`rest-api`** feature and your runner enables it with a bind address. There is **no** separate fixed port in a minimal **`blvm`** deployment; examples below use `http://localhost:8080` only as an illustration.
 
 JSON-RPC is the portable operator surface. REST availability depends on build and wiring.
 
 ## Connection
 
-Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. The default is `http://127.0.0.1:8332` (mainnet). Use `http://127.0.0.1:18332` for testnet or `http://127.0.0.1:18443` for regtest. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
+Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. The default is `http://127.0.0.1:8332` (mainnet). Use `http://127.0.0.1:18332` for testnet or regtest. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
 
 ## Authentication
 
-For production use, configure RPC authentication with **`[rpc_auth]`** (tokens, optional `token_file` / `certificates`) — not username/password tables:
+Configure RPC authentication with **`[rpc_auth]`**. Two common patterns:
+
+**Bearer tokens** (wallets, automation):
 
 ```toml
 [rpc_auth]
 required = true
 tokens = ["your-long-random-token"]
-# token_file = "/etc/blvm/rpc_tokens.txt"
+admin_tokens = ["admin-token-for-mining-rpcs"]  # optional; mining/destructive methods
 ```
 
-Pass the token on each request: `Authorization: Bearer <token>` (or `RPC_AUTH_TOKENS` for multiple comma-separated tokens). **`[rpc]`** in `NodeConfig` is only for **limits / rate limits**, not credentials.
+Pass `Authorization: Bearer <token>` on each request. Tokens in `tokens` alone are **read-only** unless also listed in `admin_tokens`.
 
-See **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** for TCP HTTP vs QUIC JSON-RPC vs REST and **[Deployment posture](../security/deployment-posture.md)** for operator checklist language.
+**HTTP Basic** (ckpool, Bitcoin Core–style tools, `curl -u`):
+
+```toml
+[rpc_auth]
+required = true
+username = "ckpool"
+password = "your-long-random-secret"
+```
+
+The password is registered as **admin** automatically (required for `getblocktemplate` / `submitblock`). Bind RPC to **loopback** (`--rpc-addr 127.0.0.1:8332`) — Basic auth is cleartext on the wire.
+
+Optional: `token_file`, `certificates`, `RPC_AUTH_TOKENS`. **`[rpc]`** in `NodeConfig` is only for **limits / rate limits**, not credentials.
+
+See **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** and **[Deployment posture](../security/deployment-posture.md)**.
 
 ## Example Requests
 
