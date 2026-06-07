@@ -221,7 +221,23 @@ header_cache_mb = 10
 
 ## Migration
 
-### Backend Migration
+### Bitcoin Core drop-in (migrate on start)
+
+With the **`rocksdb`** feature (default in release builds), point **`--datadir`** at a **synced Core** tree (`chainstate/` + `blocks/`) to import once into **`<datadir>/blvm/`**. Stop **`bitcoind`** first; match **`--network`** to the datadir.
+
+**Operator steps:** [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir). **Flags and ENV:** [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in). **Config keys:** `storage.auto_migrate_core`, `core_migrate_destination`, `reuse_core_block_files`.
+
+After success, **`blvm_meta/migration.json`** marks the store; interrupted runs resume via **`blvm_meta/migration_checkpoint.json`**.
+
+**Reuse Core block files:** `storage.reuse_core_block_files` or `BLVM_REUSE_CORE_BLOCK_FILES=1` — migrate UTXOs/indexes only; read bodies from Core `blk*.dat` (Core `blocks/` must stay on disk).
+
+**Pruned Core:** rejected when block file coverage is insufficient.
+
+**Limits:** no concurrent Core + BLVM on the same chainstate; no write-back into Core LevelDB.
+
+**Code:** [bitcoin_core_migrate.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_migrate.rs), [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs) (`open_for_node`).
+
+### Backend migration
 
 To migrate between backends:
 

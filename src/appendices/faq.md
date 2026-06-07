@@ -182,13 +182,17 @@ The experimental build variant adds compile-time features such as: UTXO commitme
 
 Configuration can be done via config file (`blvm.toml`), environment variables, or command-line options. See [Node Configuration](../node/configuration.md) for complete configuration options.
 
+### Can I start BLVM from an existing Bitcoin Core datadir?
+
+Yes, with the default **`rocksdb`** build: stop **`bitcoind`**, point **`--datadir`** at a synced Core tree, and **`blvm start`** migrates once to **`<datadir>/blvm/`**. See [Operations — Starting from a Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
+
 ### What RPC methods are available?
 
 The node implements many JSON-RPC methods aligned with widely documented Bitcoin node RPC conventions across blockchain, raw transaction, mempool, network, mining, control, address, transaction, and payment categories. See [RPC API Reference](../node/rpc-api.md) for the list.
 
 ### How does the module system work?
 
-The node includes a process-isolated module system that enables optional features (Lightning, merge mining, privacy enhancements) without affecting consensus or base node stability. Modules run in separate processes with IPC communication. See [Module Development](../sdk/module-development.md) for details.
+The node includes a process-isolated module system (Lightning, mesh, privacy modules, etc.). Spawned modules register ModuleAPI over IPC; see [Module Development](../sdk/module-development.md) and [Module IPC Protocol](../architecture/module-ipc-protocol.md).
 
 ### How do I troubleshoot issues?
 

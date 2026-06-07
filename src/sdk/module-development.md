@@ -404,10 +404,10 @@ Corresponding IPC `MessageType` / `RequestPayload` names match the `NodeAPI` met
 - `get_file_metadata(path)` - Get file metadata (size, type, timestamps)
 
 **Module Communication API:**
-- `call_module(target_module_id, method, params)` - Call an API method on another module
+- `call_module(target_module_id, method, params)` - Call an API method on another module (uses in-process API or subprocess **`ModuleApi`** invocation)
 - `publish_event(event_type, payload)` - Publish an event to other modules
-- `register_module_api(api)` - Register module API for other modules to call
-- `unregister_module_api()` - Unregister module API
+- `register_module_api(api)` - Register in-process module API (same process as the node)
+- `register_subprocess_module_api` / `unregister_subprocess_module_api` - Node-side only: install IPC proxy after subprocess sends **`RegisterModuleApi`**
 - `discover_modules()` - Discover all available modules
 - `get_module_info(module_id)` - Get information about a specific module
 - `is_module_available(module_id)` - Check if a module is available
@@ -432,10 +432,16 @@ Corresponding IPC `MessageType` / `RequestPayload` names match the `NodeAPI` met
 - `get_payment_state(payment_id)` - Get payment state by payment ID
 
 **Network Integration API:**
-- `send_mesh_packet_to_peer(peer_addr, packet_data)` — send a mesh packet to a peer (supported path for IPC modules).
-- `send_mesh_packet_to_module(module_id, packet_data, peer_addr)` — may be **unimplemented** for out-of-process modules (`NodeApiIpc`); use peer-targeted sends where available.
+- `send_mesh_packet_to_peer(peer_addr, packet_data)` — send mesh bytes to a P2P peer (requires **`network_access`**)
+- `send_mesh_packet_to_module(module_id, packet_data, peer_addr)` — delegate to a mesh module via **`call_module`**
+
+Spawned modules should declare **`network_access`**, **`register_module_api`**, **`publish_events`**, and **`read_payment`** in **`module.toml`** when they register a ModuleAPI, publish routing events, or verify payments (see [Commons Mesh Module](../modules/mesh.md)).
 
 For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs).
+
+#### Spawned modules and ModuleAPI
+
+Use **`run_module_with_setup_and_api`** and declare **`register_module_api`** in **`module.toml`**. See [Module IPC Protocol](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Commons Mesh Module](../modules/mesh.md#node-integration).
 
 ### Subscribing to events
 

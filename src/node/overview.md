@@ -63,6 +63,7 @@ graph TB
 
 ### Storage Layer
 - Database abstraction with multiple backends (see [Storage Backends](storage-backends.md))
+- **Bitcoin Core drop-in**: one-time import from a synced Core datadir into `<datadir>/blvm/` when the `rocksdb` feature is enabled (see [Operations — Starting from a Core datadir](operations.md#starting-from-a-bitcoin-core-datadir))
 - Automatic backend fallback on failure
 - Block storage and indexing
 - UTXO set management

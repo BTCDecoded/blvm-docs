@@ -134,6 +134,8 @@ pub struct ModuleContext {
 - Mempool methods (3): `getmempoolinfo`, `getrawmempool`, `savemempool`
 - Network methods (9): `getnetworkinfo`, `getpeerinfo`, `getconnectioncount`, `ping`, `addnode`, `disconnectnode`, `getnettotals`, `clearbanned`, `setban`, `listbanned`
 - Mining methods: `getmininginfo`, `getblocktemplate`, `submitblock`, `generatetoaddress`, `estimatesmartfee`, `validateaddress` (pools / solo — see [Mining Integration](../node/mining.md))
+- Mesh methods (requires `blvm-mesh`): `meshsendpacket`, `meshpollreceived`
+- Payment verification: `verifyonchainpayment`, `verifycovenantproof` (CTV feature)
 
 **Documentation:** See [RPC API Reference](../node/rpc-api.md).
 

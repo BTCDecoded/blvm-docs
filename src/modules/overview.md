@@ -11,7 +11,7 @@ The following modules are available for blvm-node:
 ### Core Modules
 
 - **[Lightning Network Module](lightning.md)** - Lightning Network payment processing with multiple provider support (LNBits, LDK, Stub), invoice verification, and payment state tracking
-- **[Commons Mesh Module](mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection. Designed to support specialized modules (onion routing, mining pool coordination, messaging) via ModuleAPI
+- **[Commons Mesh Module](mesh.md)** - Payment-gated mesh overlay with route discovery, payment proofs, and subprocess ModuleAPI
 - **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support with network integration complete and mining pool management
 - **[Datum Module](datum.md)** - DATUM Gateway mining protocol module for Ocean pool integration (works with Stratum V2)
 - **[Mining OS Module](miningos.md)** - Operating system-level mining optimizations and hardware management

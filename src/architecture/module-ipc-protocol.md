@@ -43,14 +43,16 @@ Messages use length-delimited binary encoding:
 
 ### Message Types
 
-The protocol supports four message types:
+The protocol uses length-delimited **`ModuleMessage`** variants:
 
-1. **Request**: Module → Node (API calls)
-2. **Response**: Node → Module (API responses)
-3. **Event**: Node → Module (event notifications)
-4. **Log**: Module → Node (logging)
+1. **Request** — module → node (NodeAPI calls, handshake, `RegisterModuleApi`, …)
+2. **Response** — node → module
+3. **Event** — node → module (subscribed notifications)
+4. **Log** — module → node (forwarded to node logging)
+5. **Invocation** — node → module (CLI, RPC, or **`ModuleApi`** dispatch)
+6. **InvocationResult** — module → node (correlated reply)
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs) (`ModuleMessage`)
 
 ## Message Structure
 
@@ -108,13 +110,9 @@ pub struct EventMessage {
 }
 ```
 
-**Event Types** (46+ event types):
-- Network events: `PeerConnected`, `MessageReceived`, `PeerDisconnected`
-- Payment events: `PaymentRequestCreated`, `PaymentVerified`, `PaymentSettled`
-- Chain events: `NewBlock`, `ChainTipUpdated`, `BlockDisconnected`
-- Mempool events: `MempoolTransactionAdded`, `FeeRateChanged`, `MempoolTransactionRemoved`
+**Event types:** The node defines many **`EventType`** values (chain, mempool, network, payments, mining, mesh, sync, modules, governance, maintenance, …). Modules subscribe to a subset via **`SubscribeEvents`**. See the **`EventType`** enum in [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the authoritative list — do not assume a fixed count in docs.
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
+**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs), [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
 
 ### Log Message
 
@@ -141,6 +139,31 @@ pub struct LogMessage {
 
 **Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
+### Invocation pattern (CLI, RPC, ModuleAPI)
+
+The node sends **`Invocation`** messages to a connected module subprocess:
+
+| `InvocationType` | Use |
+|------------------|-----|
+| `Cli` | `runmodulecli` / module CLI dispatch |
+| `Rpc` | Module-registered RPC methods |
+| `ModuleApi` | Inter-module **`call_module`** forwarded to the subprocess handler |
+
+The module replies with **`InvocationResult`** (same **`correlation_id`**). For **`ModuleApi`**, the payload is opaque bytes (`InvocationResultPayload::ModuleApi`).
+
+### Subprocess ModuleAPI registration
+
+Spawned modules cannot pass `Arc<dyn ModuleAPI>` into the node process. Instead:
+
+1. Module sends **`RegisterModuleApi`** with method names and API version.
+2. Node installs **`IpcForwardingModuleAPI`** in the module registry.
+3. Other callers use **`call_module`** (or node RPC such as **`meshsendpacket`**) → node sends **`InvocationType::ModuleApi`** to the subprocess.
+4. On disconnect, the node unregisters the proxy.
+
+Cross-task invocations use **`ModuleIpcHandle`** so callers do not lock the server accept loop.
+
+**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs), [ipc_proxy.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/inter_module/ipc_proxy.rs), [runner.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/module/runner.rs)
+
 ### Event Subscription Pattern
 
 1. **Module subscribes**: Module sends `SubscribeEvents` request with event types
@@ -154,15 +177,17 @@ pub struct LogMessage {
 
 ### Handshake
 
-On connection, modules send a handshake message:
+On connection, the module sends a **handshake** as the first **`Request`**:
 
 ```rust
-pub struct HandshakeMessage {
-    pub module_id: String,
-    pub capabilities: Vec<String>,
-    pub version: String,
+RequestPayload::Handshake {
+    module_id,
+    module_name,
+    version,
 }
 ```
+
+The node replies with **`HandshakeAck`** (node version). Modules without a handshake receive a fallback connection id (legacy path).
 
 **Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
@@ -202,11 +227,11 @@ Modules request capabilities that are validated before API access:
 Modules run in sandboxed environments with:
 
 - Resource limits (CPU, memory, file descriptors)
-- Filesystem restrictions
-- Network restrictions (modules cannot open network connections)
+- Filesystem restrictions (module data dir)
+- **Network**: modules do not open arbitrary sockets; P2P and mesh sends go through **NodeAPI** with the **`network_access`** capability
 - Permission-based API access
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs)
+**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs), [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 
 ## Error Handling
 

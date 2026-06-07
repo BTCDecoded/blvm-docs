@@ -127,6 +127,7 @@ blvm-verify release \
 
 - [First Node Setup (regtest)](first-node.md) - Detailed regtest configuration
 - [Mainnet initial sync](mainnet-sync.md) - Release tarball, helper script, IBD expectations
+- [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) - Migrate a synced Core datadir instead of full IBD
 - [Node Configuration](../node/configuration.md) - Full configuration options
 - [RPC API Reference](../node/rpc-api.md) - Interact with your node
 

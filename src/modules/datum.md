@@ -142,7 +142,7 @@ capabilities = [
 
 The module subscribes to node events including:
 
-- **Chain Events**: `NewBlock`, `ChainTipUpdated`, `BlockDisconnected`
+- **Chain Events**: `NewBlock`, `ChainReorg`, `BlockDisconnected`
 - **Mining Events**: `BlockTemplateGenerated`, `BlockFound`
 
 ### Published Events

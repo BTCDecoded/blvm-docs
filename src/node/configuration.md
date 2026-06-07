@@ -122,6 +122,9 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 | `--data-dir` | `-d` | — | Data directory (overrides ENV and config) |
 | `--config` | `-c` | — | Configuration file path (TOML or JSON) |
 | `--verbose` | `-v` | false | Enable verbose logging |
+| `--no-auto-migrate` | | false | Do not auto-migrate from a Bitcoin Core datadir on start (requires `rocksdb`) |
+| `--migrate-destination` | | — | BLVM store path when auto-migrating from Core (default: `<datadir>/blvm`) |
+| `--migrate-core-only` | | false | Migrate from Core datadir and exit (no P2P/RPC start; requires `rocksdb`) |
 
 ### Feature Flags
 
@@ -135,15 +138,36 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 
 ### Commands
 
-`start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `rpc`.
+`start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `migrate core` (requires `rocksdb`), `rpc`.
 
 ```bash
 blvm --network mainnet -d /var/lib/blvm
+blvm migrate core --source ~/.bitcoin --destination ~/.bitcoin/blvm --network mainnet --verify
+blvm start --datadir ~/.bitcoin --migrate-core-only   # migrate only, then exit
 blvm config show
 blvm status --rpc-addr 127.0.0.1:8332
 ```
 
-See [Command-line arguments](../reference/configuration-reference.md#command-line-arguments) in the configuration reference for the full CLI tables, or run `blvm --help`.
+## Bitcoin Core drop-in
+
+BLVM does not read Core chainstate in place. With **`rocksdb`**, a synced Core **`--datadir`** triggers one-time migration into **`<datadir>/blvm/`** unless disabled. After migrate, point **`--datadir`** at the BLVM store or keep the Core path (node opens `blvm/` when marked).
+
+| Mechanism | Purpose |
+|-----------|---------|
+| `--datadir` / `BLVM_DATA_DIR` | Core path for detect/migrate, or BLVM store after migrate |
+| `--no-auto-migrate` | Skip auto-import |
+| `--migrate-destination` | Override `<datadir>/blvm` |
+| `--migrate-core-only` | Migrate and exit |
+| `blvm migrate core` | Explicit import (`--verify` optional) |
+
+```toml
+[storage]
+auto_migrate_core = true
+# core_migrate_destination = "/var/lib/blvm-mainnet"
+# reuse_core_block_files = false
+```
+
+ENV and reference: [Configuration Reference](../reference/configuration-reference.md) (`storage.auto_migrate_core`, `storage.reuse_core_block_files`, `BLVM_*`). Operator flow: [Operations](operations.md#starting-from-a-bitcoin-core-datadir). Storage details: [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start). Map Core **`datadir=`** via **`blvm config convert-core`** — see [bitcoin.conf vs BLVM](#bitcoin-core-bitcoinconf-versus-blvm).
 
 ## Storage Backends
 

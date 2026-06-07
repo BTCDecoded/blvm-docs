@@ -9,7 +9,7 @@ The module system supports optional features ([Lightning Network](../modules/lig
 The following modules are available for blvm-node:
 
 - **[Lightning Network Module](../modules/lightning.md)** - Lightning Network payment processing, invoice verification, payment routing, and channel management
-- **[Commons Mesh Module](../modules/mesh.md)** - Payment-gated mesh networking with routing fees, traffic classification, and anti-monopoly protection
+- **[Commons Mesh Module](../modules/mesh.md)** - Payment-gated mesh overlay, subprocess ModuleAPI, and node RPC bridge (`meshsendpacket`, `meshpollreceived`)
 - **[Stratum V2 Module](../modules/stratum-v2.md)** - Stratum V2 mining protocol support and mining pool management
 - **[Datum Module](../modules/datum.md)** - DATUM Gateway mining protocol
 - **[Mining OS Module](../modules/miningos.md)** - MiningOS integration
@@ -160,7 +160,7 @@ Modules request capabilities that are validated before API access. Capabilities 
 - `discover_modules` / `DiscoverModules` - Discover other modules
 - `publish_events` / `PublishEvents` - Publish events to other modules
 - `call_module` / `CallModule` - Call other modules' APIs
-- `register_module_api` / `RegisterModuleApi` - Register module API for other modules to call
+- `register_module_api` / `RegisterModuleApi` - Register in-process module API, or (spawned) send method descriptor so the node installs **`IpcForwardingModuleAPI`**
 
 **Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 

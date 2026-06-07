@@ -1,12 +1,11 @@
 # Migration Guides
 
-Migration guides for upgrading between BLVM versions are documented here.
+## Bitcoin Core datadir
 
-Migration guides are provided as needed for version upgrades. When available, they cover configuration changes, database migrations, API compatibility, and upgrade procedures.
+Import a synced Core datadir into BLVM’s native store at `<datadir>/blvm/` (requires `rocksdb`, Core stopped, matching `--network`).
 
-When migration guides are needed, they will cover:
-- Configuration changes between versions
-- Database schema migrations
-- API changes and compatibility
-- Breaking changes and upgrade procedures
+**Procedure:** [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir)
 
+## BLVM version upgrades
+
+Check [GitHub Releases](https://github.com/BTCDecoded/blvm/releases) for breaking config, storage, or RPC changes before upgrading.

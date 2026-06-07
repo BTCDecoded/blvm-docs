@@ -49,6 +49,18 @@ blvm --data-dir ~/.blvm
 
 ## Storage Issues
 
+### Bitcoin Core drop-in migration
+
+| Symptom | Fix |
+|---------|-----|
+| Migration refused / lock error | Stop **`bitcoind`**; remove stale **`chainstate/LOCK`** or **`bitcoind.pid`** only when Core is not running |
+| Wrong chain after migrate | Set **`--network`** to match the Core datadir (mainnet / testnet / regtest) |
+| Re-import on every start | Check **`blvm_meta/migration.json`** under the BLVM store; use **`--no-auto-migrate`** after a successful migrate |
+| Pruned Core datadir | Use a full node copy, or enable **`storage.reuse_core_block_files`** only if remaining block files cover the chain |
+| Interrupted migrate | Resume with **`blvm migrate core`** or restart with auto-migrate; checkpoint at **`blvm_meta/migration_checkpoint.json`** |
+
+See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
+
 ### Database Backend Fails
 
 **Error**: `Failed to initialize database backend`

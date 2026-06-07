@@ -95,7 +95,8 @@ The module subscribes to the following node events:
 - `BlockMined` - Block successfully mined
 - `BlockTemplateUpdated` - New block template available
 - `MiningDifficultyChanged` - Mining difficulty changed
-- `ChainTipUpdated` - Chain tip updated (new block)
+- `NewBlock` - New block connected
+- `ChainReorg` - Chain reorganization
 
 ### Published Events
 

@@ -63,7 +63,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **ckpool** - Solo mining pool software that talks to the node over JSON-RPC (HTTP Basic). See [Mining Integration](../node/mining.md#ckpool-solo-bitaxe--stratum-v1).
 
-## Consensus & Protocol
+**Core drop-in** - Import a synced Bitcoin Core datadir into BLVM’s native store at `<datadir>/blvm/` (requires `rocksdb` build). Stop Core before migrate. See [Storage Backends — Bitcoin Core drop-in](../node/storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
 
 **Consensus Rules** - Mathematical rules that all Bitcoin nodes must follow to maintain network consensus. Defined in the [Orange Paper](orange-paper.md) and implemented in [blvm-consensus](../consensus/overview.md).
 

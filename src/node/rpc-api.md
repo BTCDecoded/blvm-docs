@@ -160,6 +160,15 @@ curl -X POST http://localhost:8332 \
 - `gethealth` - Get node health status
 - `getmetrics` - Get node metrics
 
+### Mesh Methods
+
+**Requires:** `blvm-mesh` loaded and its ModuleAPI registered (spawned module with `register_module_api` capability).
+
+- `meshsendpacket` - Forward a hex-encoded bincode `SendPacketRequest` to the mesh module (`request_hex`, optional `mesh_module_id`, default `blvm-mesh`)
+- `meshpollreceived` - Poll locally delivered mesh app payloads (`protocol_id`, optional `max_packets`, optional `mesh_module_id`)
+
+**Code**: [control.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/control.rs) (`meshsendpacket`, `meshpollreceived`)
+
 ### Address Methods
 - `validateaddress` - Validate a Bitcoin address
 - `getaddressinfo` - Get detailed address information
@@ -169,6 +178,8 @@ curl -X POST http://localhost:8332 \
 
 ### Payment Methods (BIP70)
 - `createpaymentrequest` - Create a BIP70 payment request (requires `bip70-http` feature)
+- `verifyonchainpayment` - Verify on-chain payment state for a payment request (`payment_request_id`, `tx_hash` hex)
+- `verifycovenantproof` - Verify a covenant proof for instant settlement (requires `ctv` feature)
 
 ## Error Codes
 

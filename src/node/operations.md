@@ -23,6 +23,32 @@ blvm --network mainnet
 blvm --config blvm.toml
 ```
 
+## Starting from a Bitcoin Core datadir
+
+Use when Core is **fully synced** and you want the same tip without full IBD. **Stop `bitcoind`** first.
+
+```bash
+# Auto-migrate on start → ~/.bitcoin/blvm/
+blvm start --network mainnet --datadir ~/.bitcoin
+
+# Or migrate with verify, then start the BLVM store
+blvm migrate core --source ~/.bitcoin --destination ~/.bitcoin/blvm \
+  --network mainnet --verify
+blvm start --network mainnet --datadir ~/.bitcoin/blvm
+```
+
+| Flag / setting | Effect |
+|----------------|--------|
+| `--no-auto-migrate` | Skip Core import on start |
+| `--migrate-destination PATH` | BLVM store path (default `<datadir>/blvm`) |
+| `--migrate-core-only` | Migrate and exit |
+| `storage.auto_migrate_core = false` | Same as `--no-auto-migrate` |
+| `BLVM_CORE_MIGRATE_BLOCK_WORKERS` / `BLVM_CORE_MIGRATE_BLOCK_BATCH` | Parallel block read tuning |
+
+Requires **`rocksdb`** (default release build). Config, ENV, reuse/pruned notes: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
+
+**Verify:** `--verify` on `blvm migrate core`; regtest test `core_drop_in` (fixture: `blvm-node/scripts/gen-core-regtest-fixture.sh`); mainnet smoke: `blvm-node/scripts/core-drop-in-mainnet-smoke.sh`.
+
 ## Node Lifecycle
 
 The node follows a lifecycle with multiple states and transitions.

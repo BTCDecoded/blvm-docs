@@ -212,6 +212,21 @@ Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default
   - `"tidesdb"` - Use TidesDB (if available)
 - **Description**: Database backend selection. System automatically falls back if preferred backend fails.
 
+### `storage.auto_migrate_core`
+- **Type**: `boolean`
+- **Default**: `true`
+- **Description**: When `true` and `--datadir` contains a Bitcoin Core layout (`chainstate/` + `blocks/`), **`blvm start`** runs a one-time migration into **`storage.core_migrate_destination`** or **`<datadir>/blvm/`** before opening the BLVM store. Requires **`rocksdb`** feature. Disabled by **`--no-auto-migrate`** or **`BLVM_NO_AUTO_MIGRATE_CORE=1`**.
+
+### `storage.core_migrate_destination`
+- **Type**: `string` (path), optional
+- **Default**: unset (use **`<datadir>/blvm/`** when migrating from a Core datadir)
+- **Description**: Override BLVM native store path for Core drop-in migration. Overridden by **`--migrate-destination`** or **`BLVM_CORE_MIGRATE_DESTINATION`**.
+
+### `storage.reuse_core_block_files`
+- **Type**: `boolean`
+- **Default**: `false`
+- **Description**: During Core migration, migrate UTXOs and indexes only; leave Core `blocks/` in place and read block bodies from Core `blk*.dat` via a fallback reader. Saves disk; requires Core block files to remain available. Overridden by **`BLVM_REUSE_CORE_BLOCK_FILES=1`**.
+
 ### Storage Cache
 
 #### `storage.cache.block_cache_mb`
@@ -559,7 +574,12 @@ Configuration can be overridden via command-line arguments. CLI overrides ENV an
 
 **Feature flags:** `--enable-stratum-v2`, `--enable-dandelion`, `--enable-sigop` and `--disable-*` counterparts (each requires the matching **compile-time** feature in the `blvm` / `blvm-node` binary). **`--enable-bip158` / `--disable-bip158`** only record **logged** preference—BIP158 filter code is **always** included in default builds (no `bip158` Cargo feature).
 
-**Commands:** `start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `rpc`
+| `--verbose` | `-v` | false | Verbose logging |
+| `--no-auto-migrate` | | false | Skip Core datadir auto-migration on start (`rocksdb` builds) |
+| `--migrate-destination` | | — | BLVM store path for Core migration (default `<datadir>/blvm`) |
+| `--migrate-core-only` | | false | Migrate from Core datadir and exit |
+
+**Commands:** `start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `migrate core` (`rocksdb`), `rpc`
 
 ```bash
 blvm --config /path/to/config.toml
@@ -584,7 +604,7 @@ export BLVM_IBD_WAN_SINGLE_PEER=1
 export BLVM_NETWORK_TARGET_PEER_COUNT=125
 ```
 
-**Key ENV categories:** Node (`BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`), Block validation (`BLVM_ASSUME_VALID_HEIGHT`), Network timing (`BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_NETWORK_PEER_CONNECTION_DELAY`), Request timeouts (`BLVM_REQUEST_ASYNC_TIMEOUT`, etc.), Module limits (`BLVM_MODULE_MAX_*`), IBD (`BLVM_IBD_*`, including `BLVM_IBD_ENGINE`, `BLVM_IBD_WAN_SINGLE_PEER`), Storage (`BLVM_DBCACHE_MB`, `BLVM_ROCKSDB_*`), External (`RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`).
+**Key ENV categories:** Node (`BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`), Core drop-in (`BLVM_AUTO_MIGRATE_CORE`, `BLVM_NO_AUTO_MIGRATE_CORE`, `BLVM_CORE_MIGRATE_DESTINATION`, `BLVM_REUSE_CORE_BLOCK_FILES`, `BLVM_CORE_MIGRATE_BLOCK_WORKERS`, `BLVM_CORE_MIGRATE_BLOCK_BATCH`), Block validation (`BLVM_ASSUME_VALID_HEIGHT`), Network timing (`BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_NETWORK_PEER_CONNECTION_DELAY`), Request timeouts (`BLVM_REQUEST_ASYNC_TIMEOUT`, etc.), Module limits (`BLVM_MODULE_MAX_*`), IBD (`BLVM_IBD_*`, including `BLVM_IBD_ENGINE`, `BLVM_IBD_WAN_SINGLE_PEER`), Storage (`BLVM_DBCACHE_MB`, `BLVM_ROCKSDB_*`), External (`RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`).
 
 Additional or experimental `BLVM_*` names may exist; use `blvm --help` and the node’s config schema as the source of truth in this repository.
 
@@ -610,6 +630,6 @@ Common validation errors:
 ## See Also
 
 - [Node Configuration](../node/configuration.md) - Quick start guide
-- [Storage Backends](../node/configuration.md#storage-backends) - Backend selection details
+- [Storage Backends](../node/storage-backends.md) - Backend selection and Core drop-in
 - [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer) - Transport options
 - [Module Development](../sdk/module-development.md) - Module system details
