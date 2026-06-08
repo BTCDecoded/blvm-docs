@@ -384,19 +384,46 @@ max_filter_age_days = 0  # 0 = keep forever
 - **Default**: `"data/modules/sockets"`
 - **Description**: Directory for IPC sockets used for module communication.
 
-### `modules.enabled_modules`
+### `modules.registry_url`
+- **Type**: `string` (URL)
+- **Default**: `https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json`
+- **Description**: Discovery index (`modules.json`) for bootstrap-download of pinned modules missing on disk. Requires the `governance` feature on the `blvm` build (on by default).
+
+### `modules.enabled_modules` (version pins)
+- **Type**: map of module name → semver constraint (inline `[modules]` keys, `[modules.enabled_modules]` table, or legacy array)
+- **Default**: `{}` (empty — no bootstrap; discover and auto-load only modules already under `modules_dir`)
+- **Description**: Allowlist of modules to auto-load. Each entry may include a **version constraint**. When `registry_url` is set, missing modules (or on-disk versions that do not match the constraint) are **bootstrap-downloaded** from each module’s GitHub Releases (highest release matching the constraint).
+- **Constraints**: `0.1.*` (same major/minor), `0.*` (same major), exact `0.1.2`, or `*` / legacy array entry (unpinned — manifest from `main`, floating version).
+- **Example (inline pins)**:
+```toml
+[modules]
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+blvm-miniscript = "0.1.*"
+blvm-zmq = "0.3.*"
+```
+- **Example (spawn overrides + pin — use `version` in the module table; inline `name = "…"` conflicts with `[modules.name]` in TOML)**:
+```toml
+[modules.blvm-zmq]
+version = "0.3.*"
+hashblock = "tcp://127.0.0.1:28332"
+```
+- **Legacy (unpinned)**:
+```toml
+enabled_modules = ["blvm-miniscript", "blvm-zmq"]
+```
+
+### `modules.disabled_modules`
 - **Type**: `array` of `string`
-- **Default**: `["blvm-miniscript", "blvm-zmq"]` (bootstrapped on first boot when not explicitly set)
-- **Description**: List of module names to enable on startup. Set explicitly to control which modules load; an empty list `[]` disables all module bootstrapping.
-- **Example**: `enabled_modules = ["lightning-module", "mining-module"]`
+- **Default**: `[]`
+- **Description**: Module manifest names to never auto-load or bootstrap. Wins over `enabled_modules` if both list the same name.
 
 ### `modules.module_configs`
-- **Type**: `object` (nested key-value pairs)
-- **Default**: `{}`
-- **Description**: Module-specific configuration overrides.
+- **Type**: per-module override tables under `[modules.<name>]`
+- **Default**: none
+- **Description**: Module-specific configuration overrides (merged into module spawn env). Use a `version = "0.1.*"` key in the same table when the module also needs spawn settings (see above).
 - **Example**:
 ```toml
-[modules.module_configs.lightning-module]
+[modules.lightning-module]
 port = "9735"
 network = "mainnet"
 ```

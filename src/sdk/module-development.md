@@ -539,9 +539,10 @@ modules_dir = "modules"
 data_dir = "data/modules"
 socket_dir = "data/modules/sockets"
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-enabled_modules = ["blvm-miniscript", "blvm-zmq"]  # default: bootstrap if missing; [] = discover on-disk only
+# Pin modules with semver constraints (see blvm.toml.example). Empty = on-disk only, no bootstrap.
+blvm-miniscript = "0.1.*"
 
-[modules.module_configs.my-module]
+[modules.my-module]
 setting1 = "value1"
 ```
 

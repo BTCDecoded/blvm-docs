@@ -301,7 +301,7 @@ max_indexed_addresses = 1000000
 
 ## Module Configuration
 
-Configure process-isolated modules:
+Configure process-isolated modules. **There is no hardcoded default module list in the node** — copy pins from `blvm.toml.example` or set your own. An empty pin map auto-discovers modules already on disk under `modules_dir` (no HTTP bootstrap).
 
 ```toml
 [modules]
@@ -309,9 +309,17 @@ enabled = true                    # Enable module system (default: true)
 modules_dir = "modules"           # Directory containing module binaries (default: "modules")
 data_dir = "data/modules"         # Directory for module data/state (default: "data/modules")
 socket_dir = "data/modules/sockets"  # Directory for IPC sockets (default: "data/modules/sockets")
-# Paths support ~ expansion (e.g. "~/.local/share/blvm-modules")
-enabled_modules = ["blvm-lightning", "blvm-mesh"]  # List of enabled modules (empty = auto-discover all)
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+# Version pins (wildcard or exact semver). Omit pins to load on-disk modules only.
+blvm-miniscript = "0.1.*"
+# When a module needs spawn overrides, put the pin in its table as `version`:
+[modules.blvm-zmq]
+version = "0.3.*"
+hashblock = "tcp://127.0.0.1:28332"
+# Legacy unpinned allowlist: enabled_modules = ["blvm-miniscript"]
 ```
+
+See [Module System](../architecture/module-system.md) and `blvm-node/modules/README.md` for bootstrap and registry details.
 
 **Module resource limits** (optional) use the **`[module_resource_limits]`** table on **`NodeConfig`**, not `[modules.resource_limits]`:
 

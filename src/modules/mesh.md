@@ -28,11 +28,12 @@ rate_limit_per_minute = 120   # 0 = off
 # peers = [{ address = "127.0.0.1:8333", node_id_hex = "..." }]
 ```
 
-Enable in node config:
+Enable in node config (pin version or use legacy unpinned allowlist):
 
 ```toml
 [modules]
-enabled_modules = ["blvm-mesh"]
+blvm-mesh = "0.1.*"
+# or: enabled_modules = ["blvm-mesh"]
 ```
 
 **`module.toml` capabilities:** `read_blockchain`, `subscribe_events`, `register_module_api`, `network_access`, `publish_events`, `read_payment`.
