@@ -29,7 +29,7 @@ For implementation details, see the [blvm-protocol README](../../../blvm-protoco
 
 ## Transport Abstraction Layer
 
-The network layer uses multiple transport protocols through a unified abstraction (see [Transport Abstraction](../node/transport-abstraction.md)):
+The network layer supports multiple transport protocols through one abstraction (see [Transport Abstraction](../node/transport-abstraction.md)):
 
 ```
 NetworkManager

@@ -164,7 +164,7 @@ Impact levels map to governance tiers:
 The validator detects placeholder implementations in security-critical files:
 
 - `PLACEHOLDER`
-- See [Threat Models](threat-models.md) for comprehensive security documentation
+- See [Threat Models](threat-models.md) for security documentation
 - `0x00[PLACEHOLDER`
 - `0x02[PLACEHOLDER`
 - `0x03[PLACEHOLDER`
@@ -318,8 +318,8 @@ The security controls system includes:
 ## See Also
 
 - [Threat Models](threat-models.md) - Security threat analysis
-- [Developer Security Checklist](DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
-- [Security Architecture Review Template](ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process
-- [Security Testing Template](SECURITY_TESTING_TEMPLATE.md) - Security testing guidelines
+- [Developer Security Checklist](../appendices/templates/DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
+- [Security Architecture Review Template](../appendices/templates/ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process
+- [Security Testing Template](../appendices/templates/SECURITY_TESTING_TEMPLATE.md) - Security testing guidelines
 - [Contributing](../development/contributing.md) - Development workflow
 - [PR Process](../development/pr-process.md) - Security review in PR process

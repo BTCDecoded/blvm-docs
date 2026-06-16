@@ -39,7 +39,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Spec Drift Detection** - Automated detection when implementation code diverges from the [Orange Paper](orange-paper.md) mathematical specification.
 
-**Compiler-Like Architecture** - The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** that spec through tests, review, and [BLVM Specification Lock](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [System Overview](../architecture/system-overview.md).
+**Compiler-Like Architecture** - The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** that spec through tests, review, and [BLVM Specification Lock](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [Stack overview](../architecture/system-overview.md).
 
 **Process Isolation** - [Module system](../architecture/module-system.md) design where each module runs in a separate process with isolated memory, preventing failures from propagating to the base node.
 

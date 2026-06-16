@@ -1,4 +1,4 @@
-# Layer-Tier Governance Model
+# Governance layers and tiers
 
 ## Overview
 

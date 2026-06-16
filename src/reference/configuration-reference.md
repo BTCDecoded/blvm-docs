@@ -675,4 +675,4 @@ Common validation errors:
 - [Node Configuration](../node/configuration.md) - Quick start guide
 - [Storage Backends](../node/storage-backends.md) - Backend selection and Core drop-in
 - [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer) - Transport options
-- [Module Development](../sdk/module-development.md) - Module system details
+- [Building modules](../sdk/module-development.md) - Module system details

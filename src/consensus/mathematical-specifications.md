@@ -224,6 +224,6 @@ The mathematical specifications system includes:
 - [Consensus Overview](overview.md) - Consensus layer introduction
 - [Consensus Architecture](architecture.md) - Consensus layer design
 - [Formal Verification](formal-verification.md) - BLVM Specification Lock verification details
-- [Mathematical Correctness](mathematical-correctness.md) - Correctness guarantees
+- [Formal Verification](formal-verification.md#primary-verification-areas) - Correctness guarantees
 - [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
 

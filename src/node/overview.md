@@ -96,7 +96,7 @@ graph TB
 - Transaction validation and storage
 - Fee-based transaction selection
 - RBF (Replace-By-Fee) support with 4 configurable modes (Disabled, Conservative, Standard, Aggressive)
-- Comprehensive mempool policies and limits
+- Mempool policies and limits
 - Transaction expiry
 - Advanced indexing (address and value range indexing)
 
@@ -135,7 +135,7 @@ graph TB
 
 ### Network Features
 - [Multi-transport architecture](transport-abstraction.md) (TCP, QUIC)
-- [Privacy-preserving relay](privacy-relay.md) (Dandelion++)
+- [Transaction relay](privacy-relay.md) (Dandelion++, Fibre)
 - High-performance block relay (Fibre)
 - [Package relay](package-relay.md) (BIP331)
 - [UTXO commitments](../consensus/utxo-commitments.md) support

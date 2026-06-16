@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons maintains a comprehensive benchmarking infrastructure to measure and track performance across all components. Benchmarks are automatically generated and published at [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org).
+Bitcoin Commons maintains benchmarking infrastructure to measure and track performance across components. Benchmarks are published at [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org).
 
 ## Benchmark Infrastructure
 
@@ -25,7 +25,7 @@ Benchmarks are generated automatically via GitHub Actions workflows:
 
 - **Scheduled Runs**: Regular benchmark runs on schedule
 - **PR Triggers**: Benchmarks run on pull requests
-- **Release Triggers**: Comprehensive benchmarks before releases
+- **Release Triggers**: Full benchmark suite before releases
 - **Results Publishing**: Automatic publishing to benchmark website
 
 ## Published Benchmarks
@@ -175,7 +175,7 @@ Benchmark workflows in `blvm-bench`:
 
 - **Scheduled Benchmarks**: Daily/weekly benchmark runs
 - **PR Benchmarks**: Benchmark on pull requests
-- **Release Benchmarks**: Comprehensive benchmarks before releases
+- **Release Benchmarks**: Full benchmark suite before releases
 - **Results Publishing**: Automatic publishing to website
 
 ### Benchmark Artifacts

@@ -71,7 +71,7 @@ Mathematical protection mechanisms ensure correctness through formal verificatio
 
 - [Consensus Overview](overview.md) - Consensus layer introduction
 - [Formal Verification](formal-verification.md) - Verification methodology and tools
-- [Mathematical Correctness](mathematical-correctness.md) - Verification approach and coverage
+- [Formal Verification](formal-verification.md#primary-verification-areas) - Verification approach and coverage
 - [Orange Paper](../reference/orange-paper.md) - Mathematical foundation
 - [Protocol Architecture](../protocol/architecture.md) - Protocol layer built on consensus
 

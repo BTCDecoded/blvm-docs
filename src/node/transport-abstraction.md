@@ -1,8 +1,8 @@
-# Multi-Transport Architecture
+# Transport abstraction
 
 ## Overview
 
-The transport abstraction layer provides a unified interface for multiple network transport protocols, enabling Bitcoin Commons to support both traditional TCP (Bitcoin P2P compatible) and modern QUIC-based transports simultaneously.
+Multiple network transport protocols (TCP for Bitcoin P2P compatibility and QUIC) share one abstraction so the node can run both at once.
 
 ## Architecture
 
@@ -96,7 +96,7 @@ QUIC-based transport using Iroh for P2P networking:
 
 ### Transport Trait
 
-The `Transport` trait provides a unified interface:
+The `Transport` trait is the shared interface:
 
 ```rust
 pub trait Transport: Send + Sync {

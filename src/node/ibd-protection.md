@@ -2,7 +2,7 @@
 
 ## Overview
 
-The node implements comprehensive protection against Initial Block Download (IBD) bandwidth exhaustion attacks. This prevents malicious peers from forcing a node to upload the entire blockchain multiple times, which could cause ISP data cap overages and economic denial-of-service.
+The node protects against Initial Block Download (IBD) bandwidth exhaustion attacks.
 
 ## Protection Mechanisms
 

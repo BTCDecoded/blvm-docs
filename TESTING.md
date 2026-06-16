@@ -32,7 +32,7 @@ dig docs.thebitcoincommons.org CNAME
   - Orange Paper (reference/orange-paper.md)
   - Consensus overview (consensus/overview.md)
   - Governance model (governance/governance-model.md)
-  - System overview (architecture/system-overview.md)
+  - Stack overview (architecture/system-overview.md)
 
 ### 6. Test Navigation
 - Click through all major sections:

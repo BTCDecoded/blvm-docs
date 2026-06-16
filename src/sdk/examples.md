@@ -172,8 +172,8 @@ The **hello-module** example shows the full declarative pattern: `#[config]`, `#
 ## See Also
 
 - [SDK Overview](overview.md) - SDK introduction and architecture
-- [SDK Getting Started](getting-started.md) - Quick start guide
+- [SDK Overview](overview.md#quick-start) - Quick start and module authoring
 - [API Reference](api-reference.md) - Complete SDK API documentation
-- [Module Development](module-development.md) - Building modules with the SDK
+- [Building modules](module-development.md) - Building modules with the SDK
 - [Module System Architecture](../architecture/module-system.md) - Module system design
-- [Modules Overview](../modules/overview.md) - Available modules
+- [Module catalog](../modules/overview.md) - Available modules

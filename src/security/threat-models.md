@@ -194,7 +194,7 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Add DoS protection mechanisms
 - Add RPC authentication
 - Implement rate limiting
-- Add comprehensive fuzzing
+- Add fuzzing
 - Add eclipse attack prevention
 - Add storage bounds checking
 
@@ -366,9 +366,9 @@ For complete documentation, see [LAN Peering System](../node/lan-peering.md).
 
 - [LAN Peering System](../node/lan-peering.md) - Complete LAN peering documentation
 - [Security Controls](security-controls.md) - Security control implementation
-- [Developer Security Checklist](DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
-- [Security Architecture Review Template](ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process
-- [Security Testing Template](SECURITY_TESTING_TEMPLATE.md) - Security testing guidelines
+- [Developer Security Checklist](../appendices/templates/DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
+- [Security Architecture Review Template](../appendices/templates/ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process
+- [Security Testing Template](../appendices/templates/SECURITY_TESTING_TEMPLATE.md) - Security testing guidelines
 - [Node Overview](../node/overview.md) - Node security features
 - [Contributing](../development/contributing.md) - Security in development workflow
 ## Components

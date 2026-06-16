@@ -1,6 +1,6 @@
-# Module Development
+# Building modules
 
-The BTCDecoded blvm-node includes a process-isolated module system that enables optional features (Lightning, merge mining, privacy enhancements) without affecting consensus or base node stability. Modules run in separate processes with IPC communication, providing security through isolation.
+Optional node features (Lightning, merge mining, privacy relays, and similar) run in separate processes with IPC. See [Module system (design)](../architecture/module-system.md).
 
 ### Core Principles
 
@@ -97,7 +97,7 @@ poll_interval = "Polling interval in seconds (default: 5)"
 - `^1.0.0` - Compatible version (>=1.0.0 and <2.0.0)
 - `~1.2.0` - Patch updates only (>=1.2.0 and <1.3.0)
 
-## Module Development
+## Authoring modules
 
 ### SDK declarative style (recommended)
 
@@ -617,5 +617,5 @@ For detailed API reference, see `blvm-node/src/module/` (traits, IPC protocol, N
 - [SDK Examples](examples.md) - Module development examples
 - [Module System Architecture](../architecture/module-system.md) - Module system design
 - [Module IPC Protocol](../architecture/module-ipc-protocol.md) - IPC communication details
-- [Modules Overview](../modules/overview.md) - Available modules
+- [Module catalog](../modules/overview.md) - Available modules
 - [Node Configuration](../node/configuration.md) - Configuring modules

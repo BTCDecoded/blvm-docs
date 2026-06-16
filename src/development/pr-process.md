@@ -1,7 +1,5 @@
 # Pull Request Process
 
-This document explains the PR review process, governance tiers, signature requirements, and how to get your PR reviewed and merged.
-
 For **human maintainer expectations** and the **AI review intelligence** operating document (alternative implementation vs Core fork, flags, Compact alignment), see [Review standards](../governance/review-standards.md).
 
 ## Overview
@@ -133,7 +131,7 @@ The PR can be merged.
 
 The governance system combines two dimensions:
 
-1. **Layers** (Repository Architecture) - Which repository the change affects
+1. **Layers** (repository layout) - Which repository the change affects
 2. **Tiers** (Action Classification) - What type of change is being made
 
 When both apply, the system uses **"most restrictive wins"** rule:

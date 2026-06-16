@@ -1,6 +1,6 @@
 # RBF and Mempool Policies
 
-Configure Replace-By-Fee (RBF) behavior and mempool policies to control transaction acceptance, eviction, and limits.
+Configure Replace-By-Fee (RBF) behavior and mempool policies to control transaction acceptance, eviction, and limits. Worked examples: [RBF configuration example](../examples/rbf-configuration-example.md).
 
 ## RBF and Mempool Flow
 

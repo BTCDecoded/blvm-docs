@@ -1,6 +1,6 @@
 # Keyholder Procedures
 
-Bitcoin Commons uses cryptographic keyholders (maintainers) to sign governance decisions. This section describes procedures for keyholders.
+Cryptographic keyholders (maintainers) sign governance decisions. Procedures below apply to keyholders.
 
 ## Maintainer Responsibilities
 

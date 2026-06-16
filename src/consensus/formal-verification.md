@@ -9,7 +9,7 @@ Verification approach follows: **"Rust + Tests + Math Specs = Source of Truth"**
 ```mermaid
 graph TB
     subgraph "Layer 1: Empirical Testing"
-        UT[Unit Tests<br/>Comprehensive Coverage]
+        UT[Unit Tests]
         PT[Property Tests<br/>Randomized Edge Cases]
         IT[Integration Tests<br/>Cross-System Validation]
     end
@@ -96,7 +96,7 @@ cargo spec-lock verify --tier strong
 **Tier System**:
 - **Strong Tier**: Critical consensus proofs (AWS spot instance integration)
 - **Medium Tier**: Important proofs (parallel execution)
-- **Slow Tier**: Comprehensive coverage proofs
+- **Slow Tier**: Full coverage proofs
 
 **Infrastructure**:
 - AWS spot instance integration for expensive proof execution
@@ -377,12 +377,23 @@ Use the `verify` feature for full protocol verification builds; see **blvm-proto
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 
+## Primary verification areas
+
+Functions and paths commonly covered by tests and spec-lock proofs:
+
+- **Chain selection**: `should_reorganize`, `calculate_chain_work`
+- **Block subsidy**: `get_block_subsidy` halving schedule
+- **Proof of work**: `check_proof_of_work`, target expansion
+- **Transaction validation**: `check_transaction` structure rules
+- **Block connection**: `connect_block`, UTXO consistency
+
+Proof bounds and policy: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md), [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+
 ## See Also
 
 - [Consensus Overview](overview.md) - Consensus layer introduction
 - [Consensus Architecture](architecture.md) - Consensus layer design
 - [Mathematical Specifications](mathematical-specifications.md) - Mathematical spec details
-- [Mathematical Correctness](mathematical-correctness.md) - Correctness guarantees
 - [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
 - [Fuzzing](../development/fuzzing.md) - Fuzzing infrastructure
 - [Testing Infrastructure](../development/testing.md) - Complete testing overview

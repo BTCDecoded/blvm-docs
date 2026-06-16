@@ -1,6 +1,6 @@
-# Repository Architecture and Organization
+# Repository layout
 
-This document explains how the Bitcoin Commons codebase is organized, the reasoning behind that organization, and the development workflow it supports. It is intended for new contributors and for anyone evaluating the project who wants to understand why the code is structured the way it is.
+How the Bitcoin Commons Rust implementation is split across repositories, why, and how local development and CI relate.
 
 ## Summary
 
@@ -16,7 +16,7 @@ The layered core consists of blvm-primitives, blvm-consensus, blvm-protocol, blv
 
 The standalone cryptographic and infrastructure crates include blvm-secp256k1, blvm-muhash, and blvm-miniscript. These have value entirely independent of Bitcoin Commons. Any Rust project that needs a fast secp256k1 implementation or a MuHash accumulator can consume these directly without adopting anything else from the project.
 
-The modules include blvm-lightning, blvm-stratum-v2, blvm-mesh, blvm-governance, and blvm-selective-sync. These extend the system along specific axes and are designed to be adopted selectively.
+The modules include blvm-lightning, blvm-stratum-v2, blvm-mesh, blvm-governance, and blvm-selective-sync. Each targets a specific extension point and can be adopted on its own.
 
 The verification layer is blvm-spec-lock, which locks the implementation to the formal specification.
 
@@ -54,12 +54,12 @@ A workspace always builds against the in-tree code, so it never verifies that th
 
 ## On the Choice of Structure
 
-The conventional default for a multi-crate Rust effort is a workspace monorepo, and for most projects that is the better choice. Bitcoin Commons departs from it because its constraints differ: a specification-first consensus system, designed to support multiple independent implementations, with independently consumable components and a multi-decade horizon. A monorepo would optimize for compile-time convenience, which the local patch already provides, while giving up the independent consumption, boundary enforcement, and capture resistance described above. This document records that reasoning so the structure is legible to anyone encountering it for the first time.
+The conventional default for a multi-crate Rust effort is a workspace monorepo, and for most projects that is the better choice. Bitcoin Commons departs from it because its constraints differ: a specification-first consensus system built for multiple independent implementations, with independently consumable components and a multi-decade horizon. A monorepo would optimize for compile-time convenience, which the local patch already provides, while giving up the independent consumption, boundary enforcement, and capture resistance described above.
 
 ## See Also
 
 - [Contributing](contributing.md) — developer workflow from setup to merge
-- [System Overview](../architecture/system-overview.md) — six-layer stack architecture
-- [Component Relationships](../architecture/component-relationships.md) — crate dependency graph
+- [Stack overview](../architecture/system-overview.md) — six-layer stack
+- [Crate dependencies](../architecture/component-relationships.md) — crate dependency graph
 - [Layer-Tier Model](../governance/layer-tier-model.md) — governance layers mapped to repositories
 - [CI/CD Workflows](ci-cd-workflows.md) — what runs when you push code

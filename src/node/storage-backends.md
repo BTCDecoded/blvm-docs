@@ -98,7 +98,7 @@ let storage = Storage::new(data_dir)?;
 
 ## Database Abstraction
 
-The storage layer uses a unified database abstraction:
+The storage layer uses one database abstraction interface:
 
 ### Database Trait
 

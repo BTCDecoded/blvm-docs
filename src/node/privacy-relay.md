@@ -1,8 +1,8 @@
-# Privacy Relay Protocols
+# Transaction relay
 
 ## Overview
 
-Bitcoin Commons implements multiple privacy-preserving and performance-optimized transaction relay protocols: Dandelion++, Fibre, and Package Relay. These protocols improve privacy, reduce bandwidth, and enable efficient transaction propagation.
+The node supports **Dandelion++** and **Fibre** for transaction propagation. **Package relay (BIP331)** is documented separately in [Package Relay (BIP331)](package-relay.md).
 
 ## Dandelion++
 
@@ -146,7 +146,7 @@ max_assemblies = 100
 
 ### Statistics
 
-Fibre tracks comprehensive statistics:
+Fibre tracks per-peer and per-chunk statistics:
 
 - Blocks sent/received
 - Chunks sent/received
@@ -164,86 +164,16 @@ Fibre tracks comprehensive statistics:
 3. **High Throughput**: Efficient chunk-based transmission
 4. **Automatic Recovery**: No manual retry needed
 
-## Package Relay (BIP331)
-
-### Overview
-
-Package Relay (BIP331) allows nodes to relay and validate groups of transactions together, enabling efficient fee-bumping (RBF) and CPFP (Child Pays For Parent) scenarios.
-
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
-
-### Package Structure
-
-A transaction package contains:
-
-- **Transactions**: Ordered list (parents before children)
-- **Package ID**: Combined hash of all transactions
-- **Combined Fee**: Sum of all transaction fees
-- **Combined Weight**: Total weight for fee rate calculation
-
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
-
-### Package Validation
-
-Packages are validated for:
-
-- **Size Limits**: Maximum 25 transactions (BIP331)
-- **Weight Limits**: Maximum 404,000 WU (BIP331)
-- **Fee Rate**: Minimum fee rate requirement
-- **Ordering**: Parents must precede children
-- **No Duplicates**: No duplicate transactions
-
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
-
-### Use Cases
-
-1. **Fee-Bumping (RBF)**: Parent + child transaction for fee increase
-2. **CPFP**: Child transaction pays for parent's fees
-3. **Atomic Sets**: Multiple transactions that must be accepted together
-
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
-
-### Package ID Calculation
-
-Package ID is calculated as double SHA256 of all transaction IDs:
-
-```rust
-pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
-    // Hash all txids, then double hash
-}
-```
-
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
-
-### Configuration
-
-```toml
-[network.package_relay]
-enabled = true
-max_package_size = 25
-max_package_weight = 404000  # 404k WU
-min_fee_rate = 1000  # 1 sat/vB
-```
-
-**Code**: [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
-
-### Benefits
-
-1. **Efficient Fee-Bumping**: Better fee rate calculation for packages
-2. **Reduced Orphans**: Reduces orphan transactions in mempool
-3. **Atomic Validation**: Package validated as unit
-4. **DoS Resistance**: Size and weight limits prevent abuse
-
 ## Integration
 
 ### Relay Manager
 
-The `RelayManager` coordinates all relay protocols:
+The `RelayManager` coordinates relay protocols:
 
 - Standard block/transaction relay
 - Dandelion++ integration (optional)
 - Fibre integration (optional)
-- Package relay support
+- Package relay (optional; see [Package Relay (BIP331)](package-relay.md))
 
 **Code**: [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs)
 
@@ -260,12 +190,10 @@ Relay protocols are selected based on:
 
 ## Components
 
-The privacy relay system includes:
 - Dandelion++ stem/fluff phase management
 - Fibre UDP transport with FEC encoding
-- Package Relay (BIP331) validation
 - Relay manager coordination
 - Statistics tracking
 
-**Location**: `blvm-node/src/network/dandelion.rs`, `blvm-node/src/network/fibre.rs`, `blvm-node/src/network/package_relay.rs`, `blvm-node/src/network/relay.rs`
+**Location**: `blvm-node/src/network/dandelion.rs`, `blvm-node/src/network/fibre.rs`, `blvm-node/src/network/relay.rs`
 

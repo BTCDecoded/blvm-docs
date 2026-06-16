@@ -1,7 +1,5 @@
 # Contributing to BLVM Documentation
 
-Thank you for your interest in improving BLVM documentation!
-
 ## Documentation Philosophy
 
 The public book is built from **`blvm-docs`**: most content is authored in **`src/`**. A **small, explicit** set of pages uses mdBook **`{{#include}}`** to embed files from a local **`modules/`** checkout (Orange Paper, governance narrative, and governance **config YAML** verified in deploy CI). Crate-specific documentation (e.g. `blvm-consensus/docs/`) stays in those repositories; this book **links** to them or summarizes them unless you add another include.
@@ -25,8 +23,11 @@ The public book is built from **`blvm-docs`**: most content is authored in **`sr
 - **Storage default** — `database_backend = "auto"` resolves by build features: heed3 (if `heed3` feature) → RocksDB → TidesDB → Redb → Sled. Do not describe "redb" or "RocksDB" as the default without this context.
 - **Paths** — Code links must use actual paths: `block/`, `script/` (dirs), `node/parallel_ibd/` (dir), blvm-protocol for spam_filter/utxo_commitments; no `block.rs`, `script.rs`, `parallel_ibd.rs` as single files, no utxostore_proofs.
 - **Brittle links** — Prefer file or module links without line-number anchors (`#L123`). Line numbers break as code changes; use them only when pointing to a stable, narrow section and prefer "see `path/to/file.rs`" when the exact line is not critical.
+- **No meta openers** — Do not restate the page title ("This document explains…", "This guide covers…"). Start with substance.
+- **No hedge labels** — Avoid `(illustrative)`, `(non-binding)`, "napkin math", and similar disclaimers. Either cite a benchmark source, give a concrete example with its assumptions, or say figures depend on deployment—once, without stacking qualifiers.
+- **Plain adjectives** — Cut filler (`comprehensive`, `robust`, `seamless`, `unified`) when they add no information. Prefer what the code actually does.
 
-When in doubt, follow the **Content principles** subsection above and the [Contributing](../development/contributing.md) chapter.
+Follow the **Content principles** above and the [Contributing](../development/contributing.md) chapter.
 
 ### Markdown Format
 
@@ -145,5 +146,3 @@ Add missing sections rather than assuming “the plan” covered developer ergon
 - Open an issue for questions about documentation structure
 - Ask in GitHub Discussions for general questions
 - Contact maintainers for repository-specific questions
-
-Thank you for helping improve BLVM documentation!

@@ -1,8 +1,6 @@
-# Modules Overview
+# Module catalog
 
-## Introduction
-
-BLVM node uses a modular architecture where optional features run as separate, process-isolated modules. This extends node functionality without affecting consensus or base node stability.
+BLVM node runs optional features as separate, process-isolated modules. See [Building modules](../sdk/module-development.md) to build your own.
 
 ## Available Modules
 
@@ -81,7 +79,7 @@ When the node loads **WebAssembly** modules (**`wasm-modules`** / **`blvm-sdk`**
 ## See Also
 
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
-- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [Building modules](../sdk/module-development.md) - Guide for developing custom modules
 - [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
 - [SDK API Reference](../sdk/api-reference.md) - Complete SDK API documentation
 - [SDK Examples](../sdk/examples.md) - Module development examples

@@ -24,7 +24,7 @@ For **node modules** (process-isolated extensions), blvm-sdk provides:
 - **`blvm_sdk::module::prelude`** and **`run_module!` / `run_module_main!`** — bootstrap, DB, IPC main loop without hand-written event plumbing.
 - **`blvm-sdk-macros`** — `#[module]`, `#[command]`, `#[rpc_method]`, `#[on_event]`, `#[config]`, `#[migration]`, etc., to declare CLI, RPC, events, and config in one place.
 
-Requires the **`node`** feature on `blvm-sdk`. See [Module Development](module-development.md) (especially [SDK declarative style](module-development.md#sdk-declarative-style-recommended)) and the [hello-module](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module) example.
+Requires the **`node`** feature on `blvm-sdk`. See [Building modules](module-development.md) (especially [SDK declarative style](module-development.md#sdk-declarative-style-recommended)) and the [hello-module](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module) example.
 
 ### Governance Primitives
 
@@ -167,11 +167,20 @@ let message = GovernanceMessage::Release {
 let signature = keypair.sign(&message.to_signing_bytes())?;
 ```
 
+## Quick start
+
+### Author a node module
+
+1. Add **`blvm-sdk`** with the **`node`** feature and use the [SDK declarative style](module-development.md#sdk-declarative-style-recommended) (`#[module]`, `run_module!`).
+2. Ship a binary + **`module.toml`** under the node’s modules directory (see [Building modules](module-development.md)).
+3. Optional: register **CLI subcommands** so users invoke your module via **`blvm <your-cli-group> …`** when loaded ([Module CLI under blvm](module-development.md#module-cli-under-the-blvm-binary)).
+
+For more detail, see the [blvm-sdk README](https://github.com/BTCDecoded/blvm-sdk/blob/main/README.md).
+
 ## See Also
 
-- [SDK Getting Started](getting-started.md) - Quick start guide
+- [Building modules](module-development.md) - Module development guide
 - [API Reference](api-reference.md) - Complete SDK API documentation
-- [Module Development](module-development.md) - Building modules
 - [SDK Examples](examples.md) - Usage examples
 - [Governance Overview](../governance/overview.md) - Governance system
 

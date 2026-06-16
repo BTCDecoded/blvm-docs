@@ -102,14 +102,14 @@ pub struct ConsensusConfig {
 
 **Code**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs)
 
-### Bandwidth savings (illustrative)
+### Bandwidth savings
 
-Fast sync aims for **far less** downloaded data than replaying **every full block** for all heights. A typical illustration compares **headers plus filtered / incremental payloads** against **full blocks** at rough historical chain sizes; **actual** GiB and percentage depend on tip height, peer behavior, and configuration. **Do not treat** the round numbers below as audited benchmarks.
+Fast sync downloads far less data than replaying every full block for all heights—headers plus filtered or incremental payloads instead of full blocks at each height. Actual volume and ratios depend on tip height, peer behavior, and configuration; measure on your deployment.
 
 Conceptually:
 - **Headers only** vs **full blocks** per height reduces volume dramatically
 - **Filtered blocks** and incremental updates avoid re-downloading the entire chain as raw blocks
-- **Illustrative** napkin math (non-binding): a naïve full-block archive may be **two orders of magnitude larger** than a headers + filters + incremental path at comparable tip—**verify on your deployment**
+- At comparable tips, a naïve full-block archive can be orders of magnitude larger than a headers + filters + incremental path
 
 ## Spam Filtering Integration
 
@@ -123,7 +123,7 @@ When processing blocks for UTXO commitments, spam filtering is applied:
 
 - **Location**: [initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs)
 - **Process**: All transactions are processed, but spam outputs are filtered out
-- **Benefit**: Additional bandwidth reduction during ongoing sync in some configurations (illustrative ranges appear in deployment-specific analyses—treat as non-binding)
+- **Benefit**: Additional bandwidth reduction during ongoing sync in some configurations
 - **Critical Design**: INPUTS are always removed (maintains UTXO consistency), OUTPUTS are filtered (bandwidth savings)
 
 ### Effect on bandwidth (spam filtering)
@@ -300,7 +300,7 @@ update_commitments_after_block(
 
 ## Benefits
 
-1. **Fast sync**: Substantially less data than naïve full-block replay (see illustrative discussion under [Bandwidth savings](#bandwidth-savings-illustrative))
+1. **Fast sync**: Substantially less data than naïve full-block replay (see [Bandwidth savings](#bandwidth-savings))
 2. **Security**: N-of-M peer consensus prevents single peer attacks
 3. **Efficiency**: Incremental updates, no full set download
 4. **Flexibility**: Multiple sync modes and verification levels

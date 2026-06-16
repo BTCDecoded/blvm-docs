@@ -1,7 +1,5 @@
 # CI/CD Workflows
 
-This document explains what happens when you push code or open a Pull Request, how to interpret CI results, and how to debug failures.
-
 ## Overview
 
 BLVM uses GitHub Actions for continuous integration and deployment. All workflows run on **self-hosted Linux x64 runners** to ensure security and deterministic builds.
@@ -374,7 +372,7 @@ With proper caching optimization:
 
 ## Additional Resources
 
-- [Testing Infrastructure](testing.md) - Comprehensive testing documentation
+- [Testing Infrastructure](testing.md) - Testing documentation
 - [Release Process](release-process.md) - How releases are created
 - [PR Process](pr-process.md) - Pull request review process
 

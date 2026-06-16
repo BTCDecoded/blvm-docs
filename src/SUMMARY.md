@@ -15,14 +15,13 @@
 
 # Architecture
 
-- [System Overview](architecture/system-overview.md)
-- [Component Relationships](architecture/component-relationships.md)
+- [Stack overview](architecture/system-overview.md)
+- [Crate dependencies](architecture/component-relationships.md)
 - [Design Philosophy](architecture/design-philosophy.md)
-- [Module System](architecture/module-system.md)
+- [Module system (design)](architecture/module-system.md)
 - [Module IPC Protocol](architecture/module-ipc-protocol.md)
-- [Event System Integration](architecture/event-system-integration.md)
-- [Event Consistency](architecture/event-consistency.md)
-- [Janitorial Events](architecture/janitorial-events.md)
+- [Module events](architecture/module-events.md)
+- [Janitorial events](architecture/janitorial-events.md)
 
 # Consensus Layer
 
@@ -31,7 +30,6 @@
 - [Formal Verification](consensus/formal-verification.md)
 - [Peer Consensus Protocol](consensus/peer-consensus.md)
 - [Mathematical Specifications](consensus/mathematical-specifications.md)
-- [Mathematical Correctness](consensus/mathematical-correctness.md)
 - [Spam Filtering](consensus/spam-filtering.md)
 - [UTXO Commitments](consensus/utxo-commitments.md)
 
@@ -45,7 +43,7 @@
 # Node Implementation
 
 - [Overview](node/overview.md)
-- [Configuration](node/configuration.md)
+- [Node configuration guide](node/configuration.md)
 - [RBF and Mempool Policies](node/rbf-mempool-policies.md)
 - [Operations](node/operations.md)
 - [RPC API Reference](node/rpc-api.md)
@@ -56,8 +54,8 @@
 - [LAN Peering System](node/lan-peering.md)
 - [Mining Integration](node/mining.md)
 - [Stratum V2 + Merge Mining](node/mining-stratum-v2.md)
-- [Multi-Transport Architecture](node/transport-abstraction.md)
-- [Privacy Relay Protocols](node/privacy-relay.md)
+- [Transport abstraction](node/transport-abstraction.md)
+- [Transaction relay](node/privacy-relay.md)
 - [Package Relay (BIP331)](node/package-relay.md)
 - [Performance Optimizations](node/performance.md)
 - [QUIC RPC](node/quic-rpc.md)
@@ -65,14 +63,13 @@
 # Developer SDK
 
 - [Overview](sdk/overview.md)
-- [Getting Started](sdk/getting-started.md)
-- [Module Development](sdk/module-development.md)
+- [Building modules](sdk/module-development.md)
 - [API Reference](sdk/api-reference.md)
 - [Examples](sdk/examples.md)
 
 # Modules
 
-- [Modules Overview](modules/overview.md)
+- [Module catalog](modules/overview.md)
 - [Lightning Network Module](modules/lightning.md)
 - [Commons Mesh Module](modules/mesh.md)
 - [Stratum V2 Module](modules/stratum-v2.md)
@@ -86,8 +83,8 @@
 - [Review standards](governance/review-standards.md)
 - [blvm-commons](governance/blvm-commons.md)
 - [Governance Model](governance/governance-model.md)
-- [Layer-Tier Model](governance/layer-tier-model.md)
-- [Configuration System](governance/configuration-system.md)
+- [Governance layers and tiers](governance/layer-tier-model.md)
+- [Governance configuration](governance/configuration-system.md)
 - [Governance Fork System](governance/governance-fork.md)
 - [P2P Governance Messages](governance/p2p-governance-messages.md)
 - [OpenTimestamps Integration](governance/opentimestamps-integration.md)
@@ -106,12 +103,17 @@
 
 # Development
 
+## Contributing
+
 - [Contributing](development/contributing.md)
-- [Repository Architecture](development/repository-architecture.md)
+- [Repository layout](development/repository-architecture.md)
 - [Rust MSRV vs CI toolchains](development/msrv-note.md)
 - [CI/CD Workflows](development/ci-cd-workflows.md)
 - [PR Process](development/pr-process.md)
 - [Release Process](development/release-process.md)
+
+## Testing
+
 - [Testing Infrastructure](development/testing.md)
 - [Fuzzing Infrastructure](development/fuzzing.md)
 - [Property-Based Testing](development/property-based-testing.md)
@@ -126,9 +128,6 @@
 - [Threat Models](security/threat-models.md)
 - [Deployment posture](security/deployment-posture.md)
 - [RPC transport × authentication](security/rpc-transport-auth-matrix.md)
-- [Developer Security Checklist](security/DEVELOPER_SECURITY_CHECKLIST.md)
-- [Security Architecture Review Template](security/ARCHITECTURE_REVIEW_TEMPLATE.md)
-- [Security Testing Template](security/SECURITY_TESTING_TEMPLATE.md)
 
 # Appendices
 
@@ -137,3 +136,8 @@
 - [Troubleshooting](appendices/troubleshooting.md)
 - [Contributing to Documentation](appendices/contributing-docs.md)
 
+## Templates
+
+- [Developer Security Checklist](appendices/templates/DEVELOPER_SECURITY_CHECKLIST.md)
+- [Security Architecture Review Template](appendices/templates/ARCHITECTURE_REVIEW_TEMPLATE.md)
+- [Security Testing Template](appendices/templates/SECURITY_TESTING_TEMPLATE.md)

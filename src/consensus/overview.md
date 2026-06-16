@@ -68,7 +68,7 @@ Implements major Bitcoin consensus functions from the [Orange Paper](../referenc
 2. **Mathematical Accuracy**: Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
 3. **Optimization Passes**: [Optimization passes](architecture.md#optimization-passes) (e.g. constant folding, batch script verification) optimize the implementation; the implementation is validated against the spec, not generated from it
 4. **Controlled dependencies**: Declare **BLVM** and third-party crates with the **version ranges and pins in `Cargo.toml`** (ranges for many **blvm-*** crates on crates.io; **`=`** where the manifest pins a revision)
-5. **Comprehensive Testing**: Extensive test coverage with [unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
+5. **Testing**: [Unit tests](../development/testing.md), [property-based tests](../development/property-based-testing.md), and [integration tests](../development/testing.md#integration-tests)
 6. **No Consensus Rule Interpretation**: Only mathematical implementation
 7. **Formal Verification**: [BLVM Specification Lock](formal-verification.md) and [property-based testing](../development/property-based-testing.md) ensure correctness
 
@@ -158,7 +158,7 @@ ripemd = "=0.1.3"
 
 - [Consensus Architecture](architecture.md) - Consensus layer design
 - [Formal Verification](formal-verification.md) - Verification methodology
-- [Mathematical Correctness](mathematical-correctness.md) - Verification approach and coverage
+- [Formal Verification](formal-verification.md#primary-verification-areas) - Verification approach and coverage
 - [UTXO Commitments](utxo-commitments.md) - UTXO commitment system
 - [Orange Paper](../reference/orange-paper.md) - Mathematical foundation
 

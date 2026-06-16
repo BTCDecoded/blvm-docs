@@ -102,8 +102,8 @@ BLVM is designed to support Bitcoin's evolution for the next 500 years:
 
 ## See Also
 
-- [System Overview](system-overview.md) - High-level architecture overview
-- [Component Relationships](component-relationships.md) - Layer dependencies and data flow
+- [Stack overview](system-overview.md) - Six-layer stack summary
+- [Crate dependencies](component-relationships.md) - Dependency graph and governance layers by crate
 - [Consensus Architecture](../consensus/architecture.md) - Mathematical correctness implementation
 - [Governance Overview](../governance/overview.md) - Cryptographic governance system
 - [Orange Paper](../reference/orange-paper.md) - Mathematical foundation

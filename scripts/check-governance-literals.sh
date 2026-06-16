@@ -22,7 +22,6 @@ mapfile -t FILES < <(
     src/appendices/faq.md \
     src/reference/glossary.md \
     src/sdk/overview.md \
-    src/sdk/getting-started.md \
     src/sdk/examples.md \
     src/sdk/api-reference.md \
     src/getting-started/quick-start.md \

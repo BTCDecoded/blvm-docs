@@ -1,6 +1,6 @@
-# Component Relationships
+# Crate dependencies
 
-BLVM implements a **six-layer stack** (stack layers 1–6 below) where each layer builds on the previous. **Stack layer** here means **architecture position**, not [repository governance layers](../governance/layer-tier-model.md) or governance **tiers** (PR classification).
+BLVM is a **six-layer stack**. **Stack layer** means architecture position, not [governance repository layers](../governance/layer-tier-model.md) or governance **tiers** (PR classification). Layer descriptions and the stack diagram: [Stack overview](system-overview.md).
 
 ## Dependency Graph
 
@@ -34,47 +34,18 @@ flowchart LR
 
 **blvm-primitives** (types, serialization, crypto) sits under **blvm-consensus** and **blvm-protocol**; it is not shown as its own stack layer here.
 
-## Stack layer descriptions
+## Governance repository layers by crate
 
-### Stack layer 1: [Orange Paper](../reference/orange-paper.md) (blvm-spec)
-- **Purpose**: Mathematical foundation - timeless consensus rules
-- **Type**: Documentation and specification
-- **Governance**: Layer 1 (Constitutional — [[gov:layer_1_signatures]] maintainers, [[gov:layer_1_review_days]] days, see [Layer-Tier Model](../governance/layer-tier-model.md))
+| Stack layer | Crate | Governance layer |
+|-------------|-------|------------------|
+| 1 | blvm-spec (Orange Paper) | Layer 1 — [[gov:layer_1_signatures]], [[gov:layer_1_review_days]] days |
+| 2 | blvm-consensus | Layer 2 — [[gov:layer_2_signatures]], [[gov:layer_2_review_days]] days |
+| 3 | blvm-protocol | Layer 3 — [[gov:layer_3_signatures]], [[gov:layer_3_review_days]] days |
+| 4 | blvm-node | Layer 4 — [[gov:layer_4_signatures]], [[gov:layer_4_review_days]] days |
+| 5 | blvm-sdk | Layer 5 — [[gov:layer_5_signatures]], [[gov:layer_5_review_days]] days |
+| 6 | blvm-commons | Layer 5 — [[gov:layer_5_signatures]], [[gov:layer_5_review_days]] days |
 
-### Stack layer 2: [Consensus Layer](../consensus/overview.md) (blvm-consensus)
-- **Purpose**: Pure mathematical implementation of [Orange Paper](../reference/orange-paper.md) functions
-- **Type**: Rust library (pure functions, no side effects)
-- **Dependencies**: **[blvm-primitives](https://github.com/BTCDecoded/blvm-primitives)** (shared types, serialization, consensus crypto); version constraints **as declared in `Cargo.toml`**
-- **Governance**: Layer 2 (Constitutional — [[gov:layer_2_signatures]] maintainers, [[gov:layer_2_review_days]] days, see [Layer-Tier Model](../governance/layer-tier-model.md))
-- **Key Functions**: CheckTransaction, ConnectBlock, EvalScript, VerifyScript
-
-### Stack layer 3: [Protocol Layer](../protocol/overview.md) (blvm-protocol)
-- **Purpose**: Protocol abstraction layer for multiple Bitcoin variants
-- **Type**: Rust library
-- **Dependencies**: [blvm-consensus](../consensus/overview.md) and **[blvm-primitives](https://github.com/BTCDecoded/blvm-primitives)** (exact / ranged versions per `Cargo.toml`)
-- **Governance**: Layer 3 (Implementation — [[gov:layer_3_signatures]] maintainers, [[gov:layer_3_review_days]] days, see [Layer-Tier Model](../governance/layer-tier-model.md))
-- **Supports**: mainnet, testnet, regtest, and additional protocol variants
-
-### Stack layer 4: [Node Implementation](../node/overview.md) (blvm-node)
-- **Purpose**: Minimal reference **full node**—non-consensus infrastructure only; deploy with [security hardening](../security/security-controls.md) and check [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) for governance and maturity
-- **Type**: Rust binaries (full node)
-- **Dependencies**: [blvm-protocol](../protocol/overview.md), [blvm-consensus](../consensus/overview.md) (version ranges per **`Cargo.toml`**)
-- **Governance**: Layer 4 (Application — [[gov:layer_4_signatures]] maintainers, [[gov:layer_4_review_days]] days, see [Layer-Tier Model](../governance/layer-tier-model.md))
-- **Components**: Block validation, [storage](../node/storage-backends.md), [P2P networking](../node/transport-abstraction.md), [RPC](../node/rpc-api.md), [mining](../node/mining.md)
-
-### Stack layer 5: [Developer SDK](../sdk/overview.md) (blvm-sdk)
-- **Purpose**: Developer toolkit and governance cryptographic primitives
-- **Type**: Rust library and CLI tools
-- **Dependencies**: Declares **`blvm-protocol`** and **`blvm-consensus`** on crates.io (for composition and module tooling); optional **`blvm-node`** via the default **`node`** feature. See the crate `Cargo.toml`.
-- **Governance**: Layer 5 (Extension — [[gov:layer_5_signatures]] maintainers, [[gov:layer_5_review_days]] days, see [Layer-Tier Model](../governance/layer-tier-model.md))
-- **Components**: Key generation, signing, verification, [multisig operations](../governance/multisig-configuration.md)
-
-### Stack layer 6: Governance Infrastructure (blvm-commons)
-- **Purpose**: Cryptographic governance enforcement
-- **Type**: Rust service (GitHub App / server binaries)
-- **Dependencies**: **`blvm-sdk`**, **`blvm-protocol`** (see `blvm-commons` / `Cargo.toml`)
-- **Governance**: Layer 5 (Extension — [[gov:layer_5_signatures]] maintainers, [[gov:layer_5_review_days]] days)
-- **Components**: GitHub integration, signature verification, status checks
+See [Governance layers and tiers](../governance/layer-tier-model.md) for how layers combine with PR tiers.
 
 ## Data flow
 
@@ -99,7 +70,7 @@ The dependency graph above is the accurate picture for **crate dependencies**. A
 
 ## See Also
 
-- [System Overview](system-overview.md) - High-level architecture overview
+- [Stack overview](system-overview.md) - Six-layer stack and component summary
 - [Design Philosophy](design-philosophy.md) - Core design principles
 - [Consensus Architecture](../consensus/architecture.md) - Consensus layer details
 - [Protocol Architecture](../protocol/architecture.md) - Protocol layer details

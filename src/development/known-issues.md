@@ -1,6 +1,6 @@
 # Known Issues
 
-This document tracks known technical issues in the codebase that require attention. These are validated issues confirmed through code inspection and static analysis.
+Validated technical issues from code inspection and static analysis. File fixes against the linked repository.
 
 ## Critical Issues
 

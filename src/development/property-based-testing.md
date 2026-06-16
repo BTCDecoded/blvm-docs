@@ -184,10 +184,10 @@ proptest! {
 
 ## Additional Property Tests
 
-### Comprehensive Property Tests
+### Property test suites
 
 **Location**: `tests/unit/comprehensive_property_tests.rs`
-- Multiple proptest! blocks covering comprehensive scenarios
+- Multiple `proptest!` blocks for cross-cutting scenarios
 
 ### Script Opcode Property Tests
 

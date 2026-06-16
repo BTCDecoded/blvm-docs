@@ -4,7 +4,7 @@
 
 ### What is Bitcoin Commons?
 
-Bitcoin Commons is a project that solves Bitcoin's governance asymmetry through two complementary innovations: [BLVM](../introduction.md) (the technical stack providing mathematical rigor) and Bitcoin Commons (the governance framework providing coordination without civil war). Together, they enable safe alternative Bitcoin implementations with forkable governance. See [Introduction](../introduction.md) and [Governance Overview](../governance/overview.md) for details.
+Bitcoin Commons combines [BLVM](../introduction.md) (spec-first implementation stack) with a forkable governance framework. See [Introduction](../introduction.md) and [Governance Overview](../governance/overview.md).
 
 ### How does this relate to other Bitcoin implementations?
 
@@ -12,7 +12,7 @@ The widely deployed reference stack is one mature codebase and informal governan
 
 ### Is this a fork of Bitcoin?
 
-No. Neither BLVM nor Bitcoin Commons forks Bitcoin's blockchain or consensus rules. BLVM provides mathematical specification enabling safe alternative implementations. Bitcoin Commons provides governance framework enabling coordination. Both maintain full Bitcoin consensus compatibility.
+No. Neither BLVM nor Bitcoin Commons forks Bitcoin's blockchain or consensus rules. BLVM publishes the Orange Paper spec for alternative implementations. Bitcoin Commons publishes governance rules for coordination. Both maintain full Bitcoin consensus compatibility.
 
 ### Is the system production ready?
 
@@ -20,7 +20,7 @@ BLVM provides a complete node implementation with core components, formal verifi
 
 ### How do BLVM and Bitcoin Commons work together?
 
-BLVM provides the mathematical foundation and compiler-like architecture (Orange Paper as spec/IR; implementation validated against it). Bitcoin Commons provides the governance framework (coordination without civil war). The modular architecture is where both meet: BLVM supplies the spec and verification stack; Commons supplies governance. Production deployments need engineering and operations like any node.
+BLVM holds the Orange Paper spec and verification stack; Bitcoin Commons holds governance rules and merge enforcement. Production deployments still need your own engineering and operations.
 
 ### What are the two innovations?
 
@@ -30,11 +30,11 @@ BLVM provides the mathematical foundation and compiler-like architecture (Orange
 
 ### What's the relationship between Bitcoin Commons and BTCDecoded?
 
-Bitcoin Commons is the governance framework; BTCDecoded is the first complete implementation of both innovations (BLVM + Commons). Think of BLVM as the technical foundation, Bitcoin Commons as the governance constitution, and BTCDecoded as the first "government" built on both. Other implementations can adopt the same framework.
+Bitcoin Commons is the governance framework; BTCDecoded is the first full implementation of BLVM and Commons. Other teams can adopt the same spec and governance model independently.
 
 ### What is Bitcoin Commons (the governance framework)?
 
-Bitcoin Commons is a forkable governance framework that applies Elinor Ostrom's proven commons management principles through cryptographic enforcement. It solves Bitcoin's governance asymmetry by making development governance as robust as technical consensus. It provides coordination without civil war through forkable rules, cryptographic signatures, and transparent audit trails.
+Bitcoin Commons is a forkable governance framework: Ostrom-style commons rules enforced with cryptographic signatures, forkable policy YAML, and audit trails. See [Governance Overview](../governance/overview.md).
 
 ### How does Bitcoin Commons governance work?
 
@@ -54,7 +54,7 @@ Elinor Ostrom's Nobel Prize-winning research identified 8 principles for managin
 
 ### Why do you need both BLVM and Bitcoin Commons?
 
-BLVM addresses the technical problem (shared Orange Paper spec, layered verification, alternative implementations). Bitcoin Commons addresses the governance problem (coordination without civil war). They are designed to work together.
+BLVM covers the technical stack (Orange Paper, consensus, node). Bitcoin Commons covers governance (tiers, signatures, fork rules). They share repository boundaries but serve different roles.
 
 ### How does the modular architecture combine both innovations?
 
@@ -192,7 +192,7 @@ The node implements many JSON-RPC methods aligned with widely documented Bitcoin
 
 ### How does the module system work?
 
-The node includes a process-isolated module system (Lightning, mesh, privacy modules, etc.). Spawned modules register ModuleAPI over IPC; see [Module Development](../sdk/module-development.md) and [Module IPC Protocol](../architecture/module-ipc-protocol.md).
+The node includes a process-isolated module system (Lightning, mesh, privacy modules, etc.). Spawned modules register ModuleAPI over IPC; see [Building modules](../sdk/module-development.md) and [Module IPC Protocol](../architecture/module-ipc-protocol.md).
 
 ### How do I troubleshoot issues?
 

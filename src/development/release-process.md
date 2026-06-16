@@ -1,7 +1,5 @@
 # Release Process
 
-This document explains how BLVM releases are created, what variants are available, version numbering, and how to verify releases.
-
 ## Overview
 
 BLVM uses an automated release pipeline that builds and releases the entire ecosystem when code is merged to `main` in any repository. The system uses Cargo's dependency management to build repositories in the correct order.

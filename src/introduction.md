@@ -1,8 +1,8 @@
 # Introduction
 
-Welcome to the BLVM documentation.
-
 BLVM (Bitcoin Low-Level Virtual Machine) implements Bitcoin consensus from the [Orange Paper](reference/orange-paper.md), provides protocol abstraction for multiple Bitcoin variants, a **reference** full node with P2P networking, a developer SDK, and cryptographic governance for transparent development.
+
+Contributors: start with [Repository layout](development/repository-architecture.md) for how repos fit together, then [Contributing](development/contributing.md).
 
 ## What is BLVM?
 

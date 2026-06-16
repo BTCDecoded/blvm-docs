@@ -2,7 +2,7 @@
 
 ## Overview
 
-The module system provides comprehensive janitorial and maintenance events that allow modules to participate in node lifecycle, resource management, and data maintenance operations. This ensures modules can perform their own cleanup, maintenance, and resource management in sync with the node.
+Janitorial and maintenance events let modules participate in node lifecycle, resource management, and data maintenance in sync with the node.
 
 ## Event Categories
 
@@ -243,7 +243,6 @@ match event_type {
 ## See Also
 
 - [Module System](module-system.md) - Module system architecture
-- [Event System Integration](event-system-integration.md) - Complete integration guide
-- [Event Consistency](event-consistency.md) - Event timing and consistency guarantees
+- [Module events](module-events.md) - Delivery, timing, and integration patterns
 - [Module IPC Protocol](module-ipc-protocol.md) - IPC communication details
 

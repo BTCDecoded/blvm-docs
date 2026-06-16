@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Lightning Network module (`blvm-lightning`) handles Lightning Network payment processing for blvm-node: invoice verification, payment routing, channel management, and payment state tracking. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Lightning Network module (`blvm-lightning`) handles invoice verification, payment routing, channel management, and payment state tracking for blvm-node.
 
 ## Features
 
 - **Invoice Verification**: Validates Lightning Network invoices (BOLT11) using multiple provider backends
 - **Payment Processing**: Processes Lightning payments via LNBits API or LDK
-- **Provider Abstraction**: Supports multiple Lightning providers (LNBits, LDK, Stub) with unified interface
+- **Provider Abstraction**: Supports multiple Lightning providers (LNBits, LDK, Stub) through one interface
 - **Payment State Tracking**: Monitors payment lifecycle from request to settlement
 
 ## Installation
@@ -103,7 +103,7 @@ provider = "stub"
 
 ## Module Manifest
 
-The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
+The module includes a `module.toml` manifest (see [Building modules](../sdk/module-development.md#module-manifest)):
 
 ```toml
 name = "blvm-lightning"
@@ -222,9 +222,9 @@ The module uses module storage to persist configuration and statistics:
 
 ## See Also
 
-- [Module System Overview](overview.md) - Overview of all available modules
+- [Module catalog](overview.md) - Overview of all available modules
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
-- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [Building modules](../sdk/module-development.md) - Guide for developing custom modules
 - [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
 - [SDK API Reference](../sdk/api-reference.md) - Complete SDK API documentation
 - [SDK Examples](../sdk/examples.md) - Module development examples

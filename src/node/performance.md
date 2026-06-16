@@ -8,7 +8,7 @@ The node implements performance optimizations for initial block download (IBD), 
 
 ### Overview
 
-Parallel IBD significantly speeds up initial blockchain synchronization by downloading and validating blocks concurrently from multiple peers. The system uses checkpoint-based parallel header download, block pipelining, streaming validation, and efficient batch storage operations.
+Parallel IBD downloads and validates blocks from multiple peers concurrently. The pipeline uses checkpoint-based header download, block pipelining, streaming validation, and batch storage writes.
 
 The node uses parallel IBD for initial sync. **Code**: [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 

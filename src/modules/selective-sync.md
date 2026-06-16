@@ -4,7 +4,7 @@ The **blvm-selective-sync** module provides a configurable **sync policy**: oper
 
 ## Requirements
 
-- Node with modules enabled; **blvm-selective-sync** built and installed (see [Modules Overview](overview.md#installing-modules)).
+- Node with modules enabled; **blvm-selective-sync** built and installed (see [Module catalog](overview.md#installing-modules)).
 - Typical workspace: **blvm-node**, **blvm-sdk**, **blvm-protocol** (path dependencies via `[patch.crates-io]` in the module crate for local builds).
 
 ## Loading

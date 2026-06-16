@@ -1,10 +1,10 @@
-# Configuration System
+# Governance configuration
 
-> **Accuracy:** This chapter describes the *intended* governance configuration architecture (YAML source of truth, tier rules, fallbacks). On current `blvm-commons` `main`, YAML is loaded through **`src/config/loader.rs`** (`GovernanceConfigFiles` and related types). Older doc links to `src/governance/config_registry.rs`, `config_reader.rs`, `yaml_loader.rs`, and similar files **do not exist** in that form; use **loader.rs** and the **[governance](https://github.com/BTCDecoded/governance) repo** `config/` tree as the live references.
+> On current `blvm-commons` `main`, YAML loads through **`src/config/loader.rs`** (`GovernanceConfigFiles` and related types). Older doc links to `src/governance/config_registry.rs`, `config_reader.rs`, `yaml_loader.rs`, and similar files **do not exist** in that form; use **loader.rs** and the **[governance](https://github.com/BTCDecoded/governance) repo** `config/` tree as the live references.
 
 ## Overview
 
-The Bitcoin Commons configuration system provides a unified, type-safe interface for all governance-controlled parameters. The system uses **YAML files as the source of truth** with a database-backed registry for governance-controlled changes and a comprehensive fallback chain.
+The Bitcoin Commons configuration system exposes governance-controlled parameters through typed YAML. **YAML files are the source of truth**, with a database-backed registry for governed changes and a fallback chain when files are missing.
 
 Published policy tables in this book (for example [PR Process](../development/pr-process.md), [Layer-Tier Model](layer-tier-model.md)) use **`[[gov:KEY]]`** placeholders expanded at **`mdbook build`** from `modules/governance/config/*.yml` via **`mdbook-governance-vars`**. That keeps narrative docs aligned with YAML; **merge enforcement** in `blvm-commons` may still use hardcoded thresholds until runtime YAML loading is implemented.
 

@@ -22,7 +22,7 @@ Shared types, serialization, and crypto live in **blvm-primitives**. **blvm-cons
 
 **Key areas:** types (Transaction, Block, BlockHeader, UTXO, Script, etc.), serialization, cryptographic operations, opcodes, constants.
 
-**Documentation:** See [Consensus Architecture](../consensus/architecture.md) and [System Overview](../architecture/system-overview.md).
+**Documentation:** See [Consensus Architecture](../consensus/architecture.md) and [Stack overview](../architecture/system-overview.md).
 
 ### Consensus Layer (blvm-consensus)
 
@@ -122,7 +122,7 @@ pub struct ModuleContext {
 }
 ```
 
-**Documentation:** See [Module Development](../sdk/module-development.md) for complete module API details.
+**Documentation:** See [Building modules](../sdk/module-development.md) for complete module API details.
 
 #### RPC API
 
@@ -161,7 +161,7 @@ pub struct ModuleContext {
 
 - **Crate:** [blvm-sdk](../sdk/api-reference.md) (feature **`node`**); procedural macros in **[blvm-sdk-macros](https://github.com/BTCDecoded/blvm-sdk/tree/main/crates/blvm-sdk-macros)** (`#[module]`, `#[command]`, `#[rpc_method]`, `#[on_event]`, `#[config]`, `#[migration]`, etc.).
 - **Entry:** `blvm_sdk::module::prelude::*`, **`run_module!`**, **`run_module_main!`**, `ModuleBootstrap`, `ModuleDb`, `InvocationContext`.
-- **Documentation:** [Module Development](../sdk/module-development.md#sdk-declarative-style-recommended), [hello-module example](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module).
+- **Documentation:** [Building modules](../sdk/module-development.md#sdk-declarative-style-recommended), [hello-module example](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module).
 
 #### Governance Primitives
 
@@ -233,7 +233,7 @@ use blvm_protocol::{BitcoinProtocolEngine, ProtocolVersion};
 let engine = BitcoinProtocolEngine::new(ProtocolVersion::Testnet3)?;
 ```
 
-### Module Development
+### Building modules
 
 ```rust
 use blvm_node::module::traits::NodeAPI;
@@ -277,6 +277,6 @@ All APIs use consistent error types:
 ## See Also
 
 - [SDK API Reference](../sdk/api-reference.md) - Detailed SDK documentation
-- [Module Development](../sdk/module-development.md) - Module API usage
+- [Building modules](../sdk/module-development.md) - Module API usage
 - [RPC API Reference](../node/rpc-api.md) - RPC method documentation
 - [Configuration Reference](configuration-reference.md) - Configuration APIs

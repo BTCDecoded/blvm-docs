@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Mining OS module (`blvm-miningos`) provides bidirectional integration between BLVM and MiningOS (Mos), enabling BLVM to be managed as a MiningOS "rack" (worker) and exposing miners as "things". For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Mining OS module (`blvm-miningos`) integrates BLVM with MiningOS (Mos): BLVM runs as a MiningOS "rack" (worker) and exposes miners as "things".
 
 ## Features
 
@@ -150,7 +150,7 @@ update_interval_seconds = 30
 
 ## Module Manifest
 
-The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
+The module includes a `module.toml` manifest (see [Building modules](../sdk/module-development.md#module-manifest)):
 
 ```toml
 name = "blvm-miningos"
@@ -275,7 +275,7 @@ For manual testing:
 
 ## See Also
 
-- [Module System Overview](overview.md) - Overview of all available modules
+- [Module catalog](overview.md) - Overview of all available modules
 - [Stratum V2 Module](stratum-v2.md) - Stratum V2 mining protocol (integrates with MiningOS for pool config updates)
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
-- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [Building modules](../sdk/module-development.md) - Guide for developing custom modules

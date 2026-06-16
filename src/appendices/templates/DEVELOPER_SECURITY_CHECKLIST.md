@@ -232,7 +232,7 @@ fn test_invalid_signature() {
 
 ## Resources
 
-- [Security Controls System](security-controls.md)
-- [Threat Models](threat-models.md)
+- [Security Controls System](../../security/security-controls.md)
+- [Threat Models](../../security/threat-models.md)
 - [blvm-node SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md) (reference node security practices)
 

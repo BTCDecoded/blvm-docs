@@ -324,9 +324,9 @@ The RPC API implements JSON-RPC 2.0 methods documented in the [Available Methods
 
 ### Overview
 
-The REST API provides a modern, developer-friendly interface alongside JSON-RPC when enabled. It uses standard HTTP methods and status codes, with JSON request/response bodies.
+The REST API exposes HTTP endpoints alongside JSON-RPC when enabled. Requests and responses use JSON; status codes follow normal HTTP semantics.
 
-**Base URL** (illustrative bind): `http://localhost:8080/api/v1/` — replace host/port with your REST bind address.
+**Base URL:** `http://localhost:8080/api/v1/` — use your REST bind host and port.
 
 **Code**: [rest/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/mod.rs)
 

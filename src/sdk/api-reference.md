@@ -464,7 +464,7 @@ let deps = registry.resolve_dependencies(&["lightning-module".to_string()])?;
 
 ## See Also
 
-- [Module Development](../sdk/module-development.md) - Building modules that use these APIs
+- [Building modules](../sdk/module-development.md) - Building modules that use these APIs
 - [SDK Examples](../sdk/examples.md) - More usage examples
 - [API Index](../reference/api-index.md) - Cross-reference to all APIs
 - [API Index](../reference/api-index.md) - Cross-reference to all BLVM APIs in this book

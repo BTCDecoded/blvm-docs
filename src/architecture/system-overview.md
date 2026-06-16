@@ -1,4 +1,4 @@
-# System Overview
+# Stack overview
 
 Bitcoin Commons is a Bitcoin implementation ecosystem with **six stack layers** (numbered below) building on the [Orange Paper](../reference/orange-paper.md) mathematical specifications. **“Layer” here means position in the technology stack**, not [repository governance layers](../governance/layer-tier-model.md) or governance **tiers** (PR classification). blvm-consensus and blvm-protocol share the **blvm-primitives** crate for types, serialization, and crypto. The system implements consensus rules directly from the spec, provides protocol abstraction, delivers a full node implementation, and includes a developer SDK.
 
@@ -132,7 +132,7 @@ graph TB
 
 ## See Also
 
-- [Component Relationships](component-relationships.md) - Detailed component interactions
+- [Crate dependencies](component-relationships.md) - Dependency graph and governance layers by crate
 - [Design Philosophy](design-philosophy.md) - Core design principles
 - [Module System](module-system.md) - Module system architecture
 - [Node Overview](../node/overview.md) - Node implementation details

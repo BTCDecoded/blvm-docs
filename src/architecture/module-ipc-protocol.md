@@ -303,7 +303,7 @@ The module-side IPC client:
 ## See Also
 
 - [Module System](module-system.md) - Module system architecture
-- [Module Development](../sdk/module-development.md) - Building modules
-- [Modules Overview](../modules/overview.md) - Available modules
+- [Building modules](../sdk/module-development.md) - Building modules
+- [Module catalog](../modules/overview.md) - Available modules
 
 

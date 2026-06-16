@@ -1,8 +1,8 @@
-# Module System
+# Module system (design)
 
 ## Overview
 
-The module system supports optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy enhancements) without affecting consensus or base node stability. Modules run in separate processes with [IPC communication](module-ipc-protocol.md), providing security through isolation.
+Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
 ## Available Modules
 
@@ -17,7 +17,7 @@ The following modules are available for blvm-node:
 
 For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
 
-**Writing modules:** Use the **SDK declarative style** (blvm-sdk attribute macros and `run_module!`) to define CLI, RPC, and event handling in one impl block without manual IPC loops; see [Module Development](../sdk/module-development.md#sdk-declarative-style-recommended). Alternatively use the integration API or low-level IPC for custom control.
+**Writing modules:** Use the **SDK declarative style** (blvm-sdk attribute macros and `run_module!`) to define CLI, RPC, and event handling in one impl block without manual IPC loops; see [Building modules](../sdk/module-development.md#sdk-declarative-style-recommended). Alternatively use the integration API or low-level IPC for custom control.
 
 ## Architecture
 
@@ -318,7 +318,7 @@ The `ModuleApiHub` routes API requests from modules to the appropriate handlers:
 
 ## Event System
 
-The module event system provides a comprehensive, consistent, and reliable way for modules to receive notifications about node state changes, blockchain events, and system lifecycle events.
+Modules subscribe to node state changes, blockchain events, and system lifecycle events through the event system.
 
 ### Event Subscription
 
@@ -510,8 +510,7 @@ For a complete list of all event types, see [EventType enum](https://github.com/
 **Code**: [events.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/events.rs)
 
 For detailed event system documentation, see:
-- [Event System Integration](event-system-integration.md) - Complete integration guide
-- [Event Consistency](event-consistency.md) - Event timing and consistency guarantees
+- [Module events](module-events.md) - Delivery, timing, and integration patterns
 - [Janitorial Events](janitorial-events.md) - Maintenance and lifecycle events
 
 ## Module Registry
@@ -602,7 +601,7 @@ There are two approaches for modules to integrate with the node:
 
 #### 1. ModuleIntegration (Recommended for New Modules)
 
-The `ModuleIntegration` API provides a simplified, unified interface for module integration:
+The `ModuleIntegration` API wraps connect, subscribe, and RPC helpers:
 
 ```rust
 use blvm_node::module::integration::ModuleIntegration;
@@ -627,7 +626,7 @@ let mut event_receiver = integration.event_receiver();
 ```
 
 **Benefits:**
-- Single unified API for all integration needs
+- One API for connect, subscribe, and RPC calls
 - Automatic handshake and connection management
 - Simplified event subscription
 - Direct access to NodeAPI and event receiver
@@ -674,11 +673,11 @@ For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protoc
 ## See Also
 
 - [Module IPC Protocol](module-ipc-protocol.md) - Complete IPC protocol documentation
-- [Modules Overview](../modules/overview.md) - Overview of all available modules
+- [Module catalog](../modules/overview.md) - Overview of all available modules
 - [Lightning Network Module](../modules/lightning.md) - Lightning Network payment processing
 - [Commons Mesh Module](../modules/mesh.md) - Payment-gated mesh networking
 - [Stratum V2 Module](../modules/stratum-v2.md) - Stratum V2 mining protocol
 - [Datum Module](../modules/datum.md) - DATUM Gateway mining protocol
 - [Mining OS Module](../modules/miningos.md) - MiningOS integration
-- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [Building modules](../sdk/module-development.md) - Guide for developing custom modules
 

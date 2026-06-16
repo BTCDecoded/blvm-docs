@@ -264,8 +264,8 @@ Use this template when conducting security architecture reviews for new features
 
 ## References
 
-- [Security Controls System](security-controls.md)
-- [Threat Models](threat-models.md)
+- [Security Controls System](../../security/security-controls.md)
+- [Threat Models](../../security/threat-models.md)
 - [Developer Security Checklist](DEVELOPER_SECURITY_CHECKLIST.md)
 - [Security Testing Template](SECURITY_TESTING_TEMPLATE.md)
 - [blvm-node SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md) (reference node security practices)

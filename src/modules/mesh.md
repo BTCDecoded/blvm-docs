@@ -99,6 +99,6 @@ Or `node_api.call_module(Some("blvm-mesh"), "send_packet", bincode::serialize(&r
 
 ## See Also
 
-- [Modules Overview](overview.md)
-- [Module Development](../sdk/module-development.md)
+- [Module catalog](overview.md)
+- [Building modules](../sdk/module-development.md)
 - [Module IPC Protocol](../architecture/module-ipc-protocol.md)

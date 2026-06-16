@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Datum module (`blvm-datum`) implements the DATUM Gateway mining protocol for blvm-node, enabling decentralized mining with Ocean pool support. This module handles pool communication only - miners connect via the `blvm-stratum-v2` module. For information on developing custom modules, see [Module Development](../sdk/module-development.md).
+The Datum module (`blvm-datum`) implements the DATUM Gateway mining protocol for Ocean pool support. Pool communication runs here; miners connect through `blvm-stratum-v2`.
 
 ## Features
 
@@ -121,7 +121,7 @@ pool_address = "bc1q..."  # Bitcoin address for pool payouts
 
 ## Module Manifest
 
-The module includes a `module.toml` manifest (see [Module Development](../sdk/module-development.md#module-manifest)):
+The module includes a `module.toml` manifest (see [Building modules](../sdk/module-development.md#module-manifest)):
 
 ```toml
 name = "blvm-datum"
@@ -245,8 +245,8 @@ Ocean Pool ← blvm-datum (DATUM client) ← NodeAPI (block templates)
 
 ## See Also
 
-- [Module System Overview](overview.md) - Overview of all available modules
+- [Module catalog](overview.md) - Overview of all available modules
 - [Stratum V2 Module](stratum-v2.md) - Stratum V2 mining protocol (required for miners to connect)
 - [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
-- [Module Development](../sdk/module-development.md) - Guide for developing custom modules
+- [Building modules](../sdk/module-development.md) - Guide for developing custom modules
 - [DATUM Gateway Documentation](https://ocean.xyz/docs/datum) - Official DATUM documentation
