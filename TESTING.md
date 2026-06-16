@@ -10,7 +10,9 @@
 ### 2. Verify GitHub Pages Status
 - Go to: https://github.com/BTCDecoded/blvm-docs/settings/pages
 - Should show: "Your site is live at https://docs.thebitcoincommons.org"
-- Source should be: "GitHub Actions"
+- **Source must be: GitHub Actions** (`build_type: workflow`), **not** "Deploy from branch `main`"
+- If source is legacy branch deploy, the site 404s even when **Deploy Documentation** CI is green (repo root has no `index.html`; mdbook output is in `book/` via Actions only)
+- Deploy workflow runs `scripts/assert-pages-workflow-source.sh` and `scripts/verify-live-docs-site.sh` to catch this automatically
 
 ### 3. Test Site Access
 - **Primary URL**: https://docs.thebitcoincommons.org
