@@ -2,6 +2,8 @@
 
 Thank you for your interest in contributing to BLVM (Bitcoin Low-Level Virtual Machine)! This guide covers the complete developer workflow from setting up your environment to getting your changes merged.
 
+New to the project? Read [Repository Architecture](repository-architecture.md) first — it explains why Bitcoin Commons uses separate repositories, how the crates fit together, and how local development and CI differ.
+
 ## Code of Conduct
 
 This project and everyone participating in it is governed by our [Code of Conduct](https://github.com/BTCDecoded/.github/blob/main/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
@@ -270,6 +272,7 @@ For documentation-specific contributions (improving docs, fixing typos, adding e
 
 ## See Also
 
+- [Repository Architecture](repository-architecture.md) - Why the codebase uses separate repositories and how local vs CI builds work
 - [PR Process](pr-process.md) - Pull request review process and governance tiers
 - [CI/CD Workflows](ci-cd-workflows.md) - What happens when you push code
 - [Testing Infrastructure](testing.md) - Testing guides

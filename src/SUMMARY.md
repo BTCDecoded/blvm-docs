@@ -107,6 +107,7 @@
 # Development
 
 - [Contributing](development/contributing.md)
+- [Repository Architecture](development/repository-architecture.md)
 - [Rust MSRV vs CI toolchains](development/msrv-note.md)
 - [CI/CD Workflows](development/ci-cd-workflows.md)
 - [PR Process](development/pr-process.md)
