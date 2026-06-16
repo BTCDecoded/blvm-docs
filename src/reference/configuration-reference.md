@@ -205,12 +205,28 @@ Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default
 - **Type**: `string` (enum)
 - **Default**: `"auto"`
 - **Options**:
-  - `"auto"` - Select by build features: RocksDB when `rocksdb` feature enabled (typical default), else TidesDB, else Redb, else Sled
+  - `"auto"` - Select by build features: heed3 when `heed3` feature enabled (typical default), else RocksDB, else TidesDB, else Redb, else Sled
   - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
+  - `"tidesdb"` - Use TidesDB (if available)
+  - `"heed3"` - Use heed3 / LMDB (requires `heed3` feature; UTXO values use rkyv encoding)
   - `"redb"` - Use redb (pure Rust; common when building **without** RocksDB)
   - `"sled"` - Use sled database (beta, fallback option)
-  - `"tidesdb"` - Use TidesDB (if available)
 - **Description**: Database backend selection. System automatically falls back if preferred backend fails.
+
+#### `storage.heed3.map_size_mb`
+- **Type**: `integer` (megabytes), optional
+- **Default**: `max(65536, dbcache_mb * 128)` when unset
+- **Description**: LMDB virtual memory map size. Must be large enough for the full UTXO set; cannot shrink after creation without reopening.
+
+#### `storage.heed3.max_readers`
+- **Type**: `integer`, optional
+- **Default**: `512`
+- **Description**: Maximum concurrent LMDB read transactions (MVCC readers).
+
+#### `storage.heed3.max_dbs`
+- **Type**: `integer`, optional
+- **Default**: `KNOWN_TREE_NAMES + 8`
+- **Description**: Maximum named LMDB sub-databases (trees). Set once at environment creation.
 
 ### `storage.auto_migrate_core`
 - **Type**: `boolean`

@@ -68,7 +68,7 @@ See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a
 **Solution**:
 - The system automatically falls back to alternative backends when the chosen one fails
 - Check data directory permissions and sufficient disk space
-- Set backend explicitly in config if needed: `[storage] database_backend = "rocksdb"` / `"redb"` / `"sled"` / `"tidesdb"`, or keep **`"auto"`** (default builds usually pick **RocksDB** first). See [Configuration Reference](../reference/configuration-reference.md).
+- Set backend explicitly in config if needed: `[storage] database_backend = "rocksdb"` / `"heed3"` / `"redb"` / `"sled"` / `"tidesdb"`, or keep **`"auto"`** (default builds usually pick **heed3** first). See [Configuration Reference](../reference/configuration-reference.md).
 
 ### Corrupted Database
 

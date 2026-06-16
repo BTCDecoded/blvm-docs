@@ -144,7 +144,7 @@ protocol_version = "Testnet3"
 
 [storage]
 data_dir = "~/.local/share/blvm-testnet"
-database_backend = "auto"  # default builds: resolves to RocksDB when `rocksdb` feature is on
+database_backend = "auto"  # default builds: resolves to heed3 (LMDB) when `heed3` feature is on
 
 [rbf]
 mode = "standard"

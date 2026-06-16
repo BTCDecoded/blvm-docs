@@ -190,7 +190,7 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Implement proper Bitcoin double SHA256 hashing
 - Review **Cargo.toml** dependency constraints and run **`cargo audit`**
 - Add network protocol input validation
-- Prefer **`database_backend = "auto"`** with supported backends over ad-hoc defaults; use **redb** when omitting RocksDB for pure-Rust deployments
+- Prefer **`database_backend = "auto"`** with supported backends over ad-hoc defaults; use **redb** when omitting RocksDB/heed3 for pure-Rust minimal builds
 - Add DoS protection mechanisms
 - Add RPC authentication
 - Implement rate limiting
@@ -306,7 +306,7 @@ Eclipse attack prevention:
 
 Storage layer security:
 
-- **`auto` / RocksDB**: Default path in typical builds (performance + common layout interop; see storage docs)
+- **`auto` / heed3**: Default path in typical builds (mmap UTXO reads + rkyv); **`rocksdb`**: explicit choice or fallback (performance + Core layout interop; see storage docs)
 - **redb / sled / tidesdb**: Alternative backends with different trust and build surfaces; **redb** is pure Rust when RocksDB is not used
 - **Database Abstraction**: Allows switching backends explicitly
 - **Storage Bounds**: Storage bounds checking

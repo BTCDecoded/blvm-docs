@@ -382,7 +382,7 @@ The performance optimization system includes:
 - Runtime optimizations (constant folding, bounds checks, cache-friendly layouts)
 - Performance configuration
 
-**Location**: `blvm-consensus/src/optimizations.rs`, `blvm-consensus/src/block/`, `blvm-consensus/src/config.rs`, `blvm-node/src/validation/mod.rs`. Storage default for IBD is RocksDB when the `rocksdb` feature is enabled.
+**Location**: `blvm-consensus/src/optimizations.rs`, `blvm-consensus/src/block/`, `blvm-consensus/src/config.rs`, `blvm-node/src/validation/mod.rs`. Storage default for IBD is heed3 (LMDB + rkyv) when the `heed3` feature is enabled; use `database_backend = "rocksdb"` for RocksDB.
 
 ## See Also
 

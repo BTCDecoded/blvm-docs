@@ -143,7 +143,7 @@ graph TB
 - [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with optional [IBD UTXO engine](ibd-engine.md) (`BLVM_IBD_ENGINE=1`)
 
 ### Storage Features
-- [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → RocksDB** in typical release builds; optional redb, sled, tidesdb)
+- [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → heed3 (LMDB)** in typical release builds; optional RocksDB, redb, sled, tidesdb)
 - [Common on-disk chain layouts](storage-backends.md#rocksdb-optional-common-on-disk-layouts) via RocksDB backend
 - Automatic backend fallback on failure
 - Pruning support

@@ -2,13 +2,13 @@
 
 ## Overview
 
-The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. **Official `blvm` / `blvm-node` default features include `rocksdb`**, so **`auto` usually means RocksDB** unless you build with `--no-default-features` or a custom feature set. See [Configuration Reference](../reference/configuration-reference.md) for the full `database_backend` options. The system falls back gracefully if the preferred backend is unavailable.
+The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by build features: **heed3 (LMDB)** when the `heed3` feature is enabled, then RocksDB, TidesDB, Redb, Sled. **Official `blvm` / `blvm-node` default features include `heed3` and `rocksdb`**, so **`auto` usually means heed3** unless you build with `--no-default-features` or a custom feature set. See [Configuration Reference](../reference/configuration-reference.md) for the full `database_backend` options. The system falls back gracefully if the preferred backend is unavailable.
 
 ## Supported Backends
 
-### rocksdb (typical default via `auto`)
+### rocksdb (optional; explicit config or fallback)
 
-**RocksDB** is the **first choice** when `database_backend = "auto"` and the `rocksdb` cargo feature is enabled (true for default `blvm-node` / `blvm` release builds):
+**RocksDB** remains available when the `rocksdb` feature is enabled (default builds include both `heed3` and `rocksdb`). Use **`database_backend = "rocksdb"`** to keep or create a RocksDB store, or when migrating from Core LevelDB layouts:
 
 - **High performance** for large chain state
 - **Interop**: Can work with **typical** LevelDB-format chain state and `blk*.dat` layouts where supported
@@ -33,6 +33,31 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 **TidesDB** is optional; in **`auto`** it is preferred over Redb/Sled **only when** RocksDB is not enabled. See crate features and [Configuration Reference](../reference/configuration-reference.md).
 
+### heed3 (LMDB mdb.master3)
+
+**heed3** wraps LMDB with MVCC concurrent readers (`WithoutTls` read transactions). **Default backend** when `database_backend = "auto"` in standard builds (`heed3` feature enabled):
+
+- **MVCC**: Many concurrent read transactions; single writer (LMDB model)
+- **rkyv UTXO encoding**: Zero-copy field access from mmap'd pages (`storage/rkyv_codec.rs`, `storage/utxo_value_codec.rs`)
+- **Build**: Requires system **liblmdb**
+- **Data directory**: `{datadir}/heed3/`
+- **Feature**: `heed3` (enabled in default `blvm` / `blvm-node` features)
+
+LMDB map size defaults to **64 GiB** (`max(65536, dbcache_mb × 128)` MB). Override only if you know your UTXO footprint:
+
+```toml
+[storage]
+database_backend = "heed3"
+
+[storage.heed3]
+# map_size_mb = 65536   # default; required headroom for mainnet UTXO set
+max_readers = 512
+```
+
+**Existing RocksDB datadir:** `auto` on a tree that already has `{datadir}/rocksdb/` does not migrate it. Use a fresh datadir for heed3, or set `database_backend = "rocksdb"` to keep the existing store.
+
+**Code**: [database/heed3_impl.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/heed3_impl.rs)
+
 ### sled (Fallback)
 
 **sled** is available as a fallback option:
@@ -48,10 +73,11 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 When `database_backend = "auto"`, the node chooses the backend by **build features** in this order:
 
-1. **RocksDB** (if the `rocksdb` feature is enabled)
-2. **TidesDB** (if the `tidesdb` feature is enabled and RocksDB is not)
-3. **Redb** (if the `redb` feature is enabled and neither RocksDB nor TidesDB is)
-4. **Sled** (if the `sled` feature is enabled and no other backend is)
+1. **heed3 / LMDB** (if the `heed3` feature is enabled — default in standard builds)
+2. **RocksDB** (if the `rocksdb` feature is enabled)
+3. **TidesDB** (if the `tidesdb` feature is enabled and neither heed3 nor RocksDB is)
+4. **Redb** (if the `redb` feature is enabled and no higher-priority backend is)
+5. **Sled** (if the `sled` feature is enabled and no other backend is)
 
 At least one backend feature must be enabled at build time. If the chosen backend fails to open (e.g. missing data dir or lock), the node may fall back to another enabled backend where implemented.
 
@@ -150,11 +176,12 @@ Transaction indexing:
 ```toml
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto"  # typical release: RocksDB; or "rocksdb" | "tidesdb" | "redb" | "sled"
+database_backend = "auto"  # typical release: heed3 (LMDB); or "rocksdb" | "tidesdb" | "redb" | "sled"
 ```
 
 **Options**:
-- `"auto"`: Select by build features (RocksDB when `rocksdb` enabled, then TidesDB, Redb, Sled)
+- `"auto"`: Select by build features (heed3 when `heed3` enabled, then RocksDB, TidesDB, Redb, Sled)
+- `"heed3"`: Force heed3 / LMDB (requires `heed3` feature; rkyv UTXO encoding)
 - `"rocksdb"`: Force RocksDB (requires `rocksdb` feature)
 - `"tidesdb"`: Force TidesDB (requires `tidesdb` feature)
 - `"redb"`: Force redb backend

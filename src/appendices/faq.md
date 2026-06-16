@@ -164,7 +164,7 @@ BLVM implements numerous Bitcoin Improvement Proposals. See [Protocol Specificat
 
 ### What storage backends are supported?
 
-The node supports multiple storage backends. With `database_backend = "auto"` (default), the backend is chosen by build features: **RocksDB** when the `rocksdb` feature is enabled, then TidesDB, Redb, Sled. **Default `blvm` / `blvm-node` release builds enable `rocksdb`, so `auto` is usually RocksDB on disk.** Options include **rocksdb** (can read common LevelDB-format chain state and `blk*.dat` layouts), **redb**, **sled**, and **tidesdb**. See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](../reference/configuration-reference.md) for details.
+The node supports multiple storage backends. With `database_backend = "auto"` (default), the backend is chosen by build features: **heed3 (LMDB)** when the `heed3` feature is enabled, then RocksDB, TidesDB, Redb, Sled. **Default `blvm` / `blvm-node` release builds enable `heed3`, so `auto` is usually heed3 on disk.** Use `database_backend = "rocksdb"` to keep an existing RocksDB datadir. Options include **heed3**, **rocksdb** (Core LevelDB / `blk*.dat` interop), **redb**, **sled**, and **tidesdb**. See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](../reference/configuration-reference.md) for details.
 
 ### What transport protocols are supported?
 

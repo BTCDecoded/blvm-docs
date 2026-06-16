@@ -151,7 +151,7 @@ pub struct ModuleContext {
 - `get_chain_tip(&self) -> Result<Hash>`
 - `get_block_height(&self) -> Result<u64>`
 
-**Backends:** Selected by `database_backend` (default `auto` resolves by build features: RocksDB when `rocksdb` enabled, then TidesDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
+**Backends:** Selected by `database_backend` (default `auto` resolves by build features: heed3 when `heed3` enabled, then RocksDB, TidesDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
 
 **Documentation:** See [Storage Backends](../node/storage-backends.md) and [Node Configuration](../node/configuration.md#storage-backends).
 
