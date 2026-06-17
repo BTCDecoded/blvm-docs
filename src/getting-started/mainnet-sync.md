@@ -15,6 +15,12 @@ sha256sum -c SHA256SUMS-blvm-linux-x86_64
 # BLVM_BACKGROUND=1 ./scripts/start-ibd-mainnet.sh   # background → ~/.local/share/blvm-mainnet/ibd.log
 ```
 
+Expected in the first minute:
+
+- Config loads without TOML errors
+- `Network: Mainnet` (or equivalent) in logs
+- After peer discovery (often 15–60s): `IBD: <height> / <tip>` lines as sync progresses
+
 Uses bundled `blvm-mainnet-ibd.toml.example`, mainnet, and `~/.local/share/blvm-mainnet`. The bundled script does not set `BLVM_IBD_*` env vars. LAN Core is auto-discovered; on WAN-only networks, **`parallel` mode uses multi-peer work-stealing by default** — set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to force a single download peer.
 
 Optional: enable the age-tiered UTXO engine with **`BLVM_IBD_ENGINE=1`** before start (see [IBD UTXO engine](../node/ibd-engine.md)); the example TOML leaves it off.
@@ -23,7 +29,7 @@ Optional: enable the age-tiered UTXO engine with **`BLVM_IBD_ENGINE=1`** before 
 
 **Monitor:** same flags as start — `blvm --network mainnet --config blvm-mainnet-ibd.toml.example sync`. During sync, `IBD: <height> / <tip>` in logs is authoritative.
 
-**Resume:** same `--data-dir` every run; do not delete `rocksdb/`.
+**Resume:** same `--data-dir` every run; do not delete the active backend directory (`heed3/`, `rocksdb/`, …).
 
 ## Expectations
 

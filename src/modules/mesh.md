@@ -58,8 +58,10 @@ Spawned modules register a ModuleAPI descriptor over IPC; the node installs **`I
 |-----|---------|
 | `meshsendpacket` | Hex bincode `SendPacketRequest` → `send_packet` |
 | `meshpollreceived` | Poll `poll_local_deliveries` by `protocol_id` |
+| `meshquoteroute` | Quote route to a destination (`blvm-mesh` JSON-RPC) |
+| `meshrequesthopinvoice` | Request hop invoice for mesh routing |
 
-Details: [RPC API — Mesh Methods](../node/rpc-api.md#mesh-methods).
+Details: [RPC API — Mesh Methods](../node/rpc-api.md#mesh-methods). Core `blvm-node` does not register mesh JSON-RPC handlers; load **`blvm-mesh`** to expose the four methods above.
 
 ## ModuleAPI
 

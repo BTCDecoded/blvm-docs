@@ -13,7 +13,7 @@ See [Mainnet initial sync](../getting-started/mainnet-sync.md).
 | `blvm sync` won't connect | `blvm --network mainnet --config … sync` |
 | Slow / stalled sync | Auto-LAN when Core on LAN; else `BLVM_IBD_PEERS=<ip>:8333` |
 | Slow near ~900k+ | Normal after assume-valid |
-| Lost progress | Same `--data-dir`; don't delete `rocksdb/` |
+| Lost progress | Same `--data-dir`; do not delete the active backend directory (`heed3/`, `rocksdb/`, etc.) mid-IBD |
 
 ## Node Won't Start
 
@@ -76,14 +76,13 @@ See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a
 **Error**: Database corruption or inconsistent state
 
 **Solution**:
-```bash
-# Stop the node
-# Remove corrupted database files (backup first!)
-rm -rf data/blocks data/chainstate
 
-# Restart and resync
-blvm
-```
+1. **Stop the node** before deleting anything.
+2. Identify the active backend under `{data_dir}` — e.g. `heed3/`, `rocksdb/`, `redb/`, `sled/`, `tidesdb/` (see [Storage backends](../node/storage-backends.md)).
+3. Back up the datadir, then remove only the corrupted backend subtree (not generic `data/blocks` / `data/chainstate` Core paths unless you intentionally reset a Core-import layout).
+4. Restart; expect resync or migration depending on what you removed.
+
+For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb` + `.sst` index), see [Storage backends — Interop](../node/storage-backends.md) and use `blvm config convert-core` / migration tooling rather than blind `rm -rf`.
 
 ## Network Issues
 
@@ -126,6 +125,17 @@ blvm
 - Configure **`[rpc_auth]`** tokens (or `RPC_AUTH_TOKENS` / `token_file`) when `required = true`
 - Send `Authorization: Bearer <token>` on HTTP JSON-RPC requests
 - For local development only, leave **`[rpc_auth].required = false`** (not for production)
+
+### `savemempool` / mempool.dat errors
+
+**Error**: `savemempool` fails with I/O or “no such file or directory” for the data directory
+
+**Cause**: Earlier builds wrote `mempool.dat` only when the data directory already existed.
+
+**Solutions**:
+- Use a current build: `savemempool` creates the data directory (parent of `mempool.dat`) before writing
+- Ensure **`--datadir`** / `DATA_DIR` points to the intended location
+- Check disk space and permissions on the data directory path
 
 ## Module System Issues
 

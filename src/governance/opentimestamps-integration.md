@@ -22,7 +22,6 @@ OpenTimestamps integration serves as a temporal proof mechanism by:
 - **Proof**: OpenTimestamps proof anchored to Bitcoin
 - **Storage**: Local proof files and public registry
 
-**Code**: [anchor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/anchor.rs)
 
 ### Registry Structure
 
@@ -38,7 +37,6 @@ OpenTimestamps integration serves as a temporal proof mechanism by:
 }
 ```
 
-**Code**: [anchor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/anchor.rs)
 
 ## OTS Client
 
@@ -51,7 +49,6 @@ The `OtsClient` handles communication with OpenTimestamps calendar servers:
 - **Proof Generation**: Receives OpenTimestamps proofs
 - **Verification**: Verifies proofs against Bitcoin blockchain
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/client.rs)
 
 ### Calendar Servers
 
@@ -59,7 +56,6 @@ Default calendar servers:
 - `alice.btc.calendar.opentimestamps.org`
 - `bob.btc.calendar.opentimestamps.org`
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/client.rs)
 
 ## Proof Generation
 
@@ -78,7 +74,6 @@ Default calendar servers:
 4. **Store Proof**: Save proof file locally
 5. **Publish**: Make proof publicly available
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/client.rs)
 
 ## Registry Anchorer
 
@@ -91,7 +86,6 @@ The `RegistryAnchorer` creates monthly governance registries:
 - **OTS Stamping**: Submits registry for timestamping
 - **Proof Storage**: Stores proofs for verification
 
-**Code**: [anchor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/anchor.rs)
 
 ### Registry Content
 
@@ -102,7 +96,6 @@ Monthly registries include:
 - Multisig configuration
 - Previous registry hash (hash chain)
 
-**Code**: [anchor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/anchor.rs)
 
 ## Verification
 
@@ -114,7 +107,6 @@ OTS proofs can be verified:
 ots verify YYYY-MM.json.ots
 ```
 
-**Code**: [verify.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/verify.rs)
 
 ### Verification Process
 
@@ -135,7 +127,6 @@ Audit log entries are anchored via monthly registries:
 - **Immutable History**: Cannot be retroactively modified
 - **Public Verification**: Anyone can verify proofs
 
-**Code**: [entry.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/audit/entry.rs)
 
 ### Governance State Proof
 
@@ -157,7 +148,6 @@ registry_path = "./registries"
 proofs_path = "./proofs"
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config.rs)
 
 ## Benefits
 
@@ -176,5 +166,12 @@ The OpenTimestamps integration includes:
 - Hash chain maintenance
 - Proof storage and publishing
 
-**Location**: `blvm-commons/src/ots/`, `blvm-commons/src/audit/`
+## Source
+
+- [anchor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/anchor.rs)
+- [client.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/client.rs)
+- [verify.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/verify.rs)
+- [entry.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/audit/entry.rs)
+- [config.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config.rs)
+- [blvm-commons/src/ots/](https://github.com/BTCDecoded/blvm-commons/tree/main/src/ots/), [blvm-commons/src/audit/](https://github.com/BTCDecoded/blvm-commons/tree/main/src/audit/) (blvm-commons/src/audit/`)
 

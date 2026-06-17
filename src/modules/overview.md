@@ -2,87 +2,79 @@
 
 BLVM node runs optional features as separate, process-isolated modules. See [Building modules](../sdk/module-development.md) to build your own.
 
-## Available Modules
+## Available modules
 
-The following modules are available for blvm-node:
+**Core integration modules** (documented in this book):
 
-### Core Modules
+- **[Lightning Network Module](lightning.md)** — Lightning payment processing (LNBits, LDK, Stub)
+- **[Commons Mesh Module](mesh.md)** — Payment-gated mesh overlay; four JSON-RPC methods when loaded
+- **[Stratum V2 Module](stratum-v2.md)** — Stratum V2 mining protocol
+- **[Datum Module](datum.md)** — DATUM Gateway (with Stratum V2)
+- **[Mining OS Module](miningos.md)** — MiningOS integration
+- **[Selective Sync Module](selective-sync.md)** — IBD sync policy and witness filtering
 
-- **[Lightning Network Module](lightning.md)** - Lightning Network payment processing with multiple provider support (LNBits, LDK, Stub), invoice verification, and payment state tracking
-- **[Commons Mesh Module](mesh.md)** - Payment-gated mesh overlay with route discovery, payment proofs, and subprocess ModuleAPI
-- **[Stratum V2 Module](stratum-v2.md)** - Stratum V2 mining protocol support with network integration complete and mining pool management
-- **[Datum Module](datum.md)** - DATUM Gateway mining protocol module for Ocean pool integration (works with Stratum V2)
-- **[Mining OS Module](miningos.md)** - Operating system-level mining optimizations and hardware management
-- **[Selective Sync Module](selective-sync.md)** — Configurable IBD sync policy (e.g. skip flagged transaction content during IBD); `blvm sync-policy …` CLI when the module is loaded
+**Registry modules** (bootstrap from `registry/modules.json`):
 
-## Module System Architecture
+- **blvm-zmq** — ZMQ PUB notifications ([ZMQ module](zmq.md))
+- **blvm-miniscript** — Miniscript descriptor / PSBT helpers
+- **blvm-governance** — On-chain proposal voting module
+- **blvm-fibre** — FIBRE UDP/FEC block relay ([FIBRE module](fibre.md))
 
-All modules run in separate processes with IPC communication (see [Module System Architecture](../architecture/module-system.md) for details), providing:
+## Module system architecture
 
-- **Process Isolation**: Each module runs in isolated memory space
-- **Crash Containment**: Module failures don't affect the base node
-- **Consensus Isolation**: Modules cannot modify consensus rules or UTXO set
-- **Security**: Modules communicate only through well-defined APIs
+Modules run in separate processes with IPC ([Module System Architecture](../architecture/module-system.md)):
 
-For detailed information about the module system architecture, see [Module System](../architecture/module-system.md).
+- **Process isolation** — Module crash does not take down the node
+- **Consensus isolation** — Modules cannot alter consensus rules or the UTXO set
+- **Defined APIs** — IPC, ModuleAPI, and optional JSON-RPC extension
 
-## Installing Modules
+## Installing modules
 
-Modules can be installed in several ways:
+### Registry bootstrap (recommended)
 
-### Via Cargo
+Pin modules in `blvm.toml`:
 
-```bash
-cargo install blvm-lightning
-cargo install blvm-mesh
-cargo install blvm-stratum-v2
-cargo install blvm-datum
-cargo install blvm-miningos
-cargo install blvm-selective-sync
+```toml
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+
+[enabled_modules]
+blvm-mesh = "0.1.39"
+blvm-zmq = "0.1.39"
 ```
 
-### Via Module Installer
+The node downloads version-pinned binaries from GitHub Releases (`sha256sums.txt` on each tag) when a pinned module is missing on disk. See `blvm/README.md` in the `blvm` repository for the full bootstrap contract.
+
+### Build from source
 
 ```bash
-cargo install cargo-blvm-module
-cargo blvm-module install blvm-lightning
-cargo blvm-module install blvm-mesh
-cargo blvm-module install blvm-stratum-v2
-cargo blvm-module install blvm-datum
-cargo blvm-module install blvm-miningos
-cargo blvm-module install blvm-selective-sync
+cargo install blvm-lightning   # when published on crates.io
+# or clone BTCDecoded/blvm-<name>, cargo build --release, place binary per module.toml
 ```
 
-### Manual Installation
+### Manual placement
 
 1. Build the module: `cargo build --release`
-2. Copy the binary to `modules/<module-name>/target/release/`
-3. Create `module.toml` manifest in the module directory
-4. Restart the node or use runtime module loading
+2. Place the binary and `module.toml` under the node module search path
+3. Restart the node or load at runtime via configuration / module manager
 
-## Module Configuration
+## Module configuration
 
-Each module requires a `config.toml` file in its module directory where applicable. See individual module documentation ([Lightning](lightning.md), [Mesh](mesh.md), [Stratum V2](stratum-v2.md), [Datum](datum.md), [Mining OS](miningos.md), [Selective Sync](selective-sync.md)). For blvm-mesh submodules, see the [Mesh Module documentation](mesh.md#building-on-mesh-infrastructure).
+Each module uses `module.toml` plus optional `config.toml`. See per-module pages linked above and [Node configuration](../node/configuration.md).
 
-## Module Lifecycle
+## Module lifecycle
 
-Modules can be:
-- **Loaded** at node startup (if enabled in configuration)
-- **Loaded** at runtime via RPC or module manager API
-- **Unloaded** at runtime without affecting the base node
-- **Reloaded** (hot reload) for configuration updates
+- **Load** at startup when listed in `enabled_modules` or configuration
+- **Load** at runtime via RPC or module manager API
+- **Unload** without stopping the base node
+- **Reload** configuration where the module supports hot reload
 
 ## WASM modules (`wasm-modules`)
 
-When the node loads **WebAssembly** modules (**`wasm-modules`** / **`blvm-sdk`** embedding), treat guests as **trusted only if your governance policy says so**. The embedder uses **wasmtime fuel** and **store limits** (memory / instance counts) with conservative defaults; operators can override per module via **`[modules.<name>]`** keys documented in **`blvm-node/docs/CONFIGURATION_GUIDE.md`**. Third-party or internet-exposed WASM should use explicitly reviewed budgets (see workspace hardening plan **Track C**).
+When the node loads **WebAssembly** guests (**`wasm-modules`** / **`blvm-sdk`** embedding), treat them as trusted only if your governance policy says so. The embedder applies **wasmtime fuel** and **store limits** with conservative defaults; override per module via **`[modules.<name>]`** keys in **`blvm-node/docs/CONFIGURATION_GUIDE.md`**.
 
 ## See Also
 
-- [Module System Architecture](../architecture/module-system.md) - Detailed module system documentation
-- [Building modules](../sdk/module-development.md) - Guide for developing custom modules
-- [SDK Overview](../sdk/overview.md) - SDK introduction and capabilities
-- [SDK API Reference](../sdk/api-reference.md) - Complete SDK API documentation
-- [SDK Examples](../sdk/examples.md) - Module development examples
-- [Node Configuration](../node/configuration.md) - Node-level module configuration
-
-
+- [Module System Architecture](../architecture/module-system.md)
+- [Building modules](../sdk/module-development.md)
+- [SDK Overview](../sdk/overview.md)
+- [Node Configuration](../node/configuration.md)

@@ -69,6 +69,14 @@ jobs:
       - name: Test governance-vars (allowlist + YAML vs threshold.rs drift)
         run: cargo test --locked --manifest-path mdbook-governance-vars/Cargo.toml
 
+      - name: Refresh install metadata from blvm GitHub Releases
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/fetch-blvm-release.mjs --strict
+
+      - name: Regenerate installation.md from install-content.json
+        run: node scripts/render-installation.mjs
+
       - name: Install mdBook
         uses: peaceiris/actions-mdbook@v1
         with:

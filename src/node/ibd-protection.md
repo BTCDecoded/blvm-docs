@@ -15,7 +15,6 @@ Tracks bandwidth usage per peer with configurable daily and hourly limits:
 - **Automatic Throttling**: Blocks requests when limits are exceeded
 - **Legitimate Node Protection**: First request always allowed, reasonable limits for legitimate sync
 
-**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs)
 
 ### Per-IP Bandwidth Limits
 
@@ -25,7 +24,6 @@ Tracks bandwidth usage per IP address to prevent single-IP attacks:
 - **Aggregate Limits**: Combined daily/hourly limits for all peers from an IP
 - **Attack Detection**: Identifies coordinated attacks from single IP
 
-**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs)
 
 ### Per-Subnet Bandwidth Limits
 
@@ -36,7 +34,6 @@ Tracks bandwidth usage per subnet to prevent distributed attacks:
 - **Subnet Aggregation**: Combines bandwidth from all IPs in subnet
 - **Distributed Attack Mitigation**: Prevents coordinated attacks from subnet
 
-**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs)
 
 ### Concurrent IBD Serving Limits
 
@@ -46,7 +43,6 @@ Limits how many peers can simultaneously request IBD:
 - **Queue Management**: Queues additional requests when limit reached
 - **Fair Serving**: Rotates serving to queued peers
 
-**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs)
 
 ### Peer Reputation Scoring
 
@@ -57,7 +53,6 @@ Tracks peer behavior to identify malicious patterns:
 - **Cooldown Periods**: Enforces cooldown after suspicious activity
 - **Legitimate Node Protection**: First-time sync always allowed
 
-**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs)
 
 ## Configuration
 
@@ -94,7 +89,6 @@ emergency_throttle_percent = 50
 - **enable_emergency_throttle**: Enable emergency bandwidth throttling (default: false)
 - **emergency_throttle_percent**: Percentage of bandwidth to throttle when emergency throttle is enabled (default: 50)
 
-**Code**: [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs)
 
 ## Attack Mitigation
 
@@ -140,15 +134,18 @@ The IBD protection is automatically integrated into the network manager:
 - **Request Protection**: Protects GetHeaders and GetData requests
 - **Cleanup**: Automatically cleans up tracking on peer disconnect
 
-**Code**: [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (IBD protection wiring and config)
 
 ## LAN Peer Prioritization
 
 LAN peers are auto-preferred for IBD download (still subject to bandwidth limits). See [LAN Peering System](lan-peering.md).
 
+## Source
+
+- [ibd_protection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ibd_protection.rs)
+- [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (IBD protection wiring and config)
 ## See Also
 
 - [LAN Peering System](lan-peering.md) - Automatic local network discovery and prioritization
 - [Network Operations](operations.md) - General network operations
 - [Node Configuration](configuration.md) - IBD protection configuration
-- [Security Controls](../security/security-controls.md) - Security system overview
+- [PR security control classification](../development/security-controls.md) - Contributor CI security control mapping

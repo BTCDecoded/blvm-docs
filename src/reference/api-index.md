@@ -6,6 +6,7 @@ Quick reference and cross-references to all BLVM APIs across the ecosystem.
 
 API reference in this book (hosted at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org)):
 
+- **JSON-RPC errors:** [JSON-RPC error reference](rpc-errors.md)
 - **[blvm-primitives](#foundation-blvm-primitives)** - Foundation crate: types, serialization, crypto, opcodes, constants (shared by consensus and protocol; blvm-consensus re-exports for API compatibility)
 - **[blvm-consensus](#consensus-layer-blvm-consensus)** - Consensus layer APIs (transaction validation, block validation, script execution)
 - **[blvm-protocol](#protocol-layer-blvm-protocol)** - Protocol abstraction layer APIs (network variants, message handling)
@@ -28,7 +29,8 @@ Shared types, serialization, and crypto live in **blvm-primitives**. **blvm-cons
 
 Block and script logic live in the `block/` and `script/` submodules (directories), not single files. Canonical types and crypto are in blvm-primitives and re-exported by consensus.
 
-**Core Functions** (Orange Paper spec names):
+**Core Functions** (Orange Paper spec names) — full catalog: [Consensus function catalog](#consensus-function-catalog-orange-paper-names) below.
+
 - `CheckTransaction` - Validate transaction structure and signatures
 - `ConnectBlock` - Validate and connect block to chain
 - `EvalScript` - Execute Bitcoin script
@@ -43,6 +45,19 @@ Block and script logic live in the `block/` and `script/` submodules (directorie
 - `ValidationResult`
 
 **Documentation:** See [Consensus Overview](../consensus/overview.md), [Consensus Architecture](../consensus/architecture.md), and [Formal Verification](../consensus/formal-verification.md).
+
+#### Consensus function catalog (Orange Paper names)
+
+Reference list for contributors and spec readers. Rust paths: [blvm-consensus](https://github.com/BTCDecoded/blvm-consensus).
+
+| Category | Functions |
+|----------|-----------|
+| **Transaction validation** | `CheckTransaction`, `CheckTxInputs`, `EvalScript`, `VerifyScript` |
+| **Block validation** | `ConnectBlock`, `ApplyTransaction`, `CheckProofOfWork`, `ShouldReorganize` |
+| **Economic model** | `GetBlockSubsidy`, `TotalSupply`, `GetNextWorkRequired` |
+| **Mempool protocol** | `AcceptToMemoryPool`, `IsStandardTx`, `ReplacementChecks` |
+| **Mining protocol** | `CreateNewBlock`, `MineBlock`, `GetBlockTemplate` |
+| **SegWit / Taproot** | Witness weight, P2TR validation (see `segwit.rs`) |
 
 ### Protocol Layer (blvm-protocol)
 
@@ -134,8 +149,8 @@ pub struct ModuleContext {
 - Mempool methods (3): `getmempoolinfo`, `getrawmempool`, `savemempool`
 - Network methods (9): `getnetworkinfo`, `getpeerinfo`, `getconnectioncount`, `ping`, `addnode`, `disconnectnode`, `getnettotals`, `clearbanned`, `setban`, `listbanned`
 - Mining methods: `getmininginfo`, `getblocktemplate`, `submitblock`, `generatetoaddress`, `estimatesmartfee`, `validateaddress` (pools / solo — see [Mining Integration](../node/mining.md))
-- Mesh methods (requires `blvm-mesh`): `meshsendpacket`, `meshpollreceived`
-- Payment verification: `verifyonchainpayment`, `verifycovenantproof` (CTV feature)
+- Mesh methods (requires `blvm-mesh`): `meshsendpacket`, `meshpollreceived`, `meshquoteroute`, `meshrequesthopinvoice`
+- Payment verification: `verifyonchainpayment`, `verifyonchainpaymentbytx`, `verifycovenantproof` (CTV feature)
 
 **Documentation:** See [RPC API Reference](../node/rpc-api.md).
 

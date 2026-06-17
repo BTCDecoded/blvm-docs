@@ -2,11 +2,31 @@
 
 Reference for BLVM node configuration options. Configuration can be provided via TOML file, JSON file, command-line arguments, or environment variables. See [Node Configuration](../node/configuration.md) for usage examples.
 
+**On this page:** [Quick lookup](#quick-lookup-common-keys) · [File format](#configuration-file-format) · [Primary settings](#primary-settings) · [IBD](#ibd-configuration) · [Storage](#storage-configuration) · [Modules](#module-system-configuration) · [RPC](#rpc-configuration) · [Network](#network-configuration) · [Experimental](#experimental-features) · [CLI & ENV](#command-line-arguments)
+
 **Precedence:** CLI > ENV > config file > defaults. **Canonical defaults:** This reference is the source of truth; other docs (e.g. first-node, storage-backends) give examples—use this page when you need exact defaults.
 
 **Path expansion:** Path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, `ibd.snapshot_dir`) expand `~` to the home directory when loading from file.
 
 **Operator security:** Exposure classes (RPC / P2P / QUIC), **`[rpc_auth]`** expectations, and maturity language (**required / recommended / unsupported**) — **[Deployment posture](../security/deployment-posture.md)** and **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)**.
+
+## Quick lookup (common keys)
+
+| Goal | Where to look |
+|------|----------------|
+| P2P listen address | `listen_addr` (top level) |
+| RPC bind | CLI `--rpc-addr` / `BLVM_RPC_ADDR` (not a `NodeConfig` port key) |
+| RPC auth | `[rpc_auth]` — `required`, `tokens`, `admin_tokens`, `username`, `password` |
+| Data directory | `[storage].data_dir` |
+| Database backend | `[storage].database_backend` (`auto`, `heed3`, `rocksdb`, …) |
+| Network variant | `protocol_version` (`BitcoinV1`, `Testnet3`, `Regtest`) |
+| Transport stack | `transport_preference` (`tcponly`, `hybrid`, …) |
+| Module directory | `[modules].modules_dir`, `[enabled_modules]` |
+| IBD tuning | `[ibd]` and `BLVM_IBD_*` env vars — [Mainnet initial sync](../getting-started/mainnet-sync.md) |
+| Pruning | `[storage.pruning]` |
+| Logging | `[logging].level` |
+
+Full tables below. Precedence: **CLI > ENV > config file > defaults**.
 
 ## Configuration File Format
 
@@ -192,7 +212,6 @@ Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default
 
 **Additional IBD environment variables** (no `[ibd]` table key): **`BLVM_IBD_ENGINE`**, **`BLVM_IBD_ENGINE_PATH`**, **`BLVM_IBD_WAN_SINGLE_PEER`**, **`BLVM_IBD_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_DEFER_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_EXPORT_HEIGHT_OVERRIDE`**, **`BLVM_IBD_MAX_PARALLEL`**, **`BLVM_IBD_PIPELINE_DEPTH`**. See [IBD UTXO engine](../node/ibd-engine.md) and [Mainnet initial sync](../getting-started/mainnet-sync.md).
 
-**Code**: [config/ibd.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/ibd.rs), [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 ## Storage Configuration
 
@@ -415,12 +434,12 @@ max_filter_age_days = 0  # 0 = keep forever
 [modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
 blvm-miniscript = "0.1.*"
-blvm-zmq = "0.3.*"
+blvm-zmq = "0.1.*"
 ```
-- **Example (spawn overrides + pin — use `version` in the module table; inline `name = "…"` conflicts with `[modules.name]` in TOML)**:
+- **Example (spawn overrides + pin — use `version` in the module table; inline `name = "…"` conflicts with `[modules.name]` in TOML)** — see [ZMQ module](../modules/zmq.md) for topic keys:
 ```toml
 [modules.blvm-zmq]
-version = "0.3.*"
+version = "0.1.*"
 hashblock = "tcp://127.0.0.1:28332"
 ```
 - **Legacy (unpinned)**:
@@ -577,6 +596,8 @@ min_ban_duration_to_share = 3600         # Min ban duration to share (1 hour)
 
 ## Experimental Features
 
+> **Experimental build** — Everything in this section requires compile-time features **not** included in stable GitHub Release binaries (`production`). Build from source or use the experimental feature set. See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+
 ### Dandelion++ Privacy Relay
 
 **Requires**: `dandelion` feature enabled.
@@ -658,7 +679,7 @@ Additional or experimental `BLVM_*` names may exist; use `blvm --help` and the n
 3. **Configuration file**
 4. **Default values** (lowest priority)
 
-**Config-file-only options:** `relay`, `fibre`, `dandelion`, `peer_rate_limiting`, `rest_api`, `ban_list_sharing` have no ENV overrides. Use CLI flags (e.g. `--enable-dandelion`) or config file.
+**Config-file-only options:** `relay`, `dandelion`, `peer_rate_limiting`, `rest_api`, `ban_list_sharing` have no ENV overrides. Use CLI flags (e.g. `--enable-dandelion`) or config file.
 
 ## Validation
 
@@ -670,6 +691,9 @@ Common validation errors:
 - Resource limits set to zero
 - Conflicting transport preferences
 
+## Source
+
+- [config/ibd.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/ibd.rs), [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 ## See Also
 
 - [Node Configuration](../node/configuration.md) - Quick start guide

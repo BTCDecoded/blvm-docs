@@ -6,7 +6,6 @@ During parallel initial block download (IBD), the node validates blocks in heigh
 
 Enable the engine only when you understand checkpoint storage and disk use. The release mainnet IBD example config does **not** turn it on.
 
-**Code**: [ibd_engine/](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/), [parallel_ibd/validation_loop.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/validation_loop.rs)
 
 ## Enable
 
@@ -34,11 +33,12 @@ Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-
 3. **Checkpoint export** — Periodic snapshots of engine state allow resume after interruption without re-downloading from genesis.
 4. **Import / seed** — On restart, the node seeds validation from the last exported checkpoint height when present.
 
-**Code**: [ibd_engine/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/mod.rs), [spend_session.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/spend_session.rs), [export.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/export.rs)
 
 ## Operator notes
 
-- Use the **same** `storage.data_dir` on every run; do not delete `rocksdb/` mid-sync.
+- Use the **same** `storage.data_dir` on every run; do not delete the active database backend directory (`heed3/`, `rocksdb/`, …) mid-sync.
+- On **SIGTERM** / **SIGINT** during parallel IBD, the node drains in-flight validation and flushes the UTXO watermark before exit when possible.
+- **`io_uring`** accelerates engine table I/O on **Linux**; other platforms use a `pread` fallback (engine still runs on Windows).
 - **[Assume-valid](../reference/configuration-reference.md#block_validationassume_valid_height)** skips signature verification below a configured height; block structure, Merkle roots, and proof-of-work are still checked.
 - For tarball mainnet sync, follow [Mainnet initial sync](../getting-started/mainnet-sync.md). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
 
@@ -46,6 +46,10 @@ Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-
 
 See **[IBD Configuration](../reference/configuration-reference.md#ibd-configuration)** for `[ibd]` keys and **`BLVM_IBD_*`** environment variables shared with parallel download.
 
+## Source
+
+- [ibd_engine/](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/), [parallel_ibd/validation_loop.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/validation_loop.rs)
+- [ibd_engine/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/mod.rs), [spend_session.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/spend_session.rs), [export.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/export.rs)
 ## See Also
 
 - [Performance Optimizations](performance.md) — Parallel download, pipelining, reorder buffer

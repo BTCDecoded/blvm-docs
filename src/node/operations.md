@@ -2,6 +2,18 @@
 
 Operational guide for running and maintaining a BLVM node.
 
+## Operations runbook
+
+| Task | Section |
+|------|---------|
+| Start regtest / testnet / mainnet | [Starting the Node](#starting-the-node) |
+| Import Bitcoin Core datadir | [Starting from a Bitcoin Core datadir](#starting-from-a-bitcoin-core-datadir) |
+| Graceful shutdown | [Maintenance — Updates](#updates) (stop before upgrade; RPC `stop` or SIGTERM) |
+| Backup datadir | [Maintenance — Backup](#backup) |
+| Mainnet first sync | [Mainnet initial sync](../getting-started/mainnet-sync.md) |
+| RPC hardening before exposure | [Deployment posture](../security/deployment-posture.md) |
+| IBD stuck / slow | [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
+
 ## Starting the Node
 
 ### Basic Startup
@@ -25,7 +37,15 @@ blvm --config blvm.toml
 
 ## Starting from a Bitcoin Core datadir
 
-Use when Core is **fully synced** and you want the same tip without full IBD. **Stop `bitcoind`** first.
+Use when Core is **fully synced** and you want the same tip without full IBD.
+
+<div class="admonition danger">
+
+<div class="admonition-title">Danger</div>
+
+Stop **`bitcoind`** before migrate or start against a Core datadir. Running both nodes against the same chainstate can corrupt data.
+
+</div>
 
 ```bash
 # Recommended: auto-migrate on start → ~/.bitcoin/blvm/
@@ -49,7 +69,15 @@ blvm start --network mainnet --datadir ~/.bitcoin/blvm
 | `blocks/blk*.dat` | **No** (default) | BLVM reads in place; **do not delete** `blocks/` |
 | `blocks/index/` | Partial | Height/header metadata copied when readable |
 
-After a successful migrate you may delete Core **`chainstate/`** (~12 GB) if you will not run **`bitcoind`** on that datadir again. Keep **`blocks/`** unless you opted into copying block bodies (see below).
+<div class="admonition warning">
+
+<div class="admonition-title">Warning</div>
+
+Keep Core **`blocks/`** on disk unless you explicitly copied block bodies into the BLVM store. Deleting `blocks/` while BLVM reads them in place will break the node.
+
+</div>
+
+After a successful migrate you may delete Core **`chainstate/`** (~12 GB) if you will not run **`bitcoind`** on that datadir again.
 
 ### Flags and settings
 
@@ -63,7 +91,7 @@ After a successful migrate you may delete Core **`chainstate/`** (~12 GB) if you
 | `BLVM_REUSE_CORE_BLOCK_FILES=0` | Same as `reuse_core_block_files = false` |
 | `BLVM_CORE_MIGRATE_BLOCK_WORKERS` / `BLVM_CORE_MIGRATE_BLOCK_BATCH` | Parallel block read tuning |
 
-Requires **`rocksdb`** (default release build). Config and ENV details: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
+Requires the **`rocksdb`** Cargo feature (included in default `blvm` release builds). Config and ENV details: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
 
 **Verify:** `--verify` on `blvm migrate core`; regtest test `core_drop_in` (fixture: `blvm-node/scripts/gen-core-regtest-fixture.sh`); mainnet smoke: `blvm-node/scripts/core-drop-in-mainnet-smoke.sh`.
 
@@ -89,7 +117,6 @@ Initial → Headers → Blocks → Synced
 4. **Synced**: Fully synchronized, normal operation
 5. **Error**: Error state (can transition from any state)
 
-**Code**: [sync.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/sync.rs)
 
 ### State Transitions
 
@@ -100,7 +127,6 @@ State transitions are managed by the `SyncStateMachine`:
 - **Blocks → Synced**: When blocks are complete (60% progress)
 - **Any → Error**: On error conditions
 
-**Code**: [sync.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/sync.rs)
 
 ### Initial Sync
 
@@ -113,7 +139,6 @@ When starting for the first time, the node will:
 5. **Build UTXO Set**: Construct UTXO set from validated blocks
 6. **Sync to Current Height**: Continue until caught up with network
 
-**Code**: [sync.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/sync.rs)
 
 ### Running State
 
@@ -126,7 +151,6 @@ Once synced, the node maintains:
 - **RPC Requests**: Serves [JSON-RPC API](rpc-api.md) requests
 - **Health Monitoring**: Periodic health checks
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs)
 
 ### Health States
 
@@ -137,7 +161,6 @@ The node tracks health status for each component:
 - **Unhealthy**: Component not functioning correctly
 - **Down**: Component not responding
 
-**Code**: [health.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/health.rs)
 
 ### Error Recovery
 
@@ -148,7 +171,6 @@ The node implements graceful error recovery:
 - **Validation Errors**: Logged and reported, node continues operation
 - **Disk Space**: Periodic checks with warnings
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs)
 
 ## Monitoring
 
@@ -208,6 +230,11 @@ When updating the node:
 
 See [Troubleshooting](../appendices/troubleshooting.md) for detailed solutions to common issues.
 
+## Source
+
+- [sync.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/sync.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs)
+- [health.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/health.rs)
 ## See Also
 
 - [Node Configuration](configuration.md) - Configuration options
@@ -215,4 +242,3 @@ See [Troubleshooting](../appendices/troubleshooting.md) for detailed solutions t
 - [RPC API Reference](rpc-api.md) - Complete RPC API documentation
 - [Troubleshooting](../appendices/troubleshooting.md) - Common issues and solutions
 - [Performance Optimizations](performance.md) - Performance tuning
-

@@ -23,7 +23,6 @@ The system uses multiple bot identities for different purposes:
 - **research**: Educational content (optional)
 - **network**: Network metrics and statistics (optional)
 
-**Code**: [bot_manager.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/bot_manager.rs)
 
 ### Bot Configuration
 
@@ -40,7 +39,6 @@ about = "Bitcoin Commons Governance Bot"
 picture = "https://bitcoincommons.org/logo.png"
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config.rs)
 
 ## Nostr Client
 
@@ -53,7 +51,6 @@ The `NostrClient` manages connections to multiple Nostr relays:
 - **Error Handling**: Handles relay failures gracefully
 - **Retry Logic**: Automatic retry for failed publishes
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/client.rs)
 
 ### Relay Management
 
@@ -62,7 +59,6 @@ let client = NostrClient::new(nsec, relay_urls).await?;
 client.publish_event(event).await?;
 ```
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/client.rs)
 
 ## Event Types
 
@@ -74,7 +70,6 @@ Published hourly by each authorized server:
 - Audit log status
 - Tagged with `d:governance-status`
 
-**Code**: [events.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/events.rs)
 
 ### Server Health Events (Kind 30079)
 
@@ -84,7 +79,6 @@ Published when server status changes:
 - Operational status
 - Tagged with `d:server-health`
 
-**Code**: [events.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/events.rs)
 
 ### Audit Log Head Events (Kind 30080)
 
@@ -93,7 +87,6 @@ Published when audit log head changes:
 - Entry count
 - Tagged with `d:audit-head`
 
-**Code**: [events.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/events.rs)
 
 ### Governance Action Events
 
@@ -102,7 +95,6 @@ Published for governance actions:
 - Review period notifications
 - Keyholder announcements
 
-**Code**: [governance_publisher.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/governance_publisher.rs)
 
 ## Governance Publisher
 
@@ -115,7 +107,6 @@ The `StatusPublisher` publishes governance status:
 - **Multi-Relay**: Published to multiple relays
 - **Error Recovery**: Handles relay failures
 
-**Code**: [publisher.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/publisher.rs)
 
 ### Action Publishing
 
@@ -125,7 +116,6 @@ The `GovernanceActionPublisher` publishes governance actions:
 - **Keyholder Events**: Signature announcements
 - **Fork Events**: Governance fork decisions
 
-**Code**: [governance_publisher.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/governance_publisher.rs)
 
 ## Zap Tracking
 
@@ -138,7 +128,6 @@ Zaps are tracked for contribution-based voting:
 - **Vote Conversion**: Converts zaps to votes
 - **Real-Time Processing**: Processes zaps as received
 
-**Code**: [zap_tracker.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_tracker.rs)
 
 ### Zap-to-Vote
 
@@ -149,7 +138,6 @@ Zaps to governance events become votes:
 - **Vote Type**: Extracted from zap message
 - **Database Storage**: Stored in proposal_zap_votes table
 
-**Code**: [zap_voting.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_voting.rs)
 
 ## Configuration
 
@@ -170,7 +158,6 @@ npub = "npub1..."
 lightning_address = "gov@example.org"
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config.rs)
 
 ## Real-Time Transparency
 
@@ -210,5 +197,15 @@ The Nostr integration includes:
 - Status publisher
 - Zap tracker and voting processor
 
-**Location**: `blvm-commons/src/nostr/`
+## Source
+
+- [bot_manager.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/bot_manager.rs)
+- [config.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config.rs)
+- [client.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/client.rs)
+- [events.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/events.rs)
+- [governance_publisher.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/governance_publisher.rs)
+- [publisher.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/publisher.rs)
+- [zap_tracker.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_tracker.rs)
+- [zap_voting.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/zap_voting.rs)
+- [blvm-commons/src/nostr/](https://github.com/BTCDecoded/blvm-commons/tree/main/src/nostr/)
 

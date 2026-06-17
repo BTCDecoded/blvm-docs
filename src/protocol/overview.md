@@ -4,16 +4,7 @@ The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple var
 
 ## Architecture Position
 
-**Stack layer 3** of the six-layer Bitcoin Commons architecture (technology stack):
-
-```
-1. Orange Paper (mathematical foundation)
-2. blvm-consensus (pure math implementation)
-3. blvm-protocol (Bitcoin abstraction) ← THIS LAYER
-4. blvm-node (full node implementation)
-5. blvm-sdk (developer toolkit)
-6. blvm-commons (governance enforcement)
-```
+**Stack layer 3** — protocol abstraction between [blvm-consensus](../consensus/overview.md) and [blvm-node](../node/overview.md). Full stack: [Introduction](../introduction.md#what-is-blvm).
 
 ## Protocol Variants
 
@@ -35,7 +26,6 @@ Each variant has specific network parameters:
 - **Halving Intervals**: Block subsidy halving schedule (210,000 blocks)
 - **Feature Activation**: [SegWit](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki), [Taproot](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki) activation heights
 
-**Code**: [network_params.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network_params.rs)
 
 ## Core Components
 
@@ -57,7 +47,6 @@ pub struct BitcoinProtocolEngine {
 - Feature flag management
 - Validation rule enforcement
 
-**Code**: [lib.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/lib.rs)
 
 ### Network Messages
 
@@ -92,7 +81,6 @@ Supports Bitcoin P2P protocol messages:
 - `GetFilteredBlock`, `FilteredBlock` - Spam-filtered blocks
 - `GetBanList`, `BanList` - Distributed ban list sharing
 
-**Code**: [`network.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network.rs) (`NetworkMessage`), [`wire/mod.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs) (command names and serialization)
 
 ### Service Flags
 
@@ -111,7 +99,6 @@ Service flags indicate node capabilities:
 - `NODE_DANDELION` - Dandelion++ privacy relay
 - `NODE_PACKAGE_RELAY` - BIP331 package relay
 
-**Code**: [service_flags.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/service_flags.rs)
 
 ### Validation Rules
 
@@ -122,7 +109,6 @@ Protocol-specific validation rules:
 - **Fee Rules**: Minimum and maximum fee rates
 - **DoS Protection**: Message size limits, address count limits
 
-**Code**: [validation.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/validation.rs)
 
 ## Commons-Specific Extensions
 
@@ -133,7 +119,6 @@ Protocol messages for [UTXO set synchronization](../consensus/utxo-commitments.m
 - `GetUTXOSet` - Request UTXO set at specific height
 - `UTXOSet` - UTXO set response with merkle proof
 
-**Code**: [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (message structs); [utxo_commitments/mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/mod.rs) (UTXO commitment protocol)
 
 ### Filtered Blocks
 
@@ -142,7 +127,6 @@ Spam-filtered block relay for efficient syncing:
 - `GetFilteredBlock` - Request filtered block
 - `FilteredBlock` - Filtered block with spam transactions removed
 
-**Code**: [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (`GetFilteredBlockMessage`, `FilteredBlockMessage`)
 
 ### Ban List Sharing
 
@@ -151,7 +135,6 @@ Distributed ban list management:
 - `GetBanList` - Request ban list
 - `BanList` - Ban list response with signatures
 
-**Code**: [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (`GetBanListMessage`, `BanListMessage`)
 
 ## BIP Support
 
@@ -163,7 +146,6 @@ Implemented Bitcoin Improvement Proposals:
 - **BIP173/350/351**: Bech32/Bech32m Address Encoding
 - **BIP70**: Payment Protocol
 
-**Code**: [bip157.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/bip157.rs)
 
 ## Protocol Evolution
 
@@ -193,6 +175,17 @@ if engine.supports_feature("segwit") {
 }
 ```
 
+## Source
+
+- [network_params.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network_params.rs)
+- [lib.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/lib.rs)
+- [`network.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network.rs) (`NetworkMessage`), [`wire/mod.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs) (command names and serialization)
+- [service_flags.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/service_flags.rs)
+- [validation.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/validation.rs)
+- [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (message structs); [utxo_commitments/mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/mod.rs) (UTXO commitment protocol)
+- [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (`GetFilteredBlockMessage`, `FilteredBlockMessage`)
+- [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (`GetBanListMessage`, `BanListMessage`)
+- [bip157.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/bip157.rs)
 ## See Also
 
 - [Protocol Architecture](architecture.md) - Protocol layer design and components
@@ -200,4 +193,3 @@ if engine.supports_feature("segwit") {
 - [Message Formats](message-formats.md) - P2P message specifications
 - [Protocol Specifications](../reference/protocol-specifications.md) - BIP implementations
 - [Node Configuration](../node/configuration.md) - Configuring protocol variants
-

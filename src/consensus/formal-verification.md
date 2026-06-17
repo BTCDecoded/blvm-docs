@@ -61,6 +61,10 @@ graph TB
 - **BLVM Specification Lock**: Tiered runs; policy in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - **OpenTimestamps audit logging**: Optional timestamps of verification artifacts
 
+### Verify JSON semantics (`blvm-spec-lock`)
+
+`cargo spec-lock verify` emits structured status per function. **Failed** means the proof obligation did not pass — CI gates on these when strict mode is enabled. **Partial** marks obligations demoted or skipped (timeout, translation gap, advisory tier) — read the log and [VERIFY_JSON.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/VERIFY_JSON.md) for jq filters; do not treat Partial as a green release gate without explicit policy.
+
 ## Verification Statistics
 
 ### Formal Proofs
@@ -135,7 +139,6 @@ cargo +nightly fuzz run <target_name>
 
 **Status**: Integrated in CI
 
-**Location**: `blvm-consensus/.github/workflows/ci.yml` (Verify job; non-blocking when MIRI nightly unavailable)
 
 **Checks**:
 - Property tests under MIRI
@@ -389,6 +392,9 @@ Functions and paths commonly covered by tests and spec-lock proofs:
 
 Proof bounds and policy: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md), [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
+## Source
+
+- [blvm-consensus/.github/workflows/ci.yml](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml) ((Verify job; non-blocking when MIRI nightly unavailable))
 ## See Also
 
 - [Consensus Overview](overview.md) - Consensus layer introduction

@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generatedAt": "2026-06-17T22:42:11.271Z",
+  "generatedAt": "2026-06-17T22:32:39.632Z",
   "source": "github://BTCDecoded/blvm",
   "release": {
     "tag": "v0.1.39",
@@ -166,7 +166,7 @@
   },
   "comingSoonNote": "Umbrel App Store — coming soon.",
   "markdownDoc": {
-    "experimentalVariantSection": "## Experimental build variant {#experimental-variant}\n\nStable GitHub Releases ship the **base** binary only (`production` Cargo features — see [Release process — Build variants](../development/release-process.md#build-variants)). Extra compile-time features — UTXO commitments, Dandelion++ privacy relay, BIP119 CTV, Stratum V2 integration, sigop counting, Iroh transport, and related flags — require a **source build** with the experimental feature set or explicit `--features`.\n\n",
+    "experimentalVariantSection": "## Experimental build variant {#experimental-variant}\n\nStable GitHub Releases ship the **base** build only (single variant per tag). Extra compile-time features — UTXO commitments, Dandelion++ privacy relay, BIP119 CTV, Stratum V2 integration, and related flags — require a **source build** with the appropriate Cargo features. See [Release process — Build variants](../development/release-process.md#build-variants).\n\n",
     "extraSectionsAfterPackages": "## Who is this for?\n\n- **Operators:** [Quick Start](../getting-started/quick-start.md) → [Mainnet initial sync](../getting-started/mainnet-sync.md) or [First Node (regtest)](../getting-started/first-node.md)\n- **Module developers:** [Building your first module](../getting-started/first-module.md)\n- **Researchers:** [Introduction](../introduction.md#who-is-this-for)\n\n## Next steps\n\n- [Quick Start](../getting-started/quick-start.md)\n- [Deployment posture](../security/deployment-posture.md) (before mainnet RPC)\n- [Node configuration](../node/configuration.md)\n\n## See also\n\n- [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest)\n"
   }
 }

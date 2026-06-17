@@ -4,16 +4,17 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-## Available Modules
+Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**) bootstrap from `registry/modules.json` — see [Module catalog](../modules/overview.md).
 
-The following modules are available for blvm-node:
+## Available modules
 
-- **[Lightning Network Module](../modules/lightning.md)** - Lightning Network payment processing, invoice verification, payment routing, and channel management
-- **[Commons Mesh Module](../modules/mesh.md)** - Payment-gated mesh overlay, subprocess ModuleAPI, and node RPC bridge (`meshsendpacket`, `meshpollreceived`)
-- **[Stratum V2 Module](../modules/stratum-v2.md)** - Stratum V2 mining protocol support and mining pool management
-- **[Datum Module](../modules/datum.md)** - DATUM Gateway mining protocol
-- **[Mining OS Module](../modules/miningos.md)** - MiningOS integration
-- **[Merge Mining Module](../modules/stratum-v2.md)** - Merge mining available as separate paid plugin (`blvm-merge-mining`)
+- **[Lightning Network Module](../modules/lightning.md)** — Lightning payment processing
+- **[Commons Mesh Module](../modules/mesh.md)** — Payment-gated mesh overlay; four JSON-RPC methods when `blvm-mesh` is loaded
+- **[Stratum V2 Module](../modules/stratum-v2.md)** — Stratum V2 mining protocol
+- **[Datum Module](../modules/datum.md)** — DATUM Gateway mining protocol
+- **[Mining OS Module](../modules/miningos.md)** — MiningOS integration
+- **blvm-zmq** — [ZMQ module](../modules/zmq.md)
+- **blvm-miniscript**, **blvm-governance**, **blvm-fibre** — See [Module catalog](../modules/overview.md)
 
 For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
 
@@ -66,7 +67,6 @@ graph TB
     style SS fill:#bfb,stroke:#333,stroke-width:2px
 ```
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
 
 ## Core Components
 
@@ -82,7 +82,6 @@ Orchestrates all modules, handling lifecycle, runtime loading/unloading/reloadin
 - Dependency resolution
 - Registry integration
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Process Isolation
 
@@ -93,7 +92,6 @@ Modules run in separate processes via `ModuleProcessSpawner`:
 - Resource limits enforced
 - Crash containment
 
-**Code**: [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs)
 
 ### IPC Communication
 
@@ -105,7 +103,6 @@ Modules communicate with the base node via Unix domain sockets (Unix) or named p
 - Type-safe message serialization
 - **Targeted node control** (module → node): `NodeAPI` / IPC also exposes bounded **writes** that are not consensus changes — e.g. P2P **serve denylists** (block/tx `getdata` policy), **`get_sync_status`**, **`ban_peer`**, and **block-serve maintenance mode**. Details: [Module IPC Protocol](module-ipc-protocol.md), [Module development](../sdk/module-development.md#querying-node-data).
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Security Sandbox
 
@@ -116,7 +113,6 @@ Modules run in sandboxed environments with:
 - Network restrictions
 - Permission-based API access
 
-**Code**: [network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/network.rs)
 
 ### Permission System
 
@@ -162,7 +158,6 @@ Modules request capabilities that are validated before API access. Capabilities 
 - `call_module` / `CallModule` - Call other modules' APIs
 - `register_module_api` / `RegisterModuleApi` - Register in-process module API, or (spawned) send method descriptor so the node installs **`IpcForwardingModuleAPI`**
 
-**Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 
 ## Module Lifecycle
 
@@ -181,7 +176,6 @@ Modules discovered through:
 - Module registry (REST API)
 - Manual installation
 
-**Code**: [discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/discovery.rs)
 
 ### Verification
 
@@ -191,7 +185,6 @@ Each module verified through:
 - Permission checking (capability validation)
 - Compatibility checking (version requirements)
 
-**Code**: [manifest_validator.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/validation/manifest_validator.rs)
 
 ### Loading
 
@@ -200,7 +193,6 @@ Module loaded into isolated process:
 - IPC connection establishment
 - API subscription setup
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Execution
 
@@ -218,7 +210,6 @@ Module health monitored:
 - Error tracking
 - Crash isolation
 
-**Code**: [monitor.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/monitor.rs)
 
 ## Security Model
 
@@ -237,7 +228,6 @@ Modules cannot:
 
 Module crashes are isolated and do not affect the base node. The `ModuleProcessMonitor` detects crashes and automatically removes failed modules.
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Security Flow
 
@@ -304,7 +294,6 @@ capabilities = [
 ]
 ```
 
-**Code**: [manifest.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/manifest.rs)
 
 ## API Hub
 
@@ -314,7 +303,6 @@ The `ModuleApiHub` routes API requests from modules to the appropriate handlers:
 - Governance API (proposals, votes)
 - Communication API (P2P messaging)
 
-**Code**: [hub.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/hub.rs)
 
 ## Event System
 
@@ -507,7 +495,6 @@ For a complete list of all event types, see [EventType enum](https://github.com/
 - Available via `EventManager::get_delivery_stats()`
 - Useful for monitoring and debugging
 
-**Code**: [events.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/events.rs)
 
 For detailed event system documentation, see:
 - [Module events](module-events.md) - Delivery, timing, and integration patterns
@@ -522,7 +509,6 @@ Modules can be discovered and installed from a module registry:
 - Dependency resolution
 - Signature verification
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/client.rs)
 
 ## Usage
 
@@ -554,7 +540,6 @@ manager.load_module(
 manager.auto_load_modules().await?;
 ```
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ## Benefits
 
@@ -584,7 +569,6 @@ The module system includes:
 - Event system
 - API hub
 
-**Location**: `blvm-node/src/module/`
 
 ## IPC Communication
 
@@ -670,6 +654,22 @@ let mut event_receiver = client.event_receiver();
 
 For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protocol.md).
 
+## Source
+
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
+- [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
+- [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs)
+- [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
+- [network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/network.rs)
+- [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
+- [discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/discovery.rs)
+- [manifest_validator.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/validation/manifest_validator.rs)
+- [monitor.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/monitor.rs)
+- [manifest.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/manifest.rs)
+- [hub.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/hub.rs)
+- [events.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/events.rs)
+- [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/client.rs)
+- [blvm-node/src/module/](https://github.com/BTCDecoded/blvm-node/tree/main/src/module/)
 ## See Also
 
 - [Module IPC Protocol](module-ipc-protocol.md) - Complete IPC protocol documentation
@@ -680,4 +680,3 @@ For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protoc
 - [Datum Module](../modules/datum.md) - DATUM Gateway mining protocol
 - [Mining OS Module](../modules/miningos.md) - MiningOS integration
 - [Building modules](../sdk/module-development.md) - Guide for developing custom modules
-

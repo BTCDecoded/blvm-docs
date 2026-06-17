@@ -15,7 +15,6 @@ The node supports multiple database backends for persistent storage of blocks, U
 - **Build**: Requires system **libclang** / LLVM for the `librocksdb-sys` stack
 - **Feature**: `rocksdb` (on by default in `blvm-node` / `blvm` default features)
 
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs), [bitcoin_core_storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_storage.rs)
 
 **Note**: RocksDB and **erlay** features are mutually exclusive in this tree (dependency conflicts).
 
@@ -27,7 +26,6 @@ The node supports multiple database backends for persistent storage of blocks, U
 - **ACID Compliance**: Full ACID transactions
 - **Typical use**: `--no-default-features` / minimal builds that omit RocksDB, or explicit operator choice
 
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs)
 
 ### tidesdb
 
@@ -56,7 +54,6 @@ max_readers = 512
 
 **Existing RocksDB datadir:** `auto` on a tree that already has `{datadir}/rocksdb/` does not migrate it. Use a fresh datadir for heed3, or set `database_backend = "rocksdb"` to keep the existing store.
 
-**Code**: [database/heed3_impl.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/heed3_impl.rs)
 
 ### sled (Fallback)
 
@@ -67,7 +64,6 @@ max_readers = 512
 - **Performance**: Good for development and testing
 - **Storage**: Key-value storage with B-tree indexing
 
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs)
 
 ## Backend Selection
 
@@ -83,7 +79,6 @@ At least one backend feature must be enabled at build time. If the chosen backen
 
 **Interop:** When RocksDB is enabled, the node may detect and use existing LevelDB-format chain data. That is separate from the `auto` selection order above.
 
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`default_backend()`, `fallback_backend()`), [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
 
 ### Automatic Fallback
 
@@ -94,7 +89,6 @@ If the backend chosen by `auto` fails to open, the node may fall back to another
 let storage = Storage::new(data_dir)?;
 ```
 
-**Code**: [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
 
 ## Database Abstraction
 
@@ -109,7 +103,6 @@ pub trait Database: Send + Sync {
 }
 ```
 
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`Database` trait)
 
 ### Tree Trait
 
@@ -124,7 +117,6 @@ pub trait Tree: Send + Sync {
 }
 ```
 
-**Code**: [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`Tree` trait)
 
 ## Storage Components
 
@@ -136,7 +128,6 @@ Stores blocks by hash:
 - **Value**: Serialized block data
 - **Indexing**: Hash-based lookup
 
-**Code**: [blockstore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/blockstore.rs)
 
 ### UtxoStore
 
@@ -146,7 +137,6 @@ Manages UTXO set:
 - **Value**: UTXO data (script, amount)
 - **Operations**: Add, remove, query UTXOs
 
-**Code**: [utxostore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore.rs)
 
 ### ChainState
 
@@ -157,7 +147,6 @@ Tracks chain metadata:
 - **Chain Work**: Cumulative proof-of-work
 - **UTXO Stats**: Cached UTXO set statistics
 
-**Code**: [chainstate.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/chainstate.rs)
 
 ### TxIndex
 
@@ -167,7 +156,6 @@ Transaction indexing:
 - **Value**: Transaction data and metadata
 - **Lookup**: Fast transaction retrieval
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
 
 ## Configuration
 
@@ -187,7 +175,6 @@ database_backend = "auto"  # typical release: heed3 (LMDB); or "rocksdb" | "tide
 - `"redb"`: Force redb backend
 - `"sled"`: Force sled backend
 
-**Code**: [config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/) (storage / database_backend)
 
 ### RocksDB Configuration
 
@@ -209,7 +196,6 @@ The system can detect typical Bitcoin-style data directories:
 - Testnet: `~/.bitcoin/testnet3/` or `~/Library/Application Support/Bitcoin/testnet3/`
 - Regtest: `~/.bitcoin/regtest/` or `~/Library/Application Support/Bitcoin/regtest/`
 
-**Code**: [bitcoin_core_detection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_detection.rs)
 
 ### Cache Configuration
 
@@ -222,7 +208,6 @@ header_cache_mb = 10
 
 **Cache Sizes**: See [Configuration Reference](../reference/configuration-reference.md) for canonical defaults (e.g. block 100 MB, UTXO 50 MB, header 10 MB).
 
-**Code**: [config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/)
 
 ## Performance Characteristics
 
@@ -233,10 +218,15 @@ header_cache_mb = 10
 - **Write Performance**: Good for batch writes
 - **Production**: A solid **pure-Rust** choice when you are not using RocksDB
 
+### heed3 (LMDB) Backend
+
+- **When**: Default **`auto`** path in standard `blvm` builds (`heed3` feature enabled)
+- **Read/Write**: LMDB + rkyv UTXO encoding; mmap-friendly reads for IBD
+
 ### RocksDB Backend
 
-- **When**: Default **`auto`** path in standard `blvm` builds
-- **Read/Write**: Tuned for large chain-state workloads; see upstream RocksDB characteristics
+- **When**: `database_backend = "rocksdb"`, or **`auto`** fallback when heed3 is not in the build
+- **Read/Write**: Tuned for large chain-state workloads; required for Core LevelDB migration reader
 
 ### sled Backend
 
@@ -291,7 +281,6 @@ auto_prune_interval = 144
 - **Aggressive**: Prune with UTXO commitments (requires utxo-commitments feature)
 - **Custom**: Fine-grained control over what to keep
 
-**Code**: [PruningConfig in `config/storage.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/storage.rs), [runtime pruning logic](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/pruning.rs)
 
 ## Error Handling
 
@@ -302,12 +291,26 @@ The storage layer handles backend failures gracefully:
 - **Data Integrity**: Verifies data integrity on startup
 - **Corruption Detection**: Detects and reports database corruption
 
-**Code**: [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
 
+## Source
+
+- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs), [bitcoin_core_storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_storage.rs)
+- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs)
+- [database/heed3_impl.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/heed3_impl.rs)
+- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`default_backend()`, `fallback_backend()`), [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
+- [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
+- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`Database` trait)
+- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`Tree` trait)
+- [blockstore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/blockstore.rs)
+- [utxostore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore.rs)
+- [chainstate.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/chainstate.rs)
+- [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
+- [config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/) (storage / database_backend)
+- [bitcoin_core_detection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_detection.rs)
+- [config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/)
+- [PruningConfig in `config/storage.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/storage.rs), [runtime pruning logic](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/pruning.rs)
 ## See Also
 
 - [Node Configuration](configuration.md) - Storage configuration options
 - [Node Operations](operations.md) - Storage operations and maintenance
 - [Pruning](#pruning-support) — pruning configuration on this page; see also [Node configuration](configuration.md)
-
-

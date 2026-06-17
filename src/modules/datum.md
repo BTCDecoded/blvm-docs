@@ -57,13 +57,6 @@ The module integrates with both the node and the Stratum V2 module:
 cargo install blvm-datum
 ```
 
-### Via Module Installer
-
-```bash
-cargo install cargo-blvm-module
-cargo blvm-module install blvm-datum
-```
-
 ### Manual Installation
 
 1. Clone the repository:
@@ -81,7 +74,41 @@ cargo blvm-module install blvm-datum
    ```bash
    mkdir -p /path/to/node/modules/blvm-datum/target/release
    cp target/release/blvm-datum /path/to/node/modules/blvm-datum/target/release/
+   cp module.toml /path/to/node/modules/blvm-datum/
    ```
+
+## Requirements
+
+- `blvm-node` with the module system enabled.
+- **`blvm-stratum-v2`** enabled — miners connect to Stratum V2; this module handles DATUM pool (Ocean) only.
+- Valid DATUM pool credentials (`pool_url`, `pool_username`, `pool_password`).
+- Optional `pool_public_key` for encrypted pool channel.
+
+## Loading
+
+Pin both modules in `blvm.toml`:
+
+```toml
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+
+[enabled_modules]
+blvm-stratum-v2 = "0.1.*"
+blvm-datum = "0.1.*"
+```
+
+Example node overrides:
+
+```toml
+[modules.blvm-stratum-v2]
+listen_addr = "0.0.0.0:3333"
+
+[modules.blvm-datum]
+pool_url = "https://ocean.xyz/datum"
+pool_username = "user"
+pool_password = "pass"
+```
+
+See [Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
@@ -207,30 +234,12 @@ Ocean Pool ← blvm-datum (DATUM client) ← NodeAPI (block templates)
 
 ## Troubleshooting
 
-### Module Not Loading
-
-- Verify the module binary exists at the correct path
-- Check `module.toml` manifest is present and valid
-- Verify module has required capabilities
-- Check node logs for module loading errors
-- Ensure `blvm-stratum-v2` module is also enabled
-
-### Pool Connection Issues
-
-- Verify pool URL is correct and accessible
-- Check pool username and password are valid
-- Verify network connectivity to pool
-- Check node logs for connection errors
-- Ensure encryption libraries (sodiumoxide) are properly installed
-
-### Template Generation Issues
-
-- Verify NodeAPI is accessible and module has `read_blockchain` capability
-- Check node is synced and can generate block templates via `get_block_template`
-- Verify both `blvm-stratum-v2` and `blvm-datum` are enabled and configured correctly
-- Check node logs for template generation errors
-- Verify node is not in IBD (Initial Block Download) mode
-- Check that the node has sufficient mempool transactions for template generation
+| Symptom | Check |
+|---------|--------|
+| Module not loading | Binary path; `module.toml`; `blvm-stratum-v2` also enabled |
+| Pool connection fails | `pool_url`, credentials; TLS reachability to Ocean |
+| Template / coinbase errors | `pool_address`, coinbase tags; `get_coinbase_payout` API |
+| Miners idle | Stratum module `listen_addr`; miners point to Stratum not DATUM |
 
 ## Repository
 

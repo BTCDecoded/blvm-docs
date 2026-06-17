@@ -2,6 +2,8 @@
 
 BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surface) and a modern REST API for interacting with the node.
 
+**On this page:** [API Overview](#api-overview) · [Connection](#connection) · [Authentication](#authentication) · [Methods operators use most](#methods-operators-use-most) · [Core parity matrix](#bitcoin-core-rpc-parity-selected) · [Available Methods](#available-methods) · [Errors](#error-codes) · [REST API](#rest-api)
+
 ## API Overview
 
 - **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet and regtest **`127.0.0.1:18332`** (not Bitcoin Core’s regtest port `18443`).
@@ -87,6 +89,78 @@ curl -X POST http://localhost:8332 \
   }'
 ```
 
+## Methods operators use most
+
+Fifteen RPC methods cover most operator, wallet, and mining workflows. Full catalog: [Available Methods](#available-methods) below.
+
+| Method | Purpose |
+|--------|---------|
+| `getblockchaininfo` | Chain, height, sync status |
+| `getnetworkinfo` | P2P connections, protocol version |
+| `getpeerinfo` | Per-peer details |
+| `getrawtransaction` | Fetch tx by txid (with index when enabled) |
+| `sendrawtransaction` | Broadcast signed tx to mempool |
+| `testmempoolaccept` | Dry-run mempool acceptance |
+| `getmempoolinfo` | Mempool size and limits |
+| `getrawmempool` | List mempool txids |
+| `validateaddress` | Decode / validate an address |
+| `getblocktemplate` | Mining template (admin auth) |
+| `submitblock` | Submit mined block (admin auth) |
+| `getmininginfo` | Mining / chain mining state |
+| `estimatesmartfee` | Fee estimation |
+| `stop` | Stop the node (admin) |
+| `uptime` | Node uptime seconds |
+
+### `getblockchaininfo` (example response fields)
+
+```json
+{
+  "chain": "regtest",
+  "blocks": 1,
+  "headers": 1,
+  "bestblockhash": "...",
+  "difficulty": 4.66e-10,
+  "chainwork": "...",
+  "pruned": false
+}
+```
+
+### `sendrawtransaction`
+
+Submit hex-encoded signed transaction. Returns txid on success; errors if policy or consensus rejects the tx.
+
+```bash
+curl -X POST http://127.0.0.1:18332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"sendrawtransaction","params":["<hex>"],"id":1}'
+```
+
+Requires valid auth when `[rpc_auth].required = true`.
+
+## Bitcoin Core RPC parity (selected)
+
+BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpool, scripts, wallets). This is not a complete Core parity audit — verify critical paths for your deployment.
+
+| Method | Core parity | Notes |
+|--------|-------------|-------|
+| `getblockchaininfo` | High | Standard fields; network names align with BLVM networks |
+| `getblock` / `getblockheader` | High | Verbosity levels supported |
+| `getrawtransaction` | High | Needs tx index or mempool/chain lookup context |
+| `sendrawtransaction` | High | Standard policy + relay |
+| `testmempoolaccept` | High | Multiple-tx batch where implemented |
+| `getmempoolinfo` / `getrawmempool` | High | |
+| `getnetworkinfo` / `getpeerinfo` | High | |
+| `validateaddress` | High | |
+| `getblocktemplate` | High | ckpool / Stratum workflows |
+| `submitblock` | High | Mining submission |
+| `generatetoaddress` | Regtest only | Not on mainnet; requires protocol engine |
+| `savemempool` | Partial | Writes `mempool.dat` under datadir |
+| `verifyonchainpayment` / `verifyonchainpaymentbytx` | BLVM-specific | BIP70 / payment state machine |
+| `meshsendpacket` / `meshpollreceived` | Module | Requires `blvm-mesh` |
+| REST `/api/v1/*` | BLVM-specific | Optional `rest-api` feature |
+
+**Ports:** BLVM defaults RPC to `18332` for testnet and regtest (Core regtest often uses `18443`). Set `--rpc-addr` explicitly when tooling assumes Core defaults.
+
 ## Available Methods
 
 **Methods Implemented**: Multiple RPC methods
@@ -123,7 +197,7 @@ curl -X POST http://localhost:8332 \
 ### Mempool Methods
 - `getmempoolinfo` - Get mempool statistics
 - `getrawmempool` - List transactions in mempool
-- `savemempool` - Persist mempool to disk
+- `savemempool` - Persist mempool to disk (`{datadir}/mempool.dat`; creates the data directory if missing)
 - `getmempoolancestors` - Get mempool ancestors of a transaction
 - `getmempooldescendants` - Get mempool descendants of a transaction
 - `getmempoolentry` - Get mempool entry for a transaction
@@ -162,12 +236,14 @@ curl -X POST http://localhost:8332 \
 
 ### Mesh Methods
 
-**Requires:** `blvm-mesh` loaded and its ModuleAPI registered (spawned module with `register_module_api` capability).
+**Requires:** `blvm-mesh` loaded. The mesh module registers these JSON-RPC methods via the module RPC extender (`register_rpc_endpoint`); core `blvm-node` does not implement mesh handlers.
 
-- `meshsendpacket` - Forward a hex-encoded bincode `SendPacketRequest` to the mesh module (`request_hex`, optional `mesh_module_id`, default `blvm-mesh`)
-- `meshpollreceived` - Poll locally delivered mesh app payloads (`protocol_id`, optional `max_packets`, optional `mesh_module_id`)
+- `meshsendpacket` — Forward a hex-encoded bincode `SendPacketRequest` (`request_hex`; optional `mesh_module_id`, default `blvm-mesh`)
+- `meshpollreceived` — Poll locally delivered mesh app payloads (`protocol_id`; optional `max_packets`, `mesh_module_id`)
+- `meshquoteroute` — Quote route cost to a destination (`destination` hex or node id per module API)
+- `meshrequesthopinvoice` — Request a hop invoice for mesh routing (`params` per `blvm-mesh` API)
 
-**Code**: [control.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/control.rs) (`meshsendpacket`, `meshpollreceived`)
+See [Commons Mesh Module](../modules/mesh.md) and [`blvm-mesh/docs/TRANSPORT.md`](https://github.com/BTCDecoded/blvm-mesh/blob/main/docs/TRANSPORT.md).
 
 ### Address Methods
 - `validateaddress` - Validate a Bitcoin address
@@ -177,39 +253,33 @@ curl -X POST http://localhost:8332 \
 - `gettransactiondetails` - Get detailed transaction information
 
 ### Payment Methods (BIP70)
+
+> **Experimental build** — `bip70-http` and `ctv` features are not in stable release binaries. See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+
 - `createpaymentrequest` - Create a BIP70 payment request (requires `bip70-http` feature)
-- `verifyonchainpayment` - Verify on-chain payment state for a payment request (`payment_request_id`, `tx_hash` hex)
+- `verifyonchainpayment` - Verify on-chain payment state for a payment request (`payment_request_id`, `tx_hash` hex) using the local payment state machine
+- `verifyonchainpaymentbytx` - Verify payment by transaction lookup (`payment_request_id`, `tx_hash` hex, `min_amount_sats`); consults mempool and chain when local state is not sufficient (path-3 verify)
 - `verifycovenantproof` - Verify a covenant proof for instant settlement (requires `ctv` feature)
 
 ## Error Codes
 
-The RPC API uses conventional JSON-RPC 2.0 error codes (same families as common Bitcoin node docs):
+BLVM uses standard JSON-RPC 2.0 codes, Bitcoin-style application codes (**-1**, **-5**, **-25**, **-27**), BLVM server codes (**-32001**), and HTTP **401/403/429** for auth, admin RBAC, and rate limits.
 
-### Standard JSON-RPC Errors
+**Full catalog:** [JSON-RPC error reference](../reference/rpc-errors.md) — every code, `error.data` fields, admin-only methods, and transport vs JSON-RPC shapes.
 
-| Code | Name | Description |
-|------|------|-------------|
-| -32700 | Parse error | Invalid JSON was received |
-| -32600 | Invalid Request | The JSON sent is not a valid Request object |
-| -32601 | Method not found | The method does not exist |
-| -32602 | Invalid params | Invalid method parameter(s) |
-| -32603 | Internal error | Internal JSON-RPC error |
+### Quick reference
 
-### Bitcoin-Specific Errors
+| Code | Meaning |
+|------|---------|
+| -32700 … -32603 | JSON-RPC protocol errors |
+| -1 | Tx already in chain **or** missing inputs (read `message`) |
+| -5 | Block, transaction, or UTXO not found |
+| -25 | Transaction rejected (policy / consensus / fee) |
+| -27 | Transaction already in mempool |
+| -32001 | Method requires unloaded module (e.g. miniscript) |
+| HTTP 401 / 403 / 429 | Auth failure, non-admin privileged method, or rate limit |
 
-| Code | Name | Description |
-|------|------|-------------|
-| -1 | Transaction already in chain | Transaction is already in blockchain |
-| -1 | Transaction missing inputs | Transaction references non-existent inputs |
-| -5 | Block not found | Block hash not found |
-| -5 | Transaction not found | Transaction hash not found |
-| -5 | UTXO not found | UTXO does not exist |
-| -25 | Transaction rejected | Transaction rejected by consensus rules |
-| -27 | Transaction already in mempool | Transaction already in mempool |
-
-**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs)
-
-### Error Response Format
+### Example JSON-RPC error
 
 ```json
 {
@@ -225,8 +295,6 @@ The RPC API uses conventional JSON-RPC 2.0 error codes (same families as common 
   "id": 1
 }
 ```
-
-**Code**: [errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs)
 
 ## Authentication
 
@@ -246,7 +314,6 @@ curl -X POST http://localhost:8332 \
 
 TLS client certificates can be used for authentication when QUIC transport is enabled.
 
-**Code**: [auth.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/auth.rs)
 
 ## Rate Limiting
 
@@ -256,7 +323,6 @@ Rate limiting is enforced per IP, per user, and per method:
 - **Unauthenticated**: 50 burst, 5 req/sec
 - **Per-method limits**: May override defaults for specific methods
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/server.rs)
 
 ## Request/Response Format
 
@@ -300,7 +366,6 @@ Rate limiting is enforced per IP, per user, and per method:
 }
 ```
 
-**Code**: [types.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/types.rs)
 
 ## Batch Requests
 
@@ -328,7 +393,6 @@ The REST API exposes HTTP endpoints alongside JSON-RPC when enabled. Requests an
 
 **Base URL:** `http://localhost:8080/api/v1/` — use your REST bind host and port.
 
-**Code**: [rest/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/mod.rs)
 
 ### Authentication
 
@@ -346,7 +410,6 @@ Rate limiting is enforced per IP, per user, and per endpoint:
 - **Unauthenticated**: 50 burst, 5 req/sec
 - **Per-endpoint limits**: Stricter limits for write operations
 
-**Code**: [rest/server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/server.rs)
 
 ### Response Format
 
@@ -377,13 +440,11 @@ All REST API responses follow a consistent format:
 }
 ```
 
-**Code**: [rest/types.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/types.rs)
 
 ### Endpoints
 
 #### Node Endpoints
 
-**Code**: [rest/node.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/node.rs)
 
 - `GET /api/v1/node/uptime` - Get node uptime
 - `GET /api/v1/node/memory` - Get memory information
@@ -416,7 +477,6 @@ curl http://localhost:8080/api/v1/chain/info
 
 #### Block Endpoints
 
-**Code**: [rest/blocks.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/blocks.rs)
 
 - `GET /api/v1/blocks/{hash}` - Get block by hash
 - `GET /api/v1/blocks/{hash}/transactions` - Get block transactions
@@ -474,7 +534,6 @@ curl http://localhost:8080/api/v1/mempool/info
 
 #### Network Endpoints
 
-**Code**: [rest/network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/network.rs)
 
 - `GET /api/v1/network/info` - Get network information
 - `GET /api/v1/network/peers` - Get connected peers
@@ -512,7 +571,6 @@ curl http://localhost:8080/api/v1/fees/estimate?blocks=6
 
 **Requires**: `--features bip70-http`
 
-**Code**: [rest/payment.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/payment.rs)
 
 - `GET /api/v1/payments/{payment_id}` - Get payment status
 - `POST /api/v1/payments` - Create payment request
@@ -523,7 +581,6 @@ curl http://localhost:8080/api/v1/fees/estimate?blocks=6
 
 **Requires**: `--features ctv`
 
-**Code**: [rest/vault.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/vault.rs)
 
 - `GET /api/v1/vaults` - List vaults
 - `GET /api/v1/vaults/{vault_id}` - Get vault information
@@ -535,7 +592,6 @@ curl http://localhost:8080/api/v1/fees/estimate?blocks=6
 
 **Requires**: `--features ctv`
 
-**Code**: [rest/pool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/pool.rs)
 
 - `GET /api/v1/pools` - List pools
 - `GET /api/v1/pools/{pool_id}` - Get pool information
@@ -547,7 +603,6 @@ curl http://localhost:8080/api/v1/fees/estimate?blocks=6
 
 **Requires**: `--features ctv`
 
-**Code**: [rest/congestion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/congestion.rs)
 
 - `GET /api/v1/congestion/status` - Get congestion status
 - `GET /api/v1/batches` - List pending batches
@@ -563,7 +618,6 @@ The REST API includes security headers by default:
 - `X-XSS-Protection: 1; mode=block`
 - `Strict-Transport-Security: max-age=31536000` (when TLS enabled)
 
-**Code**: [rest/server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/server.rs)
 
 ### Error Codes
 
@@ -579,10 +633,26 @@ REST API uses standard HTTP status codes:
 | 500 | Internal Server Error |
 | 503 | Service Unavailable (feature not enabled) |
 
+## Source
+
+- [auth.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/auth.rs)
+- [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/server.rs)
+- [types.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/types.rs)
+- [rest/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/mod.rs)
+- [rest/server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/server.rs)
+- [rest/types.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/types.rs)
+- [rest/node.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/node.rs)
+- [rest/blocks.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/blocks.rs)
+- [rest/network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/network.rs)
+- [rest/payment.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/payment.rs)
+- [rest/vault.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/vault.rs)
+- [rest/pool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/pool.rs)
+- [rest/congestion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/rest/congestion.rs)
 ## See Also
 
 - [Node Overview](overview.md) - Node implementation details
 - [Node Configuration](configuration.md) - RPC configuration options
+- [JSON-RPC error reference](../reference/rpc-errors.md) - Error codes and HTTP auth failures
 - [Node Operations](operations.md) - Node management
 - [Getting Started](../getting-started/quick-start.md) - Quick start guide
 - [API Index](../reference/api-index.md) - Cross-reference to all APIs

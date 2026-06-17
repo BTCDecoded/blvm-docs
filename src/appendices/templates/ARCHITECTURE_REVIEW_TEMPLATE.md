@@ -264,7 +264,7 @@ Use this template when conducting security architecture reviews for new features
 
 ## References
 
-- [Security Controls System](../../security/security-controls.md)
+- [PR security control classification](../../development/security-controls.md)
 - [Threat Models](../../security/threat-models.md)
 - [Developer Security Checklist](DEVELOPER_SECURITY_CHECKLIST.md)
 - [Security Testing Template](SECURITY_TESTING_TEMPLATE.md)

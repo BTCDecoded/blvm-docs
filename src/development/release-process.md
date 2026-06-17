@@ -82,46 +82,48 @@ So `blvm-sdk` is **not** a leaf with “no dependencies”; it sits beside the n
 
 ### Build Variants
 
-Each release includes two variants:
+Stable **GitHub Releases** ship one **base** binary set per tag (see [Release artifacts](#release-artifacts)). Experimental compile-time features are **not** published as separate release tarballs on every stable tag.
 
-#### Base Variant
+#### Base variant (stable releases)
 
-**Purpose**: Default **stable** build (standard optimizations, no experimental-only features)
+**Purpose**: Default binaries on GitHub Releases and GHCR stable tags.
 
-**Features**:
-- Core functionality
-- Production-oriented optimizations
-- Standard Bitcoin-compatible feature set for the variant
+**Cargo features:** `blvm` is built with **`production`** only (not the full `cargo build` default feature set from `blvm/Cargo.toml`). Core P2P, RPC, storage, and modules work; compile-time extras (Dandelion++, CTV, Stratum V2, UTXO commitments, Iroh, sigop counting, etc.) require the [experimental variant](#experimental-variant-source-build) or a local build with explicit `--features`.
 
-**Use for**: Production-style deployments **after** you apply your own security review, monitoring, and hardening—not a blanket “certified production” artifact.
+#### Experimental variant (source build)
 
-#### Experimental Variant
+**Purpose**: Optional features enabled at compile time (release CI uses `production,utxo-commitments,ctv,dandelion,stratum-v2,sigop,iroh`; local builds may use `--all-features` or pick features).
 
-**Purpose**: Full-featured with experimental features
+**Features** (experimental / non-base release build):
 
-**Features**: All base features plus:
 - UTXO commitments
 - Dandelion++ privacy relay
 - BIP119 CheckTemplateVerify (CTV)
-- Stratum V2 mining
-- BIP158 compact block filters
+- Stratum V2 mining integration
 - Signature operations counting
 - Iroh transport support
 
-**Use for**: Development, testing, advanced features
+**BIP158** compact block filter support is included in default builds as well (CLI/ENV preference flags; no separate `bip158` Cargo feature on the default release binary).
+
+**Use for**: Development, testing, and operators who compile locally.
+
+See [Installation — Experimental build variant](../getting-started/installation.md#experimental-variant).
 
 ### Platforms
 
-Both variants are built for:
+Stable release artifacts include:
 
-- **Linux x86_64** (native)
-- **Windows x86_64** (cross-compiled with MinGW)
+- **Linux x86_64** — `.deb`, `.rpm`, Arch `.pkg.tar.gz`, standalone binary, `.tar.gz`
+- **Linux aarch64** — standalone binary, `.tar.gz`
+- **Windows x86_64** — portable `.exe`, `.zip` (MinGW `gnu` target)
+
+Rolling **nightly** binaries and `ghcr.io/btcdecoded/blvm:nightly` are published from the `develop` branch (see [Release channels](#release-channels)).
 
 ## Release Artifacts
 
 ### Binaries Included
 
-Both variants include:
+Stable release archives include:
 
 - `blvm` - Bitcoin reference node
 - `blvm-keygen` - Key generation tool
@@ -134,11 +136,7 @@ Both variants include:
 
 ### Archive Formats
 
-Each platform/variant combination produces:
-
-- **`.tar.gz`** archive (Linux/Unix)
-- **`.zip`** archive (Windows/universal)
-- **`SHA256SUMS`** file for verification
+Each release tag produces platform archives (Linux `.tar.gz`, Windows `.zip`, plus `SHA256SUMS`). See [Installation](../getting-started/installation.md) for the current matrix.
 
 ### Release Notes
 
@@ -175,6 +173,15 @@ All repositories run their test suites:
 - All tests must pass
 - 30-minute timeout per repository
 - Single-threaded execution to avoid resource contention
+
+## Release channels
+
+| Channel | Source | Artifacts | crates.io |
+|---------|--------|-----------|-----------|
+| **Stable** | `main` release job | Versioned GitHub Release + `ghcr.io/btcdecoded/blvm:{version}` | Stable crate versions |
+| **Develop / nightly** | `develop` branch | Rolling `nightly` tag, `ghcr.io/btcdecoded/blvm:nightly` | Coordinated pre-release set when published |
+
+Stable releases trigger `repository_dispatch(blvm-release)` to refresh `website`, `commons-website`, and `blvm-docs` install metadata.
 
 ## Git Tagging
 

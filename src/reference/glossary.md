@@ -4,11 +4,11 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## BLVM Components
 
-**BLVM** (Bitcoin Low-Level Virtual Machine) - Compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](orange-paper.md) is the mathematical specification (IR); the implementation is **validated against** it via [formal verification](../consensus/formal-verification.md) (blvm-spec-lock), not generated or transformed from the IR. Similar to how LLVM provides compiler infrastructure, BLVM provides Bitcoin implementation infrastructure.
+**BLVM** (Bitcoin Low-Level Virtual Machine) - Compiler-like infrastructure for Bitcoin implementations. See [Introduction](../introduction.md#what-is-blvm) and [compiler-like architecture](#compiler-like-architecture).
 
-**Orange Paper** - Mathematical specification of Bitcoin's consensus protocol, serving as the "intermediate representation" (IR) in BLVM's compiler-like architecture. The implementation is **validated against** this spec via formal verification; code is not generated or transformed from the IR. See [Orange Paper](orange-paper.md).
+**Orange Paper** - Normative mathematical specification of Bitcoin consensus (the reference IR for BLVM). See [Orange Paper](orange-paper.md) and [compiler-like architecture](#compiler-like-architecture).
 
-**Optimization Passes** - Runtime optimizations applied to the [blvm-consensus](../consensus/overview.md) implementation (e.g. constant folding, memory layout, SIMD vectorization, bounds check optimization, dead code elimination). They optimize the implementation code; the implementation is validated against the Orange Paper, not generated from it. See [Optimization Passes](../consensus/architecture.md#optimization-passes).
+**Optimization Passes** - Runtime optimizations in [blvm-consensus](../consensus/overview.md) (constant folding, SIMD, etc.). See [Consensus architecture](../consensus/architecture.md#optimization-passes).
 
 **blvm-primitives** - Shared foundation crate: Bitcoin types, serialization, crypto, opcodes, constants. Used by blvm-consensus and blvm-protocol; consensus re-exports for API compatibility. See [API Index](api-index.md#foundation-blvm-primitives).
 

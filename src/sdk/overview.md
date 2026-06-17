@@ -37,7 +37,6 @@ Cryptographic primitives for governance operations:
 - **Nested Multisig**: Team-based governance with hierarchical multisig support
 - **Message Formats**: Structured messages for releases, approvals, decisions
 
-**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs)
 
 ### CLI Tools
 
@@ -51,7 +50,6 @@ Command-line tools for governance operations:
 - **`blvm-verify-binary`**: Verify binary file signatures
 - **`blvm-aggregate-signatures`**: Aggregate multiple signatures
 
-**Code**: [blvm-keygen.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/bin/blvm-keygen.rs)
 
 ### Composition Framework
 
@@ -59,10 +57,8 @@ Declarative node composition from modules:
 
 - **Module Registry**: Discover and manage available modules
 - **Lifecycle Management**: Load, unload, reload modules at runtime
-- **Economic Integration**: Merge mining revenue distribution
 - **Dependency Resolution**: Automatic module dependency handling
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/composition/mod.rs)
 
 ## Key Features
 
@@ -99,7 +95,6 @@ Threshold-based signature verification:
 - **Signature Aggregation**: Combine multiple signatures
 - **Verification**: Cryptographic verification of threshold satisfaction
 
-**Code**: [multisig.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/multisig.rs)
 
 ### Bitcoin-Compatible Signing
 
@@ -110,7 +105,6 @@ Uses Bitcoin message signing standards:
 - **Hash Function**: Double SHA256
 - **Compatibility**: Works with common PSBT/signing workflows used across the ecosystem
 
-**Code**: [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs)
 
 ## Design Principles
 
@@ -171,16 +165,21 @@ let signature = keypair.sign(&message.to_signing_bytes())?;
 
 ### Author a node module
 
-1. Add **`blvm-sdk`** with the **`node`** feature and use the [SDK declarative style](module-development.md#sdk-declarative-style-recommended) (`#[module]`, `run_module!`).
+1. Add **`blvm-sdk`** with the **`node`** feature and use the [SDK declarative style](module-development.md#sdk-declarative-style-recommended) (`#[module]`, `run_module!`). For subprocess **ModuleAPI** modules, use **`run_module_with_setup_and_api`** instead of plain **`run_module!`**.
 2. Ship a binary + **`module.toml`** under the node’s modules directory (see [Building modules](module-development.md)).
 3. Optional: register **CLI subcommands** so users invoke your module via **`blvm <your-cli-group> …`** when loaded ([Module CLI under blvm](module-development.md#module-cli-under-the-blvm-binary)).
 
 For more detail, see the [blvm-sdk README](https://github.com/BTCDecoded/blvm-sdk/blob/main/README.md).
 
+## Source
+
+- [signatures.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/signatures.rs)
+- [blvm-keygen.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/bin/blvm-keygen.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/composition/mod.rs)
+- [multisig.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/multisig.rs)
 ## See Also
 
 - [Building modules](module-development.md) - Module development guide
 - [API Reference](api-reference.md) - Complete SDK API documentation
 - [SDK Examples](examples.md) - Usage examples
 - [Governance Overview](../governance/overview.md) - Governance system
-

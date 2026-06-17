@@ -25,7 +25,7 @@ mapfile -t FILES < <(
     src/sdk/examples.md \
     src/sdk/api-reference.md \
     src/getting-started/quick-start.md \
-    src/security/security-controls.md \
+    src/development/security-controls.md \
     src/governance/configuration-system.md \
     -type f 2>/dev/null
 )

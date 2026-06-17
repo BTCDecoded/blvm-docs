@@ -21,13 +21,6 @@ The Stratum V2 module (`blvm-stratum-v2`) implements [Stratum V2 mining protocol
 cargo install blvm-stratum-v2
 ```
 
-### Via Module Installer
-
-```bash
-cargo install cargo-blvm-module
-cargo blvm-module install blvm-stratum-v2
-```
-
 ### Manual Installation
 
 1. Clone the repository:
@@ -45,7 +38,36 @@ cargo blvm-module install blvm-stratum-v2
    ```bash
    mkdir -p /path/to/node/modules/blvm-stratum-v2/target/release
    cp target/release/blvm-stratum-v2 /path/to/node/modules/blvm-stratum-v2/target/release/
+   cp module.toml /path/to/node/modules/blvm-stratum-v2/
    ```
+
+## Requirements
+
+- `blvm-node` with the module system enabled.
+- Miners connect to this module’s **`listen_addr`** (module-owned TCP), not the node P2P port.
+- Admin RPC auth for `getblocktemplate` / `submitblock` when miners submit blocks via the node.
+- Optional: node `stratum-v2` feature for P2P Stratum TLV demux — see [Stratum V2 mining](../node/mining-stratum-v2.md).
+
+## Loading
+
+Pin in `blvm.toml`:
+
+```toml
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+
+[enabled_modules]
+blvm-stratum-v2 = "0.1.*"
+```
+
+Per-module overrides:
+
+```toml
+[modules.blvm-stratum-v2]
+enabled = true
+listen_addr = "0.0.0.0:3333"
+```
+
+See [Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
@@ -168,28 +190,12 @@ The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 
 ## Troubleshooting
 
-### Module Not Loading
-
-- Verify the module binary exists at the correct path
-- Check `module.toml` manifest is present and valid
-- Verify module has required capabilities
-- Check node logs for module loading errors
-
-### Mining Jobs Not Creating
-
-- Verify node has `read_blockchain` capability
-- Check that block template events (`BlockTemplateUpdated`) are being published by the node
-- Verify listening address is accessible and not blocked by firewall
-- Check node logs for mining job creation errors
-- Verify node is synced and can generate block templates
-- Check that miners are connected (if no miners, jobs may not be created)
-
-### Pool Connection Failing
-
-- Verify pool URL is correct and accessible
-- Check network connectivity to mining pool
-- Verify pool supports Stratum V2 protocol
-- Check node logs for connection errors
+| Symptom | Check |
+|---------|--------|
+| Module not loading | Binary path; `module.toml`; capabilities in node logs |
+| No mining jobs | Node synced; `BlockTemplateUpdated` events; miners connected |
+| Pool connection fails | `pool_url` reachable; pool supports Stratum V2 |
+| Miners cannot connect | Firewall on `listen_addr`; not the node P2P port |
 
 ## Repository
 

@@ -45,7 +45,6 @@ compatibility:
 5. Export generation (package for distribution)
 6. Publication (make available for download)
 
-**Code**: [export.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/fork/export.rs)
 
 ## Versioning System
 
@@ -81,7 +80,6 @@ Track ruleset adoption through: node count, hash rate, user count, exchange supp
 - Status reporting (report chosen ruleset)
 - Update mechanism (handle ruleset updates)
 
-**Code**: [executor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/fork/executor.rs)
 
 ## Fork Resolution
 
@@ -116,4 +114,9 @@ Forks can be merged by: consensus building, gradual migration, feature adoption,
 
 - `governance/config/governance-fork.yml` - Fork configuration
 - `governance/fork-registry.yml` - Registered forks
+
+## Source
+
+- [export.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/fork/export.rs)
+- [executor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/fork/executor.rs)
 

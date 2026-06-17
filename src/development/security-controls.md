@@ -1,4 +1,6 @@
-# Security Controls System
+# PR security control classification
+
+Contributor and CI documentation: how pull requests are classified against security controls and governance tiers. **Operators** preparing a mainnet deployment should start with [Deployment posture](../security/deployment-posture.md) instead.
 
 ## Overview
 
@@ -15,7 +17,6 @@ Security controls are defined in a YAML configuration file that maps file patter
 - **Priority Levels**: P0 (Critical), P1 (High), P2 (Medium), P3 (Low)
 - **Categories**: Control categories (consensus_integrity, cryptographic, etc.)
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### Security Control Structure
 
@@ -35,7 +36,6 @@ security_controls:
     requires_cryptography_expert: false
 ```
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ## Priority Levels
 
@@ -48,7 +48,6 @@ Highest priority security controls:
 - **Governance Tier**: `security_critical`
 - **Examples**: Genesis block implementation, cryptographic primitives
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### P1 (High)
 
@@ -59,7 +58,6 @@ High priority security controls:
 - **Governance Tier**: `cryptographic` or `security_enhancement`
 - **Examples**: Signature verification, key management
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### P2 (Medium)
 
@@ -70,7 +68,6 @@ Medium priority security controls:
 - **Governance Tier**: `security_enhancement`
 - **Examples**: Access control, rate limiting
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### P3 (Low)
 
@@ -81,7 +78,6 @@ Low priority security controls:
 - **Governance Tier**: None (standard process)
 - **Examples**: Logging, monitoring
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ## Control Categories
 
@@ -129,7 +125,6 @@ The `SecurityControlValidator` analyzes security impact of changed files:
 4. **Tier Determination**: Determines required governance tier
 5. **Requirement Collection**: Collects additional requirements
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### Impact Levels
 
@@ -143,7 +138,6 @@ pub enum ImpactLevel {
 }
 ```
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### Governance Tier Mapping
 
@@ -155,7 +149,6 @@ Impact levels map to governance tiers:
 - **Low**: `security_enhancement` tier
 - **None**: Standard tier
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ## Placeholder Detection
 
@@ -164,7 +157,7 @@ Impact levels map to governance tiers:
 The validator detects placeholder implementations in security-critical files:
 
 - `PLACEHOLDER`
-- See [Threat Models](threat-models.md) for security documentation
+- See [Threat Models](../security/threat-models.md) for security documentation
 - `0x00[PLACEHOLDER`
 - `0x02[PLACEHOLDER`
 - `0x03[PLACEHOLDER`
@@ -173,7 +166,6 @@ The validator detects placeholder implementations in security-critical files:
 - `return vec![] as a placeholder`
 - `This is a placeholder`
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### Placeholder Violations
 
@@ -183,7 +175,6 @@ Placeholder violations block PRs affecting P0 controls:
 - **Blocking**: Blocks production deployment
 - **Reporting**: Detailed violation reports
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ## Security Gate CLI
 
@@ -196,7 +187,6 @@ security-gate status
 security-gate status --detailed
 ```
 
-**Code**: [security-gate.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/bin/security-gate.rs)
 
 ### PR Impact Analysis
 
@@ -207,7 +197,6 @@ security-gate check-pr 123
 security-gate check-pr 123 --format json
 ```
 
-**Code**: [security-gate.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/bin/security-gate.rs)
 
 ### Placeholder Check
 
@@ -218,7 +207,6 @@ security-gate check-placeholders
 security-gate check-placeholders --fail-on-placeholder
 ```
 
-**Code**: [security-gate.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/bin/security-gate.rs)
 
 ### Production Readiness
 
@@ -229,7 +217,6 @@ security-gate verify-production-readiness
 security-gate verify-production-readiness --format json
 ```
 
-**Code**: [security-gate.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/bin/security-gate.rs)
 
 ## Integration with Governance
 
@@ -242,7 +229,6 @@ Security controls automatically classify PRs:
 - **Tier Assignment**: Assigns governance tier
 - **Requirement Collection**: Collects requirements
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### PR Comments
 
@@ -254,7 +240,6 @@ The validator generates PR comments with security impact:
 - **Additional Requirements**: List of requirements
 - **Blocking Status**: Production/audit blocking status
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ## Control Requirements
 
@@ -268,7 +253,6 @@ Requirements for `security_critical` tier:
 - Security audit report attached to PR
 - Cryptographer approval required
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### Cryptographic Tier
 
@@ -279,17 +263,15 @@ Requirements for `cryptographic` tier:
 - Side-channel analysis performed
 - Formal verification proofs passing
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ### Security Enhancement Tier
 
 Requirements for `security_enhancement` tier:
 
 - Security review by maintainer
-- Comprehensive test coverage
+- Unit, integration, property, and differential tests across consensus, node, and SDK crates (see each repository's `cargo test` targets)
 - No placeholder implementations
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ## Production Blocking
 
@@ -301,7 +283,6 @@ P0 controls block production deployment:
 - **Blocks Audit**: Cannot proceed with security audit
 - **Requires Certification**: Must be certified before merge
 
-**Code**: [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
 
 ## Components
 
@@ -313,11 +294,14 @@ The security controls system includes:
 - Governance tier integration
 - PR comment generation
 
-**Location**: `blvm-commons/src/validation/security_controls.rs`, `blvm-commons/src/bin/security-gate.rs`
 
+## Source
+
+- [security_controls.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/security_controls.rs)
+- [security-gate.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/bin/security-gate.rs)
 ## See Also
 
-- [Threat Models](threat-models.md) - Security threat analysis
+- [Threat Models](../security/threat-models.md) - Security threat analysis
 - [Developer Security Checklist](../appendices/templates/DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
 - [Security Architecture Review Template](../appendices/templates/ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process
 - [Security Testing Template](../appendices/templates/SECURITY_TESTING_TEMPLATE.md) - Security testing guidelines

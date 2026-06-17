@@ -2,11 +2,17 @@
 
 BLVM (Bitcoin Low-Level Virtual Machine) implements Bitcoin consensus from the [Orange Paper](reference/orange-paper.md), provides protocol abstraction for multiple Bitcoin variants, a **reference** full node with P2P networking, a developer SDK, and cryptographic governance for transparent development.
 
-Contributors: start with [Repository layout](development/repository-architecture.md) for how repos fit together, then [Contributing](development/contributing.md).
+## Who is this for?
+
+**Running a Bitcoin node?** [Operator guide](getting-started/operator-guide.md) — [Installation](getting-started/installation.md), [Quick Start](getting-started/quick-start.md), [Mainnet initial sync](getting-started/mainnet-sync.md). Read [Deployment posture](security/deployment-posture.md) before exposing RPC on mainnet.
+
+**Building a module or integrating with the SDK?** [Developer guide](getting-started/developer-guide.md) — [Building your first module](getting-started/first-module.md), then [Building modules](sdk/module-development.md).
+
+**Studying the spec or contributing to consensus?** The [Orange Paper](reference/orange-paper.md) is the normative spec. [Formal Verification](consensus/formal-verification.md) explains verification. Contributors: [Repository layout](development/repository-architecture.md), [Contributing](development/contributing.md).
 
 ## What is BLVM?
 
-BLVM is compiler-like infrastructure for Bitcoin implementations. There is a mathematical specification (the [Orange Paper](reference/orange-paper.md), treated as an intermediate representation / IR) and an implementation. The implementation is **validated against** the spec using [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) (formal verification with Z3)—it is not generated or transformed from the IR. Alternative implementations can target the same Orange Paper and tooling.
+BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR). **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture) in the glossary.
 
 **Stack:**
 
@@ -18,11 +24,12 @@ BLVM is compiler-like infrastructure for Bitcoin implementations. There is a mat
 - **[blvm-sdk](sdk/overview.md)** – Developer toolkit and module composition
 - **[Governance](governance/overview.md)** – Cryptographic governance enforcement
 
-**Why "LVM"?** Like LLVM’s infrastructure for compilers, BLVM provides shared infrastructure for Bitcoin implementations—with the spec as the reference and the implementation validated against it, not generated from it.
+**Why "LVM"?** Like LLVM’s shared compiler infrastructure, BLVM provides shared infrastructure for Bitcoin implementations—the Orange Paper is the reference spec; node and consensus code is validated against it.
 
 ## Documentation Structure
 
-- **Getting Started** – Installation, quick start, [regtest first node](getting-started/first-node.md), [mainnet initial sync](getting-started/mainnet-sync.md)
+- **Operators:** [Operator guide](getting-started/operator-guide.md) — install, sync, RPC, security
+- **Developers:** [Developer guide](getting-started/developer-guide.md) — modules, SDK, contributing
 - **Architecture** – System design, module system, events
 - **Layers** – Consensus, protocol, node (each with overview and detailed pages)
 - **Developer SDK** – Module development, API reference, examples
@@ -34,7 +41,3 @@ Documentation is maintained in source repositories alongside code and is aggrega
 ## Getting Help
 
 Report bugs or request features via GitHub Issues, ask questions in GitHub Discussions, or report security issues to security@thebitcoincommons.org.
-
-## License
-
-This documentation is licensed under the MIT License, same as the BLVM codebase.

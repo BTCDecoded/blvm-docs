@@ -1,16 +1,18 @@
 # Transaction relay
 
+> **Experimental build** — Dandelion++ (`dandelion` feature) is not in stable release binaries. FIBRE is a loadable module (`blvm-fibre`). See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+
 ## Overview
 
-The node supports **Dandelion++** and **Fibre** for transaction propagation. **Package relay (BIP331)** is documented separately in [Package Relay (BIP331)](package-relay.md).
+The node supports **Dandelion++** for privacy-preserving **transaction** relay (optional `dandelion` compile-time feature). **FIBRE** is **block** relay over UDP/FEC — provided by the loadable **`blvm-fibre`** module, not an in-node `[network.fibre]` table. See [FIBRE module](../modules/fibre.md). **Package relay (BIP331)** is documented in [Package Relay (BIP331)](package-relay.md).
 
-## Dandelion++
+Stable GitHub Release binaries use the **base** feature set (`production`); Dandelion++, CTV, Stratum V2, and related flags require an [experimental source build](../getting-started/installation.md#experimental-variant) or local `cargo build` with the matching features.
 
-### Overview
+## Dandelion++ *(experimental build)*
 
 Dandelion++ provides privacy-preserving transaction relay with formal anonymity guarantees against transaction origin analysis. It operates in two phases: stem phase (obscures origin) and fluff phase (standard diffusion).
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
+**Requires:** `dandelion` Cargo feature in the binary ([experimental build](../getting-started/installation.md#experimental-variant)).
 
 ### Architecture
 
@@ -31,7 +33,6 @@ pub struct StemPath {
 }
 ```
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Stem Phase Behavior
 
@@ -41,7 +42,6 @@ pub struct StemPath {
 - Fluff probability: 10% per hop (default)
 - Maximum stem hops: 2 (default)
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Fluff Phase Behavior
 
@@ -52,19 +52,21 @@ pub struct StemPath {
   - Stem timeout expiration
   - Maximum hop count reached
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Configuration
 
+Enable at runtime via **`[relay].enable_dandelion`** (or `--enable-dandelion` when the binary includes the feature). Tune stem/fluff under **`[dandelion]`**:
+
 ```toml
-[network.dandelion]
-enabled = true
-stem_timeout_secs = 10
-fluff_probability = 0.1  # 10%
+[relay]
+enable_dandelion = true
+
+[dandelion]
+stem_timeout_seconds = 10
+fluff_probability = 0.1   # 10%
 max_stem_hops = 2
 ```
 
-**Code**: [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 
 ### Benefits
 
@@ -73,96 +75,15 @@ max_stem_hops = 2
 3. **Backward Compatible**: Falls back to standard relay if disabled
 4. **Configurable**: Adjustable timeouts and probabilities
 
-## Fibre
+## FIBRE block relay (module)
 
-### Overview
+FIBRE (Fast Internet Bitcoin Relay Engine) is **block** transport over UDP with FEC — not transaction propagation.
 
-Fibre (Fast Internet Bitcoin Relay Engine) provides high-performance block relay using UDP transport with Forward Error Correction (FEC) encoding for packet loss tolerance.
+- **Operator path:** load **`blvm-fibre`** ([FIBRE module](../modules/fibre.md)) — outbound on `NewBlock` / `BlockMined`, inbound via `queue_received_block_bytes`.
+- **Node support:** advertises **`NODE_FIBRE`** on P2P and publishes **`CompanionUdpPeerRegistered`** / **`CompanionUdpPeerUnregistered`** when peers advertise FIBRE (companion UDP = peer TCP port + 1) so the module can register dynamic peers.
 
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
 
-### Architecture
-
-Fibre uses:
-- **UDP Transport**: Low-latency UDP for block relay
-- **FEC Encoding**: Reed-Solomon erasure coding for packet loss tolerance
-- **Chunk-based Transmission**: Blocks split into chunks with parity shards
-- **Automatic Recovery**: Missing chunks recovered via FEC
-
-### FEC Encoding
-
-Blocks are encoded using Reed-Solomon erasure coding:
-
-- **Data Shards**: Original block data split into shards
-- **Parity Shards**: Redundant shards for error recovery
-- **Shard Size**: Configurable (default: 1024 bytes)
-- **Parity Ratio**: Configurable (default: 0.2 = 20% parity)
-
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
-
-### Block Encoding Process
-
-1. Serialize block to bytes
-2. Split into data shards
-3. Generate parity shards via FEC
-4. Create FEC chunks for transmission
-5. Send chunks via UDP
-
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
-
-### Block Assembly Process
-
-1. Receive FEC chunks via UDP
-2. Track received chunks per block
-3. When enough chunks received (data shards), reconstruct block
-4. Verify block hash matches
-
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
-
-### UDP Transport
-
-Fibre uses UDP for low-latency transmission:
-
-- **Connection Tracking**: Per-peer connection state
-- **Retry Logic**: Automatic retry for lost chunks
-- **Sequence Numbers**: Duplicate detection
-- **Timeout Handling**: Connection timeout management
-
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
-
-### Configuration
-
-```toml
-[network.fibre]
-enabled = true
-bind_addr = "0.0.0.0:8334"
-chunk_timeout_secs = 5
-max_retries = 3
-fec_parity_ratio = 0.2  # 20% parity
-max_assemblies = 100
-```
-
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
-
-### Statistics
-
-Fibre tracks per-peer and per-chunk statistics:
-
-- Blocks sent/received
-- Chunks sent/received
-- FEC recoveries
-- UDP errors
-- Average latency
-- Success rate
-
-**Code**: [fibre.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/fibre.rs)
-
-### Benefits
-
-1. **Low Latency**: UDP transport reduces latency
-2. **Packet Loss Tolerance**: FEC recovers from lost chunks
-3. **High Throughput**: Efficient chunk-based transmission
-4. **Automatic Recovery**: No manual retry needed
+There is **no** in-node `network/fibre.rs` or `[network.fibre]` configuration table.
 
 ## Integration
 
@@ -171,29 +92,31 @@ Fibre tracks per-peer and per-chunk statistics:
 The `RelayManager` coordinates relay protocols:
 
 - Standard block/transaction relay
-- Dandelion++ integration (optional)
-- Fibre integration (optional)
+- Dandelion++ integration (optional `dandelion` feature + `[relay].enable_dandelion`)
 - Package relay (optional; see [Package Relay (BIP331)](package-relay.md))
 
-**Code**: [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs)
+FIBRE block relay runs in the **`blvm-fibre`** module process, not inside `RelayManager`.
+
 
 ### Protocol Selection
 
 Relay protocols are selected based on:
 
-- Feature flags (`dandelion`, `fibre`)
+- Compile-time features (`dandelion`, etc.)
 - Peer capabilities
 - Configuration settings
 - Runtime preferences
 
-**Code**: [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs)
 
 ## Components
 
 - Dandelion++ stem/fluff phase management
-- Fibre UDP transport with FEC encoding
 - Relay manager coordination
-- Statistics tracking
+- P2P `NODE_FIBRE` service bit and companion-UDP events for modules
 
-**Location**: `blvm-node/src/network/dandelion.rs`, `blvm-node/src/network/fibre.rs`, `blvm-node/src/network/relay.rs`
+## Source
+
+- [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (companion UDP events), [blvm-fibre](https://github.com/BTCDecoded/blvm-fibre) (UDP/FEC relay)
+- [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs)
+- [blvm-node/src/network/dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs), [blvm-node/src/network/relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs), [blvm-node/src/network/network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (blvm-node/src/network/relay.rsblvm-node/src/network/network_manager.rs`)
 

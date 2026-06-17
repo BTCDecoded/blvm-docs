@@ -1,5 +1,7 @@
 # Transport abstraction
 
+> **Experimental build** — **Iroh** and **Quinn** transports require compile-time features (`iroh`, `quinn`). Stable release binaries default to **TCP** (`tcponly`). See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+
 ## Overview
 
 Multiple network transport protocols (TCP for Bitcoin P2P compatibility and QUIC) share one abstraction so the node can run both at once.
@@ -32,7 +34,6 @@ NetworkManager
 | **Default** | ✅ Yes | ❌ No | ❌ No |
 | **Feature Flag** | Always enabled | `quinn` | `iroh` |
 
-**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
 
 ### TCP Transport
 
@@ -44,7 +45,6 @@ Traditional TCP transport for Bitcoin P2P protocol compatibility:
 - No built-in encryption (TLS optional)
 - No connection multiplexing
 
-**Code**: [tcp_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/tcp_transport.rs)
 
 ### Quinn QUIC Transport
 
@@ -56,7 +56,6 @@ Direct QUIC transport using the Quinn library:
 - Stream multiplexing over single connection
 - Optional feature flag: `quinn`
 
-**Code**: [quinn_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/quinn_transport.rs)
 
 ### Iroh Transport
 
@@ -68,7 +67,6 @@ QUIC-based transport using Iroh for P2P networking:
 - Connection migration support
 - Optional feature flag: `iroh`
 
-**Code**: [iroh_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/iroh_transport.rs)
 
 ### Performance Characteristics
 
@@ -90,7 +88,6 @@ QUIC-based transport using Iroh for P2P networking:
 - **Connection Overhead**: Higher (DERP relay overhead)
 - **Use Case**: NAT traversal, decentralized networking
 
-**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
 
 ## Transport Abstraction
 
@@ -106,7 +103,6 @@ pub trait Transport: Send + Sync {
 }
 ```
 
-**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
 
 ### TransportAddr
 
@@ -120,7 +116,6 @@ pub enum TransportAddr {
 }
 ```
 
-**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
 
 ### TransportType
 
@@ -134,7 +129,6 @@ pub enum TransportType {
 }
 ```
 
-**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
 
 ## Transport Selection
 
@@ -146,7 +140,6 @@ Runtime preference for transport selection:
 - **IrohOnly**: Use only Iroh transport
 - **Hybrid**: Prefer Iroh if available, fallback to TCP
 
-**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
 
 ### Feature Negotiation
 
@@ -155,7 +148,6 @@ Peers negotiate transport capabilities during connection:
 - Automatic fallback if preferred transport unavailable
 - Transport-aware message routing
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs)
 
 ## Protocol Adapter
 
@@ -163,7 +155,6 @@ The `ProtocolAdapter` handles message serialization between:
 - Consensus-proof `NetworkMessage` types
 - Transport-specific wire formats (TCP Bitcoin P2P vs Iroh message format)
 
-**Code**: [protocol_adapter.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol_adapter.rs)
 
 ## Message Bridge
 
@@ -172,7 +163,6 @@ The `MessageBridge` bridges blvm-consensus message processing with transport lay
 - Processes incoming messages
 - Generates responses
 
-**Code**: [message_bridge.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/message_bridge.rs)
 
 ## Network Manager Integration
 
@@ -182,7 +172,6 @@ The `NetworkManager` supports multiple transports:
 - Unified message routing
 - Automatic transport fallback
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 
 ## Benefits
 
@@ -221,5 +210,15 @@ The transport abstraction includes:
 - Message bridge for unified routing
 - Network manager integration
 
-**Location**: `blvm-node/src/network/transport.rs`, `blvm-node/src/network/tcp_transport.rs`, `blvm-node/src/network/quinn_transport.rs`, `blvm-node/src/network/iroh_transport.rs`
+## Source
+
+- [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
+- [tcp_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/tcp_transport.rs)
+- [quinn_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/quinn_transport.rs)
+- [iroh_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/iroh_transport.rs)
+- [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs)
+- [protocol_adapter.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol_adapter.rs)
+- [message_bridge.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/message_bridge.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
+- [blvm-node/src/network/transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs), [blvm-node/src/network/tcp_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/tcp_transport.rs), [blvm-node/src/network/quinn_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/quinn_transport.rs), [blvm-node/src/network/iroh_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/iroh_transport.rs) (blvm-node/src/network/tcp_transport.rsblvm-node/src/network/quinn_transport.rsblvm-node/src/network/iroh_transport.rs`)
 

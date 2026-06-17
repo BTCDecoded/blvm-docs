@@ -1,6 +1,10 @@
 # Stack overview
 
-Bitcoin Commons is a Bitcoin implementation ecosystem with **six stack layers** (numbered below) building on the [Orange Paper](../reference/orange-paper.md) mathematical specifications. **“Layer” here means position in the technology stack**, not [repository governance layers](../governance/layer-tier-model.md) or governance **tiers** (PR classification). blvm-consensus and blvm-protocol share the **blvm-primitives** crate for types, serialization, and crypto. The system implements consensus rules directly from the spec, provides protocol abstraction, delivers a full node implementation, and includes a developer SDK.
+Bitcoin Commons is a Bitcoin implementation ecosystem built as a **six-layer technology stack** on the [Orange Paper](../reference/orange-paper.md).
+
+**“Layer” here means stack position**, not [governance repository layers](../governance/layer-tier-model.md) or PR **tiers**. **blvm-consensus** and **blvm-protocol** share **blvm-primitives** for types, serialization, and crypto.
+
+The stack implements consensus from the spec, abstracts protocol variants, ships a reference full node, SDK, and governance enforcement tooling.
 
 ## Six-layer stack (architecture)
 
@@ -27,11 +31,6 @@ graph TB
     style L6 fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
-## BLVM Stack Architecture
-
-![BLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
-*Figure: BLVM stack (marketing image): Orange Paper / blvm-spec as the foundation, blvm-consensus with verification tooling, then blvm-protocol, blvm-node, blvm-sdk, and governance enforcement (blvm-commons). The mermaid diagram above is the canonical **six stack layers** list.*
-
 ## Component Overview
 
 ### Stack layer 1: [Orange Paper](../reference/orange-paper.md) (Mathematical Foundation)
@@ -45,15 +44,11 @@ graph TB
 - Side-effect-free, deterministic functions
 - Consensus-critical dependencies and transitive pins follow **`Cargo.toml`** (BLVM crates use **published ranges**; many third-party crates use **`=`** where pinned)
 
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/README.md)
-
 ### Stack layer 3: [blvm-protocol](../protocol/overview.md) (Protocol Abstraction)
 - Bitcoin protocol abstraction for multiple variants
 - Supports mainnet, testnet, regtest
 - Commons-specific protocol extensions ([UTXO commitments](../consensus/utxo-commitments.md), ban list sharing)
 - BIP implementations (BIP152, BIP157, BIP158, BIP173/350/351)
-
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md)
 
 ### Stack layer 4: [blvm-node](../node/overview.md) (Node Implementation)
 - Reference full node (non-consensus infrastructure: storage, P2P, RPC, modules); operational hardening required for real deployments
@@ -67,17 +62,13 @@ graph TB
 - [Mining coordination](../node/mining-stratum-v2.md) (Stratum V2, merge mining)
 - P2P governance message relay
 - Governance integration (webhooks, user signaling)
-- ZeroMQ notifications (optional)
-
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-node/blob/main/README.md)
+- ZeroMQ notifications (optional module **`blvm-zmq`**)
 
 ### Stack layer 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
 - Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
 - CLI tools (blvm-keygen, blvm-sign, blvm-verify)
 - [Composition framework](../architecture/module-system.md) (declarative node composition)
 - Bitcoin-compatible signing standards
-
-**Code**: [README.md](https://github.com/BTCDecoded/blvm-sdk/blob/main/README.md)
 
 ### Stack layer 6: blvm-commons (Governance Enforcement)
 - GitHub App for governance enforcement
@@ -129,6 +120,17 @@ graph TB
 - [Multisig threshold enforcement](../governance/multisig-configuration.md)
 - [Transparent audit trails](../governance/audit-trails.md)
 - [Forkable governance rules](../governance/governance-fork.md)
+
+## Source repositories
+
+| Stack layer | Crate | Repository |
+|-------------|-------|------------|
+| 2 | blvm-consensus | [BTCDecoded/blvm-consensus](https://github.com/BTCDecoded/blvm-consensus) |
+| 3 | blvm-protocol | [BTCDecoded/blvm-protocol](https://github.com/BTCDecoded/blvm-protocol) |
+| 4 | blvm-node | [BTCDecoded/blvm-node](https://github.com/BTCDecoded/blvm-node) |
+| 5 | blvm-sdk | [BTCDecoded/blvm-sdk](https://github.com/BTCDecoded/blvm-sdk) |
+| 6 | blvm-commons | [BTCDecoded/blvm-commons](https://github.com/BTCDecoded/blvm-commons) |
+| Umbrella binary | blvm | [BTCDecoded/blvm](https://github.com/BTCDecoded/blvm) |
 
 ## See Also
 

@@ -53,13 +53,6 @@ The module uses a hybrid approach combining:
 cargo install blvm-miningos
 ```
 
-### Via Module Installer
-
-```bash
-cargo install cargo-blvm-module
-cargo blvm-module install blvm-miningos
-```
-
 ### Manual Installation
 
 1. Clone the repository:
@@ -85,6 +78,26 @@ cargo blvm-module install blvm-miningos
    cp target/release/blvm-miningos /path/to/node/modules/blvm-miningos/target/release/
    cp -r bridge /path/to/node/modules/blvm-miningos/
    ```
+
+## Requirements
+
+- `blvm-node` with the module system enabled.
+- **Node.js** (for the Hyperswarm P2P bridge) — install bridge deps under `bridge/`.
+- MiningOS app-node URL and **OAuth2** credentials (`oauth_client_id`, `oauth_client_secret`).
+- Optional: `blvm-stratum-v2` for pool config actions from MiningOS.
+
+## Loading
+
+Pin in `blvm.toml`:
+
+```toml
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+
+[enabled_modules]
+blvm-miningos = "0.1.*"
+```
+
+Config file search order: `{data_dir}/config/miningos.toml`, `{data_dir}/miningos.toml`, then local paths — see below. See [Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
@@ -232,36 +245,12 @@ For manual testing:
 
 ## Troubleshooting
 
-### Module Not Loading
-
-- Verify the module binary exists at the correct path
-- Check `module.toml` manifest is present and valid
-- Verify module has required capabilities
-- Check node logs for module loading errors
-- Ensure Node.js bridge is properly installed
-
-### OAuth2 Authentication Issues
-
-- Verify OAuth2 credentials are correct
-- Check token cache file permissions
-- Verify OAuth2 provider URL is accessible
-- Check node logs for authentication errors
-- Ensure token refresh is working correctly
-
-### P2P Bridge Issues
-
-- Verify Node.js bridge is installed (`npm install` in `bridge/` directory)
-- Check bridge process is running
-- Verify Hyperswarm connectivity
-- Check bridge logs for connection errors
-- Ensure rack_id is unique
-
-### Statistics Collection Issues
-
-- Verify node is synced and can provide statistics
-- Check collection interval configuration
-- Verify NodeAPI is accessible
-- Check node logs for statistics collection errors
+| Symptom | Check |
+|---------|--------|
+| Module not loading | Binary + `module.toml`; Node.js bridge installed |
+| OAuth2 failures | Client ID/secret; `token_cache_file` permissions; app-node URL |
+| P2P bridge down | `npm install` in `bridge/`; unique `rack_id`; Hyperswarm reachability |
+| Stats not updating | Node synced; `collection_interval_seconds`; NodeAPI access |
 
 ## Repository
 

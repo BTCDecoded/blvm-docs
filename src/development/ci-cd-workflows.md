@@ -4,6 +4,8 @@
 
 BLVM uses GitHub Actions for continuous integration and deployment. All workflows run on **self-hosted Linux x64 runners** to ensure security and deterministic builds.
 
+**Release channels:** stable artifacts from `main` (versioned GitHub Releases + GHCR tags); rolling **nightly** from `develop` (`nightly` tag, `ghcr.io/btcdecoded/blvm:nightly`). See [Release process — Release channels](release-process.md#release-channels).
+
 ## What Happens When You Push Code
 
 ### On Push to Any Branch
@@ -320,7 +322,7 @@ For self-hosted runners, local caching can provide significant performance impro
 
 #### Local Caching System
 
-Using `/tmp/runner-cache` with rsync provides 10-100x faster cache operations than GitHub Actions cache:
+Using `/tmp/runner-cache` with rsync can be much faster than GitHub Actions cache for self-hosted runners (measure on your hardware):
 
 - **No API rate limits**: Local filesystem access
 - **Faster restore**: rsync is much faster than GitHub cache API
@@ -368,7 +370,7 @@ With proper caching optimization:
 - **Dependency build**: ~30s (cached artifacts vs ~5min without cache)
 - **Total overhead**: ~2min vs ~35min without optimization
 
-**Estimated speedup**: ~17x faster for setup overhead
+**Estimated speedup**: measure setup overhead locally on self-hosted runners (varies by disk and cache state).
 
 ## Additional Resources
 

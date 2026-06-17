@@ -71,17 +71,19 @@ This repository builds the [docs.thebitcoincommons.org](https://docs.thebitcoinc
 
 The optional **`modules/blvm`** git submodule is the **meta-repo** umbrella (`blvm`). Its `docs/` tree covers release/CI workflows for that repo. The **canonical** narrative for [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org) lives in **`src/`** in this repository.
 
-## Installation page (shared with BTCDecoded website)
+## Installation page
 
-Canonical copy for install instructions lives in **`src/install/install-content.json`**. The book chapter **`src/getting-started/installation.md`** is **generated** from that file; do not edit the markdown by hand.
-
-After changing the JSON:
+Install copy is generated from **`src/install/install-content.json`**. CI and local builds should refresh it from live **`blvm` GitHub Releases** before rendering:
 
 ```bash
-node scripts/render-installation.mjs
+node scripts/fetch-blvm-release.mjs && node scripts/render-installation.mjs
 ```
 
-CI runs this before `mdbook build`. The [BTCDecoded website](https://github.com/BTCDecoded/website) **build** refreshes its `data/install-content.json` via **`fetch-blvm-release.mjs`** ( **`blvm` GitHub Releases** ), so [`/install`](https://btcdecoded.org/install/) stays aligned with **released artifacts**. Developers may instead run **`sync-install-data`** against a sibling **blvm-docs** checkout to preview book JSON locally; the **book** remains canonical for narrative generated from this file.
+- **`deploy.yml`** and **`docs-pr.yml`** run fetch (`--strict`) then render before `mdbook build`.
+- **`blvm` releases** dispatch `repository_dispatch(blvm-release)` to redeploy docs without a manual `blvm-docs` push.
+- Static slot definitions: **`src/install/install-content.static.json`**; optional offline copy: **`install-content.fallback.json`**.
+
+Do not edit **`getting-started/installation.md`** by hand. The [BTCDecoded website](https://github.com/BTCDecoded/website) uses its own **`fetch-blvm-release.mjs`** — do not run **`sync-install-data.mjs`** in CI.
 
 ## Documentation sources
 

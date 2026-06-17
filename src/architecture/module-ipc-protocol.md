@@ -39,7 +39,6 @@ Messages use length-delimited binary encoding:
 - **Length**: 4-byte little-endian integer (message size)
 - **Payload**: Binary-encoded message (bincode serialization)
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/mod.rs)
 
 ### Message Types
 
@@ -52,7 +51,6 @@ The protocol uses length-delimited **`ModuleMessage`** variants:
 5. **Invocation** — node → module (CLI, RPC, or **`ModuleApi`** dispatch)
 6. **InvocationResult** — module → node (correlated reply)
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs) (`ModuleMessage`)
 
 ## Message Structure
 
@@ -86,7 +84,6 @@ Reads and subscriptions include `GetBlock`, `GetBlockHeader`, `GetTransaction`, 
 
 These affect **relay/serving only**, not consensus validation. See [`NodeAPI`](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the Rust surface.
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Response Message
 
@@ -99,7 +96,6 @@ pub struct ResponseMessage {
 
 **Response payload** variants carry typed data (blocks, templates, snapshots, booleans, errors, etc.); denylist merges return dedicated merged/snapshot payloads where applicable.
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Event Message
 
@@ -112,7 +108,6 @@ pub struct EventMessage {
 
 **Event types:** The node defines many **`EventType`** values (chain, mempool, network, payments, mining, mesh, sync, modules, governance, maintenance, …). Modules subscribe to a subset via **`SubscribeEvents`**. See the **`EventType`** enum in [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the authoritative list — do not assume a fixed count in docs.
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs), [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
 
 ### Log Message
 
@@ -126,7 +121,6 @@ pub struct LogMessage {
 
 **Log Levels**: `Error`, `Warn`, `Info`, `Debug`, `Trace`
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ## Communication Flow
 
@@ -137,7 +131,6 @@ pub struct LogMessage {
 3. **Node sends Response**: Node sends response with matching correlation ID
 4. **Module receives Response**: Module matches response to request using correlation ID
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ### Invocation pattern (CLI, RPC, ModuleAPI)
 
@@ -153,6 +146,8 @@ The module replies with **`InvocationResult`** (same **`correlation_id`**). For 
 
 ### Subprocess ModuleAPI registration
 
+Spawned modules use **`blvm-sdk`** **`run_module_with_setup_and_api`** (not plain **`run_module!`**) when they register a ModuleAPI over IPC.
+
 Spawned modules cannot pass `Arc<dyn ModuleAPI>` into the node process. Instead:
 
 1. Module sends **`RegisterModuleApi`** with method names and API version.
@@ -162,7 +157,6 @@ Spawned modules cannot pass `Arc<dyn ModuleAPI>` into the node process. Instead:
 
 Cross-task invocations use **`ModuleIpcHandle`** so callers do not lock the server accept loop.
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs), [ipc_proxy.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/inter_module/ipc_proxy.rs), [runner.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/module/runner.rs)
 
 ### Event Subscription Pattern
 
@@ -171,7 +165,6 @@ Cross-task invocations use **`ModuleIpcHandle`** so callers do not lock the serv
 3. **Node publishes Events**: Node sends event messages as they occur
 4. **Module receives Events**: Module processes events asynchronously
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ## Connection Management
 
@@ -189,7 +182,6 @@ RequestPayload::Handshake {
 
 The node replies with **`HandshakeAck`** (node version). Modules without a handshake receive a fallback connection id (legacy path).
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ### Connection Lifecycle
 
@@ -198,7 +190,6 @@ The node replies with **`HandshakeAck`** (node version). Modules without a hands
 3. **Active**: Connection active, ready for requests/events
 4. **Disconnect**: Connection closed (graceful or error)
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ## Security
 
@@ -208,7 +199,6 @@ The node replies with **`HandshakeAck`** (node version). Modules without a hands
 - No shared memory between node and modules
 - Module crashes don't affect the base node
 
-**Code**: [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs)
 
 ### Permission System
 
@@ -220,7 +210,6 @@ Modules request capabilities that are validated before API access:
 - `SubscribeEvents` - Subscribe to node events
 - `SendTransactions` - Submit transactions to mempool
 
-**Code**: [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 
 ### Sandboxing
 
@@ -231,7 +220,6 @@ Modules run in sandboxed environments with:
 - **Network**: modules do not open arbitrary sockets; P2P and mesh sends go through **NodeAPI** with the **`network_access`** capability
 - Permission-based API access
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs), [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 
 ## Error Handling
 
@@ -247,7 +235,6 @@ pub enum ModuleError {
 }
 ```
 
-**Code**: [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
 
 ### Error Recovery
 
@@ -256,7 +243,6 @@ pub enum ModuleError {
 - **Permission Errors**: Detailed error messages, request rejection
 - **Timeout Errors**: Request timeout, connection remains active
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs)
 
 ## Performance
 
@@ -266,7 +252,6 @@ pub enum ModuleError {
 - **Size**: Compact binary representation
 - **Speed**: Fast serialization/deserialization
 
-**Code**: [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
 
 ### Connection Pooling
 
@@ -274,7 +259,6 @@ pub enum ModuleError {
 - **Concurrent Requests**: Multiple requests can be in-flight simultaneously
 - **Correlation IDs**: Match responses to requests asynchronously
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs)
 
 ## Implementation Details
 
@@ -287,7 +271,6 @@ The node-side IPC server:
 - Routes requests to NodeAPI implementation
 - Publishes events to subscribed modules
 
-**Code**: [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
 
 ### IPC Client
 
@@ -298,12 +281,22 @@ The module-side IPC client:
 - Subscribes to events
 - Handles connection errors
 
-**Code**: [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs)
 
+## Source
+
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/mod.rs)
+- [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs) (`ModuleMessage`)
+- [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
+- [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs), [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
+- [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs)
+- [server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/server.rs), [ipc_proxy.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/inter_module/ipc_proxy.rs), [runner.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/module/runner.rs)
+- [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs)
+- [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs), [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
+- [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs)
+- [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/client.rs)
 ## See Also
 
 - [Module System](module-system.md) - Module system architecture
 - [Building modules](../sdk/module-development.md) - Building modules
 - [Module catalog](../modules/overview.md) - Available modules
-
-

@@ -26,7 +26,6 @@ Unit tests verify individual functions in isolation:
 - **Coverage**: Public functions
 - **Examples**: Transaction validation, block validation, script execution
 
-**Code**: [scripts/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/scripts/README.md) (test data helpers); [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) (verification workflows)
 
 ### Property-Based Tests
 
@@ -36,7 +35,6 @@ Property-based tests verify mathematical invariants:
 - **Coverage**: Mathematical invariants
 - **Tool**: Proptest
 
-**Code**: [consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
 
 ### Integration Tests
 
@@ -46,7 +44,6 @@ Integration tests verify end-to-end correctness:
 - **Coverage**: Multi-component scenarios
 - **Examples**: BIP compliance, historical replay, mempool mining
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/mod.rs)
 
 ### Fuzz tests
 
@@ -63,7 +60,6 @@ Coverage-guided fuzzing (libFuzzer / cargo-fuzz). Inventory: `fuzz/Cargo.toml` i
 
 **See also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification)
 
-**Code**: [formal-verification.md](../consensus/formal-verification.md)
 
 ### Runtime Assertions
 
@@ -134,7 +130,6 @@ cargo +nightly miri test
 cargo spec-lock verify
 ```
 
-**Code**: [formal-verification.md](../consensus/formal-verification.md)
 
 ### Run Spec-Lock Verification
 
@@ -166,7 +161,6 @@ blvm-consensus/
     └── fuzz_targets/        # Fuzz targets
 ```
 
-**Code**: [tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests)
 
 ## Edge Case Coverage
 
@@ -179,7 +173,6 @@ Edge cases beyond blvm-spec-lock proof bounds are covered by:
 3. **Integration Tests**: Realistic scenarios
 4. **Fuzz Testing**: Random generation
 
-**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Differential Testing
 
@@ -190,7 +183,6 @@ Differential tests compare **blvm-consensus** with an independent full node over
 - **Location**: `tests/integration/differential_tests.rs` (skeleton); full harnesses in **blvm-bench**
 - **Purpose**: Catch consensus divergences empirically
 
-**Code**: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs)
 
 ## CI Integration
 
@@ -205,7 +197,6 @@ All tests run in CI:
 - **blvm-spec-lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
-**Code**: [formal-verification.md](../consensus/formal-verification.md)
 
 ## Test Metrics
 
@@ -213,7 +204,6 @@ All tests run in CI:
 - **Runtime Assertions**: Multiple assertions (`assert!` and `debug_assert!`)
 - **Fuzz Targets**: Multiple fuzz targets
 
-**Code**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 
 ## Components
 
@@ -227,8 +217,18 @@ The testing infrastructure includes:
 - MIRI integration for undefined behavior detection
 - Differential tests (see [differential-testing.md](differential-testing.md))
 
-**Location**: `blvm-consensus/tests/`, `blvm-consensus/fuzz/`, `blvm-consensus/src/`
 
+## Source
+
+- [scripts/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/scripts/README.md) (test data helpers); [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) (verification workflows)
+- [consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/mod.rs)
+- [formal-verification.md](../consensus/formal-verification.md)
+- [tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests)
+- [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
+- [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs)
+- [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- [blvm-consensus/tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/), [blvm-consensus/fuzz/](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz/), [blvm-consensus/src/](https://github.com/BTCDecoded/blvm-consensus/tree/main/src/) (blvm-consensus/fuzz/blvm-consensus/src/`)
 ## See Also
 
 - [Property-Based Testing](property-based-testing.md) - Verify mathematical invariants

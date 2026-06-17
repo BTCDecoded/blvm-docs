@@ -56,10 +56,9 @@ graph TB
 - Multi-transport support (TCP, Quinn QUIC, Iroh)
 - Peer connection management
 - Message routing and relay
-- Privacy protocols (Dandelion++, Fibre)
+- Privacy protocols (Dandelion++ when `dandelion` feature enabled; FIBRE via **`blvm-fibre`** module)
 - Package relay (BIP331)
 
-**Code**: [network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (module root), [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (connection and message handling)
 
 ### Storage Layer
 - Database abstraction with multiple backends (see [Storage Backends](storage-backends.md))
@@ -71,7 +70,6 @@ graph TB
 - Transaction indexing
 - Pruning support
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
 
 ### RPC Server
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
@@ -81,7 +79,6 @@ graph TB
 - Authentication and rate limiting
 - Method coverage
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mod.rs)
 
 ### Module System
 - Process-isolated modules (see [Module System Architecture](../architecture/module-system.md))
@@ -90,7 +87,6 @@ graph TB
 - Permission-based API access
 - Hot reload support
 
-**Code**: [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 
 ### Mempool Manager
 - Transaction validation and storage
@@ -100,29 +96,24 @@ graph TB
 - Transaction expiry
 - Advanced indexing (address and value range indexing)
 
-**Code**: [mempool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mempool.rs)
 
 ### Mining Coordinator
-- Block template generation
-- Stratum V2 protocol support
-- Mining job distribution
+- Block template generation (RPC)
+- Stratum V2 (optional `blvm-stratum-v2` module)
 
-**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
 
 ### Payment Processing
-- CTV (CheckTemplateVerify) support
+- CTV (CheckTemplateVerify) when `ctv` feature enabled
 - Lightning Network integration
 - Payment vaults
 - Covenant support
 - Payment state management
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/payment/mod.rs)
 
 ### Governance Integration
 - Optional `[governance]` configuration (e.g. Commons URL, relay toggles) and **`NODE_GOVERNANCE`** P2P capability for extensions such as **ban list sharing**
 - Module-visible governance **events** (proposal lifecycle, webhooks, fork detection) for optional out-of-process modules
 
-**Code**: [config/governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/governance.rs), [network/peer_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/peer_manager.rs) (`governance` feature), [P2P governance extensions](../governance/p2p-governance-messages.md)
 
 ## Design Principles
 
@@ -135,10 +126,10 @@ graph TB
 
 ### Network Features
 - [Multi-transport architecture](transport-abstraction.md) (TCP, QUIC)
-- [Transaction relay](privacy-relay.md) (Dandelion++, Fibre)
-- High-performance block relay (Fibre)
+- [Transaction relay](privacy-relay.md) (Dandelion++; FIBRE via `blvm-fibre` module)
+- High-performance block relay (FIBRE module)
 - [Package relay](package-relay.md) (BIP331)
-- [UTXO commitments](../consensus/utxo-commitments.md) support
+Available in [experimental build variant](../getting-started/installation.md#experimental-variant) or local builds with `utxo-commitments`: [UTXO commitments](../consensus/utxo-commitments.md)
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
 - [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with optional [IBD UTXO engine](ibd-engine.md) (`BLVM_IBD_ENGINE=1`)
 
@@ -162,8 +153,8 @@ graph TB
 
 ### Mining Features
 - Block template generation
-- [Stratum V2 protocol](mining-stratum-v2.md)
-- Merge mining support
+- [Stratum V2 protocol](mining-stratum-v2.md) (optional `blvm-stratum-v2` module)
+- Merge mining (optional `blvm-merge-mining` plugin)
 - [Mining pool coordination](mining.md)
 
 ### Payment Features
@@ -174,7 +165,7 @@ graph TB
 
 ### Integration Features
 - Governance webhook integration
-- ZeroMQ notifications (optional)
+- ZeroMQ notifications (optional **`blvm-zmq`** module — see [ZMQ module](../modules/zmq.md))
 - REST API alongside JSON-RPC
 - Module registry (P2P discovery)
 
@@ -186,7 +177,6 @@ graph TB
 4. **Running**: Validate blocks/transactions, relay messages, serve RPC requests
 5. **Shutdown**: Graceful shutdown of all components
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs)
 
 ## Metrics and Monitoring
 
@@ -198,8 +188,19 @@ The node includes metrics collection:
 - **Performance Metrics**: Block validation time, transaction processing time
 - **System Metrics**: CPU usage, memory usage, disk I/O
 
-**Code**: [metrics.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/metrics.rs)
 
+## Source
+
+- [network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (module root), [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (connection and message handling)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mod.rs)
+- [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
+- [mempool.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mempool.rs)
+- [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/payment/mod.rs)
+- [config/governance.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/governance.rs), [network/peer_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/peer_manager.rs) (`governance` feature), [P2P governance extensions](../governance/p2p-governance-messages.md)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/mod.rs)
+- [metrics.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/metrics.rs)
 ## See Also
 
 - [Installation](../getting-started/installation.md) - Installing the node
@@ -210,4 +211,3 @@ The node includes metrics collection:
 - [Mining Integration](mining.md) - Mining functionality
 - [Module System](../architecture/module-system.md) - Module system architecture
 - [Storage Backends](storage-backends.md) - Storage backend details
-

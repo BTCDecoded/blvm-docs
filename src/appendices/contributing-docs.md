@@ -13,6 +13,8 @@ The public book is built from **`blvm-docs`**: most content is authored in **`sr
 
 ### Content principles (keep docs timeless and accurate)
 
+- **Diátaxis type** — Optional HTML comment on page 1: `<!-- diataxis: tutorial | how-to | reference | explanation -->` (see [Operator guide](../getting-started/operator-guide.md), [Developer guide](../getting-started/developer-guide.md) for hub examples).
+
 - **Current state only** — Describe how things work and where things live now. Do not describe what was removed, refactored, or "we recently changed X."
 - **No plan artifacts** — No task IDs, "Phase 2", "we removed X", or references to internal plans or WIP.
 - **No unsubstantiated numbers** — Do not claim specific speedups (e.g. "10-50x faster") unless citing published benchmarks. Describe optimizations and point to benchmarks.thebitcoincommons.org or local runs.
@@ -26,6 +28,17 @@ The public book is built from **`blvm-docs`**: most content is authored in **`sr
 - **No meta openers** — Do not restate the page title ("This document explains…", "This guide covers…"). Start with substance.
 - **No hedge labels** — Avoid `(illustrative)`, `(non-binding)`, "napkin math", and similar disclaimers. Either cite a benchmark source, give a concrete example with its assumptions, or say figures depend on deployment—once, without stacking qualifiers.
 - **Plain adjectives** — Cut filler (`comprehensive`, `robust`, `seamless`, `unified`) when they add no information. Prefer what the code actually does.
+- **Experimental compile-time features** — Flag sections that need non-`production` builds with a blockquote at the section or page top: `> **Experimental build** — …` linking to [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+- **Admonitions** — Use HTML callouts for operator-critical notes (styles in `custom.css`):
+
+```html
+<div class="admonition danger">
+<div class="admonition-title">Danger</div>
+Stop bitcoind before migrating a Core datadir.
+</div>
+```
+
+Types: `note`, `tip`, `warning`, `danger`. Prefer these over bare bold for data-loss or security-critical instructions.
 
 Follow the **Content principles** above and the [Contributing](../development/contributing.md) chapter.
 

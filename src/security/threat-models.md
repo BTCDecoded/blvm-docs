@@ -26,7 +26,6 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Cryptographic key generation (delegated to blvm-sdk or modules)
 - Governance enforcement (delegated to blvm-commons)
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Module System Security Boundaries
 
@@ -35,7 +34,6 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Node consensus state is protected and read-only to modules
 - Module crashes are isolated and do not affect the base node
 
-**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
 
 **What Modules Cannot Do**:
 - Modify consensus rules
@@ -44,7 +42,6 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Bypass security boundaries
 - Affect other modules
 
-**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
 
 ## Threat Model: Pre-Production Testing
 
@@ -63,7 +60,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Network partitioning attacks
 - Malicious peer injection
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Threats That Apply
 
@@ -73,7 +69,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - **Resource exhaustion** (DoS)
 - **Supply chain attacks** on dependencies
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Threat Model: Mainnet Deployment
 
@@ -91,7 +86,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - **Resource exhaustion** - memory/CPU DoS
 - **Protocol manipulation** - malformed messages
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Attack Vectors
 
@@ -106,7 +100,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Geographic diversity requirements
 - ASN diversity tracking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Sybil Attacks
 
@@ -118,7 +111,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Peer reputation tracking
 - Ban list sharing
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Resource Exhaustion (DoS)
 
@@ -131,7 +123,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Resource monitoring
 - Per-user RPC rate limiting
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Protocol Manipulation
 
@@ -144,7 +135,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Property-based testing
 - Network protocol validation
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Memory Corruption
 
@@ -156,7 +146,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Fuzzing with sanitizers (ASAN, UBSAN, MSAN)
 - Runtime assertions
 
-**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ### Integer Overflow
 
@@ -168,7 +157,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Property-based testing
 - Runtime assertions
 
-**Code**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ### Supply Chain Attacks
 
@@ -180,7 +168,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Minimal dependency set
 - Trusted dependency sources
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Security Hardening
 
@@ -198,7 +185,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Add eclipse attack prevention
 - Add storage bounds checking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Production Readiness
 
@@ -207,7 +193,6 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 - Formal verification of critical paths
 - Advanced peer management
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Module System Security
 
@@ -220,7 +205,6 @@ Modules run in separate processes:
 - **Crash Isolation**: Module crashes don't affect node
 - **Resource Limits**: CPU, memory, and network limits enforced
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
 
 ### Sandboxing
 
@@ -231,7 +215,6 @@ Modules are sandboxed:
 - **Process**: Resource limits enforced
 - **Capabilities**: Permission-based access control
 
-**Code**: [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs)
 
 ### Permission System
 
@@ -242,7 +225,6 @@ Modules require explicit permissions:
 - **Resource Limits**: Enforced resource limits
 - **Request Validation**: All requests validated
 
-**Code**: [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
 
 ## RPC Security
 
@@ -254,7 +236,6 @@ RPC authentication implemented:
 - **Certificate-Based**: Certificate-based authentication
 - **Configurable**: Authentication method configurable
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Rate Limiting
 
@@ -264,7 +245,6 @@ RPC rate limiting implemented:
 - **Token Bucket**: Token bucket algorithm
 - **Configurable**: Rate limits configurable
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Input Validation
 
@@ -274,7 +254,6 @@ RPC input validation:
 - **Validation**: Input validation
 - **Access Control**: Access control via authentication
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Network Security
 
@@ -287,7 +266,6 @@ DoS protection mechanisms:
 - **Auto-Ban**: Automatic banning of abusive peers
 - **Resource Monitoring**: Resource usage monitoring
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ### Eclipse Attack Prevention
 
@@ -298,7 +276,6 @@ Eclipse attack prevention:
 - **Geographic Diversity**: Geographic diversity requirements
 - **ASN Diversity**: ASN diversity tracking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## Storage Security
 
@@ -311,7 +288,6 @@ Storage layer security:
 - **Database Abstraction**: Allows switching backends explicitly
 - **Storage Bounds**: Storage bounds checking
 
-**Code**: [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 
 ## LAN Peering Security
 
@@ -324,7 +300,6 @@ The LAN peering system includes multiple security mechanisms to prevent eclipse 
 - **Minimum 3 Internet Peers**: Required for checkpoint validation consensus
 - **Maximum 1 Discovered LAN Peer**: Limits automatically discovered peers (whitelisted are separate)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Checkpoint Validation
 
@@ -335,7 +310,6 @@ Internet checkpoints are the **primary security mechanism** for LAN peering:
 - **Consensus Requirement**: Requires agreement from at least 3 internet peers
 - **Failure Response**: Checkpoint failure results in permanent ban (1 year duration)
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Progressive Trust System
 
@@ -347,7 +321,6 @@ LAN peers start with limited trust and earn higher priority over time:
 - **Demotion**: After 3 failures, peer loses LAN status
 - **Banning**: Checkpoint failure results in permanent ban
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 ### Eclipse Attack Prevention
 
@@ -358,14 +331,22 @@ The security model ensures eclipse attack prevention:
 3. **LAN Address Privacy**: LAN addresses never advertised to external peers
 4. **Failure Handling**: Multiple failures result in demotion or ban
 
-**Code**: [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
 
 For complete documentation, see [LAN Peering System](../node/lan-peering.md).
 
+## Source
+
+- [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
+- [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
+- [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
+- [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs)
+- [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
+- [blvm-node/SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md), [blvm-node/src/module/](https://github.com/BTCDecoded/blvm-node/tree/main/src/module/), [blvm-node/docs/MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md) (blvm-node/src/module/blvm-node/docs/MODULE_SYSTEM.md`)
 ## See Also
 
 - [LAN Peering System](../node/lan-peering.md) - Complete LAN peering documentation
-- [Security Controls](security-controls.md) - Security control implementation
+- [PR security control classification](../development/security-controls.md) - Automated PR classification (contributors)
 - [Developer Security Checklist](../appendices/templates/DEVELOPER_SECURITY_CHECKLIST.md) - Security checklist for developers
 - [Security Architecture Review Template](../appendices/templates/ARCHITECTURE_REVIEW_TEMPLATE.md) - Architecture review process
 - [Security Testing Template](../appendices/templates/SECURITY_TESTING_TEMPLATE.md) - Security testing guidelines
@@ -382,6 +363,3 @@ The threat model and security boundaries include:
 - RPC security (authentication, rate limiting)
 - Network security (DoS protection, eclipse prevention)
 - Storage security
-
-**Location**: `blvm-node/SECURITY.md`, `blvm-node/src/module/`, `blvm-node/docs/MODULE_SYSTEM.md`
-

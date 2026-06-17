@@ -13,7 +13,6 @@ Bitcoin Commons optionally supports JSON-RPC over **HTTP/3 on QUIC** using Quinn
 - **Better Performance**: Lower latency, better congestion control
 - **Backward Compatible**: TCP RPC server always available
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## Usage
 
@@ -28,7 +27,6 @@ let mut rpc_manager = RpcManager::new(tcp_addr);
 rpc_manager.start().await?;
 ```
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ### With QUIC Support
 
@@ -51,7 +49,6 @@ rpc_manager.enable_quinn(quinn_addr);
 rpc_manager.start().await?;
 ```
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## Configuration
 
@@ -64,7 +61,6 @@ QUIC RPC requires the `quinn` feature flag:
 blvm-node = { path = "../blvm-node", features = ["quinn"] }
 ```
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ### Build with QUIC
 
@@ -72,7 +68,6 @@ blvm-node = { path = "../blvm-node", features = ["quinn"] }
 cargo build --features quinn
 ```
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## QUIC RPC Server
 
@@ -85,7 +80,6 @@ The `QuinnRpcServer` provides JSON-RPC over QUIC:
 - **Stream Management**: Manages bidirectional streams
 - **Request Processing**: Processes JSON-RPC requests
 
-**Code**: [quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs)
 
 ### Certificate Management
 
@@ -95,7 +89,6 @@ QUIC uses TLS certificates:
 - **Production**: Should use proper certificate management
 - **Certificate Generation**: Automatic certificate generation
 
-**Code**: [quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs)
 
 ## Client Usage
 
@@ -125,7 +118,6 @@ recv.read_to_end(&mut response).await?;
 let response_str = String::from_utf8(response)?;
 ```
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## Benefits Over TCP
 
@@ -135,7 +127,6 @@ let response_str = String::from_utf8(response)?;
 4. **Lower Latency**: Better congestion control
 5. **Stream-Based**: Natural fit for request/response patterns
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## Limitations
 
@@ -144,7 +135,6 @@ let response_str = String::from_utf8(response)?;
 - **Certificate Management**: Self-signed certs need proper handling for production
 - **Network Requirements**: Some networks may block UDP/QUIC
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## Security Notes
 
@@ -152,7 +142,6 @@ let response_str = String::from_utf8(response)?;
 - **Authentication**: HTTP/3 carries **`Authorization`** like TCP HTTP; QUIC adds transport encryption
 - **Same Security Boundaries**: QUIC RPC has same security boundaries as TCP RPC (no wallet access)
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## When to Use
 
@@ -161,7 +150,6 @@ let response_str = String::from_utf8(response)?;
 - **Enhanced Security**: When you want built-in encryption without extra TLS layer
 - **Internal Services**: When you control both client and server
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## When Not to Use
 
@@ -169,7 +157,6 @@ let response_str = String::from_utf8(response)?;
 - **Legacy Clients**: Clients that only support TCP/HTTP
 - **Simple Use Cases**: TCP RPC is simpler and sufficient for most cases
 
-**Code**: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 
 ## Components
 
@@ -180,5 +167,9 @@ The QUIC RPC system includes:
 - JSON-RPC protocol over QUIC
 - Client support examples
 
-**Location**: `blvm-node/src/rpc/quinn_server.rs`, `blvm-node/docs/QUIC_RPC.md`
+## Source
+
+- [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
+- [quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs)
+- [blvm-node/src/rpc/quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs), [blvm-node/docs/QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md) (blvm-node/docs/QUIC_RPC.md`)
 

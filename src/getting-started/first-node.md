@@ -207,7 +207,7 @@ You need **a peer that already has blocks**, or a **datadir that already contain
 
 **1. Second regtest full node (typical way to create blocks)**
 
-The commands below use **Bitcoin Core** (`bitcoind` / `bitcoin-cli`) **only** as a separate regtest peer to generate blocks. They are **not** BLVM configuration: your BLVM node still uses **`blvm.toml`** and the **`blvm`** binary. Map Core **`rpcuser`** / **`rpcpassword`** to **`[rpc_auth].username`** / **`password`** (HTTP Basic) or to Bearer **`tokens`** / **`admin_tokens`** — see [RPC API — Authentication](rpc-api.md).
+The commands below use **Bitcoin Core** (`bitcoind` / `bitcoin-cli`) **only** as a separate regtest peer to generate blocks. They are **not** BLVM configuration: your BLVM node still uses **`blvm.toml`** and the **`blvm`** binary. Map Core **`rpcuser`** / **`rpcpassword`** to **`[rpc_auth].username`** / **`password`** (HTTP Basic) or to Bearer **`tokens`** / **`admin_tokens`** — see [RPC API — Authentication](../node/rpc-api.md).
 
 Run a reference regtest daemon on default P2P **`127.0.0.1:18444`**, mine some blocks, then run BLVM on a **different** local P2P port and peer **outbound** to it. Example using the common `bitcoind` / `bitcoin-cli` CLI:
 
@@ -255,7 +255,7 @@ On a normal node (RPC server wired with `NetworkManager`), `submitblock` require
 
 If `MiningRpc` is used without a network manager (some tests or minimal tooling), `submitblock` remains **validation-only** and does not advance the chain.
 
-If you use the workspace **local harness** (`BitcoinCommons/local/regtest-two-blvm.sh`), `regtest-two-node-seed-bootstrap.toml` is wired for a regtest seed on **:18444** and BLVM P2P on **:18445**. After the seed has blocks, run **`./local/regtest-two-blvm.sh start-seed-bootstrap`**, then **`start-follower`** (or **`start-both`** after the seed has height > 0) as documented in the script header.
+If you use the **local regtest harness** (`BitcoinCommons/local/regtest-two-blvm.sh`), `regtest-two-node-seed-bootstrap.toml` is wired for a regtest seed on **:18444** and BLVM P2P on **:18445**. After the seed has blocks, run **`./local/regtest-two-blvm.sh start-seed-bootstrap`**, then **`start-follower`** (or **`start-both`** after the seed has height > 0) as documented in the script header.
 
 ## RPC interface (regtest)
 

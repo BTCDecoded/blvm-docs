@@ -1,5 +1,7 @@
 # Stratum V2 Mining Protocol
 
+> **Experimental build** — Node `stratum-v2` P2P demux and related compile-time flags are not in stable GitHub Release binaries (`production`). Use the **`blvm-stratum-v2`** module for miner TCP in all builds. See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+
 ## Overview
 
 The Stratum V2 mining stack is implemented primarily in the **`blvm-stratum-v2`** module repository (pool/server/protocol). The reference node integrates **P2P-side** handling: TLV-shaped bytes on the Bitcoin transport can be demuxed into `NetworkMessage::StratumV2MessageReceived` for the Stratum module. **Dedicated miner TCP** is bound only by **`blvm-stratum-v2`**, not by the node process.
@@ -30,13 +32,11 @@ Miners connect to **`blvm-stratum-v2`**’s configured `listen_addr`. The node d
 
 When the `stratum-v2` feature is enabled and **`[stratum_v2].p2p_stratum_demux`** is **`true`** (default), the network layer may detect Stratum V2 TLV on P2P bytes and emit **`NetworkMessage::StratumV2MessageReceived`** for dispatch to modules. Set **`p2p_stratum_demux = false`** to disable that path (miner TCP on **`blvm-stratum-v2`** is unchanged).
 
-**Code**: [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), [network_message_dispatch.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_message_dispatch.rs), [network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (message variants)
 
 ### Transport
 
 Mining traffic uses the same transport stack as P2P; see [Transport abstraction](transport-abstraction.md).
 
-**Code**: [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
 
 ## Merge mining (optional plugin)
 
@@ -75,7 +75,6 @@ listen_addr = "0.0.0.0:3333"
 pool_url = "stratum+tcp://pool.example.com:3333"  # optional pool mode
 ```
 
-**Code**: [StratumV2Config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/rpc.rs)
 
 ## Usage
 
@@ -92,3 +91,10 @@ Integrate via the **`blvm-stratum-v2`** crate as a **node module** ([`StratumV2M
 - [Mining integration](mining.md)
 - [Modules overview](../modules/overview.md)
 - [Stratum V2 module](../modules/stratum-v2.md)
+
+## Source
+
+- [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), [network_message_dispatch.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_message_dispatch.rs), [network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (message variants)
+- [transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs)
+- [StratumV2Config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/rpc.rs)
+

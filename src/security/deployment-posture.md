@@ -57,6 +57,20 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 
 - **Required acknowledgment:** BLVM remains **pre-production for mainnet high assurance** unless your organization has independently validated releases — see **[Threat models](threat-models.md)** and **[SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)**.
 
+## Before mainnet (first sync checklist)
+
+Complete before running a mainnet node or exposing RPC beyond loopback:
+
+1. **Release verification** — Download from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
+2. **Sync path** — Use [Mainnet initial sync](../getting-started/mainnet-sync.md) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
+3. **Data directory** — Dedicated path (e.g. `~/.local/share/blvm-mainnet`); restrict filesystem permissions to the node OS user.
+4. **IBD tuning** — Review bundled `blvm-mainnet-ibd.toml.example`; optional `BLVM_IBD_ENGINE` per [IBD UTXO engine](../node/ibd-engine.md).
+5. **Modules** — Keep third-party modules disabled during first sync; verify maintainer policy before production enablement.
+6. **Backups** — Plan snapshot/backup policy; snapshot `data_dir` when stopped or per [Storage backends](../node/storage-backends.md).
+7. **RPC exposure** — Before binding RPC off loopback, complete the [Minimum checklist (non-loopback RPC)](#minimum-checklist-non-loopback-rpc) below.
+
+Then meet **Required** items under **Supported contexts → Mainnet** above.
+
 ## Minimum checklist (non-loopback RPC)
 
 1. Set **`rpc_auth.required = true`** (or equivalent env) **unless** RPC listens only on **`127.0.0.1`** / **`::1`** (loopback).

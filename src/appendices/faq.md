@@ -1,199 +1,107 @@
 # Frequently Asked Questions
 
-## General Questions
+Short answers for operators and developers. Governance philosophy and tier mechanics: [Governance Overview](../governance/overview.md) and [Governance Model](../governance/governance-model.md).
 
-### What is Bitcoin Commons?
-
-Bitcoin Commons combines [BLVM](../introduction.md) (spec-first implementation stack) with a forkable governance framework. See [Introduction](../introduction.md) and [Governance Overview](../governance/overview.md).
-
-### How does this relate to other Bitcoin implementations?
-
-The widely deployed reference stack is one mature codebase and informal governance. Bitcoin Commons adds: (1) BLVM — mathematical rigor and a normative Orange Paper, (2) Commons — forkable governance. The goals are implementation diversity and verifiable specs alongside strong consensus testing.
-
-### Is this a fork of Bitcoin?
-
-No. Neither BLVM nor Bitcoin Commons forks Bitcoin's blockchain or consensus rules. BLVM publishes the Orange Paper spec for alternative implementations. Bitcoin Commons publishes governance rules for coordination. Both maintain full Bitcoin consensus compatibility.
-
-### Is the system production ready?
-
-BLVM provides a complete node implementation with core components, formal verification tooling, and broad tests. **Readiness depends on your deployment**: governance is not universally activated, and you must apply your own security review, hardening, RPC authentication, and monitoring. See [Node Configuration](../node/configuration.md), [Security](../security/security-controls.md), and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md).
-
-### How do BLVM and Bitcoin Commons work together?
-
-BLVM holds the Orange Paper spec and verification stack; Bitcoin Commons holds governance rules and merge enforcement. Production deployments still need your own engineering and operations.
-
-### What are the two innovations?
-
-**BLVM (Bitcoin Low-Level Virtual Machine)**: Technical innovation combining the [Orange Paper](../reference/orange-paper.md) (normative math spec), [formal verification](../consensus/formal-verification.md) (**BLVM Specification Lock** / Z3), and a compiler-like split between spec and implementation. See [Introduction](../introduction.md) and [Consensus Overview](../consensus/overview.md).
-
-**Bitcoin Commons (Cryptographic Commons)**: Governance innovation providing forkable governance through Ostrom's principles, cryptographic enforcement, [5-tier governance model](../governance/layer-tier-model.md), and [transparent audit trails](../governance/audit-trails.md). This ensures coordination. See [Governance Overview](../governance/overview.md) for details.
-
-### What's the relationship between Bitcoin Commons and BTCDecoded?
-
-Bitcoin Commons is the governance framework; BTCDecoded is the first full implementation of BLVM and Commons. Other teams can adopt the same spec and governance model independently.
-
-### What is Bitcoin Commons (the governance framework)?
-
-Bitcoin Commons is a forkable governance framework: Ostrom-style commons rules enforced with cryptographic signatures, forkable policy YAML, and audit trails. See [Governance Overview](../governance/overview.md).
-
-### How does Bitcoin Commons governance work?
-
-Bitcoin Commons uses a 5-tier constitutional governance model with graduated signature thresholds ([[gov:tier_1_signatures]] for routine maintenance, up to [[gov:layer_1_signatures]] for constitutional layers) and review periods ([[gov:tier_1_review_days]] days to [[gov:layer_1_consensus_review_days]] days for consensus changes on layers 1–2). All governance actions are cryptographically signed and transparently auditable. Users can fork governance rules if they disagree, creating exit competition.
-
-### What makes Bitcoin Commons governance "6x harder to capture"?
-
-Multiple mechanisms: (1) Forkable governance rules allow users to exit if governance is captured, (2) Multiple implementations compete, preventing monopoly, (3) Cryptographic enforcement makes power visible and accountable, (4) Economic alignment through merge mining, (5) Graduated thresholds prevent rapid changes, (6) Transparent audit trails.
-
-### How does forkable governance work?
-
-Users can fork the governance rules (not just the code) if they disagree with decisions. This creates exit competition: if governance is captured, users can fork to a better governance model while maintaining Bitcoin consensus compatibility. The threat of forking prevents capture.
-
-### What are Ostrom's principles?
-
-Elinor Ostrom's Nobel Prize-winning research identified 8 principles for managing commons successfully. Bitcoin Commons applies these through: clearly defined boundaries, proportional equivalence, collective choice, monitoring, graduated sanctions, conflict resolution, minimal recognition of rights, and nested enterprises.
-
-### Why do you need both BLVM and Bitcoin Commons?
-
-BLVM covers the technical stack (Orange Paper, consensus, node). Bitcoin Commons covers governance (tiers, signatures, fork rules). They share repository boundaries but serve different roles.
-
-### How does the modular architecture combine both innovations?
-
-The modular architecture has three layers: (1) **Mandatory Consensus** (shared **blvm-consensus** rules and verification policy), (2) **Optional Modules** (Commons enables competition), (3) **Economic Coordination** (module marketplace funds infrastructure). Consensus stays in one layer; Commons coordinates changes and releases. The architecture is where both meet.
-
-### Can you use BLVM without Bitcoin Commons governance?
-
-Yes. BLVM is a technical stack usable on its own. Without Bitcoin Commons governance you do not get this project’s governance model. BLVM supplies the spec and implementation stack; Commons supplies coordination between alternatives.
-
-### Can you use Bitcoin Commons governance without BLVM?
-
-The governance framework can apply to other implementations. BLVM’s Orange Paper and verification stack give a shared spec and Z3-backed proofs on spec-locked code; any codebase still needs correct implementation and review to stay aligned with mainnet.
-
-### What happens if governance is captured?
-
-Forkable governance means users can fork to a better governance model. This creates exit competition: captured governance loses users to better-governed implementations. The threat of forking prevents capture. Here you can fork **governance rules**, not only application code.
-
-### How does economic alignment work?
-
-Through the module marketplace. Module authors receive 75% of sales, Commons receives 15% for infrastructure, and node operators receive 10%. This creates sustainable funding while incentivizing quality module development.
-
-### What is merge mining?
-
-Merge mining is available as a separate paid plugin module (`blvm-merge-mining`). It allows miners to mine multiple blockchains simultaneously using the same proof-of-work. However, merge mining is not a Commons funding model - revenue goes to the module developer, not to Commons infrastructure.
-
-### What features does BLVM provide?
-
-The Orange Paper, blvm-consensus (with formal verification tooling), blvm-protocol, blvm-node, blvm-sdk, and blvm-commons (governance enforcement) exist as implemented layers. **Governance rules are not yet activated in production**; treat the stack as experimental until your deployment’s activation criteria are met. See [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) and [Governance Overview](../governance/overview.md).
-
-### How is Bitcoin Commons governance implemented?
-
-Bitcoin Commons governance uses a 5-tier constitutional model with cryptographic enforcement. Governance rules are defined, the governance-app is implemented, and cryptographic primitives are available. Governance activation requires a suitable cohort of keyholders to be onboarded. See [Governance Overview](../governance/overview.md) for details.
-
-### How does governance activation work?
-
-Governance activation requires a suitable cohort of keyholders to be onboarded. This involves security audits, keyholder onboarding, governance app deployment, and community testing. See [Governance Overview](../governance/overview.md) and [Keyholder Procedures](../governance/keyholder-procedures.md) for details.
-
-### How can I contribute?
-
-Review BLVM code and formal proofs, review Bitcoin Commons governance rules, submit issues and pull requests, help with testing and security audits, build your own implementation using both innovations, or participate in governance discussions.
-
-### Can I build my own implementation?
-
-Yes! You can use BLVM's technical stack (Orange Paper, blvm-consensus) and adopt Bitcoin Commons governance framework. Fork the governance model, customize it for your organization, and build your own Bitcoin-compatible implementation. See the [Implementations Registry](https://github.com/BTCDecoded/governance/blob/main/IMPLEMENTATIONS_REGISTRY.md).
-
-### Where is the code?
-
-All code is open source on GitHub under the [BTCDecoded organization](https://github.com/BTCDecoded). Key repositories: BLVM (blvm-spec/Orange Paper, blvm-consensus, blvm-protocol, blvm-node, blvm-sdk) and Commons (governance, governance-app).
-
-### What documentation should I read?
-
-[White Paper](https://thebitcoincommons.org/whitepaper.html) for complete technical and governance overview, [Unified Documentation](https://docs.thebitcoincommons.org) for technical documentation, and [Governance Docs](https://github.com/BTCDecoded/governance) for governance rules and processes.
-
-### Why "commons"?
-
-Bitcoin's codebase is a commons: a shared resource that benefits everyone but no one owns. Traditional commons fail due to tragedy of the commons. Ostrom showed how to manage commons successfully. Bitcoin Commons applies these proven principles through cryptographic enforcement.
-
-### How does this relate to cypherpunk philosophy?
-
-Cypherpunks focused on eliminating trusted third parties in transactions. Bitcoin Commons extends this to development: reduce reliance on trusted parties in governance through cryptographic enforcement, transparency, and forkability. BLVM extends this to implementation: open specs, tests, review, and **BLVM Specification Lock** where applied—not a single blanket proof of every line.
-
-## Technical Questions
+## General
 
 ### What is BLVM?
 
-BLVM (Bitcoin Low-Level Virtual Machine) is a compiler-like infrastructure for Bitcoin implementations. It includes: (1) Orange Paper—complete mathematical specification serving as the IR (intermediate representation), (2) **blvm-consensus**—implementation **validated against** that spec (not generated from the IR), (3) optimization passes—runtime optimizations on the implementation, (4) **blvm-protocol**—Bitcoin abstraction layer, (5) **blvm-node**—full node implementation, (6) **blvm-sdk**—developer toolkit.
+BLVM (Bitcoin Low-Level Virtual Machine) is compiler-like infrastructure for Bitcoin: the [Orange Paper](../reference/orange-paper.md) spec, **blvm-consensus**, **blvm-protocol**, **blvm-node**, and **blvm-sdk**. See [Introduction](../introduction.md).
 
-### What is the Orange Paper?
+### Is this a fork of Bitcoin?
 
-The Orange Paper is a complete mathematical specification of Bitcoin's consensus protocol, produced from analysis of the widely deployed implementation using AI-assisted extraction. It serves as the "intermediate representation" (IR) in BLVM's compiler-like architecture. The implementation is **validated against** this spec (not generated from it). **blvm-consensus** implements those rules with tests, review, and **BLVM Specification Lock** proofs on spec-locked code.
+No. BLVM does not fork Bitcoin’s chain or consensus rules. It implements the same consensus rules as mainnet Bitcoin.
 
-### How does formal verification work in BLVM?
+### Is the system production ready?
 
-BLVM uses **BLVM Specification Lock** (Z3) for formal proofs on spec-locked consensus functions, together with tests and review. The Orange Paper is the specification; **blvm-consensus** implements it. See [Formal Verification](../consensus/formal-verification.md).
+BLVM ships a full node stack with tests and formal verification tooling, but **readiness depends on your deployment**: apply your own security review, RPC hardening, and monitoring. Governance is not universally activated. See [Deployment posture](../security/deployment-posture.md) and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md).
 
-### How is BLVM different from a typical full-node codebase?
+### Where is the code?
 
-Many deployments embed consensus in a large C++ codebase without a single companion IR like the Orange Paper. BLVM provides: (1) mathematical specification (Orange Paper), (2) **BLVM Specification Lock** (Z3 proofs on spec-locked code), (3) proofs co-located with code, (4) a compiler-like split (spec vs implementation) for alternative implementations. BLVM is a **different** development and verification stack, not a drop-in replacement for any one node.
+Repositories under [BTCDecoded](https://github.com/BTCDecoded) (e.g. `blvm`, `blvm-node`, `blvm-consensus`). The umbrella release binary is built from the `blvm` crate.
 
-### What does "compiler-like architecture" mean?
-
-Like a compiler has a spec (IR) and implementation (machine code), BLVM has the Orange Paper as the spec (IR) and **blvm-consensus** as the implementation. The implementation is **validated against** the Orange Paper—it is not generated or transformed from the IR. Optimization passes optimize the implementation code. Multiple implementations can target the same Orange Paper; operating on mainnet also requires sound deployment and operations.
-
-### What is formal verification in BLVM?
-
-**BLVM Specification Lock** produces Z3 proofs for spec-locked functions against Orange Paper contracts. The Orange Paper remains the normative spec for the full rule set. See [Formal Verification](../consensus/formal-verification.md).
-
-### How many formal proofs does BLVM have?
-
-The set of spec-locked functions grows over time. Run `cargo spec-lock verify` in **blvm-consensus** or see [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
-
-### What does "proofs locked to code" mean?
-
-Spec-lock proofs live next to the functions they verify. Changing those functions requires updating proofs. Full proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
-
-### How does BLVM prevent consensus bugs?
-
-Through multiple layers: (1) Orange Paper specifies the rules, (2) Tests and integration catch regressions, (3) **BLVM Specification Lock** proves spec-locked consensus code against those rules, (4) Consensus logic lives in **blvm-consensus** so the node does not reimplement rules, (5) Review and tooling catch what automation misses. See [Formal Verification](../consensus/formal-verification.md).
-
-### How does cryptographic enforcement work?
-
-All governance actions require cryptographic signatures from maintainers. The governance-app (GitHub App) verifies signatures, enforces thresholds (e.g., [[gov:layer_1_signatures]] on constitutional layers), and blocks merges until requirements are met. This makes power visible and accountable: you can see who signed what, when.
-
-### What BIPs are implemented?
-
-BLVM implements numerous Bitcoin Improvement Proposals. See [Protocol Specifications](../reference/protocol-specifications.md) for a complete list, including consensus-critical BIPs (BIP65, BIP112, BIP68, BIP113, BIP125, BIP141/143, BIP340/341/342), network protocol BIPs (BIP152, BIP157/158, BIP331), and application-level BIPs (BIP21, BIP32/39/44, BIP174, BIP350/351).
-
-### What storage backends are supported?
-
-The node supports multiple storage backends. With `database_backend = "auto"` (default), the backend is chosen by build features: **heed3 (LMDB)** when the `heed3` feature is enabled, then RocksDB, TidesDB, Redb, Sled. **Default `blvm` / `blvm-node` release builds enable `heed3`, so `auto` is usually heed3 on disk.** Use `database_backend = "rocksdb"` to keep an existing RocksDB datadir. Options include **heed3**, **rocksdb** (Core LevelDB / `blk*.dat` interop), **redb**, **sled**, and **tidesdb**. See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](../reference/configuration-reference.md) for details.
-
-### What transport protocols are supported?
-
-The network layer supports multiple transport protocols: **TCP** (default, Bitcoin P2P compatible) and **Iroh/QUIC** (experimental). See [Network Protocol](../protocol/network-protocol.md) for details.
+## Running a node
 
 ### How do I install BLVM?
 
-Pre-built binaries are available from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases). See [Installation](../getting-started/installation.md) for platform-specific instructions.
+Pre-built packages and binaries: [Installation](../getting-started/installation.md). Verify checksums on every download.
 
-### What experimental features are available?
+### How do I run my first node?
 
-The experimental build variant adds compile-time features such as: UTXO commitments, BIP119 CTV (CheckTemplateVerify), Dandelion++ privacy relay, Stratum V2 (`stratum-v2`), and enhanced signature operations counting. **BIP158 compact block filter support** is included in **default** builds as well (CLI/ENV “BIP158” flags record preference; there is no `bip158` Cargo feature). See [Installation](../getting-started/installation.md#experimental-variant) for details.
+[Quick Start](../getting-started/quick-start.md) (regtest, ~5 minutes) or [First Node Setup (regtest)](../getting-started/first-node.md) (config file). **Mainnet:** [Mainnet initial sync](../getting-started/mainnet-sync.md) — not bare `blvm --network mainnet`.
+
+### What must I do before mainnet?
+
+See [Deployment posture](../security/deployment-posture.md) — RPC auth, bind addresses, release verification, backups, and module supply chain.
 
 ### How do I configure the node?
 
-Configuration can be done via config file (`blvm.toml`), environment variables, or command-line options. See [Node Configuration](../node/configuration.md) for complete configuration options.
+`blvm.toml`, CLI flags, and `BLVM_*` environment variables. Precedence: CLI > ENV > file > defaults. [Node Configuration](../node/configuration.md), [Configuration Reference](../reference/configuration-reference.md).
 
-### Can I start BLVM from an existing Bitcoin Core datadir?
+### Can I start from an existing Bitcoin Core datadir?
 
-Yes, with the default **`rocksdb`** build: stop **`bitcoind`**, point **`--datadir`** at a synced Core tree, and **`blvm start`** migrates once to **`<datadir>/blvm/`**. See [Operations — Starting from a Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
+Yes, with the **`rocksdb`** feature (default release binaries): stop **`bitcoind`**, point **`--datadir`** at a synced Core tree, migrate once to **`<datadir>/blvm/`**. See [Operations — Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
+
+### What storage backends are supported?
+
+`database_backend = "auto"` (usually **heed3** in default builds), or explicit **rocksdb**, **redb**, **sled**, **tidesdb**. See [Storage Backends](../node/storage-backends.md).
+
+### What experimental compile-time features exist?
+
+Stable GitHub Releases ship the **base** binary (`production` features). UTXO commitments, Dandelion++, CTV, Stratum V2, Iroh, and related flags need an experimental/source build. See [Installation — experimental variant](../getting-started/installation.md#experimental-build-variant).
 
 ### What RPC methods are available?
 
-The node implements many JSON-RPC methods aligned with widely documented Bitcoin node RPC conventions across blockchain, raw transaction, mempool, network, mining, control, address, transaction, and payment categories. See [RPC API Reference](../node/rpc-api.md) for the list.
+JSON-RPC aligned with common Bitcoin node docs, plus BLVM-specific and module-extended methods. See [RPC API Reference](../node/rpc-api.md) and the parity table there.
+
+### How do I troubleshoot?
+
+[Appendix — Troubleshooting](troubleshooting.md). Mainnet IBD: [Troubleshooting — Mainnet IBD](troubleshooting.md#mainnet-ibd).
+
+## Governance
+
+Questions operators and new contributors often ask before reading the full governance docs.
+
+### Do I need governance to run a node?
+
+No. Running a BLVM node does not require tiers, multisig, or governance tooling. Use the [Operator guide](../getting-started/operator-guide.md) and [Deployment posture](../security/deployment-posture.md). Governance applies when you contribute code, review PRs, or sign releases.
+
+### What is Bitcoin Commons vs BLVM?
+
+BLVM is the technical stack (spec, node, SDK). Bitcoin Commons is the governance framework (tiers, signatures, fork rules). They are related but serve different roles. See [Governance Overview](../governance/overview.md).
+
+### What are layers, tiers, and signatures?
+
+**Layers** map repo areas (consensus, protocol, node, modules). **Tiers** set how many signatures a change needs. **Signatures** are cryptographic approvals from registered keyholders. Constitutional layers need more signatures than extension layers. Details: [Governance Model](../governance/governance-model.md), [Layer-Tier Model](../governance/layer-tier-model.md).
+
+### Why “6x harder to capture”?
+
+Bitcoin Commons applies graduated signature thresholds and review periods so capturing governance requires compromising many independent keyholders across layers—not a single maintainer group. See [Governance Model](../governance/governance-model.md).
+
+## Modules and development
 
 ### How does the module system work?
 
-The node includes a process-isolated module system (Lightning, mesh, privacy modules, etc.). Spawned modules register ModuleAPI over IPC; see [Building modules](../sdk/module-development.md) and [Module IPC Protocol](../architecture/module-ipc-protocol.md).
+Optional features run in isolated processes with IPC. See [Module catalog](../modules/overview.md) and [Building modules](../sdk/module-development.md).
 
-### How do I troubleshoot issues?
+### Can I build my own module?
 
-See [Troubleshooting](../appendices/troubleshooting.md) for common issues and solutions, including node startup problems, storage issues, network connectivity, RPC configuration, module system issues, and performance optimization.
+Yes. Start with [Building your first module](../getting-started/first-module.md), then [Building modules](../sdk/module-development.md).
+
+### How can I contribute?
+
+[Contributing](../development/contributing.md), [Contributing to Documentation](contributing-docs.md).
+
+### What documentation should I read?
+
+Use the [Introduction — Who is this for](../introduction.md#who-is-this-for) paths. Operators: Getting Started + Node + Security. Developers: SDK + Modules. Researchers: Orange Paper + Formal Verification.
+
+## Spec and verification
+
+### What is the Orange Paper?
+
+The normative mathematical specification of Bitcoin consensus—the reference “IR” for BLVM. [Orange Paper](../reference/orange-paper.md).
+
+### How does formal verification work?
+
+**BLVM Specification Lock** links spec-locked Rust code to Orange Paper properties; Z3 proofs and tests complement differential and integration testing. [Formal Verification](../consensus/formal-verification.md).

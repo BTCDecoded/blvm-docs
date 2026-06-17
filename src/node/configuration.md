@@ -130,7 +130,7 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 
 `--enable-stratum-v2`, `--enable-dandelion`, `--enable-sigop` and corresponding `--disable-*` flags (each requires that **compile-time** feature in the binary).
 
-**BIP158:** `--enable-bip158` / `--disable-bip158` adjust **logged** preference only—compact block filter support is **always** built into default `blvm-node` releases (there is no `bip158` Cargo feature flag).
+**BIP158:** `--enable-bip158` / `--disable-bip158` adjust **logged** preference only—compact block filter code is compiled without a separate `bip158` Cargo feature (present in typical `blvm` / `blvm-node` builds).
 
 ### Advanced Options
 
@@ -316,12 +316,12 @@ registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/
 blvm-miniscript = "0.1.*"
 # When a module needs spawn overrides, put the pin in its table as `version`:
 [modules.blvm-zmq]
-version = "0.3.*"
+version = "0.1.*"
 hashblock = "tcp://127.0.0.1:28332"
 # Legacy unpinned allowlist: enabled_modules = ["blvm-miniscript"]
 ```
 
-See [Module System](../architecture/module-system.md) and `blvm-node/modules/README.md` for bootstrap and registry details.
+See [Module System](../architecture/module-system.md) and `blvm-node/modules/README.md` for bootstrap and registry details. ZMQ topic endpoints: [ZMQ module](../modules/zmq.md).
 
 **Module resource limits** (optional) use the **`[module_resource_limits]`** table on **`NodeConfig`**, not `[modules.resource_limits]`:
 

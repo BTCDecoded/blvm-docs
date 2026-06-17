@@ -21,6 +21,16 @@ Bitcoin Commons implements a constitutional governance model that makes Bitcoin 
 
 ## See Also
 
+### Operator quick answers (FAQ)
+
+- [Do I need governance to run a node?](../appendices/faq.md#do-i-need-governance-to-run-a-node)
+- [What is Bitcoin Commons vs BLVM?](../appendices/faq.md#what-is-bitcoin-commons-vs-blvm)
+- [What are layers, tiers, and signatures?](../appendices/faq.md#what-are-layers-tiers-and-signatures)
+- [Why “6x harder to capture”?](../appendices/faq.md#why-6x-harder-to-capture)
+- [Is the system production ready?](../appendices/faq.md#is-the-system-production-ready) (governance is not universally activated)
+
+### Governance docs
+
 - [PR Process](../development/pr-process.md) - How governance applies to pull requests
 - [Layer-Tier Model](layer-tier-model.md) - Layer and tier combination rules
 - [Multisig Configuration](multisig-configuration.md) - Signature threshold configuration

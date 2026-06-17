@@ -6,12 +6,58 @@
 
 - [Installation](getting-started/installation.md)
 - [Quick Start](getting-started/quick-start.md)
+- [Operator guide](getting-started/operator-guide.md)
+- [Developer guide](getting-started/developer-guide.md)
 - [First Node Setup (regtest)](getting-started/first-node.md)
 - [Mainnet initial sync](getting-started/mainnet-sync.md)
+- [Building your first module](getting-started/first-module.md)
 
-# Examples
+# Running a node
 
-- [RBF Configuration Example](examples/rbf-configuration-example.md)
+- [Node Operations](node/operations.md)
+- [Node configuration guide](node/configuration.md)
+- [RPC API Reference](node/rpc-api.md)
+- [Storage Backends](node/storage-backends.md)
+- [Transaction Indexing](node/transaction-indexing.md)
+- [IBD Bandwidth Protection](node/ibd-protection.md)
+- [IBD UTXO engine](node/ibd-engine.md)
+- [LAN Peering System](node/lan-peering.md)
+- [RBF and Mempool Policies](node/rbf-mempool-policies.md)
+- [Transaction relay](node/privacy-relay.md)
+- [Package Relay (BIP331)](node/package-relay.md)
+- [Performance Optimizations](node/performance.md)
+- [QUIC RPC](node/quic-rpc.md)
+- [Mining Integration](node/mining.md)
+- [Stratum V2 + Merge Mining](node/mining-stratum-v2.md)
+- [Transport abstraction](node/transport-abstraction.md)
+- [Node overview](node/overview.md)
+
+# Security
+
+- [Deployment posture](security/deployment-posture.md)
+- [RPC transport × authentication](security/rpc-transport-auth-matrix.md)
+- [Threat Models](security/threat-models.md)
+
+# Building on BLVM
+
+## Developer SDK
+
+- [Overview](sdk/overview.md)
+- [Building modules](sdk/module-development.md)
+- [API Reference](sdk/api-reference.md)
+- [Examples](sdk/examples.md)
+
+## Modules
+
+- [Module catalog](modules/overview.md)
+- [Lightning Network Module](modules/lightning.md)
+- [Commons Mesh Module](modules/mesh.md)
+- [Stratum V2 Module](modules/stratum-v2.md)
+- [Datum Module](modules/datum.md)
+- [Mining OS Module](modules/miningos.md)
+- [Selective Sync Module](modules/selective-sync.md)
+- [FIBRE Module](modules/fibre.md)
+- [ZMQ Module](modules/zmq.md)
 
 # Architecture
 
@@ -40,43 +86,6 @@
 - [Message Formats](protocol/message-formats.md)
 - [Network Protocol](protocol/network-protocol.md)
 
-# Node Implementation
-
-- [Overview](node/overview.md)
-- [Node configuration guide](node/configuration.md)
-- [RBF and Mempool Policies](node/rbf-mempool-policies.md)
-- [Operations](node/operations.md)
-- [RPC API Reference](node/rpc-api.md)
-- [Storage Backends](node/storage-backends.md)
-- [Transaction Indexing](node/transaction-indexing.md)
-- [IBD Bandwidth Protection](node/ibd-protection.md)
-- [IBD UTXO engine](node/ibd-engine.md)
-- [LAN Peering System](node/lan-peering.md)
-- [Mining Integration](node/mining.md)
-- [Stratum V2 + Merge Mining](node/mining-stratum-v2.md)
-- [Transport abstraction](node/transport-abstraction.md)
-- [Transaction relay](node/privacy-relay.md)
-- [Package Relay (BIP331)](node/package-relay.md)
-- [Performance Optimizations](node/performance.md)
-- [QUIC RPC](node/quic-rpc.md)
-
-# Developer SDK
-
-- [Overview](sdk/overview.md)
-- [Building modules](sdk/module-development.md)
-- [API Reference](sdk/api-reference.md)
-- [Examples](sdk/examples.md)
-
-# Modules
-
-- [Module catalog](modules/overview.md)
-- [Lightning Network Module](modules/lightning.md)
-- [Commons Mesh Module](modules/mesh.md)
-- [Stratum V2 Module](modules/stratum-v2.md)
-- [Datum Module](modules/datum.md)
-- [Mining OS Module](modules/miningos.md)
-- [Selective Sync Module](modules/selective-sync.md)
-
 # Governance
 
 - [Overview](governance/overview.md)
@@ -98,6 +107,7 @@
 - [Orange Paper](reference/orange-paper.md)
 - [Protocol Specifications](reference/protocol-specifications.md)
 - [Configuration Reference](reference/configuration-reference.md)
+- [JSON-RPC error reference](reference/rpc-errors.md)
 - [API Index](reference/api-index.md)
 - [Glossary](reference/glossary.md)
 
@@ -106,6 +116,7 @@
 ## Contributing
 
 - [Contributing](development/contributing.md)
+- [PR security control classification](development/security-controls.md)
 - [Repository layout](development/repository-architecture.md)
 - [Rust MSRV vs CI toolchains](development/msrv-note.md)
 - [CI/CD Workflows](development/ci-cd-workflows.md)
@@ -120,17 +131,10 @@
 - [Benchmarking](development/benchmarking.md)
 - [Differential Testing](development/differential-testing.md)
 - [Snapshot Testing](development/snapshot-testing.md)
-- [Known Issues](development/known-issues.md)
-
-# Security
-
-- [Security Controls](security/security-controls.md)
-- [Threat Models](security/threat-models.md)
-- [Deployment posture](security/deployment-posture.md)
-- [RPC transport × authentication](security/rpc-transport-auth-matrix.md)
 
 # Appendices
 
+- [RBF Configuration Example](examples/rbf-configuration-example.md)
 - [Migration Guides](appendices/migration-guides.md)
 - [FAQ](appendices/faq.md)
 - [Troubleshooting](appendices/troubleshooting.md)

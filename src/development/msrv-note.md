@@ -1,27 +1,30 @@
 # Rust MSRV and pinned CI toolchains
 
-Published **`blvm-*`** crates declare **`rust-version`** in **`Cargo.toml`**. For any **`cargo build`** / **`cargo check`** graph, the compiler must satisfy the **maximum** `rust-version` among packages that graph actually compiles.
+Published **`blvm-*`** crates declare **`rust-version`** and **`edition`** in **`Cargo.toml`**. For any **`cargo build`** / **`cargo check`** graph, the compiler must satisfy the **maximum** `rust-version` among packages that graph actually compiles.
 
-## Representative graphs (snapshot — re-audit before releases)
+## Representative graphs (re-audit before releases)
 
 | Role | Typical crates | Effective MSRV (max of declares in graph) |
 |------|----------------|------------------------------------------|
-| Consensus development | `blvm-consensus` + deps | **1.83** |
-| Protocol + consensus | `blvm-protocol` → `blvm-consensus` | **1.83** (consensus dominates) |
-| Node / `blvm` binary | `blvm-node`, `blvm`, SDK integration tests | **1.83** (pulls `blvm-consensus`) |
-| Crypto-only | `blvm-secp256k1` alone | **1.82** |
+| Consensus development | `blvm-consensus` + deps | **1.85** |
+| Protocol + consensus | `blvm-protocol` → `blvm-consensus` | **1.85** (consensus dominates) |
+| Node / `blvm` binary | `blvm-node`, `blvm`, SDK integration tests | **1.85** (pulls `blvm-consensus`) |
+| Crypto-only | `blvm-secp256k1` alone | Check crate `Cargo.toml` |
+
+**Edition:** workspace crates on the node/consensus path use **Rust edition 2024**.
 
 **Inventory command** (multi-repo workspace):
 
 ```bash
 rg '^rust-version' --glob 'Cargo.toml'
+rg '^edition' --glob 'Cargo.toml'
 ```
 
 ## CI vs MSRV
 
-Repositories pin CI via **`rust-toolchain.toml`**; that toolchain is often **newer** than every crate’s declared MSRV. CI green **does not** prove builds on the oldest supported compiler unless you run **`cargo +<msrv> check`** (below).
+The **`blvm`** repository pins CI via **`rust-toolchain.toml`** (currently **1.88.0**). CI green **does not** prove builds on the oldest supported compiler unless you run **`cargo +<msrv> check`** (below).
 
-## Release checklist (**F4**)
+## Release checklist
 
 Before publishing or bumping MSRV:
 

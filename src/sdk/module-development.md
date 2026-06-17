@@ -443,6 +443,8 @@ For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/bl
 
 Use **`run_module_with_setup_and_api`** and declare **`register_module_api`** in **`module.toml`**. See [Module IPC Protocol](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Commons Mesh Module](../modules/mesh.md#node-integration).
 
+**IBD hook:** modules such as **blvm-selective-sync** may implement **`filter_block_before_store`** on ModuleAPI — the node calls it before persisting witness data during parallel IBD when the module enables `ibd_filter_enabled`.
+
 ### Subscribing to events
 
 Modules subscribe with `SubscribeEvents` and receive `EventType` / `EventPayload` streams (chain, mempool, network, payments, mining, governance, maintenance, etc.). Events are **notifications**; changing serve policy or sync-adjacent behavior uses the **NodeAPI** methods above (denylists, maintenance mode, bans), not events alone.

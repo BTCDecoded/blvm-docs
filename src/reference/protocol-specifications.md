@@ -34,5 +34,5 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical beh
 
 ## Experimental Features
 
-Available in [experimental build variant](../getting-started/installation.md#experimental-variant): [UTXO commitments](../consensus/utxo-commitments.md), BIP119 CTV (CheckTemplateVerify), [Dandelion++ privacy relay](../node/privacy-relay.md), [Stratum V2 mining protocol](../node/mining-stratum-v2.md).
+Available in [experimental build variant](../getting-started/installation.md#experimental-variant): [UTXO commitments](../consensus/utxo-commitments.md), BIP119 CTV (CheckTemplateVerify), [Dandelion++ privacy relay](../node/privacy-relay.md), [Stratum V2 mining protocol](../node/mining-stratum-v2.md), sigop counting, Iroh transport.
 

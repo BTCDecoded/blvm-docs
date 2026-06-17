@@ -1,0 +1,96 @@
+{
+  "version": 2,
+  "releaseRepo": "BTCDecoded/blvm",
+  "page": {
+    "title": "Install blvm",
+    "lead": "Pre-built binaries and Linux packages from GitHub Releases. Each release ships `checksums.sha256` — verify before running.",
+    "verificationGuideUrl": "https://docs.thebitcoincommons.org/getting-started/installation.html",
+    "buildFromSourceUrl": "https://github.com/BTCDecoded/blvm"
+  },
+  "packageGroups": [
+    { "id": "linux-pkg", "title": "Linux package managers" },
+    { "id": "binaries", "title": "Standalone binaries" }
+  ],
+  "packageSlots": [
+    {
+      "id": "deb",
+      "group": "linux-pkg",
+      "label": "Debian / Ubuntu",
+      "ext": ".deb",
+      "icon": "fa-brands fa-debian",
+      "description": "Ubuntu 22.04+, Debian 11+, and any dpkg-based distro.",
+      "pick": { "suffix": ".deb", "includes": ["amd64"] },
+      "installCmdTemplate": "sudo dpkg -i {{FILENAME}}\nsudo apt-get install -f    # pull in any missing deps",
+      "verifyTemplate": "sha256sum --check {{CHECKFILE}}"
+    },
+    {
+      "id": "rpm",
+      "group": "linux-pkg",
+      "label": "Fedora / RHEL",
+      "ext": ".rpm",
+      "icon": "fa-brands fa-fedora",
+      "description": "Fedora 38+, RHEL 9, CentOS Stream 9, and RPM-based distros.",
+      "pick": { "suffix": ".rpm", "includes": ["x86_64"] },
+      "installCmdTemplate": "sudo rpm -i {{FILENAME}}\n# or via dnf:\nsudo dnf install ./{{FILENAME}}",
+      "verifyTemplate": "sha256sum --check {{CHECKFILE}}"
+    },
+    {
+      "id": "pacman",
+      "group": "linux-pkg",
+      "label": "Arch Linux",
+      "ext": ".pkg.tar.gz",
+      "icon": "fa-solid fa-cubes",
+      "description": "Arch and other pacman-based distros (x86_64).",
+      "pick": { "suffix": ".pkg.tar.gz", "includes": ["x86_64"] },
+      "installCmdTemplate": "sudo pacman -U {{FILENAME}}",
+      "verifyTemplate": "sha256sum --check {{CHECKFILE}}"
+    },
+    {
+      "id": "linux-x86_64",
+      "group": "binaries",
+      "label": "Linux x86_64",
+      "ext": "binary",
+      "icon": "fa-solid fa-microchip",
+      "description": "Single static binary for 64-bit Linux (glibc). Base release build (`production` features); not the full local `cargo build` default set.",
+      "pick": { "suffix": "-linux-x86_64", "includes": [] },
+      "installCmdTemplate": "chmod +x {{FILENAME}}\nsudo mv {{FILENAME}} /usr/local/bin/blvm",
+      "verifyTemplate": "sha256sum --check {{CHECKFILE}}"
+    },
+    {
+      "id": "linux-aarch64",
+      "group": "binaries",
+      "label": "ARM64 Linux",
+      "ext": "binary",
+      "icon": "fa-brands fa-raspberry-pi",
+      "description": "64-bit ARM Linux binary (Raspberry Pi 4/5 with 64-bit OS, Apple Silicon Linux VMs, etc.).",
+      "pick": { "suffix": "-linux-aarch64", "includes": [] },
+      "installCmdTemplate": "chmod +x {{FILENAME}}\nsudo mv {{FILENAME}} /usr/local/bin/blvm",
+      "verifyTemplate": "sha256sum --check {{CHECKFILE}}"
+    },
+    {
+      "id": "exe",
+      "group": "binaries",
+      "label": "Windows",
+      "ext": ".exe",
+      "icon": "fa-brands fa-windows",
+      "description": "Portable Windows 10 / 11 build (64-bit). Download, verify against `checksums.sha256`, then run the `.exe` from PowerShell.",
+      "pick": { "suffix": ".exe", "includes": ["windows"] },
+      "installCmdTemplate": "",
+      "verifyTemplate": ""
+    }
+  ],
+  "docker": {
+    "title": "Docker",
+    "icon": "fa-brands fa-docker",
+    "description": "Official image on GHCR, published on every stable release.",
+    "pullCmd": "docker pull ghcr.io/btcdecoded/blvm:{{VERSION}}",
+    "runCmd": "docker run -d --name blvm \\\n  -v blvm-data:/data \\\n  -p 8333:8333 -p 8332:8332 \\\n  ghcr.io/btcdecoded/blvm:{{VERSION}}",
+    "packageUrl": "https://github.com/BTCDecoded/blvm/pkgs/container/blvm",
+    "packageLinkLabel": "View on GHCR →"
+  },
+  "comingSoonNote": "Umbrel App Store — coming soon.",
+  "markdownDoc": {
+    "experimentalVariantSection": "## Experimental build variant {#experimental-variant}\n\nStable GitHub Releases ship the **base** binary only (`production` Cargo features — see [Release process — Build variants](../development/release-process.md#build-variants)). Extra compile-time features — UTXO commitments, Dandelion++ privacy relay, BIP119 CTV, Stratum V2 integration, sigop counting, Iroh transport, and related flags — require a **source build** with the experimental feature set or explicit `--features`.\n\n",
+    "extraSectionsAfterPackages": "## Who is this for?\n\n- **Operators:** [Quick Start](../getting-started/quick-start.md) → [Mainnet initial sync](../getting-started/mainnet-sync.md) or [First Node (regtest)](../getting-started/first-node.md)\n- **Module developers:** [Building your first module](../getting-started/first-module.md)\n- **Researchers:** [Introduction](../introduction.md#who-is-this-for)\n\n## Next steps\n\n- [Quick Start](../getting-started/quick-start.md)\n- [Deployment posture](../security/deployment-posture.md) (before mainnet RPC)\n- [Node configuration](../node/configuration.md)\n\n## See also\n\n- [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest)\n"
+  }
+}

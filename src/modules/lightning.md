@@ -19,12 +19,7 @@ The Lightning Network module (`blvm-lightning`) handles invoice verification, pa
 cargo install blvm-lightning
 ```
 
-### Via Module Installer
-
-```bash
-cargo install cargo-blvm-module
-cargo blvm-module install blvm-lightning
-```
+When the crate is not on crates.io, use [registry bootstrap](overview.md#installing-modules) or build from the GitHub repository.
 
 ### Manual Installation
 
@@ -43,7 +38,27 @@ cargo blvm-module install blvm-lightning
    ```bash
    mkdir -p /path/to/node/modules/blvm-lightning/target/release
    cp target/release/blvm-lightning /path/to/node/modules/blvm-lightning/target/release/
+   cp module.toml /path/to/node/modules/blvm-lightning/
    ```
+
+## Requirements
+
+- `blvm-node` with the module system enabled.
+- External Lightning backend for real payments: **LNBits** (HTTP API) or **LDK** (embedded). **Stub** is for tests only.
+- Secrets (`api_key`, `node_private_key`) in module config — never commit to git.
+
+## Loading
+
+Pin in `blvm.toml`:
+
+```toml
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+
+[enabled_modules]
+blvm-lightning = "0.1.*"
+```
+
+Module config: `<modules.data_dir>/blvm-lightning/config.toml` (same schema as examples below). See [Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
@@ -196,24 +211,12 @@ The module uses module storage to persist configuration and statistics:
 
 ## Troubleshooting
 
-### Module Not Loading
-
-- Verify the module binary exists at the correct path
-- Check `module.toml` manifest is present and valid
-- Verify module has required capabilities
-- Check node logs for module loading errors
-
-### Payment Verification Failing
-
-- **LNBits Provider**: Verify API URL and API key are correct, check LNBits service is accessible
-- **LDK Provider**: Verify data directory permissions, check network configuration (mainnet/testnet/regtest)
-- **General**: Verify module has `read_blockchain` capability, check node logs for detailed error messages
-
-### Provider-Specific Issues
-
-- **LNBits**: Check API endpoint is accessible, verify wallet_id if specified, check API rate limits
-- **LDK**: Verify data directory exists and is writable, check network matches node configuration
-- **Stub**: No real verification - only for testing
+| Symptom | Check |
+|---------|--------|
+| Module not loading | Binary at `target/release/blvm-lightning`; valid `module.toml`; node logs |
+| LNBits errors | `api_url`, `api_key`; HTTPS reachability |
+| LDK errors | `data_dir` writable; `network` matches node |
+| No payment events | Node publishes `PaymentRequestCreated`; provider not `stub` for real traffic |
 
 ## Repository
 

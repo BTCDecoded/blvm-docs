@@ -27,7 +27,6 @@ Headers are downloaded in parallel using hardcoded checkpoints at well-known blo
 
 **Checkpoints**: Genesis, 11111, 33333, 74000, 105000, 134444, 168000, 193000, 210000 (first halving), 250000, 295000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000
 
-**Code**: [parallel_ibd/checkpoints.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/checkpoints.rs)
 
 **Algorithm**:
 1. Identify checkpoint ranges for the target height range
@@ -45,12 +44,11 @@ Blocks are downloaded with deep pipelining per peer, allowing multiple outstandi
 - `download_timeout_secs`: timeout per block in seconds (default: 30)
 - `max_concurrent_per_peer`: fixed at 64 in code (not in `[ibd]` config; see `ParallelIBDConfig`)
 
-**Code**: [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 **Dynamic Work Dispatch**:
 - Uses a shared work queue instead of static chunk assignment
 - Fast peers automatically grab more work as they finish chunks
-- On WAN-only **`parallel`** sync, **multi-peer work-stealing** is default; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** for single-peer download
+- On WAN-only **`parallel`** sync, **multi-peer work-stealing** is default; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** for single-peer download. Peers that exceed max download failures are blacklisted for **300 seconds** before reassignment.
 - FIFO ordering ensures lowest heights are processed first
 
 ### Streaming Validation with Reorder Buffer
@@ -62,7 +60,6 @@ Blocks may arrive out of order from parallel downloads. A reorder buffer ensures
 - Streaming validation: validates blocks in order as they become available.
 - Backpressure: downloads pause when buffer is full.
 
-**Code**: [parallel_ibd](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/) (feeder, validation_loop when `production` feature enabled)
 
 ### Batch Storage Operations
 
@@ -73,7 +70,6 @@ UTXO set updates use batch writes for efficient bulk operations (single transact
 - Commits all operations atomically in a single transaction
 - Ensures database consistency even on crash
 
-**Code**: [BatchWriter](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (trait and backend impls)
 
 **Usage**:
 ```rust
@@ -92,7 +88,6 @@ The system tracks peer performance and filters out extremely slow peers during I
 - **Slow Peer Filtering**: Drops peers with >90s average latency (keeps at least 2)
 - **Dynamic Selection**: Fast peers automatically get more work
 
-**Code**: [parallel_ibd](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/) (peer scoring and filtering)
 
 ### Configuration
 
@@ -108,7 +103,6 @@ headers_max_failures = 10
 ```
 (`max_concurrent_per_peer` is fixed at 64 in the node; not in `IbdConfig`. See [Node Configuration](configuration.md#ibd-configuration) and [configuration-reference](../reference/configuration-reference.md#ibd-configuration).)
 
-**Code**: [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
 Parallel headers, pipelining, streaming validation, and batch storage all contribute to faster IBD compared to a single-threaded sequential sync. See benchmarks for current measurements.
 
@@ -124,7 +118,6 @@ See **[IBD UTXO engine](ibd-engine.md)** for enablement, architecture, and check
 
 Blocks are validated in parallel when they are deep enough from the chain tip. This optimization uses Rayon for parallel execution.
 
-**Code**: [validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs)
 
 ### Safety Conditions
 
@@ -133,7 +126,6 @@ Parallel validation is only used when:
 - Each block uses its own UTXO set snapshot (independent validation)
 - Blocks are validated sequentially if too close to tip
 
-**Code**: [validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs)
 
 ### Implementation
 
@@ -156,7 +148,6 @@ pub fn validate_blocks_parallel(
 }
 ```
 
-**Code**: [validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs)
 
 ## Batch UTXO Operations
 
@@ -169,7 +160,6 @@ Transaction fees are calculated in batches by pre-fetching all UTXOs before vali
 3. Cache UTXOs for fee calculation
 4. Calculate fees using cached UTXOs
 
-**Code**: [block/apply.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/apply.rs)
 
 ### Implementation
 
@@ -192,7 +182,6 @@ for prevout in &all_prevouts {
 }
 ```
 
-**Code**: [block/apply.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/apply.rs)
 
 ### Configuration
 
@@ -202,7 +191,6 @@ enable_batch_utxo_lookups = true
 parallel_batch_size = 8
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 
 ## Assume-Valid Height
 
@@ -210,7 +198,6 @@ parallel_batch_size = 8
 
 Assume-valid height skips expensive signature verification for blocks before a configured height, reducing IBD time. The node merges **`[block_validation]`** into consensus validation config at startup.
 
-**Code**: [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs) (`BlockValidationNodeConfig`), [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Safety
 
@@ -246,7 +233,6 @@ Within a block, transaction validation is parallelized where safe:
 1. **Parallel validation** (read-only UTXO access): transaction structure, input validation, fee calculation, script verification.
 2. **Sequential application** (write operations): UTXO set updates and state transitions to maintain correctness.
 
-**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ### Implementation
 
@@ -267,7 +253,6 @@ Within a block, transaction validation is parallelized where safe:
 }
 ```
 
-**Code**: [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 
 ## Advanced Indexing
 
@@ -279,7 +264,6 @@ Indexes transactions by address for fast lookup:
 - **Fast Lookup**: O(1) address-to-transaction mapping
 - **Incremental Updates**: Updates on each block
 
-**Code**: [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs), [transaction-indexing.md](transaction-indexing.md)
 
 ### Value Range Indexing
 
@@ -303,7 +287,6 @@ pub mod precomputed_constants {
 }
 ```
 
-**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 
 ### Bounds Check Optimization
 
@@ -320,7 +303,6 @@ pub fn get_proven<T>(slice: &[T], index: usize, bound_check: bool) -> Option<&T>
 }
 ```
 
-**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 
 ### Cache-Friendly Memory Layouts
 
@@ -331,7 +313,6 @@ pub fn get_proven<T>(slice: &[T], index: usize, bound_check: bool) -> Option<&T>
 pub struct CacheAlignedHash([u8; 32]);
 ```
 
-**Code**: [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 
 ## Performance Configuration
 
@@ -355,7 +336,6 @@ enable_cache_optimizations = true
 enable_batch_utxo_lookups = true
 ```
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 
 ### Default Values
 
@@ -365,7 +345,6 @@ enable_batch_utxo_lookups = true
 - `enable_cache_optimizations`: true
 - `enable_batch_utxo_lookups`: true
 
-**Code**: [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 
 ## Benchmark Results
 
@@ -382,8 +361,23 @@ The performance optimization system includes:
 - Runtime optimizations (constant folding, bounds checks, cache-friendly layouts)
 - Performance configuration
 
-**Location**: `blvm-consensus/src/optimizations.rs`, `blvm-consensus/src/block/`, `blvm-consensus/src/config.rs`, `blvm-node/src/validation/mod.rs`. Storage default for IBD is heed3 (LMDB + rkyv) when the `heed3` feature is enabled; use `database_backend = "rocksdb"` for RocksDB.
 
+## Source
+
+- [parallel_ibd/checkpoints.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/checkpoints.rs)
+- [ParallelIBDConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
+- [parallel_ibd](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/) (feeder, validation_loop when `production` feature enabled)
+- [BatchWriter](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (trait and backend impls)
+- [parallel_ibd](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/) (peer scoring and filtering)
+- [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
+- [validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs)
+- [block/apply.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/apply.rs)
+- [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
+- [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs) (`BlockValidationNodeConfig`), [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
+- [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
+- [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs), [transaction-indexing.md](transaction-indexing.md)
+- [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
+- [blvm-consensus/src/optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs), [blvm-consensus/src/block/](https://github.com/BTCDecoded/blvm-consensus/tree/main/src/block/), [blvm-consensus/src/config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs), [blvm-node/src/validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs), `heed3`, `database_backend = "rocksdb"` (blvm-consensus/src/block/blvm-consensus/src/config.rsblvm-node/src/validation/mod.rsheed3database_backend = "rocksdb"` for RocksDB.)
 ## See Also
 
 - [Node Overview](overview.md) - Node implementation details

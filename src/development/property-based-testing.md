@@ -74,7 +74,6 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 37. `sha256_output_length` - Verifies SHA256 output length
 38. `double_sha256_output_length` - Verifies double SHA256 output length
 
-**Location**: `blvm-consensus/tests/consensus_property_tests.rs`
 
 ## Proptest Integration
 
@@ -186,17 +185,14 @@ proptest! {
 
 ### Property test suites
 
-**Location**: `tests/unit/comprehensive_property_tests.rs`
 - Multiple `proptest!` blocks for cross-cutting scenarios
 
 ### Script Opcode Property Tests
 
-**Location**: `tests/unit/script_opcode_property_tests.rs`
 - Multiple proptest! blocks for script opcode testing
 
 ### SegWit/Taproot Property Tests
 
-**Location**: `tests/unit/segwit_taproot_property_tests.rs`
 - Multiple proptest! blocks for SegWit and Taproot
 
 ### Edge Case Property Tests
@@ -212,7 +208,6 @@ Multiple files with edge case testing:
 
 ### Cross-BIP Property Tests
 
-**Location**: `tests/cross_bip_property_tests.rs`
 - Multiple proptest! blocks for cross-BIP validation
 
 ## Statistics
@@ -307,8 +302,12 @@ The property-based testing system includes:
 - Automatic shrinking
 - MIRI integration
 
-**Location**: `blvm-consensus/tests/consensus_property_tests.rs`, `blvm-consensus/tests/unit/`
 
+## Source
+
+- [blvm-consensus/tests/consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
+- [blvm-consensus/tests/unit/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/unit/) — comprehensive, script opcode, segwit/taproot property tests
+- [blvm-consensus/tests/cross_bip_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/cross_bip_property_tests.rs)
 ## See Also
 
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques

@@ -51,7 +51,6 @@ When both Layer and Tier requirements apply, the system takes the **most restric
 
 ## Implementation
 
-**Code**: [threshold.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/threshold.rs)
 
 ```rust
 pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {
@@ -75,6 +74,9 @@ Published tables above are derived from the same max-rule at book build time (`m
 - `config/emergency-tiers.yml` - Emergency classes (separate from action tiers)
 - `config/tier-classification-rules.yml` - PR classification
 
+## Source
+
+- [threshold.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/threshold.rs)
 ## See Also
 
 - [PR Process](../development/pr-process.md) - How governance tiers apply to pull requests

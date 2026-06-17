@@ -19,6 +19,10 @@ The benchmarking infrastructure is maintained in a separate repository (`blvm-be
 - Tracks performance over time
 - Optional A/B comparisons when a second implementation is available in your bench setup
 
+### Storage backend benchmarks
+
+`blvm-bench` includes heed3 zero-copy / LMDB storage comparisons against other backends. Run locally or inspect results on [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org); see the [`blvm-bench` README](https://github.com/BTCDecoded/blvm-bench).
+
 ### Automated Benchmark Generation
 
 Benchmarks are generated automatically via GitHub Actions workflows:
@@ -234,8 +238,10 @@ The benchmarking infrastructure includes:
 - Optional external baselines when wired in blvm-bench
 - Historical performance trends
 
-**Location**: `blvm-bench` repository, benchmark results at [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org)
 
+## Source
+
+- `blvm-bench` repository, benchmark results at [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org)
 ## See Also
 
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques

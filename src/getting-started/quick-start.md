@@ -1,142 +1,68 @@
 # Quick Start
 
-Get up and running with BLVM in minutes.
+Tutorial: install the binary, run a **regtest** node, query RPC, and mine one block. About five minutes. For mainnet, use [Mainnet initial sync](mainnet-sync.md) instead of the steps below.
 
-## Running Your First Node
+**Prerequisites:** [Installation](installation.md) completed (`blvm` on your `PATH`).
 
-After [installing](installation.md) the binary, you can start a node:
-
-### Regtest Mode (Recommended for Development)
-
-Regtest mode is safe for development - it creates an isolated network:
+## 1. Verify the binary
 
 ```bash
-blvm
+blvm --version
+blvm --help
 ```
 
-Or explicitly:
+You should see a version string and help text (no “command not found”).
+
+## 2. Start a regtest node
+
+Use a dedicated data directory so this tutorial does not mix with other networks:
 
 ```bash
-blvm --network regtest
+blvm --network regtest -d ~/.local/share/blvm-quickstart --verbose
 ```
 
-Starts a node in regtest mode (default), creating an isolated network with instant block generation for testing and development.
+In the first log lines, confirm:
 
-### Testnet Mode
+- `Network: Regtest` (or equivalent)
+- RPC listening on **`127.0.0.1:18332`** (default for testnet/regtest)
 
-Connect to Bitcoin testnet:
+Leave this process running, or run it in another terminal for the RPC steps below.
 
-```bash
-blvm --network testnet
-```
+## 3. Check chain state
 
-### Mainnet Mode
-
-Use [Mainnet initial sync](mainnet-sync.md) — not bare `blvm --network mainnet`.
-
-## Basic Node Operations
-
-### Checking Node Status
-
-Once the node is running, check its status via RPC:
+Regtest uses RPC port **18332** (not mainnet 8332):
 
 ```bash
-# Mainnet uses port 8332, testnet/regtest use 18332
-curl -X POST http://localhost:8332 \
+curl -s -X POST http://127.0.0.1:18332 \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
+  -d '{"jsonrpc":"2.0","method":"getblockchaininfo","params":[],"id":1}'
 ```
 
-**Example Response:**
-```json
-{
-  "jsonrpc": "2.0",
-  "result": {
-    "chain": "regtest",
-    "blocks": 100,
-    "headers": 100,
-    "bestblockhash": "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206",
-    "difficulty": 4.656542373906925e-10,
-    "mediantime": 1231006505,
-    "verificationprogress": 1.0,
-    "chainwork": "0000000000000000000000000000000000000000000000000000000000000064",
-    "pruned": false,
-    "initialblockdownload": false
-  },
-  "id": 1
-}
-```
+Expected: `"chain":"regtest"` and `"blocks":0` at genesis.
 
-### Getting Peer Information
+## 4. Mine one block (regtest)
+
+`generatetoaddress` is supported on **regtest** when the node has a protocol engine wired (normal `blvm start`):
 
 ```bash
-# Mainnet uses port 8332, testnet/regtest use 18332
-curl -X POST http://localhost:8332 \
+curl -s -X POST http://127.0.0.1:18332 \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getpeerinfo", "params": [], "id": 2}'
+  -d '{"jsonrpc":"2.0","method":"generatetoaddress","params":[1,"bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"],"id":2}'
 ```
 
-### Getting Mempool Information
+Expected: JSON result with an array of one block hash (hex).
 
-```bash
-# Mainnet uses port 8332, testnet/regtest use 18332
-curl -X POST http://localhost:8332 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getmempoolinfo", "params": [], "id": 3}'
-```
+## 5. Confirm the new height
 
-### Verifying Installation
+Run `getblockchaininfo` again (step 3). Expected: `"blocks":1` (or higher if you mined more).
 
-```bash
-blvm --version  # Verify installation
-blvm --help     # View available options
-```
+You now have a running regtest node that processed at least one block.
 
-The node connects to the P2P network, syncs blockchain state, accepts [RPC commands](../node/rpc-api.md) on port 8332 (mainnet default) or 18332 (testnet/regtest), and can [mine blocks](../node/mining.md) if configured.
+## Next steps
 
-## Using the SDK
-
-### Generate a Governance Keypair
-
-```bash
-blvm-keygen --output my-key.key
-```
-
-### Sign a Message
-
-```bash
-blvm-sign release \
-  --version v1.0.0 \
-  --commit abc123 \
-  --key my-key.key \
-  --output signature.txt
-```
-
-### Verify Signatures
-
-```bash
-blvm-verify release \
-  --version v1.0.0 \
-  --commit abc123 \
-  --signatures sig1.txt,sig2.txt,sig3.txt \
-  --threshold [[gov:tier_1_signatures]] \
-  --pubkeys keys.json
-```
-
-## Next Steps
-
-- [First Node Setup (regtest)](first-node.md) - Detailed regtest configuration
-- [Mainnet initial sync](mainnet-sync.md) - Release tarball, helper script, IBD expectations
-- [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) - Migrate a synced Core datadir instead of full IBD
-- [Node Configuration](../node/configuration.md) - Full configuration options
-- [RPC API Reference](../node/rpc-api.md) - Interact with your node
-
-## See Also
-
-- [Installation](installation.md) - Installing BLVM
-- [First Node Setup](first-node.md) - Complete setup guide
-- [Node Configuration](../node/configuration.md) - Configuration options
-- [Node Operations](../node/operations.md) - Managing your node
-- [RPC API Reference](../node/rpc-api.md) - Complete RPC API
-- [Troubleshooting](../appendices/troubleshooting.md) - Common issues
-
+- **Regtest with config file and peers:** [First Node Setup (regtest)](first-node.md)
+- **Mainnet:** [Mainnet initial sync](mainnet-sync.md) and [Deployment posture](../security/deployment-posture.md)
+- **Core datadir import:** [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir)
+- **Build a module:** [Building your first module](first-module.md)
+- **RPC details:** [RPC API Reference](../node/rpc-api.md)
+- **Configuration:** [Node Configuration](../node/configuration.md)

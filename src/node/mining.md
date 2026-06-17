@@ -16,7 +16,6 @@ Block templates are built from **`blvm-consensus`** helpers (e.g. template const
 6. **Calculate Merkle Root**: Compute merkle root from transaction list
 7. **Build Template**: Construct block header with all components
 
-**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs)
 
 ### Transaction Selection
 
@@ -27,7 +26,6 @@ Transactions are selected using a fee-based priority algorithm:
 3. **Minimum Fee**: Filter transactions below minimum fee rate (1 sat/vB default)
 4. **UTXO Validation**: Verify all transaction inputs exist in UTXO set
 
-**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
 
 ### Fee Calculation
 
@@ -42,7 +40,6 @@ The coinbase transaction includes:
 - **Block Subsidy**: Calculated based on halving schedule
 - **Transaction Fees**: Sum of all fees from selected transactions
 
-**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
 
 ### Block Template Structure
 
@@ -60,7 +57,6 @@ pub struct Block {
 }
 ```
 
-**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
 
 ## Mining Process
 
@@ -72,7 +68,6 @@ The `getblocktemplate` RPC method generates a block template:
 2. Converts to JSON-RPC format (BIP 22/23)
 3. Returns template ready for mining
 
-**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs)
 
 ### Proof of Work
 
@@ -83,7 +78,6 @@ Mining involves finding a nonce that satisfies the difficulty target:
 3. **Target Check**: Verify hash < difficulty target
 4. **Success**: Return mined block with valid nonce
 
-**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
 
 ### Block Submission
 
@@ -93,7 +87,6 @@ Mined blocks are submitted via `submitblock` RPC method:
 2. **Connection**: Block connected to chain
 3. **Confirmation**: Block added to blockchain
 
-**Code**: [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs)
 
 ## Mining Coordinator
 
@@ -104,7 +97,6 @@ The `MiningCoordinator` manages mining operations:
 - **Stratum V2**: Pool/miner TCP and protocol server live in the **`blvm-stratum-v2`** module; the node exposes P2P demux and `NodeAPI` hooks
 - **Merge Mining**: Available via optional `blvm-merge-mining` module (paid plugin)
 
-**Code**: [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
 
 ## Stratum V2 Support
 
@@ -115,7 +107,6 @@ Optional Stratum V2 protocol support provides:
 - **Multiplexed Channels**: QUIC stream multiplexing
 - **Merge Mining**: Simultaneous mining of multiple chains
 
-**Code**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) (module — dedicated miner TCP); node: P2P demux in [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), `NodeAPI::send_peer_transport_payload`
 
 ## Configuration
 
@@ -142,8 +133,13 @@ HTTP Basic password is auto-granted **admin** (required for `getblocktemplate` /
 
 See [Stratum V2 + Merge Mining](mining-stratum-v2.md) for split **node** vs **module** `config.toml` examples and **`p2p_stratum_demux`**.
 
-**Code**: [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs), [StratumV2Config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/rpc.rs)
 
+## Source
+
+- [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs)
+- [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
+- [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) (module — dedicated miner TCP); node: P2P demux in [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), `NodeAPI::send_peer_transport_payload`
+- [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs), [StratumV2Config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/rpc.rs)
 ## See Also
 
 - [Node Operations](operations.md) - Node operation and management
@@ -151,4 +147,3 @@ See [Stratum V2 + Merge Mining](mining-stratum-v2.md) for split **node** vs **mo
 - [Stratum V2 + Merge Mining](mining-stratum-v2.md) - Stratum V2 protocol details
 - [Node Configuration](configuration.md) - Mining configuration options
 - [Protocol Specifications](../reference/protocol-specifications.md) - Stratum V2 and mining protocols
-
