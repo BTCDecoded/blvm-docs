@@ -240,8 +240,8 @@ Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default
 
 ### `storage.reuse_core_block_files`
 - **Type**: `boolean`
-- **Default**: `false`
-- **Description**: During Core migration, migrate UTXOs and indexes only; leave Core `blocks/` in place and read block bodies from Core `blk*.dat` via a fallback reader. Saves disk; requires Core block files to remain available. Overridden by **`BLVM_REUSE_CORE_BLOCK_FILES=1`**.
+- **Default**: `true`
+- **Description**: During Core migration, migrate UTXOs and indexes only; leave Core **`blocks/`** in place and read block bodies from Core **`blk*.dat`** via a fallback reader. **Default avoids copying ~700 GB of block files** on mainnet. Core **`blocks/`** must remain on disk while BLVM runs. Set **`false`** or **`BLVM_REUSE_CORE_BLOCK_FILES=0`** to copy block bodies into the BLVM store (self-contained store, roughly double block disk use). Overridden by **`BLVM_REUSE_CORE_BLOCK_FILES`** when set.
 
 ### Storage Cache
 

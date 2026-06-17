@@ -152,6 +152,8 @@ blvm status --rpc-addr 127.0.0.1:8332
 
 BLVM does not read Core chainstate in place. With **`rocksdb`**, a synced Core **`--datadir`** triggers one-time migration into **`<datadir>/blvm/`** unless disabled. After migrate, point **`--datadir`** at the BLVM store or keep the Core path (node opens `blvm/` when marked).
 
+**Default behavior:** migrate UTXOs and indexes only; **do not copy** Core **`blocks/`** (~700 GB on mainnet). BLVM reads block bodies from the original Core **`blocks/`** directory via a fallback reader. Set **`storage.reuse_core_block_files = false`** (or **`BLVM_REUSE_CORE_BLOCK_FILES=0`**) only if you want a self-contained BLVM store that duplicates block files.
+
 | Mechanism | Purpose |
 |-----------|---------|
 | `--datadir` / `BLVM_DATA_DIR` | Core path for detect/migrate, or BLVM store after migrate |
@@ -164,7 +166,7 @@ BLVM does not read Core chainstate in place. With **`rocksdb`**, a synced Core *
 [storage]
 auto_migrate_core = true
 # core_migrate_destination = "/var/lib/blvm-mainnet"
-# reuse_core_block_files = false
+# reuse_core_block_files = true   # default; set false to copy block bodies into BLVM store
 ```
 
 ENV and reference: [Configuration Reference](../reference/configuration-reference.md) (`storage.auto_migrate_core`, `storage.reuse_core_block_files`, `BLVM_*`). Operator flow: [Operations](operations.md#starting-from-a-bitcoin-core-datadir). Storage details: [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start). Map Core **`datadir=`** via **`blvm config convert-core`** — see [bitcoin.conf vs BLVM](#bitcoin-core-bitcoinconf-versus-blvm).

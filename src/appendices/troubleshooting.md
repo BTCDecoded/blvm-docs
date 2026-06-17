@@ -56,7 +56,8 @@ blvm --data-dir ~/.blvm
 | Migration refused / lock error | Stop **`bitcoind`**; remove stale **`chainstate/LOCK`** or **`bitcoind.pid`** only when Core is not running |
 | Wrong chain after migrate | Set **`--network`** to match the Core datadir (mainnet / testnet / regtest) |
 | Re-import on every start | Check **`blvm_meta/migration.json`** under the BLVM store; use **`--no-auto-migrate`** after a successful migrate |
-| Pruned Core datadir | Use a full node copy, or enable **`storage.reuse_core_block_files`** only if remaining block files cover the chain |
+| Pruned Core datadir | Use a full node copy; default **`reuse_core_block_files`** requires readable block files at the tip |
+| Disk filling during migrate | Default should **not** copy blocks; if copying, set **`reuse_core_block_files = false`** explicitly — otherwise check you are not re-migrating into a fresh store with reuse disabled |
 | Interrupted migrate | Resume with **`blvm migrate core`** or restart with auto-migrate; checkpoint at **`blvm_meta/migration_checkpoint.json`** |
 
 See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).

@@ -252,13 +252,13 @@ header_cache_mb = 10
 
 With the **`rocksdb`** feature (default in release builds), point **`--datadir`** at a **synced Core** tree (`chainstate/` + `blocks/`) to import once into **`<datadir>/blvm/`**. Stop **`bitcoind`** first; match **`--network`** to the datadir.
 
-**Operator steps:** [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir). **Flags and ENV:** [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in). **Config keys:** `storage.auto_migrate_core`, `core_migrate_destination`, `reuse_core_block_files`.
+**Operator steps:** [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir). **Flags and ENV:** [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in). **Config keys:** `storage.auto_migrate_core`, `core_migrate_destination`, `storage.reuse_core_block_files`.
 
 After success, **`blvm_meta/migration.json`** marks the store; interrupted runs resume via **`blvm_meta/migration_checkpoint.json`**.
 
-**Reuse Core block files:** `storage.reuse_core_block_files` or `BLVM_REUSE_CORE_BLOCK_FILES=1` — migrate UTXOs/indexes only; read bodies from Core `blk*.dat` (Core `blocks/` must stay on disk).
+**Reuse Core block files (default):** `storage.reuse_core_block_files` defaults to **`true`**. Migration converts the UTXO set and builds indexes under **`blvm/`** but **leaves Core `blocks/` in place** — BLVM reads **`blk*.dat`** via a fallback reader. **Do not delete** the Core **`blocks/`** directory while this mode is active. Disable with **`storage.reuse_core_block_files = false`** or **`BLVM_REUSE_CORE_BLOCK_FILES=0`** to copy block bodies into the BLVM store (requires roughly double disk space for blocks).
 
-**Pruned Core:** rejected when block file coverage is insufficient.
+**Pruned Core:** migration may fail if block files do not cover the chain tip; use a full node datadir or disable reuse and accept limited coverage.
 
 **Limits:** no concurrent Core + BLVM on the same chainstate; no write-back into Core LevelDB.
 

@@ -28,14 +28,30 @@ blvm --config blvm.toml
 Use when Core is **fully synced** and you want the same tip without full IBD. **Stop `bitcoind`** first.
 
 ```bash
-# Auto-migrate on start → ~/.bitcoin/blvm/
+# Recommended: auto-migrate on start → ~/.bitcoin/blvm/
 blvm start --network mainnet --datadir ~/.bitcoin
+```
 
-# Or migrate with verify, then start the BLVM store
+On first start BLVM detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. **Block files are not copied by default** — BLVM keeps reading bodies from Core **`blocks/`** (~700 GB stays in one place). Only the UTXO set and indexes are converted into BLVM format (~15–30 GB under **`blvm/`**).
+
+```bash
+# Optional: explicit migrate with verify, then start the BLVM store
 blvm migrate core --source ~/.bitcoin --destination ~/.bitcoin/blvm \
   --network mainnet --verify
 blvm start --network mainnet --datadir ~/.bitcoin/blvm
 ```
+
+### What gets migrated
+
+| Core path | Migrated? | Notes |
+|-----------|-----------|--------|
+| `chainstate/` (UTXO) | **Yes** → `blvm/` | One-time convert; ~12 GB on mainnet |
+| `blocks/blk*.dat` | **No** (default) | BLVM reads in place; **do not delete** `blocks/` |
+| `blocks/index/` | Partial | Height/header metadata copied when readable |
+
+After a successful migrate you may delete Core **`chainstate/`** (~12 GB) if you will not run **`bitcoind`** on that datadir again. Keep **`blocks/`** unless you opted into copying block bodies (see below).
+
+### Flags and settings
 
 | Flag / setting | Effect |
 |----------------|--------|
@@ -43,9 +59,11 @@ blvm start --network mainnet --datadir ~/.bitcoin/blvm
 | `--migrate-destination PATH` | BLVM store path (default `<datadir>/blvm`) |
 | `--migrate-core-only` | Migrate and exit |
 | `storage.auto_migrate_core = false` | Same as `--no-auto-migrate` |
+| `storage.reuse_core_block_files = false` | Copy block bodies into BLVM store (large disk use) |
+| `BLVM_REUSE_CORE_BLOCK_FILES=0` | Same as `reuse_core_block_files = false` |
 | `BLVM_CORE_MIGRATE_BLOCK_WORKERS` / `BLVM_CORE_MIGRATE_BLOCK_BATCH` | Parallel block read tuning |
 
-Requires **`rocksdb`** (default release build). Config, ENV, reuse/pruned notes: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
+Requires **`rocksdb`** (default release build). Config and ENV details: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
 
 **Verify:** `--verify` on `blvm migrate core`; regtest test `core_drop_in` (fixture: `blvm-node/scripts/gen-core-regtest-fixture.sh`); mainnet smoke: `blvm-node/scripts/core-drop-in-mainnet-smoke.sh`.
 
