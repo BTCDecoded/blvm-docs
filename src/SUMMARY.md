@@ -21,6 +21,9 @@
 - [Transaction Indexing](node/transaction-indexing.md)
 - [IBD Bandwidth Protection](node/ibd-protection.md)
 - [IBD UTXO engine](node/ibd-engine.md)
+- [UTXO Commitments](node/utxo-commitments.md)
+- [Peer Consensus Protocol](node/peer-consensus.md)
+- [Spam Filtering](node/spam-filtering.md)
 - [LAN Peering System](node/lan-peering.md)
 - [RBF and Mempool Policies](node/rbf-mempool-policies.md)
 - [Transaction relay](node/privacy-relay.md)
@@ -77,10 +80,7 @@
 - [Overview](consensus/overview.md)
 - [Architecture](consensus/architecture.md)
 - [Formal Verification](consensus/formal-verification.md)
-- [Peer Consensus Protocol](consensus/peer-consensus.md)
 - [Mathematical Specifications](consensus/mathematical-specifications.md)
-- [Spam Filtering](consensus/spam-filtering.md)
-- [UTXO Commitments](consensus/utxo-commitments.md)
 
 # Protocol Layer
 

@@ -1,5 +1,7 @@
 # Spam Filtering
 
+> **Layer** — Bandwidth and mempool filtering in **blvm-protocol** (optional `utxo-commitments` integration). Does not change consensus accept/reject for valid blocks.
+
 ## Overview
 
 Spam filtering provides transaction-level filtering for bandwidth optimization and non-monetary transaction detection. The system filters spam transactions to achieve 40-60% bandwidth savings during ongoing sync while maintaining consensus correctness.
@@ -378,6 +380,6 @@ Peers that repeatedly send spam transactions are automatically banned for the co
 - [spam_filter/mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/spam_filter/mod.rs)
 ## See Also
 
-- [UTXO Commitments](utxo-commitments.md) - How spam filtering integrates with UTXO commitments
-- [Consensus Overview](overview.md) - Consensus layer introduction
-- [Network Protocol](../protocol/network-protocol.md) - Network protocol details
+- [UTXO Commitments](utxo-commitments.md)
+- [Node overview](overview.md)
+- [Network Protocol](../protocol/network-protocol.md)

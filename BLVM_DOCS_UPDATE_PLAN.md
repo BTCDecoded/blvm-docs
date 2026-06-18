@@ -75,7 +75,7 @@ rg -n 'bllvm' blvm-docs/modules/blvm --glob '*.md' | head
 | **P2-1** | Stratum **spec** mentions modern transports; **node** integrates **TCP TLV** listener + **`blvm-stratum-v2`** module per existing book pages. | Qualify module page: **which transport** depends on deployment; **default** path documented in mining chapter. | [`modules/stratum-v2.md`](src/modules/stratum-v2.md) |
 | **P2-2** | MSRV differs by crate (**`rust-version`** field). | Single rule: **read `Cargo.toml` `rust-version` in the repo you build.** | [`development/contributing.md`](src/development/contributing.md) |
 | **P2-3** | Install copy references **v0.1.0** artifacts; either still true or drift. | Timeless [`getting-started/installation.md`](src/getting-started/installation.md) → [btcdecoded.org/install](https://btcdecoded.org/install); website fetch owns versioned JSON. | [`getting-started/installation.md`](src/getting-started/installation.md) |
-| **P2-4** | Large round numbers conflict with **`contributing-docs.md`** rule. | Rephrase as **order-of-magnitude illustration** or cite **published benchmark** with method. | [`consensus/utxo-commitments.md`](src/consensus/utxo-commitments.md) |
+| **P2-4** | Large round numbers conflict with **`contributing-docs.md`** rule. | Rephrase as **order-of-magnitude illustration** or cite **published benchmark** with method. | [`node/utxo-commitments.md`](src/node/utxo-commitments.md) |
 | **P2-5** | **`blvm-protocol`** still ships **`economic`** module (**parameters**); removed items are **specific wire / P2P surfaces**, not “economics” wholesale. README may need **wire inventory** sync only. | Upstream issue/PR: README vs **actual** `NetworkMessage` / extension set. | **External:** `blvm-protocol` repo |
 
 ---

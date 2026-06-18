@@ -128,7 +128,8 @@ graph TB
 - [Transaction relay](privacy-relay.md) (Dandelion++; FIBRE via `blvm-fibre` module)
 - High-performance block relay (FIBRE module)
 - [Package relay](package-relay.md) (BIP331)
-- [UTXO commitments](../consensus/utxo-commitments.md) (compile-time feature in release binaries; enable at runtime when used)
+- [UTXO commitments](utxo-commitments.md) (compile-time feature in release binaries; enable at runtime when used)
+- [Peer consensus protocol](peer-consensus.md), [spam filtering](spam-filtering.md) (bandwidth optimization during sync)
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
 - [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with optional [IBD UTXO engine](ibd-engine.md) (`BLVM_IBD_ENGINE=1`)
 

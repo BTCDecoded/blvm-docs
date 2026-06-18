@@ -1,5 +1,7 @@
 # UTXO Commitments
 
+> **Layer** — Optional **node fast-sync** feature (**blvm-protocol** / **blvm-node**). Not part of Orange Paper consensus rules; see [Consensus overview](../consensus/overview.md).
+
 > **Build** — `utxo-commitments` is in **`blvm` default features** (Linux x86_64 release artifacts; also in portable Windows/aarch64 CI subset). Enable at runtime via config when your deployment uses it.
 
 ## Overview
@@ -321,10 +323,11 @@ The UTXO Commitments system includes:
 - [blvm-protocol/src/utxo_commitments/](https://github.com/BTCDecoded/blvm-protocol/tree/main/src/utxo_commitments/), [blvm-node/src/network/utxo_commitments_client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/utxo_commitments_client.rs) (blvm-node/src/network/utxo_commitments_client.rs`)
 ## See Also
 
-- [Consensus Overview](overview.md) - Consensus layer introduction
-- [Consensus Architecture](architecture.md) - Consensus layer design
-- [Network Protocol](../protocol/network-protocol.md) - Network protocol details
-- [Node Configuration](../node/configuration.md) - UTXO commitment configuration
-- [Storage Backends](../node/storage-backends.md) - Storage backend details
-- [Performance Optimizations](../node/performance.md) - IBD optimizations and batch storage
-- [Formal Verification](formal-verification.md) - Spec-lock verification system
+- [Node overview](overview.md)
+- [Peer Consensus Protocol](peer-consensus.md)
+- [Spam Filtering](spam-filtering.md)
+- [Network Protocol](../protocol/network-protocol.md)
+- [Node Configuration](configuration.md)
+- [Storage Backends](storage-backends.md)
+- [Performance Optimizations](performance.md)
+- [Formal Verification](../consensus/formal-verification.md) — Spec-lock proofs on commitment code paths

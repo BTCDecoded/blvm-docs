@@ -77,7 +77,7 @@ Supports Bitcoin P2P protocol messages:
 - Integration with governance system
 
 **Commons Extensions**:
-- `GetUTXOSet`, `UTXOSet` - [UTXO commitment protocol](../consensus/utxo-commitments.md)
+- `GetUTXOSet`, `UTXOSet` - [UTXO commitment protocol](../node/utxo-commitments.md)
 - `GetFilteredBlock`, `FilteredBlock` - Spam-filtered blocks
 - `GetBanList`, `BanList` - Distributed ban list sharing
 
@@ -114,7 +114,7 @@ Protocol-specific validation rules:
 
 ### UTXO Commitments
 
-Protocol messages for [UTXO set synchronization](../consensus/utxo-commitments.md):
+Protocol messages for [UTXO set synchronization](../node/utxo-commitments.md):
 
 - `GetUTXOSet` - Request UTXO set at specific height
 - `UTXOSet` - UTXO set response with merkle proof

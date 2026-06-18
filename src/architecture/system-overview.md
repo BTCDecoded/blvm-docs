@@ -47,7 +47,7 @@ graph TB
 ### Stack layer 3: [blvm-protocol](../protocol/overview.md) (Protocol Abstraction)
 - Bitcoin protocol abstraction for multiple variants
 - Supports mainnet, testnet, regtest
-- Commons-specific protocol extensions ([UTXO commitments](../consensus/utxo-commitments.md), ban list sharing)
+- Commons-specific protocol extensions ([UTXO commitments](../node/utxo-commitments.md), ban list sharing)
 - BIP implementations (BIP152, BIP157, BIP158, BIP173/350/351)
 
 ### Stack layer 4: [blvm-node](../node/overview.md) (Node Implementation)

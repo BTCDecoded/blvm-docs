@@ -33,6 +33,7 @@ Details: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/mai
 | Script/block/UTXO math | **blvm-consensus** (this page) |
 | Network magic, ports, message serialization | [blvm-protocol](../protocol/overview.md) |
 | Storage, P2P, RPC, modules | [blvm-node](../node/overview.md) |
+| Fast sync (UTXO commitments, peer consensus, spam filtering) | [node docs](../node/utxo-commitments.md) (**blvm-protocol** / **blvm-node**, not consensus rules) |
 | Orange Paper function catalog & Rust API names | [API Index — Consensus](../reference/api-index.md#consensus-layer-blvm-consensus) |
 
 ## Architecture position
@@ -81,5 +82,4 @@ Declare versions from [`blvm-consensus` `Cargo.toml`](https://github.com/BTCDeco
 - [API Index — Consensus functions](../reference/api-index.md#consensus-function-catalog-orange-paper-names)
 - [Consensus Architecture](architecture.md) — Internal design
 - [Formal Verification](formal-verification.md) — Methodology
-- [UTXO Commitments](utxo-commitments.md) — Optional fast-sync feature (included in release binaries; configure at runtime)
 - [Orange Paper](../reference/orange-paper.md) — Normative spec

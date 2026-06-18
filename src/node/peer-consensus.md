@@ -1,5 +1,7 @@
 # Peer Consensus Protocol
 
+> **Layer** — N-of-M peer verification for [UTXO commitments](utxo-commitments.md) (**blvm-protocol** / **blvm-node**). Distinct from Bitcoin *consensus* (block/script rules in **blvm-consensus**).
+
 ## Overview
 
 Bitcoin Commons implements an N-of-M peer consensus protocol for UTXO set verification. The protocol discovers diverse peers and finds consensus among them to verify UTXO commitments without trusting any single peer.
@@ -199,7 +201,6 @@ The peer consensus protocol includes:
 - [blvm-protocol/src/utxo_commitments/peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs), [blvm-node/src/network/ban_list_merging.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ban_list_merging.rs), [blvm-node/src/network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (blvm-node/src/network/ban_list_merging.rsblvm-node/src/network/mod.rs`)
 ## See Also
 
-- [Consensus Overview](overview.md) - Consensus layer introduction
-- [UTXO Commitments](utxo-commitments.md) - UTXO commitment system
-- [Mathematical Specifications](mathematical-specifications.md) - Mathematical spec details
-- [Network Protocol](../protocol/network-protocol.md) - Network layer details
+- [Node overview](overview.md)
+- [UTXO Commitments](utxo-commitments.md)
+- [Network Protocol](../protocol/network-protocol.md)

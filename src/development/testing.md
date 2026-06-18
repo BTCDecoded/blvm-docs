@@ -58,7 +58,7 @@ Coverage-guided fuzzing (libFuzzer / cargo-fuzz). Inventory: `fuzz/Cargo.toml` i
 - **Inventory**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - **Tool**: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)
 
-**See also**: [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification)
+**See also**: [UTXO Commitments](../node/utxo-commitments.md#utxo-proof-verification)
 
 
 ### Runtime Assertions
@@ -241,5 +241,5 @@ The testing infrastructure includes:
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification
 - [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking
-- [UTXO Commitments](../consensus/utxo-commitments.md#utxo-proof-verification) - Spec-lock verification for UTXO operations
+- [UTXO Commitments](../node/utxo-commitments.md#utxo-proof-verification) - Spec-lock verification for UTXO operations
 - [Contributing](contributing.md) - Testing requirements for contributions

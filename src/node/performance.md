@@ -384,6 +384,6 @@ The performance optimization system includes:
 - [Benchmarking](../development/benchmarking.md) - Performance benchmarking
 - [Storage Backends](storage-backends.md) - Storage performance
 - [Consensus Architecture](../consensus/architecture.md) - Optimization passes
-- [UTXO Commitments](../consensus/utxo-commitments.md) - UTXO proof verification and fast sync
+- [UTXO Commitments](utxo-commitments.md) - UTXO proof verification and fast sync
 - [IBD UTXO engine](ibd-engine.md) — Optional age-tiered UTXO store during sync
 - [IBD Bandwidth Protection](ibd-protection.md) - IBD bandwidth management
