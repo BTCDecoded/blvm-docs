@@ -12,7 +12,7 @@ The layer implements rules from the [Orange Paper](../reference/orange-paper.md)
 
 The Orange Paper is the **specification** (treated as an intermediate representation). **blvm-consensus** is the **implementation**, checked by:
 
-- Unit, integration, and differential tests
+- Unit, integration, and [differential tests](../development/differential-testing.md) (full-chain harness in **blvm-bench**)
 - [Formal verification](formal-verification.md) via **BLVM Specification Lock** on spec-locked functions
 - Review and CI gates on security-critical paths
 
@@ -44,7 +44,7 @@ Details: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/mai
 1. **Pure functions** — Deterministic validation; explicit inputs instead of hidden globals
 2. **No rule interpretation in apps** — Node calls into consensus; modules never patch rules
 3. **Controlled dependencies** — `Cargo.toml` pins and ranges are the source of truth for crypto and BLVM crates
-4. **Testing in depth** — [Testing](../development/testing.md), [property-based tests](../development/property-based-testing.md), full-chain diffs in CI where configured
+4. **Testing in depth** — [Testing](../development/testing.md), [property-based tests](../development/property-based-testing.md), [differential testing](../development/differential-testing.md) via **blvm-bench**
 5. **Formal verification** — Spec-lock proofs complement tests; see [Formal Verification](formal-verification.md)
 
 ## Formal verification (summary)

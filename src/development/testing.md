@@ -176,12 +176,14 @@ Edge cases beyond blvm-spec-lock proof bounds are covered by:
 
 ## Differential Testing
 
-### Cross-implementation checks
+Cross-implementation checks compare BLVM validation with Bitcoin Core (RPC, historical replay, and a two-phase full-chain program). Primary harness: [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench) `tests/integration.rs`; consensus stub: [`differential_tests.rs`](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs).
 
-Differential tests compare **blvm-consensus** with an independent full node over RPC (see [Differential testing](differential-testing.md)).
+```bash
+cd blvm-bench
+cargo test --test integration --features differential
+```
 
-- **Location**: `tests/integration/differential_tests.rs` (skeleton); full harnesses in **blvm-bench**
-- **Purpose**: Catch consensus divergences empirically
+See [Differential Testing](differential-testing.md) for layers (BIP/regtest, historical, full-chain Phase 1/2), env vars, and operator docs.
 
 
 ## CI Integration
@@ -194,6 +196,7 @@ All tests run in CI:
 - **Property Tests**: Required for merge
 - **Integration Tests**: Required for merge
 - **Fuzz Tests**: Run on schedule
+- **Differential Tests**: **blvm-bench** integration suite (self-hosted workflow currently paused; see [differential-testing.md](differential-testing.md))
 - **blvm-spec-lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
@@ -226,14 +229,15 @@ The testing infrastructure includes:
 - [formal-verification.md](../consensus/formal-verification.md)
 - [tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests)
 - [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
-- [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs)
+- [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs) (consensus stub)
+- [blvm-bench integration tests](https://github.com/BTCDecoded/blvm-bench/blob/main/tests/integration.rs), [FULL_CHAIN_DIFFERENTIAL.md](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md)
 - [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - [blvm-consensus/tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/), [blvm-consensus/fuzz/](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz/), [blvm-consensus/src/](https://github.com/BTCDecoded/blvm-consensus/tree/main/src/) (blvm-consensus/fuzz/blvm-consensus/src/`)
 ## See Also
 
 - [Property-Based Testing](property-based-testing.md) - Verify mathematical invariants
 - [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
-- [Differential Testing](differential-testing.md) - Cross-check vs reference RPC
+- [Differential Testing](differential-testing.md) - Cross-check vs Core (RPC, historical, full-chain)
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification
 - [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking

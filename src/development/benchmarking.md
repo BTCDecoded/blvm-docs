@@ -12,7 +12,7 @@ The benchmarking infrastructure is maintained in a separate repository (`blvm-be
 
 - Runs performance benchmarks across all BLVM components
 - Parallel benchmark execution for efficient testing
-- Differential testing infrastructure (optional cross-check vs a reference full node)
+- [Differential testing](differential-testing.md) infrastructure (cross-check vs Bitcoin Core)
 - FIBRE protocol performance benchmarks
 - Generates benchmark reports and visualizations
 - Publishes results to `benchmarks.thebitcoincommons.org`

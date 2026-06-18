@@ -222,7 +222,7 @@ See [Testing Infrastructure](testing.md) for testing documentation. Key points:
 - **Integration tests** - Test cross-module functionality
 - **[Property-based testing](property-based-testing.md)** - Test with generated inputs
 - **[Fuzzing](fuzzing.md)** - Find edge cases automatically
-- **[Differential testing](differential-testing.md)** — Cross-check against a reference full node when applicable
+- **[Differential testing](differential-testing.md)** — Cross-check vs Bitcoin Core (blvm-bench; full-chain program)
 
 ## CI/CD Workflows
 
