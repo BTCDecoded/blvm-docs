@@ -206,5 +206,4 @@ The Package Relay system includes:
 
 - [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)
 - [package_relay_handler.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay_handler.rs)
-- [blvm-node/src/network/package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs), [blvm-node/src/network/package_relay_handler.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay_handler.rs) (blvm-node/src/network/package_relay_handler.rs`)
 

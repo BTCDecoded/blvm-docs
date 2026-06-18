@@ -21,7 +21,7 @@ Reference for BLVM node configuration options. Configuration can be provided via
 | Database backend | `[storage].database_backend` (`auto`, `heed3`, `rocksdb`, …) |
 | Network variant | `protocol_version` (`BitcoinV1`, `Testnet3`, `Regtest`) |
 | Transport stack | `transport_preference` (`tcponly`, `hybrid`, …) |
-| Module directory | `[modules].modules_dir`, `[enabled_modules]` |
+| Module directory | `[modules].modules_dir`, inline pins under `[modules]` |
 | IBD tuning | `[ibd]` and `BLVM_IBD_*` env vars — [Mainnet initial sync](../getting-started/mainnet-sync.md) |
 | Pruning | `[storage.pruning]` |
 | Logging | `[logging].level` |
@@ -210,6 +210,25 @@ Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default
 - **Default**: `10`
 - **Description**: Header fetch failures before peer penalty. ENV **`BLVM_IBD_HEADERS_MAX_FAILURES`**.
 
+### IBD bandwidth protection (`[ibd_protection]`)
+
+Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults match `IbdProtectionConfig` in `blvm-node`. Full operator guide: [IBD Bandwidth Protection](../node/ibd-protection.md).
+
+| Key | Default |
+|-----|---------|
+| `max_bandwidth_per_peer_per_day_gb` | `50` |
+| `max_bandwidth_per_peer_per_hour_gb` | `10` |
+| `max_bandwidth_per_ip_per_day_gb` | `100` |
+| `max_bandwidth_per_ip_per_hour_gb` | `20` |
+| `max_bandwidth_per_subnet_per_day_gb` | `500` |
+| `max_bandwidth_per_subnet_per_hour_gb` | `100` |
+| `max_concurrent_ibd_serving` | `3` |
+| `ibd_request_cooldown_seconds` | `3600` |
+| `suspicious_reconnection_threshold` | `3` |
+| `reputation_ban_threshold` | `-100` |
+| `enable_emergency_throttle` | `false` |
+| `emergency_throttle_percent` | `50` |
+
 **Additional IBD environment variables** (no `[ibd]` table key): **`BLVM_IBD_ENGINE`**, **`BLVM_IBD_ENGINE_PATH`**, **`BLVM_IBD_WAN_SINGLE_PEER`**, **`BLVM_IBD_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_DEFER_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_EXPORT_HEIGHT_OVERRIDE`**, **`BLVM_IBD_MAX_PARALLEL`**, **`BLVM_IBD_PIPELINE_DEPTH`**. See [IBD UTXO engine](../node/ibd-engine.md) and [Mainnet initial sync](../getting-started/mainnet-sync.md).
 
 
@@ -224,7 +243,7 @@ Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default
 - **Type**: `string` (enum)
 - **Default**: `"auto"`
 - **Options**:
-  - `"auto"` - Select by build features: heed3 when `heed3` feature enabled (typical default), else RocksDB, else TidesDB, else Redb, else Sled
+  - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default** and Linux releases), else RocksDB, else TidesDB, else Redb, else Sled. **Not OS-specific** — only the compile-time feature set matters. **Windows portable** release CI (`redb` + `sled` only) resolves **`auto` → redb**. **Linux aarch64** should use heed3 like x86_64; the cross-compiled release artifact is a known CI subset until liblmdb cross-link is wired.
   - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
   - `"tidesdb"` - Use TidesDB (if available)
   - `"heed3"` - Use heed3 / LMDB (requires `heed3` feature; UTXO values use rkyv encoding)
@@ -250,7 +269,7 @@ Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default
 ### `storage.auto_migrate_core`
 - **Type**: `boolean`
 - **Default**: `true`
-- **Description**: When `true` and `--datadir` contains a Bitcoin Core layout (`chainstate/` + `blocks/`), **`blvm start`** runs a one-time migration into **`storage.core_migrate_destination`** or **`<datadir>/blvm/`** before opening the BLVM store. Requires **`rocksdb`** feature. Disabled by **`--no-auto-migrate`** or **`BLVM_NO_AUTO_MIGRATE_CORE=1`**.
+When `true` and `--data-dir` contains a Bitcoin Core layout (`chainstate/` + `blocks/`), **`blvm start`** runs a one-time migration into **`storage.core_migrate_destination`** or **`<data-dir>/blvm/`** before opening the BLVM store. Requires **`rocksdb`** feature (**`blvm` default features**; absent from portable Windows/aarch64 releases). Disabled by **`--no-auto-migrate`** or **`BLVM_NO_AUTO_MIGRATE_CORE=1`**.
 
 ### `storage.core_migrate_destination`
 - **Type**: `string` (path), optional
@@ -374,6 +393,32 @@ Fine-grained control over what data to keep:
 - `keep_witnesses`: Keep witness data (for SegWit verification)
 - `keep_tx_index`: Keep transaction index
 
+### Storage compression (`[storage.compression]`)
+
+**Requires:** **`compression`** compile-time feature (in **`blvm` default features**; omitted from portable Windows/aarch64 release CI). **Off at runtime** until this table is present in `blvm.toml`. Block/witness zstd applies on all backends; **UTXO zstd is incompatible with heed3/rkyv** — use block/witness/index compression only on default heed3 builds, or set `database_backend = "rocksdb"` if you need UTXO compression.
+
+| Key | Default (when table present) | Description |
+|-----|------------------------------|-------------|
+| `block_compression_enabled` | `true` | zstd-compress block bodies in the local store |
+| `block_compression_level` | `3` | zstd level for blocks |
+| `witness_compression_enabled` | `true` | zstd-compress witness blobs |
+| `witness_compression_level` | `2` | zstd level for witnesses |
+| `utxo_compression_enabled` | `true` | zstd-compress UTXO values (**not heed3/rkyv**) |
+| `utxo_compression_level` | `1` | zstd level for UTXOs |
+
+### Transaction indexing (`[storage.indexing]`)
+
+Optional address and value-range indexes (off by default). See [Transaction Indexing](../node/transaction-indexing.md).
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `enable_address_index` | `false` | Index outputs by scriptPubKey hash |
+| `enable_value_index` | `false` | Index outputs by logarithmic value bucket |
+| `strategy` | `"eager"` | `"eager"` = index at block connect; `"lazy"` = defer until query or background worker |
+| `max_indexed_addresses` | `0` | Cap distinct address keys (`0` = unlimited) |
+| `enable_compression` | `false` | zstd-compress index blobs (requires **`compression`** in binary — **`blvm` default features**; omitted from portable Windows/aarch64 release builds) |
+| `background_indexing` | `false` | With **`lazy`**, advanced indexing on `txindex-bg` thread after connect |
+
 ### UTXO Commitments Pruning (Experimental)
 
 **Requires**: `utxo-commitments` feature enabled.
@@ -422,7 +467,7 @@ max_filter_age_days = 0  # 0 = keep forever
 ### `modules.registry_url`
 - **Type**: `string` (URL)
 - **Default**: `https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json`
-- **Description**: Discovery index (`modules.json`) for bootstrap-download of pinned modules missing on disk. Requires the `governance` feature on the `blvm` build (on by default).
+- **Description**: Discovery index (`modules.json`) for bootstrap-download of pinned modules missing on disk. Requires the `governance` feature on the `blvm` build (on by default). If unset, the node may fall back to **`[modules.blvm-marketplace] registry_url`** when that table exists — prefer setting this key on **`[modules]`** directly. See [Marketplace module](../modules/marketplace-module.md).
 
 ### `modules.enabled_modules` (version pins)
 - **Type**: map of module name → semver constraint (inline `[modules]` keys, `[modules.enabled_modules]` table, or legacy array)
@@ -452,13 +497,19 @@ enabled_modules = ["blvm-miniscript", "blvm-zmq"]
 - **Default**: `[]`
 - **Description**: Module manifest names to never auto-load or bootstrap. Wins over `enabled_modules` if both list the same name.
 
+### `modules.marketplace_fetch_enabled`
+- **Type**: `boolean`
+- **Default**: `false`
+- **Description**: When **`loadmodule`** cannot find a module locally, call **`blvm-marketplace`** via inter-module IPC to fetch it before retrying discovery. Requires **`blvm-marketplace`** loaded. Distinct from startup **registry bootstrap** (`registry_url`). See [Marketplace module](../modules/marketplace-module.md#loadmodule-and-marketplace-auto-fetch).
+
 ### `modules.module_configs`
 - **Type**: per-module override tables under `[modules.<name>]`
 - **Default**: none
-- **Description**: Module-specific configuration overrides (merged into module spawn env). Use a `version = "0.1.*"` key in the same table when the module also needs spawn settings (see above).
+- **Description**: Module-specific configuration overrides (merged into module spawn env). The `[modules.<name>]` table key must match the module manifest **`name`** (e.g. `blvm-lightning`, not a shortened alias). Use a `version = "0.1.*"` key in the same table when the module also needs spawn settings (see above).
 - **Example**:
 ```toml
-[modules.lightning-module]
+[modules.blvm-lightning]
+version = "0.1.*"
 port = "9735"
 network = "mainnet"
 ```
@@ -494,7 +545,7 @@ module_socket_max_attempts = 50
 ### `rpc_auth.admin_tokens`
 - **Type**: `array` of `string`
 - **Default**: `[]`
-- **Description**: Tokens with admin privileges (`getblocktemplate`, `submitblock`, `generatetoaddress`, `stop`, etc.). Bearer tokens in `tokens` / `token_file` must appear here (or use `[rpc_auth].password` for HTTP Basic) to call admin methods; an empty list means no bearer token is admin by default.
+- **Description**: Tokens with admin privileges (`getblocktemplate`, `submitblock`, `generatetoaddress`, `prioritisetransaction`, `savemempool`, `stop`, module load/unload, network manipulation, etc.). Bearer tokens in `tokens` / `token_file` must appear here (or use `[rpc_auth].password` for HTTP Basic) to call admin methods; an empty list means no bearer token is admin by default.
 - **Example**: `admin_tokens = ["mining-admin-token"]`
 
 ### `rpc_auth.username`
@@ -521,6 +572,17 @@ module_socket_max_attempts = 50
 - **Type**: `integer`
 - **Default**: `10`
 - **Description**: RPC rate limit (requests per second).
+
+### `[rest_api]` (config file only)
+
+Requires **`rest-api`** compile-time feature. When **`enabled = true`**, the node starts REST at startup on **`listen_addr`** or the default loopback port (**8080** when RPC is **8332**, **18080** when RPC is **18332**). See [RPC API — REST](../node/rpc-api.md#rest-api).
+
+```toml
+[rest_api]
+enabled = true
+listen_addr = "127.0.0.1:8080"   # optional; defaults from RPC port
+payment_endpoints_enabled = false   # requires bip70-http when true
+```
 
 ## Network Configuration
 
@@ -596,7 +658,7 @@ min_ban_duration_to_share = 3600         # Min ban duration to share (1 hour)
 
 ## Experimental Features
 
-> **Experimental build** — Everything in this section requires compile-time features **not** included in stable GitHub Release binaries (`production`). Build from source or use the experimental feature set. See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+> **Platform / build** — Items here need compile-time features that may be missing on **Windows** or **Linux aarch64** portable release builds. **Dandelion++**, **Iroh**, and **UTXO commitments** are in **`blvm` default features** (Linux x86_64 release artifacts use the same set). CTV, Stratum V2 node demux, and Quinn still require explicit `--features` on most artifacts. See [Release process — Build variants](../development/release-process.md#build-variants).
 
 ### Dandelion++ Privacy Relay
 
@@ -643,7 +705,17 @@ Configuration can be overridden via command-line arguments. CLI overrides ENV an
 | `--migrate-destination` | | — | BLVM store path for Core migration (default `<datadir>/blvm`) |
 | `--migrate-core-only` | | false | Migrate from Core datadir and exit |
 
-**Commands:** `start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `migrate core` (`rocksdb`), `rpc`
+**Commands:** `start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path|set|convert-core`, `configpath <module>` (offline module config path), `load` / `unload` / `reload` / `module list` (RPC to running node; admin auth), `migrate core` (`rocksdb`), `rpc`, plus dynamic **`blvm <module-cli> …`** from loaded modules (e.g. `blvm sync-policy list`)
+
+**`blvm config convert-core`** — draft `blvm.toml` from Core **`bitcoin.conf`**:
+
+```bash
+blvm config convert-core /path/to/bitcoin.conf              # writes config.toml
+blvm config convert-core ~/.bitcoin/bitcoin.conf blvm.toml  # custom output path
+blvm config convert-core ~/.bitcoin/bitcoin.conf --verbose
+```
+
+Arguments: **`input`** (Core config file), optional **`output`** path (default **`config.toml`**), **`--verbose` / `-v`**. Review output: remove legacy **`[network]`** wrappers; map **`rpcuser`/`rpcpassword`** to **`[rpc_auth]`** or tokens; set **`--rpc-addr`** and **`storage.data_dir`** separately. See [Node configuration — bitcoin.conf vs BLVM](../node/configuration.md#bitcoin-core-bitcoinconf-versus-blvm).
 
 ```bash
 blvm --config /path/to/config.toml

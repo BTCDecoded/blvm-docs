@@ -24,7 +24,7 @@ Repositories under [BTCDecoded](https://github.com/BTCDecoded) (e.g. `blvm`, `bl
 
 ### How do I install BLVM?
 
-Pre-built packages and binaries: [Installation](../getting-started/installation.md). Verify checksums on every download.
+Pre-built packages and binaries: **[btcdecoded.org/install](https://btcdecoded.org/install)** (current release). Platform/feature notes: [Installation](../getting-started/installation.md). Verify checksums on every download.
 
 ### How do I run my first node?
 
@@ -40,7 +40,7 @@ See [Deployment posture](../security/deployment-posture.md) — RPC auth, bind a
 
 ### Can I start from an existing Bitcoin Core datadir?
 
-Yes, with the **`rocksdb`** feature (default release binaries): stop **`bitcoind`**, point **`--datadir`** at a synced Core tree, migrate once to **`<datadir>/blvm/`**. See [Operations — Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
+Yes, with the **`rocksdb`** feature (**`blvm` default features**; portable Windows/aarch64 release builds use redb/sled instead): stop **`bitcoind`**, point **`--data-dir`** at a synced Core tree, migrate once to **`<datadir>/blvm/`**. See [Operations — Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
 
 ### What storage backends are supported?
 
@@ -48,7 +48,7 @@ Yes, with the **`rocksdb`** feature (default release binaries): stop **`bitcoind
 
 ### What experimental compile-time features exist?
 
-Stable GitHub Releases ship the **base** binary (`production` features). UTXO commitments, Dandelion++, CTV, Stratum V2, Iroh, and related flags need an experimental/source build. See [Installation — experimental variant](../getting-started/installation.md#experimental-build-variant).
+Stable GitHub Releases ship **platform-specific** feature sets (see [Release process — Build variants](../development/release-process.md#build-variants)). **`blvm` default features** (local `cargo build` and Linux x86_64 release artifacts) include Dandelion++, Iroh, UTXO commitments, BIP70/REST, and **`compression`**; portable **Windows** and **Linux aarch64** release CI builds omit several of those. BIP119 CTV, Stratum V2 node demux, sigop counting, and Quinn still often need explicit `--features`. See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
 
 ### What RPC methods are available?
 

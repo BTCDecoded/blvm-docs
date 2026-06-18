@@ -5,8 +5,6 @@ on:
     branches:
       - main
   workflow_dispatch:
-  repository_dispatch:
-    types: [blvm-release]
   # Optional: Schedule for automated submodule updates
   # schedule:
   #   - cron: '0 0 * * 0'  # Weekly on Sunday
@@ -42,14 +40,6 @@ jobs:
             ~/.cargo/git/
             mdbook-governance-vars/target/
           key: ${{ runner.os }}-gov-vars-${{ hashFiles('mdbook-governance-vars/Cargo.lock') }}
-
-      - name: Refresh install metadata from blvm GitHub Releases
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/fetch-blvm-release.mjs --strict
-
-      - name: Regenerate installation.md from install-content.json
-        run: node scripts/render-installation.mjs
 
       # Submodules: recursive checkout may populate modules/* at pinned SHAs.
       # This step ensures include targets and governance policy YAML exist; if

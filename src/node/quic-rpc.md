@@ -171,5 +171,4 @@ The QUIC RPC system includes:
 
 - [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md)
 - [quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs)
-- [blvm-node/src/rpc/quinn_server.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs), [blvm-node/docs/QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md) (blvm-node/docs/QUIC_RPC.md`)
 

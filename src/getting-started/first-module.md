@@ -12,7 +12,7 @@ Tutorial: load a minimal read-only module on a regtest node and confirm it recei
 
 - Declares `read_blockchain` and `subscribe_events` in `module.toml`
 - Subscribes to `NewBlock` and logs the block hash
-- Loads via `[enabled_modules]` in `blvm.toml`
+- Loads via a **`[modules]`** pin in `blvm.toml`
 
 Full patterns (manifest fields, NodeAPI, publishing events) live in [Building modules](../sdk/module-development.md).
 
@@ -28,8 +28,8 @@ cd modules/hello-module
 ```toml
 [package]
 name = "hello-module"
-version = "0.1.0"
-edition = "2021"
+version = "0.1.0"   # your crate semver (not tied to BLVM releases)
+edition = "2024"
 
 [dependencies]
 blvm-sdk = "0.1"
@@ -42,7 +42,7 @@ tracing-subscriber = "0.3"
 
 ```toml
 name = "hello-module"
-version = "0.1.0"
+version = "0.1.0"   # manifest semver for your module
 description = "Tutorial hello module"
 entry_point = "hello-module"
 
@@ -80,14 +80,10 @@ Or pin a published crate via the registry (production path) — see [Installing 
 On the regtest node from [Quick Start](quick-start.md), add:
 
 ```toml
-registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-
 [modules]
-enabled = true
-modules_dir = "~/.local/share/blvm/modules"
-
-[enabled_modules]
-hello-module = "0.1.*"   # or local path if you skipped the registry
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+hello-module = "0.1.*"   # local build: place binary under modules_dir first
+modules_dir = "~/.local/share/blvm-quickstart/modules"
 ```
 
 Restart the node with `--verbose`.

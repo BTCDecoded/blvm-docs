@@ -1,18 +1,18 @@
 # Transaction relay
 
-> **Experimental build** — Dandelion++ (`dandelion` feature) is not in stable release binaries. FIBRE is a loadable module (`blvm-fibre`). See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+> **Platform / build** — **Dandelion++** (`dandelion`) is in **`blvm` default features**; portable Windows/aarch64 release CI builds omit it. **FIBRE** is a loadable module (`blvm-fibre`), not an in-node config table. See [Release process — Build variants](../development/release-process.md#build-variants).
 
 ## Overview
 
 The node supports **Dandelion++** for privacy-preserving **transaction** relay (optional `dandelion` compile-time feature). **FIBRE** is **block** relay over UDP/FEC — provided by the loadable **`blvm-fibre`** module, not an in-node `[network.fibre]` table. See [FIBRE module](../modules/fibre.md). **Package relay (BIP331)** is documented in [Package Relay (BIP331)](package-relay.md).
 
-Stable GitHub Release binaries use the **base** feature set (`production`); Dandelion++, CTV, Stratum V2, and related flags require an [experimental source build](../getting-started/installation.md#experimental-variant) or local `cargo build` with the matching features.
+**`blvm` default features** include Dandelion++ (Linux x86_64 release artifacts use the same default set). Portable Windows/aarch64 releases use a smaller CI subset. CTV, Stratum V2 node demux, and other flags may still require explicit `--features` — see [Release process — Build variants](../development/release-process.md#build-variants).
 
 ## Dandelion++ *(experimental build)*
 
 Dandelion++ provides privacy-preserving transaction relay with formal anonymity guarantees against transaction origin analysis. It operates in two phases: stem phase (obscures origin) and fluff phase (standard diffusion).
 
-**Requires:** `dandelion` Cargo feature in the binary ([experimental build](../getting-started/installation.md#experimental-variant)).
+**Requires:** `dandelion` Cargo feature in the binary (**`blvm` default features**; omitted from portable release builds).
 
 ### Architecture
 
@@ -118,5 +118,5 @@ Relay protocols are selected based on:
 
 - [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (companion UDP events), [blvm-fibre](https://github.com/BTCDecoded/blvm-fibre) (UDP/FEC relay)
 - [relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs)
-- [blvm-node/src/network/dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs), [blvm-node/src/network/relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/relay.rs), [blvm-node/src/network/network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) (blvm-node/src/network/relay.rsblvm-node/src/network/network_manager.rs`)
+- [dandelion.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/dandelion.rs)
 

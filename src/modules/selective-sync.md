@@ -9,7 +9,17 @@ The **blvm-selective-sync** module provides a configurable **sync policy**: oper
 
 ## Loading
 
-Enable the module in node configuration (same patterns as other modules). After load, the module registers CLI with the node.
+Pin and optional spawn overrides use manifest name **`blvm-selective-sync`**:
+
+```toml
+transport_preference = "tcponly"
+
+[modules]
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
+blvm-selective-sync = "0.1.*"
+```
+
+After load, the module registers **`blvm sync-policy …`** CLI with the node (`getmoduleclispecs`).
 
 ## User-facing CLI (`blvm sync-policy …`)
 
@@ -28,9 +38,24 @@ Enable the module in node configuration (same patterns as other modules). After 
 
 Use `blvm sync-policy --help` when the module is loaded for current flags.
 
+**Auth:** Module CLI calls admin RPC (`runmodulecli`). Pass the **same `--config`** as the running node; the CLI uses `[rpc_auth].admin_tokens` (Bearer), `tokens`, or `username`/`password` from that file — see [Quick Start](../getting-started/quick-start.md).
+
+## Local development (workspace builds)
+
+Release **governance** builds verify native module binaries against the GitHub registry checksums when `[modules].registry_url` is set (the default). A locally built copy under `modules_dir` **without** a `[binary].hash` in `module.toml` will fail **auto-load** with a registry lookup error even though the files are on disk.
+
+For workspace testing:
+
+- Install the built binary under `modules/blvm-selective-sync/` with matching `module.toml`, **and** either:
+  - add a `[binary].hash` for the built artifact, **or**
+  - clear the default registry: `registry_url = ""` in `[modules]`, **or**
+  - bootstrap from the published registry (pin + default `registry_url`).
+- Confirm load with `listmodules` (non-empty) before `blvm sync-policy …`; `runmodulecli` blocks while the module subprocess is down.
+- **`loadmodule`** uses the same **`ModuleLoader`** discovery and checksum path as auto-load (registry governance when `registry_url` is set). The module must stay running; a crash removes it from `listmodules` immediately.
+
 ## Configuration
 
-Module `config.toml` (under module data dir; overridable via `[modules.selective-sync]`):
+Module `config.toml` (under `<modules.data_dir>/blvm-selective-sync/`; overridable via `[modules.blvm-selective-sync]`):
 
 | Key | Purpose |
 |-----|---------|

@@ -91,26 +91,26 @@ cargo install blvm-miningos
 Pin in `blvm.toml`:
 
 ```toml
+[modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-
-[enabled_modules]
 blvm-miningos = "0.1.*"
 ```
 
-Config file search order: `{data_dir}/config/miningos.toml`, `{data_dir}/miningos.toml`, then local paths — see below. See [Installing modules](overview.md#installing-modules).
+Config file search order (first found wins): `{data_dir}/config.toml`, `{data_dir}/config/miningos.toml`, `{data_dir}/miningos.toml`, then `./config/miningos.toml` / `./miningos.toml`. See [Configuration](#configuration). See [Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
-The module searches for configuration files in the following order (first found is used):
+The module searches for configuration in this order (first found is used):
 
-1. `{data_dir}/config/miningos.toml`
-2. `{data_dir}/miningos.toml`
-3. `./config/miningos.toml`
-4. `./miningos.toml`
+1. `{data_dir}/config.toml`
+2. `{data_dir}/config/miningos.toml`
+3. `{data_dir}/miningos.toml`
+4. `./config/miningos.toml`
+5. `./miningos.toml`
 
-If no configuration file is found, the module uses default values.
+If no file is found, defaults from `MiningOsConfig::default()` apply.
 
-Create `data/config/miningos.toml`:
+Example `{data_dir}/config/miningos.toml`:
 
 ```toml
 [miningos]
@@ -118,9 +118,11 @@ enabled = true
 
 [p2p]
 enabled = true
+orchestrator_rpc_public_key = "hex-or-base58-orchestrator-key"
 rack_id = "blvm-node-001"
 rack_type = "miner"
 auto_register = true
+reconnect_interval_seconds = 30
 
 [http]
 enabled = true
@@ -128,38 +130,49 @@ app_node_url = "https://api.mos.tether.io"
 oauth_provider = "google"
 oauth_client_id = "your-client-id"
 oauth_client_secret = "your-client-secret"
+oauth_callback_url = "http://localhost:3000/oauth/google/callback"
 token_cache_file = "miningos-token.json"
+# oauth_token_url = "https://..."  # optional; derived from provider when unset
 
 [stats]
 enabled = true
 collection_interval_seconds = 60
+hashrate_unit = "TH/s"
+temperature_unit = "celsius"
+power_unit = "watts"
 
 [template]
 enabled = true
 update_interval_seconds = 30
+expose_via_http = true
+expose_via_p2p = true
+cache_duration_seconds = 10
+
+[actions]
+enabled = true
+supported_actions = ["reboot", "setPowerMode", "updatePoolConfig", "setHashrate"]
+require_approval = true
+timeout_seconds = 120
+
+[things]
+auto_register_miners = true
+miner_tag = "t-miner"
+update_interval_seconds = 60
 ```
 
-### Configuration Options
+Node overrides: `[modules.blvm-miningos]` in `blvm.toml` or `MODULE_CONFIG_*` env vars (see [Configuration Reference](../reference/configuration-reference.md#modules-configuration)).
 
-- `enabled` (default: `true`): Enable or disable the module
-- **P2P Configuration**:
-  - `enabled` (default: `true`): Enable P2P worker bridge
-  - `rack_id` (required): Unique identifier for this BLVM node in MiningOS
-  - `rack_type` (default: `"miner"`): Type of rack (e.g., `"miner"`)
-  - `auto_register` (default: `true`): Automatically register with MiningOS
-- **HTTP Configuration**:
-  - `enabled` (default: `true`): Enable HTTP REST API client
-  - `app_node_url` (required): MiningOS app-node API URL
-  - `oauth_provider` (required): OAuth2 provider (e.g., `"google"`)
-  - `oauth_client_id` (required): OAuth2 client ID
-  - `oauth_client_secret` (required): OAuth2 client secret
-  - `token_cache_file` (default: `"miningos-token.json"`): Token cache file path
-- **Statistics Configuration**:
-  - `enabled` (default: `true`): Enable statistics collection
-  - `collection_interval_seconds` (default: `60`): Statistics collection interval
-- **Template Configuration**:
-  - `enabled` (default: `true`): Enable block template provider
-  - `update_interval_seconds` (default: `30`): Template update interval
+### Configuration options
+
+| Section | Key | Notes |
+|---------|-----|--------|
+| `[miningos]` | `enabled` | Master switch (default `true`) |
+| `[p2p]` | `enabled`, `orchestrator_rpc_public_key`, `rack_id`, `rack_type`, `auto_register`, `reconnect_interval_seconds` | Hyperswarm bridge via Node.js `bridge/` |
+| `[http]` | `enabled`, `app_node_url`, `oauth_*`, `token_cache_file`, `oauth_token_url` | MiningOS app-node REST + OAuth2 |
+| `[stats]` | `enabled`, `collection_interval_seconds`, `hashrate_unit`, `temperature_unit`, `power_unit` | Periodic stats push |
+| `[template]` | `enabled`, `update_interval_seconds`, `expose_via_http`, `expose_via_p2p`, `cache_duration_seconds` | Block template provider |
+| `[actions]` | `enabled`, `supported_actions`, `require_approval`, `timeout_seconds` | MiningOS action handlers |
+| `[things]` | `auto_register_miners`, `miner_tag`, `update_interval_seconds` | Miner → MiningOS “thing” registration |
 
 ## Module Manifest
 
@@ -167,7 +180,6 @@ The module includes a `module.toml` manifest (see [Building modules](../sdk/modu
 
 ```toml
 name = "blvm-miningos"
-version = "0.1.0"
 description = "MiningOS integration module for BLVM"
 author = "Bitcoin Commons Team"
 entry_point = "blvm-miningos"
@@ -177,41 +189,41 @@ capabilities = [
     "subscribe_events",
     "publish_events",
     "call_module",
+    "get_block_template",
+    "submit_block",
 ]
 ```
 
+Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`** — do not hardcode it in the book.
+
+The node maps manifest **`capabilities`** to module permissions at load time — include **`get_block_template`** and **`submit_block`** when this module fetches templates or submits blocks.
+
 ## Events
 
-### Subscribed Events
+### Subscribed events
 
-The module subscribes to node events including:
+At startup the module subscribes to:
 
-- **Chain Events**: `NewBlock`, `ChainReorg`, `BlockDisconnected`
-- **Mining Events**: `BlockTemplateGenerated`, `BlockFound`, `ShareSubmitted`
-- **Network Events**: `PeerConnected`, `PeerDisconnected`
-- **Mempool Events**: `MempoolTransactionAdded`, `MempoolTransactionRemoved`
+- `BlockMined`
+- `BlockTemplateUpdated`
+- `MiningDifficultyChanged`
 
-### Published Events
+### Published events
 
-The module publishes the following events:
+When actions complete via the module API, the module may publish:
 
-- `MiningOSRegistered` - Successfully registered with MiningOS
-- `MiningOSActionExecuted` - Action executed from MiningOS
-- `MiningOSStatsUpdated` - Statistics updated and sent to MiningOS
-- `MiningOSTemplateUpdated` - Block template updated and sent to MiningOS
+- `ActionExecuted` — MiningOS action handled (payload includes action name and result)
 
-## API Integration
+Statistics and template updates are pushed to MiningOS over HTTP/P2P; they are **not** separate custom `EventType` values.
 
-The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
+## API integration
 
-- **Read-only blockchain access**: Queries blockchain data for statistics
-- **Event subscription**: Receives real-time events from the node
-- **Event publication**: Publishes MiningOS-specific events
-- **Module calls**: Can call other modules (e.g., Stratum V2 for pool config updates) via `call_module`
-- **Block templates**: Gets block templates via NodeAPI `get_block_template` method (no special permission required)
-- **Block submission**: Submits mined blocks via NodeAPI `submit_block` method (no special permission required)
+The module connects via **`ModuleIntegration`**, registers **`MiningOsModuleApi`**, and uses **`NodeAPI`** for chain/template queries:
 
-**Note**: `get_block_template` and `submit_block` are NodeAPI methods, not permissions. Modules can call these methods through the NodeAPI interface without requiring special capabilities.
+- **Statistics / templates**: background tasks when `[stats]` / `[template]` are enabled
+- **Module API**: other modules can invoke MiningOS actions through the registered API
+- **Block templates / submit**: requires manifest capabilities **`get_block_template`** and **`submit_block`** (enforced as permissions)
+- **Inter-module**: pool config updates can call **`blvm-stratum-v2`** when loaded
 
 ## Action Execution System
 
@@ -254,8 +266,7 @@ For manual testing:
 
 ## Repository
 
-- **GitHub**: [blvm-miningos](https://github.com/BTCDecoded/blvm-miningos)
-- **Version**: 0.1.0
+- **GitHub**: [blvm-miningos](https://github.com/BTCDecoded/blvm-miningos) — releases and current `module.toml` **`version`**
 - **Documentation**: [QUICKSTART.md](https://github.com/BTCDecoded/blvm-miningos/blob/main/QUICKSTART.md), [Integration Guide](https://github.com/BTCDecoded/blvm-miningos/blob/main/docs/INTEGRATION.md)
 
 ## External Resources

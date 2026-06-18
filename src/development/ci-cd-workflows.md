@@ -16,14 +16,20 @@ When you push code to any branch, the following workflows may trigger:
 2. **Coverage Workflow** - Calculates test coverage
 3. **Security Workflow** - Runs security checks (if configured)
 
-### On Push to Main Branch
+### On push to `main`
 
-In addition to the above, pushing to `main` triggers:
+When the release job runs (not every push — respect `[skip_release]` and workflow filters), **`blvm/.github/workflows/ci.yml`** may:
 
-1. **Release Workflow** - Automatically creates a new release (see [Release Process](release-process.md))
-2. **Version Bumping** - Auto-increments patch version
-3. **Cargo Publishing** - Publishes dependencies to crates.io
-4. **Git Tagging** - Tags all repositories with the new version
+1. Bump **`Cargo.toml`** patch version and tag **`vX.Y.Z`**
+2. Build **Linux x86_64**, **Linux aarch64**, and **Windows** release binaries
+3. Publish **crates.io** sets per repo policy (coordinated release scripts)
+4. Upload GitHub Release artifacts and dispatch **`blvm-release`** to **`website`** and **`commons-website`** (install page at [btcdecoded.org/install](https://btcdecoded.org/install)). The **`blvm-docs`** book install chapter is timeless and deploys only on **`blvm-docs`** pushes.
+
+See [Release process](release-process.md) for artifact variants and feature matrices.
+
+### On push to `develop`
+
+The same **`ci.yml`** runs **nightly-release** on `develop`: rolling **`nightly`** tag, prerelease assets, and **`ghcr.io/btcdecoded/blvm:nightly`**, after optional develop crate-set publish/verify.
 
 ## Repository-Specific CI Workflows
 

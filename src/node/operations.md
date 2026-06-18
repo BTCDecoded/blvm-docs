@@ -49,7 +49,7 @@ Stop **`bitcoind`** before migrate or start against a Core datadir. Running both
 
 ```bash
 # Recommended: auto-migrate on start → ~/.bitcoin/blvm/
-blvm start --network mainnet --datadir ~/.bitcoin
+blvm start --network mainnet --data-dir ~/.bitcoin
 ```
 
 On first start BLVM detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. **Block files are not copied by default** — BLVM keeps reading bodies from Core **`blocks/`** (~700 GB stays in one place). Only the UTXO set and indexes are converted into BLVM format (~15–30 GB under **`blvm/`**).
@@ -58,7 +58,7 @@ On first start BLVM detects the Core layout, migrates once into **`<datadir>/blv
 # Optional: explicit migrate with verify, then start the BLVM store
 blvm migrate core --source ~/.bitcoin --destination ~/.bitcoin/blvm \
   --network mainnet --verify
-blvm start --network mainnet --datadir ~/.bitcoin/blvm
+blvm start --network mainnet --data-dir ~/.bitcoin/blvm
 ```
 
 ### What gets migrated
@@ -91,7 +91,7 @@ After a successful migrate you may delete Core **`chainstate/`** (~12 GB) if you
 | `BLVM_REUSE_CORE_BLOCK_FILES=0` | Same as `reuse_core_block_files = false` |
 | `BLVM_CORE_MIGRATE_BLOCK_WORKERS` / `BLVM_CORE_MIGRATE_BLOCK_BATCH` | Parallel block read tuning |
 
-Requires the **`rocksdb`** Cargo feature (included in default `blvm` release builds). Config and ENV details: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
+Requires the **`rocksdb`** Cargo feature (**`blvm` default features**; omitted from portable Windows/aarch64 release builds). Config and ENV details: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
 
 **Verify:** `--verify` on `blvm migrate core`; regtest test `core_drop_in` (fixture: `blvm-node/scripts/gen-core-regtest-fixture.sh`); mainnet smoke: `blvm-node/scripts/core-drop-in-mainnet-smoke.sh`.
 
@@ -177,11 +177,33 @@ The node implements graceful error recovery:
 ### Health Checks
 
 ```bash
-# Check if node is running
-curl http://localhost:8332/health
+# CLI health check (uses JSON-RPC getblockchaininfo on the configured RPC address)
+blvm health
+# Mainnet node:
+blvm --network mainnet --rpc-addr 127.0.0.1:8332 health
 
-# Get blockchain info via RPC
-curl -X POST http://localhost:8332 \
+# HTTP health on the RPC port (GET — same port as JSON-RPC)
+curl -s http://127.0.0.1:8332/health            # mainnet — quick status
+curl -s http://127.0.0.1:18332/health           # testnet / regtest
+curl -s http://127.0.0.1:18332/health/live      # liveness (same body as /health)
+curl -s http://127.0.0.1:18332/health/ready     # readiness (healthy only)
+curl -s http://127.0.0.1:18332/health/detailed  # full gethealth JSON
+
+# Prometheus metrics (GET /metrics — requires auth when [rpc_auth] is enabled)
+curl -s http://127.0.0.1:8332/metrics
+
+# JSON-RPC node health extension (blvm-node; not Bitcoin Core)
+curl -X POST http://127.0.0.1:18332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "gethealth", "params": [], "id": 1}'
+
+# JSON-RPC metrics extension (blvm-node; not Bitcoin Core)
+curl -X POST http://127.0.0.1:18332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "getmetrics", "params": [], "id": 1}'
+
+# JSON-RPC blockchain info
+curl -X POST http://127.0.0.1:8332 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
 ```

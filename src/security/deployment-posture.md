@@ -23,6 +23,7 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 ### Control plane (JSON-RPC, REST, QUIC RPC)
 
 - **Required (non-loopback):** **`[rpc_auth]`** with **`required = true`**. Use **Bearer tokens** (`tokens`, `admin_tokens`, `token_file`, **`RPC_AUTH_TOKENS`**) and/or **HTTP Basic** (`username`, `password` for ckpool / Core-style clients). TLS client certificates remain supported when configured. See **[Configuration reference](../reference/configuration-reference.md)** and **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
+- **REST note:** `/api/v1/*` requires compile-time **`rest-api`** and **`[rest_api].enabled = true`** (separate bind; off by default). Uses the same **`RpcAuthManager`** as JSON-RPC when auth is configured.
 - **Recommended:** Bind RPC to **loopback** when using HTTP Basic — credentials are cleartext on the wire. Use a reverse proxy or firewall allowlists when exposing RPC beyond localhost; server-side rate limits do not replace edge policy.
 - **Recommended:** Grant **admin** access only to operators and mining tooling (`getblocktemplate`, `submitblock`, `generatetoaddress`, destructive control methods). Bearer tokens in `tokens` alone are read-only unless also listed in `admin_tokens`; `[rpc_auth].password` is registered as admin automatically when set.
 - **Note (QUIC):** JSON-RPC over QUIC uses **HTTP/3** (ALPN **`h3`**) and shares the same **`RpcAuthManager`** as TCP HTTP (Bearer and Basic). Treat the **UDP listener** as its own exposure surface. See **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
@@ -61,7 +62,7 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 
 Complete before running a mainnet node or exposing RPC beyond loopback:
 
-1. **Release verification** — Download from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
+1. **Release verification** — Download from [btcdecoded.org/install](https://btcdecoded.org/install) or [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
 2. **Sync path** — Use [Mainnet initial sync](../getting-started/mainnet-sync.md) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
 3. **Data directory** — Dedicated path (e.g. `~/.local/share/blvm-mainnet`); restrict filesystem permissions to the node OS user.
 4. **IBD tuning** — Review bundled `blvm-mainnet-ibd.toml.example`; optional `BLVM_IBD_ENGINE` per [IBD UTXO engine](../node/ibd-engine.md).

@@ -2,7 +2,7 @@
 
 ## Bitcoin Core datadir
 
-Import a synced Core datadir into BLVM’s native store at `<datadir>/blvm/` (requires `rocksdb`, Core stopped, matching `--network`).
+Import a synced Core datadir into BLVM’s native store at `<datadir>/blvm/` (requires **`rocksdb`** in the binary — **`blvm` default features**; absent from portable Windows/aarch64 releases; Core stopped; matching `--network`).
 
 **Procedure:** [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir)
 

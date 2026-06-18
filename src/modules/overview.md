@@ -16,8 +16,9 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 **Registry modules** (bootstrap from `registry/modules.json`):
 
 - **blvm-zmq** — ZMQ PUB notifications ([ZMQ module](zmq.md))
-- **blvm-miniscript** — Miniscript descriptor / PSBT helpers
-- **blvm-governance** — On-chain proposal voting module
+- **blvm-miniscript** — Descriptor / PSBT RPC overrides ([Miniscript module](miniscript.md))
+- **blvm-governance** — On-chain proposal webhook module ([Governance module](governance-module.md))
+- **blvm-marketplace** — Optional registry/payments ([Marketplace module](marketplace-module.md))
 - **blvm-fibre** — FIBRE UDP/FEC block relay ([FIBRE module](fibre.md))
 
 ## Module system architecture
@@ -32,14 +33,13 @@ Modules run in separate processes with IPC ([Module System Architecture](../arch
 
 ### Registry bootstrap (recommended)
 
-Pin modules in `blvm.toml`:
+Pin modules in `blvm.toml` under **`[modules]`** (merge into your existing file — a standalone snippet still needs `transport_preference` and network keys elsewhere in the file):
 
 ```toml
+[modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-
-[enabled_modules]
-blvm-mesh = "0.1.39"
-blvm-zmq = "0.1.39"
+blvm-mesh = "0.1.*"
+blvm-zmq = "0.1.*"
 ```
 
 The node downloads version-pinned binaries from GitHub Releases (`sha256sums.txt` on each tag) when a pinned module is missing on disk. See `blvm/README.md` in the `blvm` repository for the full bootstrap contract.
@@ -63,8 +63,7 @@ Each module uses `module.toml` plus optional `config.toml`. See per-module pages
 
 ## Module lifecycle
 
-- **Load** at startup when listed in `enabled_modules` or configuration
-- **Load** at runtime via RPC or module manager API
+- **Load** at startup when pinned under **`[modules]`** (inline `blvm-zmq = "0.1.*"`) or loaded at runtime via RPC
 - **Unload** without stopping the base node
 - **Reload** configuration where the module supports hot reload
 

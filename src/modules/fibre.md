@@ -18,7 +18,7 @@ Wire types and `FibreConfig` live in **`blvm-protocol`** (`fibre` feature). The 
 ## Requirements
 
 - `blvm-node` with modules enabled.
-- Module listed in **`registry/modules.json`** (bootstrap via `enabled_modules` version pin) or built locally.
+- Module listed in **`registry/modules.json`** (bootstrap via **`[modules]`** version pin) or built locally.
 - Do **not** bind the same UDP port twice on one host (only one FIBRE listener per deployment unless ports are explicitly separated).
 
 ## Loading
@@ -26,9 +26,8 @@ Wire types and `FibreConfig` live in **`blvm-protocol`** (`fibre` feature). The 
 Pin in `blvm.toml` (example):
 
 ```toml
+[modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-
-[enabled_modules]
 blvm-fibre = "0.1.*"
 ```
 

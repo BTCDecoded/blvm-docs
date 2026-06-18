@@ -27,7 +27,7 @@ Optional: enable the age-tiered UTXO engine with **`BLVM_IBD_ENGINE=1`** before 
 
 **Manual:** `blvm --config blvm-mainnet-ibd.toml.example --network mainnet --data-dir ~/.local/share/blvm-mainnet --verbose`
 
-**Monitor:** same flags as start — `blvm --network mainnet --config blvm-mainnet-ibd.toml.example sync`. During sync, `IBD: <height> / <tip>` in logs is authoritative.
+**Monitor:** `blvm --network mainnet --config blvm-mainnet-ibd.toml.example --data-dir ~/.local/share/blvm-mainnet sync` (same `--network`, `--config`, and `--data-dir` as start). During sync, `IBD: <height> / <tip>` in logs is authoritative.
 
 **Resume:** same `--data-dir` every run; do not delete the active backend directory (`heed3/`, `rocksdb/`, …).
 

@@ -105,8 +105,7 @@ pub trait NodeAPI {
 
 The full **`NodeAPI`** surface includes **events** (`subscribe_events`) and **targeted writes** for P2P policy (block/tx `getdata` denylists), **sync status**, **peer ban**, and **maintenance mode**; see [Module development](../sdk/module-development.md#querying-node-data).
 
-**Event Types:**
-**Core Blockchain Events:**
+**Event Types:** Catalog of shared **`EventType`** variants (not every module emits every type — see [module pages](../modules/overview.md)).
 - `EventType::NewBlock` - New block connected to chain
 - `EventType::NewTransaction` - New transaction in mempool
 - `EventType::BlockDisconnected` - Block disconnected (chain reorg)
@@ -141,16 +140,15 @@ pub struct ModuleContext {
 
 #### RPC API
 
-**RPC Methods:** JSON-RPC methods aligned with widely documented Bitcoin node APIs. See [RPC API Reference](../node/rpc-api.md) for the list.
+**RPC Methods:** JSON-RPC methods aligned with widely documented Bitcoin node APIs. **75 core methods** in `CORE_RPC_METHODS` — full list in [RPC API Reference](../node/rpc-api.md#available-methods). Module-loaded methods (mesh, miniscript overrides) register at runtime.
 
-**Key Categories:**
-- Blockchain methods (8): `getblockchaininfo`, `getblock`, `getblockhash`, `getblockheader`, `getbestblockhash`, `getblockcount`, `getdifficulty`, `gettxoutsetinfo`, `verifychain`
-- Raw transaction methods (7): `getrawtransaction`, `sendrawtransaction`, `testmempoolaccept`, `decoderawtransaction`, `gettxout`, `gettxoutproof`, `verifytxoutproof`
-- Mempool methods (3): `getmempoolinfo`, `getrawmempool`, `savemempool`
-- Network methods (9): `getnetworkinfo`, `getpeerinfo`, `getconnectioncount`, `ping`, `addnode`, `disconnectnode`, `getnettotals`, `clearbanned`, `setban`, `listbanned`
-- Mining methods: `getmininginfo`, `getblocktemplate`, `submitblock`, `generatetoaddress`, `estimatesmartfee`, `validateaddress` (pools / solo — see [Mining Integration](../node/mining.md))
-- Mesh methods (requires `blvm-mesh`): `meshsendpacket`, `meshpollreceived`, `meshquoteroute`, `meshrequesthopinvoice`
-- Payment verification: `verifyonchainpayment`, `verifyonchainpaymentbytx`, `verifycovenantproof` (CTV feature)
+**Key categories (summary — not exhaustive):**
+- **Blockchain / raw tx / mempool / network / mining / control** — Core parity surface (`getblockchaininfo`, `sendrawtransaction`, `getblocktemplate`, `generatetoaddress`, …)
+- **Module lifecycle** — `loadmodule`, `unloadmodule`, `listmodules`, `getmoduleclispecs`, `runmodulecli` (**admin**; local discovery; optional **`[modules].marketplace_fetch_enabled`** for remote fetch via `blvm-marketplace`)
+- **Mesh** (requires `blvm-mesh` loaded): `meshsendpacket`, `meshpollreceived`, `meshquoteroute`, `meshrequesthopinvoice`
+- **Miniscript overrides** (requires `blvm-miniscript`): `getdescriptorinfo`, `analyzepsbt`
+- **Payment verification** (compile-time `bip70-http` / `ctv`; platform-dependent): `verifyonchainpayment`, `verifyonchainpaymentbytx`, `verifycovenantproof`, `createpaymentrequest`
+- **REST `/api/v1/*`** — separate server; enable with **`[rest_api].enabled`** (`rest-api` feature; see [REST API](../node/rpc-api.md#rest-api))
 
 **Documentation:** See [RPC API Reference](../node/rpc-api.md).
 

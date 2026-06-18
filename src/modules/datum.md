@@ -89,9 +89,8 @@ cargo install blvm-datum
 Pin both modules in `blvm.toml`:
 
 ```toml
+[modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-
-[enabled_modules]
 blvm-stratum-v2 = "0.1.*"
 blvm-datum = "0.1.*"
 ```
@@ -112,39 +111,47 @@ See [Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
-Both `blvm-stratum-v2` and `blvm-datum` modules should be enabled for full DATUM Gateway functionality. Create configuration in your node's `config.toml`:
+Both **`blvm-stratum-v2`** and **`blvm-datum`** must be pinned for full DATUM Gateway functionality.
+
+**Node overrides** in `blvm.toml`:
 
 ```toml
 [modules.blvm-stratum-v2]
-enabled = true
 listen_addr = "0.0.0.0:3333"
-mode = "solo"  # or "pool"
 
 [modules.blvm-datum]
-enabled = true
 pool_url = "https://ocean.xyz/datum"
 pool_username = "user"
 pool_password = "pass"
-pool_public_key = "hex_encoded_32_byte_public_key"  # Optional, for encryption
-
-[modules.blvm-datum.mining]
-coinbase_tag_primary = "DATUM Gateway"
-coinbase_tag_secondary = "BLVM User"
-pool_address = "bc1q..."  # Bitcoin address for pool payouts
 ```
+
+**Module data-dir config** (optional, same keys): `<modules.data_dir>/blvm-stratum-v2/config.toml` and `<modules.data_dir>/blvm-datum/config.toml`.
+
+Example **`blvm-datum`** module `config.toml` (matches `DatumConfig` in the module crate):
+
+```toml
+pool_url = "https://ocean.xyz/datum"
+pool_username = "user"
+pool_password = "pass"
+pool_public_key = "hex_encoded_32_byte_public_key"  # optional
+reconnect_interval = 30   # seconds between reconnect attempts (default: 30)
+# min_difficulty = 1      # optional pool min difficulty
+```
+
+Coinbase tags and payout outputs come from the **DATUM pool** at runtime (`fetch_coinbaser` / `get_coinbase_payout` inter-module API), not from static config keys.
 
 ### Configuration Options
 
-- `enabled` (default: `true`): Enable or disable the module
-- `pool_url` (required): DATUM pool URL (e.g., `https://ocean.xyz/datum`)
-- `pool_username` (required): Pool username
-- `pool_password` (required): Pool password
-- `pool_public_key` (optional): Pool public key (32-byte hex-encoded) for encryption
-- `coinbase_tag_primary` (optional): Primary coinbase tag
-- `coinbase_tag_secondary` (optional): Secondary coinbase tag
-- `pool_address` (optional): Bitcoin address for pool payouts
+- `pool_url`: DATUM pool URL (e.g. `https://ocean.xyz/datum`)
+- `pool_username`: Pool username
+- `pool_password`: Pool password
+- `pool_public_key` (optional): Pool public key (32-byte hex) for encryption
+- `reconnect_interval` (default: `30`): Seconds between reconnect attempts
+- `min_difficulty` (optional): Minimum difficulty hint for the pool
 
-**Note**: The `blvm-stratum-v2` module must also be enabled and configured for miners to connect.
+Node overrides use **`[modules.blvm-datum]`** (manifest name) with the same keys. There is **no** `[mining]` table and **no** `enabled` key in module `config.toml` — enable via **`[modules]`** pin / `loadmodule`.
+
+**Note**: The `blvm-stratum-v2` module must also be loaded for miners to connect.
 
 ## Module Manifest
 
@@ -152,7 +159,6 @@ The module includes a `module.toml` manifest (see [Building modules](../sdk/modu
 
 ```toml
 name = "blvm-datum"
-version = "0.1.0"
 description = "DATUM Gateway mining protocol module for blvm-node"
 author = "Bitcoin Commons Team"
 entry_point = "blvm-datum"
@@ -163,23 +169,21 @@ capabilities = [
 ]
 ```
 
+Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`** — do not hardcode it in the book.
+
+## Module CLI
+
+When loaded, registers commands such as **`blvm datum status`**, **`datum_info`**, **`pool_status`**, **`reconnect`**, **`config_path`**, and **`submit_pow`** (see `DatumModule` in the module crate).
+
 ## Events
 
-### Subscribed Events
+### Subscribed events
 
-The module subscribes to node events including:
+The module handles these node events (see `#[on_event(...)]` on `DatumModule`):
 
-- **Chain Events**: `NewBlock`, `ChainReorg`, `BlockDisconnected`
-- **Mining Events**: `BlockTemplateGenerated`, `BlockFound`
+- `BlockMined`, `BlockTemplateUpdated`, `MiningDifficultyChanged`, `NewBlock`, `ChainReorg`, `ShareSubmitted`
 
-### Published Events
-
-The module publishes the following events:
-
-- `DatumPoolConnected` - Successfully connected to DATUM pool
-- `DatumPoolDisconnected` - Disconnected from DATUM pool
-- `DatumTemplateReceived` - Received block template from pool
-- `DatumBlockSubmitted` - Block submitted to pool
+It does **not** publish separate custom event types; pool state is queried via module CLI or the inter-module **`get_coinbase_payout`** API.
 
 ## Dependencies
 
@@ -195,10 +199,9 @@ The module publishes the following events:
 The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 
 - **Read-only blockchain access**: Queries blockchain data for template generation
-- **Event subscription**: Receives real-time events from the node
-- **Event publication**: Publishes DATUM-specific events
-- **NodeAPI calls**: Uses `get_block_template` and `submit_block` via NodeAPI
-- **ModuleAPI registration**: Registers `DatumModuleApi` for inter-module communication
+- **Event subscription**: Receives the mining/chain events listed above
+- **Inter-module API**: Exposes **`get_coinbase_payout`** for other modules (e.g. Stratum V2)
+- **NodeAPI calls**: Uses block template / submit paths via NodeAPI
 
 ### Inter-Module Communication
 
@@ -238,13 +241,12 @@ Ocean Pool ← blvm-datum (DATUM client) ← NodeAPI (block templates)
 |---------|--------|
 | Module not loading | Binary path; `module.toml`; `blvm-stratum-v2` also enabled |
 | Pool connection fails | `pool_url`, credentials; TLS reachability to Ocean |
-| Template / coinbase errors | `pool_address`, coinbase tags; `get_coinbase_payout` API |
+| Template / coinbase errors | Pool connectivity; inter-module **`get_coinbase_payout`** (tags come from pool, not config) |
 | Miners idle | Stratum module `listen_addr`; miners point to Stratum not DATUM |
 
 ## Repository
 
-- **GitHub**: [blvm-datum](https://github.com/BTCDecoded/blvm-datum)
-- **Version**: 0.1.0
+- **GitHub**: [blvm-datum](https://github.com/BTCDecoded/blvm-datum) — releases and current `module.toml` **`version`**
 - **Status**: 🚧 In Development
 
 ## External Resources

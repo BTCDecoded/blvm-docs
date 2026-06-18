@@ -266,17 +266,17 @@ pub enum ModuleError {
 
 The node-side IPC server:
 
-- Listens on Unix domain socket
-- Accepts module connections
+- Listens on Unix domain sockets under **`[modules].socket_dir`** (default `data/modules/sockets`, relative to the process unless configured in `blvm.toml`)
+- Accepts module connections (one socket per spawned module process)
 - Routes requests to NodeAPI implementation
 - Publishes events to subscribed modules
 
 
 ### IPC Client
 
-The module-side IPC client:
+The module-side IPC client ( **`blvm-sdk`** runner):
 
-- Connects to Unix domain socket
+- Connects to the socket path passed in **`ModuleContext.socket_path`** at spawn
 - Sends requests and receives responses
 - Subscribes to events
 - Handles connection errors

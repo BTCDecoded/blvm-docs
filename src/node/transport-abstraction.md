@@ -1,6 +1,6 @@
 # Transport abstraction
 
-> **Experimental build** — **Iroh** and **Quinn** transports require compile-time features (`iroh`, `quinn`). Stable release binaries default to **TCP** (`tcponly`). See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+> **Platform / build** — **Iroh** is in **`blvm` default features** (Linux x86_64 release artifacts use the same default set; portable Windows/aarch64 CI omits several defaults). **Quinn** requires the `quinn` feature (source build). All release binaries default to TCP-capable builds; set `transport_preference` in config. See [Release process — Build variants](../development/release-process.md#build-variants).
 
 ## Overview
 
@@ -220,5 +220,4 @@ The transport abstraction includes:
 - [protocol_adapter.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol_adapter.rs)
 - [message_bridge.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/message_bridge.rs)
 - [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
-- [blvm-node/src/network/transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs), [blvm-node/src/network/tcp_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/tcp_transport.rs), [blvm-node/src/network/quinn_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/quinn_transport.rs), [blvm-node/src/network/iroh_transport.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/iroh_transport.rs) (blvm-node/src/network/tcp_transport.rsblvm-node/src/network/quinn_transport.rsblvm-node/src/network/iroh_transport.rs`)
 

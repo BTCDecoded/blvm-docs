@@ -40,7 +40,7 @@ The consensus layer is designed as a pure mathematical implementation with no si
 - Block template generation
 
 ### Chain Management
-- Chain reorganization handling
+- Reorganization primitives in **blvm-consensus** (`reorganization.rs`); **blvm-node** wires them for the live `process_block` path (block index, chainwork tip selection, undo persistence, events — see **blvm-node** `docs/FORK_CHOICE_AND_REORG.md`)
 - P2P network message processing
 
 ### Advanced Features

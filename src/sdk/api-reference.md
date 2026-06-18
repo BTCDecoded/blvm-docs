@@ -215,7 +215,7 @@ use blvm_sdk::ModuleRegistry;
 
 let mut registry = ModuleRegistry::new("modules");
 let modules = registry.discover_modules()?;
-let module = registry.get_module("lightning-module", Some("1.0.0"))?;
+let module = registry.get_module("blvm-lightning", Some("1.0.0"))?;
 ```
 
 #### `ModuleInfo`
@@ -455,12 +455,28 @@ let modules = registry.discover_modules()?;
 println!("Found {} modules", modules.len());
 
 // Get specific module
-let module = registry.get_module("lightning-module", Some("1.0.0"))?;
+let module = registry.get_module("blvm-lightning", Some("1.0.0"))?;
 println!("Module: {} v{}", module.name, module.version);
 
 // Resolve dependencies
-let deps = registry.resolve_dependencies(&["lightning-module".to_string()])?;
+let deps = registry.resolve_dependencies(&["blvm-lightning".to_string()])?;
 ```
+
+## Module runtime (`node` feature)
+
+When building modules against **`blvm-sdk`** with the **`node`** feature, the SDK re-exports IPC and storage helpers used by subprocess modules:
+
+| Symbol | Role |
+|--------|------|
+| `Module`, `ModuleContext`, `ModuleManifest` | Module trait + manifest types |
+| `ModuleIpcClient`, `NodeAPI` | IPC to the running node |
+| `EventType`, `EventPayload`, `EventMessage` | Event subscription / publish |
+| `open_module_db` | Open module-local embedded DB under the module data dir |
+| `Permission`, `PermissionSet` | Capability checks |
+
+Subprocess modules that register **`ModuleAPI`** over IPC should use **`run_module_with_setup_and_api`** (not plain **`run_module!`**) — see [Building modules — ModuleAPI](module-development.md#subprocess-moduleapi-registration) and [Module IPC Protocol](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration).
+
+Governance **`NestedMultisig`** lives in **`blvm_sdk::governance::nested_multisig`** (not re-exported at crate root).
 
 ## See Also
 

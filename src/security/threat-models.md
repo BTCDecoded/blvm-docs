@@ -342,7 +342,8 @@ For complete documentation, see [LAN Peering System](../node/lan-peering.md).
 - [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
 - [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs)
 - [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
-- [blvm-node/SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md), [blvm-node/src/module/](https://github.com/BTCDecoded/blvm-node/tree/main/src/module/), [blvm-node/docs/MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md) (blvm-node/src/module/blvm-node/docs/MODULE_SYSTEM.md`)
+- [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
+- [module/](https://github.com/BTCDecoded/blvm-node/tree/main/src/module/)
 ## See Also
 
 - [LAN Peering System](../node/lan-peering.md) - Complete LAN peering documentation

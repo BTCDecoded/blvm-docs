@@ -58,6 +58,9 @@
 - [Selective Sync Module](modules/selective-sync.md)
 - [FIBRE Module](modules/fibre.md)
 - [ZMQ Module](modules/zmq.md)
+- [Miniscript Module](modules/miniscript.md)
+- [Governance Module](modules/governance-module.md)
+- [Marketplace Module](modules/marketplace-module.md)
 
 # Architecture
 

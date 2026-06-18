@@ -131,7 +131,9 @@ Other `ServerError(n)` codes may appear as the implementation grows; treat unkno
 
 Authenticated callers without **admin** credentials receive **HTTP 403** (not JSON-RPC -32603):
 
-`stop`, `loadmodule`, `unloadmodule`, `reloadmodule`, `runmodulecli`, `logging`, `invalidateblock`, `reconsiderblock`, `pruneblockchain`, `preciousblock`, `addnode`, `disconnectnode`, `setban`, `clearbanned`, `setnetworkactive`, `getblocktemplate`, `submitblock`, `generatetoaddress`, `sendrawtransaction`, `createrawtransaction`, `savemempool`.
+`stop`, `loadmodule`, `unloadmodule`, `reloadmodule`, `runmodulecli`, `logging`, `invalidateblock`, `reconsiderblock`, `pruneblockchain`, `addnode`, `disconnectnode`, `setban`, `clearbanned`, `setnetworkactive`, `getblocktemplate`, `submitblock`, `generatetoaddress`, `sendrawtransaction`, `createrawtransaction`, `savemempool`, `prioritisetransaction`.
+
+REST **`/api/v1/*`** privileged routes use the same admin set via path→method mapping (`rest/rbac.rs`). See [RPC API — REST authentication](../node/rpc-api.md#authentication).
 
 Admin tokens: `[rpc_auth].admin_tokens`, tokens also listed in `admin_tokens`, or HTTP Basic password registered as admin. See [RPC transport × authentication](../security/rpc-transport-auth-matrix.md).
 

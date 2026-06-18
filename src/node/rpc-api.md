@@ -7,9 +7,7 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 ## API Overview
 
 - **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet and regtest **`127.0.0.1:18332`** (not Bitcoin Core’s regtest port `18443`).
-- **REST API** (optional): Served only when **`blvm-node`** is built with the **`rest-api`** feature and your runner enables it with a bind address. There is **no** separate fixed port in a minimal **`blvm`** deployment; examples below use `http://localhost:8080` only as an illustration.
-
-JSON-RPC is the portable operator surface. REST availability depends on build and wiring.
+- **REST API** (optional): Requires **`rest-api`** feature and **`[rest_api].enabled = true`** in `blvm.toml`. Binds a separate port (default **8080** mainnet / **18080** when RPC is **18332**). See [REST API](#rest-api).
 
 ## Connection
 
@@ -119,11 +117,13 @@ Fifteen RPC methods cover most operator, wallet, and mining workflows. Full cata
   "blocks": 1,
   "headers": 1,
   "bestblockhash": "...",
-  "difficulty": 4.66e-10,
+  "difficulty": 1.0,
   "chainwork": "...",
   "pruned": false
 }
 ```
+
+On regtest at genesis, `"blocks": 0`, `"difficulty": 1.0`, and `"initialblockdownload": true` are typical.
 
 ### `sendrawtransaction`
 
@@ -157,13 +157,13 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 | `savemempool` | Partial | Writes `mempool.dat` under datadir |
 | `verifyonchainpayment` / `verifyonchainpaymentbytx` | BLVM-specific | BIP70 / payment state machine |
 | `meshsendpacket` / `meshpollreceived` | Module | Requires `blvm-mesh` |
-| REST `/api/v1/*` | BLVM-specific | Optional `rest-api` feature |
+| REST `/api/v1/*` | BLVM-specific | `rest-api` feature + `[rest_api].enabled`; separate bind — see [REST API](#rest-api) |
 
 **Ports:** BLVM defaults RPC to `18332` for testnet and regtest (Core regtest often uses `18443`). Set `--rpc-addr` explicitly when tooling assumes Core defaults.
 
 ## Available Methods
 
-**Methods Implemented**: Multiple RPC methods
+**Core JSON-RPC:** **75** methods in `CORE_RPC_METHODS` (see `blvm-node/src/rpc/methods.rs`). Module RPC (mesh, miniscript overrides, etc.) registers at runtime.
 
 ### Blockchain Methods
 - `getblockchaininfo` - Get blockchain information
@@ -183,6 +183,12 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 - `waitfornewblock` - Wait for a new block
 - `waitforblock` - Wait for a specific block
 - `waitforblockheight` - Wait for a specific block height
+- `getchaintips` - Report all known chain tips (active, invalid, headers-only)
+- `getchaintxstats` - Statistics about confirmed transactions up to a block height
+- `getblockstats` - Per-block statistics (fees, sizes, counts)
+- `getpruneinfo` - Pruning state (height, manual prune target, automatic pruning)
+- `pruneblockchain` - Prune blocks up to a height (**admin**)
+- `loadtxoutset` - Load UTXO set from a snapshot file path
 
 ### Raw Transaction Methods
 - `getrawtransaction` - Get transaction by txid
@@ -193,6 +199,8 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 - `gettxout` - Get UTXO information
 - `gettxoutproof` - Get merkle proof for transaction
 - `verifytxoutproof` - Verify merkle proof
+- `getdescriptorinfo` - Descriptor metadata (**requires `blvm-miniscript` loaded**; core stub returns -32001 until override)
+- `analyzepsbt` - Analyze a PSBT (**requires `blvm-miniscript` loaded**)
 
 ### Mempool Methods
 - `getmempoolinfo` - Get mempool statistics
@@ -222,7 +230,21 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 - `getblocktemplate` - Get block template for mining
 - `submitblock` - Submit a mined block
 - `estimatesmartfee` - Estimate smart fee rate
-- `prioritisetransaction` - Prioritize a transaction in mempool
+- `prioritisetransaction` - Prioritize a transaction in mempool (**admin**)
+- `generatetoaddress` - Mine regtest blocks to an address (**regtest only**; **admin**; requires protocol engine)
+
+### Module Methods
+
+Lifecycle and CLI dispatch for the module system (**admin** for load/unload/reload/runmodulecli):
+
+- `loadmodule` - Load a module by manifest name (local discovery first; marketplace auto-fetch **off by default** — enable with **`[modules].marketplace_fetch_enabled`**; see [Marketplace module](../modules/marketplace-module.md))
+- `unloadmodule` - Stop and unload a module
+- `reloadmodule` - Reload a module (unload + load)
+- `listmodules` - List loaded modules and status
+- `getmoduleclispecs` - List CLI command groups registered by loaded modules
+- `runmodulecli` - Invoke a module CLI handler via RPC (**admin**)
+
+Dynamic module RPC methods (e.g. mesh, miniscript overrides) register at load time; see module pages and [JSON-RPC error reference](../reference/rpc-errors.md#module-not-loaded).
 
 ### Control Methods
 - `stop` - Stop the node
@@ -231,8 +253,8 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 - `getrpcinfo` - Get RPC server information
 - `help` - Get help for RPC methods
 - `logging` - Control logging levels
-- `gethealth` - Get node health status
-- `getmetrics` - Get node metrics
+- `gethealth` - Get node health status (**blvm-node** extension; not in Bitcoin Core)
+- `getmetrics` - Get node metrics (**blvm-node** extension)
 
 ### Mesh Methods
 
@@ -254,7 +276,7 @@ See [Commons Mesh Module](../modules/mesh.md) and [`blvm-mesh/docs/TRANSPORT.md`
 
 ### Payment Methods (BIP70)
 
-> **Experimental build** — `bip70-http` and `ctv` features are not in stable release binaries. See [Installation — experimental variant](../getting-started/installation.md#experimental-variant).
+> **Build / platform** — `bip70-http` (and REST payment endpoints) require compile-time features in **`blvm` default features**; portable **Windows** and **Linux aarch64** release CI builds omit them via `--no-default-features`. `ctv` remains a separate compile-time feature. See [Installation](../getting-started/installation.md) and [Release process — Build variants](../development/release-process.md#build-variants).
 
 - `createpaymentrequest` - Create a BIP70 payment request (requires `bip70-http` feature)
 - `verifyonchainpayment` - Verify on-chain payment state for a payment request (`payment_request_id`, `tx_hash` hex) using the local payment state machine
@@ -389,249 +411,133 @@ The RPC API implements JSON-RPC 2.0 methods documented in the [Available Methods
 
 ### Overview
 
-The REST API exposes HTTP endpoints alongside JSON-RPC when enabled. Requests and responses use JSON; status codes follow normal HTTP semantics.
+The REST API is a **separate HTTP server** from JSON-RPC (`blvm-node/src/rpc/rest/`). It requires the **`rest-api`** compile-time feature (included in **`blvm` default features**; omitted from portable Windows/aarch64 release builds).
 
-**Base URL:** `http://localhost:8080/api/v1/` — use your REST bind host and port.
+> **Operator note** — REST is **off by default** (`[rest_api].enabled = false`). When enabled, it binds its **own** address (default loopback **8080** / **18080** from RPC port). Handler coverage matches **`rest/server.rs` routing**, not every function in `rest/*.rs`.
 
+When enabled programmatically, REST binds its **own** address (tests use `127.0.0.1:8080`). It does **not** share the JSON-RPC port (`8332` / `18332`). HTTP **`GET /health`** on the RPC port is separate (see [Node Operations](operations.md)).
+
+**Base URL (when running):** `http://<rest-bind>/api/v1/`
 
 ### Authentication
 
-REST uses the same **`RpcAuthConfig`** manager as JSON-RPC when enabled:
+Same **`RpcAuthConfig`** / **`RpcAuthManager`** as JSON-RPC when the REST server is built with **`RestServer::with_auth(...)`** (Bearer tokens, HTTP Basic, admin tokens). If auth is **enabled** on that instance, unauthenticated requests receive **401 Unauthorized** before route handlers run — same guard as JSON-RPC. When auth is **disabled**, REST accepts anonymous requests (still subject to per-IP rate limits). Embedders must call **`with_auth`** explicitly; default test servers may run without it.
 
-```bash
-curl -H "Authorization: Bearer <token>" http://localhost:8080/api/v1/node/uptime
-```
+**Admin RBAC** mirrors JSON-RPC **`admin_rpc_methods()`** via `rest/rbac.rs`: each REST path maps to an equivalent RPC method; privileged routes return **403 Forbidden** for authenticated non-admin tokens. Examples: `GET /api/v1/mining/block-template`, `POST /api/v1/node/stop`, `POST /api/v1/transactions`. Non-admin POST routes include `POST /api/v1/transactions/decode`, `…/test`, `POST /api/v1/chain/verify`, and `POST /api/v1/network/ping`. Unmapped POST/DELETE paths (e.g. payment writes) **fail closed** (admin required).
 
-### Rate Limiting
+### Endpoints (wired in `rest/server.rs`)
 
-Rate limiting is enforced per IP, per user, and per endpoint:
+#### Chain
 
-- **Authenticated users**: 100 burst, 10 req/sec
-- **Unauthenticated**: 50 burst, 5 req/sec
-- **Per-endpoint limits**: Stricter limits for write operations
+- `GET /api/v1/chain/tip` — Best block hash
+- `GET /api/v1/chain/height` — Block height
+- `GET /api/v1/chain/info` — Blockchain state summary
+- `GET /api/v1/chain/difficulty` — Current difficulty
+- `GET /api/v1/chain/utxo-set` — UTXO set summary
+- `GET /api/v1/chain/tips` — Known chain tips
+- `GET /api/v1/chain/tx-stats?nblocks={n}` — Transaction statistics
+- `GET /api/v1/chain/prune-info` — Pruning status
+- `POST /api/v1/chain/verify` — Verify chain (optional JSON: `checklevel`, `numblocks`)
+- `POST /api/v1/chain/prune` — Prune to height (JSON: `height`)
 
+#### Indexes
 
-### Response Format
+- `GET /api/v1/indexes` — Index status (optional `?index={name}`)
 
-All REST API responses follow a consistent format:
+#### Blocks
 
-**Success Response**:
-```json
-{
-  "status": "success",
-  "data": {
-    "chain": "regtest",
-    "blocks": 123456
-  },
-  "request_id": "550e8400-e29b-41d4-a716-446655440000"
-}
-```
+- `GET /api/v1/blocks/{hash}` — Block by hash
+- `GET /api/v1/blocks/{hash}/header` — Block header
+- `GET /api/v1/blocks/{hash}/stats` — Block statistics
+- `GET /api/v1/blocks/{hash}/filter` — Block filter
+- `GET /api/v1/blocks/{hash}/transactions` — Block transactions
+- `GET /api/v1/blocks/height/{height}` — Block by height
+- `POST /api/v1/blocks/{hash}/invalidate` — Invalidate block (admin)
+- `POST /api/v1/blocks/{hash}/reconsider` — Reconsider block (admin)
 
-**Error Response**:
-```json
-{
-  "status": "error",
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "Block not found",
-    "details": "Block hash 0000... does not exist"
-  },
-  "request_id": "550e8400-e29b-41d4-a716-446655440000"
-}
-```
+#### Transactions
 
+- `GET /api/v1/transactions/{txid}` — Transaction details
+- `GET /api/v1/transactions/{txid}/confirmations`
+- `GET /api/v1/transactions/{txid}/outputs/{n}?include_mempool=true` — Output details
+- `POST /api/v1/transactions` — Submit raw hex (body)
+- `POST /api/v1/transactions/test` — Test mempool acceptance
+- `POST /api/v1/transactions/decode` — Decode raw hex
+- `POST /api/v1/transactions/create` — Create raw tx (JSON: `inputs`, `outputs`, optional `locktime`, `replaceable`, `version`)
 
-### Endpoints
+#### Addresses
 
-#### Node Endpoints
+- `GET /api/v1/addresses/{address}/balance`
+- `GET /api/v1/addresses/{address}/transactions`
+- `GET /api/v1/addresses/{address}/utxos`
 
+#### Mempool
 
-- `GET /api/v1/node/uptime` - Get node uptime
-- `GET /api/v1/node/memory` - Get memory information
-- `GET /api/v1/node/memory?mode=detailed` - Get detailed memory info
-- `GET /api/v1/node/rpc-info` - Get RPC server information
-- `GET /api/v1/node/help` - Get help for all commands
-- `GET /api/v1/node/help?command=getblock` - Get help for specific command
-- `GET /api/v1/node/logging` - Get logging configuration
-- `POST /api/v1/node/logging` - Update logging configuration
-- `POST /api/v1/node/stop` - Stop the node
+- `GET /api/v1/mempool` — List txids (`verbose` via query where supported)
+- `GET /api/v1/mempool/transactions/{txid}` — Mempool entry
+- `GET /api/v1/mempool/transactions/{txid}/ancestors` — Ancestor txids
+- `GET /api/v1/mempool/transactions/{txid}/descendants` — Descendant txids
+- `GET /api/v1/mempool/stats` — Mempool info (maps to `getmempoolinfo`)
+- `POST /api/v1/mempool/save` — Persist mempool to disk
+- `POST /api/v1/mempool/transactions/{txid}/priority` — Adjust effective fee (JSON: `fee_delta`; admin; maps to `prioritisetransaction`)
 
-**Example**:
-```bash
-curl http://localhost:8080/api/v1/node/uptime
-```
+#### Network
 
-#### Chain Endpoints
+- `GET /api/v1/network/info`
+- `GET /api/v1/network/peers`
+- `GET /api/v1/network/connections/count`
+- `GET /api/v1/network/connections/totals`
+- `GET /api/v1/network/nodes` — Known nodes
+- `GET /api/v1/network/addresses` — Network addresses
+- `GET /api/v1/network/bans` — Ban list
+- `POST /api/v1/network/ping` — Ping peers
+- `POST /api/v1/network/nodes` — Add/remove node (JSON: `address`, `command`)
+- `POST /api/v1/network/active` — Set network active (JSON: `state`)
+- `POST /api/v1/network/bans` — Ban subnet (JSON body)
+- `DELETE /api/v1/network/nodes/{addr}` — Disconnect node
+- `DELETE /api/v1/network/bans/{subnet}` — Remove ban
 
-- `GET /api/v1/chain/info` - Get blockchain information
-- `GET /api/v1/chain/blockhash/{height}` - Get block hash by height
-- `GET /api/v1/chain/blockcount` - Get current block height
-- `GET /api/v1/chain/difficulty` - Get current difficulty
-- `GET /api/v1/chain/txoutsetinfo` - Get UTXO set statistics
-- `POST /api/v1/chain/verify` - Verify blockchain database
+#### Node
 
-**Example**:
-```bash
-curl http://localhost:8080/api/v1/chain/info
-```
+- `GET /api/v1/node/uptime`
+- `GET /api/v1/node/memory`
+- `GET /api/v1/node/rpc-info`
+- `GET /api/v1/node/help?command={name}`
+- `GET /api/v1/node/logging`
+- `POST /api/v1/node/stop` — Stop node (admin)
+- `POST /api/v1/node/logging` — Set logging categories (JSON body)
 
-#### Block Endpoints
+#### Mining
 
+- `GET /api/v1/mining/info`
+- `GET /api/v1/mining/block-template`
+- `POST /api/v1/mining/blocks` — Submit block (JSON body)
 
-- `GET /api/v1/blocks/{hash}` - Get block by hash
-- `GET /api/v1/blocks/{hash}/transactions` - Get block transactions
-- `GET /api/v1/blocks/{hash}/header` - Get block header
-- `GET /api/v1/blocks/{hash}/header?verbose=true` - Get verbose block header
-- `GET /api/v1/blocks/{hash}/stats` - Get block statistics
-- `GET /api/v1/blocks/{hash}/filter` - Get BIP158 block filter
-- `GET /api/v1/blocks/{hash}/filter?filtertype=basic` - Get specific filter type
-- `GET /api/v1/blocks/height/{height}` - Get block by height
-- `POST /api/v1/blocks/{hash}/invalidate` - Invalidate block
-- `POST /api/v1/blocks/{hash}/reconsider` - Reconsider invalidated block
+#### Fees
 
-**Example**:
-```bash
-curl http://localhost:8080/api/v1/blocks/000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
-```
+- `GET /api/v1/fees/estimate?blocks=6` — Smart fee estimate (default 6 blocks)
 
-#### Transaction Endpoints
+#### Payment / CTV (`bip70-http`, `ctv`)
 
-- `GET /api/v1/transactions/{txid}` - Get transaction by txid
-- `GET /api/v1/transactions/{txid}?verbose=true` - Get verbose transaction
-- `POST /api/v1/transactions` - Submit raw transaction
-- `POST /api/v1/transactions/test` - Test if transaction would be accepted
-- `GET /api/v1/transactions/{txid}/out/{n}` - Get UTXO information
+When the REST server is running **and** payment state is configured:
 
-**Example**:
-```bash
-curl -X POST http://localhost:8080/api/v1/transactions \
-  -H "Content-Type: application/json" \
-  -d '{"hex": "0100000001..."}'
-```
+- `GET|POST /api/v1/payments` — List / create payment requests
+- `GET /api/v1/payments/{id}` — Payment state
+- `POST /api/v1/payments/{id}/covenant` — CTV covenant proof (`ctv` feature)
+- Vault: `POST /api/v1/vaults`, `GET /api/v1/vaults/{id}`, `POST …/unvault`, `POST …/withdraw`
+- Pool: `POST /api/v1/pools`, `GET /api/v1/pools/{id}`, `POST …/join`, `POST …/distribute`
+- Batch: `POST /api/v1/batches`, `GET /api/v1/batches/{id}`, `POST …/transactions`, `POST …/broadcast`
+- `GET /api/v1/congestion` — Congestion metrics
 
-#### Address Endpoints
+Legacy BIP70 HTTP also registers under `/api/v1/payment/*` when `bip70-http` is enabled.
 
-- `GET /api/v1/addresses/{address}/balance` - Get address balance
-- `GET /api/v1/addresses/{address}/transactions` - Get address transaction history
-- `GET /api/v1/addresses/{address}/utxos` - Get address UTXOs
+### Response format
 
-**Example**:
-```bash
-curl http://localhost:8080/api/v1/addresses/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa/balance
-```
+Success and error envelopes use `ApiResponse` (`status`, `data` / `error`, `request_id`). See `rest/types.rs`.
 
-#### Mempool Endpoints
+### Error codes
 
-- `GET /api/v1/mempool/info` - Get mempool information
-- `GET /api/v1/mempool/transactions` - List transactions in mempool
-- `GET /api/v1/mempool/transactions?verbose=true` - List verbose transactions
-- `POST /api/v1/mempool/save` - Persist mempool to disk
-
-**Example**:
-```bash
-curl http://localhost:8080/api/v1/mempool/info
-```
-
-#### Network Endpoints
-
-
-- `GET /api/v1/network/info` - Get network information
-- `GET /api/v1/network/peers` - Get connected peers
-- `GET /api/v1/network/connections/count` - Get connection count
-- `GET /api/v1/network/totals` - Get network statistics
-- `GET /api/v1/network/nodes` - Get added node information
-- `GET /api/v1/network/nodes?dns=true` - Get added nodes with DNS lookup
-- `GET /api/v1/network/nodes/addresses` - Get node addresses
-- `GET /api/v1/network/nodes/addresses?count=10` - Get N node addresses
-- `GET /api/v1/network/bans` - List banned nodes
-- `POST /api/v1/network/ping` - Ping connected peers
-- `POST /api/v1/network/nodes` - Add node to peer list
-- `POST /api/v1/network/active` - Activate node connection
-- `POST /api/v1/network/bans` - Ban/unban a subnet
-- `DELETE /api/v1/network/nodes/{address}` - Remove node from peer list
-- `DELETE /api/v1/network/bans` - Clear all banned nodes
-
-**Example**:
-```bash
-curl http://localhost:8080/api/v1/network/info
-```
-
-#### Fee Estimation Endpoints
-
-- `GET /api/v1/fees/estimate` - Estimate fee rate
-- `GET /api/v1/fees/estimate?blocks=6` - Estimate fee for N blocks
-- `GET /api/v1/fees/smart` - Get smart fee estimate
-
-**Example**:
-```bash
-curl http://localhost:8080/api/v1/fees/estimate?blocks=6
-```
-
-#### Payment Endpoints (BIP70 HTTP)
-
-**Requires**: `--features bip70-http`
-
-
-- `GET /api/v1/payments/{payment_id}` - Get payment status
-- `POST /api/v1/payments` - Create payment request
-- `POST /api/v1/payments/{payment_id}/pay` - Submit payment
-- `POST /api/v1/payments/{payment_id}/cancel` - Cancel payment
-
-#### Vault Endpoints (CTV)
-
-**Requires**: `--features ctv`
-
-
-- `GET /api/v1/vaults` - List vaults
-- `GET /api/v1/vaults/{vault_id}` - Get vault information
-- `POST /api/v1/vaults` - Create vault
-- `POST /api/v1/vaults/{vault_id}/deposit` - Deposit to vault
-- `POST /api/v1/vaults/{vault_id}/withdraw` - Withdraw from vault
-
-#### Pool Endpoints (CTV)
-
-**Requires**: `--features ctv`
-
-
-- `GET /api/v1/pools` - List pools
-- `GET /api/v1/pools/{pool_id}` - Get pool information
-- `POST /api/v1/pools` - Create pool
-- `POST /api/v1/pools/{pool_id}/join` - Join pool
-- `POST /api/v1/pools/{pool_id}/leave` - Leave pool
-
-#### Congestion Control Endpoints (CTV)
-
-**Requires**: `--features ctv`
-
-
-- `GET /api/v1/congestion/status` - Get congestion status
-- `GET /api/v1/batches` - List pending batches
-- `POST /api/v1/batches` - Create batch
-- `POST /api/v1/batches/{batch_id}/submit` - Submit batch
-
-### Security Headers
-
-The REST API includes security headers by default:
-
-- `X-Content-Type-Options: nosniff`
-- `X-Frame-Options: DENY`
-- `X-XSS-Protection: 1; mode=block`
-- `Strict-Transport-Security: max-age=31536000` (when TLS enabled)
-
-
-### Error Codes
-
-REST API uses standard HTTP status codes:
-
-| Status Code | Meaning |
-|-------------|---------|
-| 200 | Success |
-| 400 | Bad Request (invalid parameters) |
-| 401 | Unauthorized (authentication required) |
-| 404 | Not Found (resource doesn't exist) |
-| 429 | Too Many Requests (rate limit exceeded) |
-| 500 | Internal Server Error |
-| 503 | Service Unavailable (feature not enabled) |
+Standard HTTP status codes: 200, 400, 401, 404, 429, 500, 503 (feature or payment engine unavailable).
 
 ## Source
 

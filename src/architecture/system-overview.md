@@ -113,7 +113,7 @@ graph TB
 - [Multiple storage backends](../node/storage-backends.md) with automatic fallback
 - [Multi-transport networking](../node/transport-abstraction.md) (TCP, QUIC, Iroh)
 - Payment processing infrastructure
-- REST API alongside [JSON-RPC](../node/rpc-api.md)
+- Optional REST `/api/v1/*` when built with `rest-api` and **`[rest_api].enabled = true`** (separate bind; off by default)
 
 ### Governance Infrastructure
 - [Cryptographic governance primitives](../governance/overview.md)

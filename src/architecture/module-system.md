@@ -4,7 +4,7 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**) bootstrap from `registry/modules.json` — see [Module catalog](../modules/overview.md).
+Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**, optional **blvm-marketplace**) bootstrap from **`[modules].registry_url`** (`registry/modules.json`) when pinned under **`[modules]`** — see [Module catalog](../modules/overview.md).
 
 ## Available modules
 
@@ -14,7 +14,10 @@ Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**,
 - **[Datum Module](../modules/datum.md)** — DATUM Gateway mining protocol
 - **[Mining OS Module](../modules/miningos.md)** — MiningOS integration
 - **blvm-zmq** — [ZMQ module](../modules/zmq.md)
-- **blvm-miniscript**, **blvm-governance**, **blvm-fibre** — See [Module catalog](../modules/overview.md)
+- **blvm-miniscript** — [Miniscript module](../modules/miniscript.md)
+- **blvm-governance** — [Governance module](../modules/governance-module.md)
+- **blvm-fibre** — [FIBRE module](../modules/fibre.md)
+- **blvm-marketplace** — [Marketplace module](../modules/marketplace-module.md) (optional; registry bootstrap usually does not need it)
 
 For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
 
@@ -171,10 +174,12 @@ Registry    Signer      Loader      Process      Monitor
 
 ### Discovery
 
-Modules discovered through:
-- Local filesystem (`modules/` directory)
-- Module registry (REST API)
-- Manual installation
+Modules are discovered through:
+
+1. **Local filesystem** — scan **`[modules].modules_dir`** for `module.toml` + binaries
+2. **Registry bootstrap** — when **`[modules].registry_url`** is set and a module is pinned (inline `blvm-zmq = "0.1.*"` etc.), missing versions are downloaded from GitHub Releases (see [Installing modules](../modules/overview.md#installing-modules))
+3. **Runtime load** — **`loadmodule`** / **`blvm load`** after the node is running (admin RPC)
+4. **Optional marketplace** — **`blvm-marketplace`** module for paid installs and legacy registry URL fallback; **`loadmodule`** remote auto-fetch is **opt-in and off by default**
 
 
 ### Verification
@@ -248,8 +253,8 @@ Module Binary
 Module manifests use TOML format:
 
 ```toml
-# Module Identity
-name = "lightning-network"
+# Module Identity (manifest `name` must match [modules] pin and [modules.<name>] tables)
+name = "blvm-lightning"
 version = "1.2.3"
 description = "Lightning Network implementation"
 author = "Alice <alice@example.com>"
@@ -273,7 +278,7 @@ threshold = "[[gov:layer_5_signatures]]"
 [binary]
 hash = "sha256:abc123..."
 size = 1234567
-download_url = "https://registry.bitcoincommons.org/modules/lightning-network/1.2.3"
+download_url = "https://github.com/BTCDecoded/blvm-lightning/releases/download/v1.2.3/blvm-lightning"
 
 # Dependencies
 [dependencies]
@@ -324,7 +329,7 @@ client.subscribe_events(event_types).await?;
 
 ### Event Categories
 
-**Core Blockchain Events:**
+Catalog of shared **`EventType`** variants on the node bus. **Individual modules subscribe/publish subsets only** — see each [module page](../modules/overview.md) (e.g. `blvm-lightning` does not emit `ChannelOpened`; `blvm-stratum-v2` does not emit `MiningPoolConnected`).
 - `NewBlock` - Block connected to chain
 - `NewTransaction` - Transaction in mempool
 - `BlockDisconnected` - Block disconnected (reorg)
@@ -502,12 +507,16 @@ For detailed event system documentation, see:
 
 ## Module Registry
 
-Modules can be discovered and installed from a module registry:
+Two related mechanisms:
 
-- REST API client for module discovery
-- Binary download and verification
-- Dependency resolution
-- Signature verification
+| Mechanism | Purpose |
+|-----------|---------|
+| **`[modules].registry_url` bootstrap** | Built into the node: download pinned modules from `modules.json` + GitHub Releases when not on disk |
+| **`blvm-marketplace` module** | Optional: registry proxy, module payments, and opt-in **`loadmodule`** auto-fetch via IPC |
+
+Bootstrap does **not** require the marketplace module for standard pins (`blvm-zmq`, `blvm-miniscript`, …). See [Marketplace module](../modules/marketplace-module.md).
+
+Verification at install time includes release checksums (`sha256sums.txt` on module tags) when using bootstrap; additional signature/multisig policy is deployment-specific.
 
 
 ## Usage
@@ -526,7 +535,7 @@ let mut manager = ModuleManager::new(
 manager.start(socket_path, node_api).await?;
 
 manager.load_module(
-    "lightning-network",
+    "blvm-lightning",
     binary_path,
     metadata,
     config,

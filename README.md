@@ -73,17 +73,7 @@ The optional **`modules/blvm`** git submodule is the **meta-repo** umbrella (`bl
 
 ## Installation page
 
-Install copy is generated from **`src/install/install-content.json`**. CI and local builds should refresh it from live **`blvm` GitHub Releases** before rendering:
-
-```bash
-node scripts/fetch-blvm-release.mjs && node scripts/render-installation.mjs
-```
-
-- **`deploy.yml`** and **`docs-pr.yml`** run fetch (`--strict`) then render before `mdbook build`.
-- **`blvm` releases** dispatch `repository_dispatch(blvm-release)` to redeploy docs without a manual `blvm-docs` push.
-- Static slot definitions: **`src/install/install-content.static.json`**; optional offline copy: **`install-content.fallback.json`**.
-
-Do not edit **`getting-started/installation.md`** by hand. The [BTCDecoded website](https://github.com/BTCDecoded/website) uses its own **`fetch-blvm-release.mjs`** — do not run **`sync-install-data.mjs`** in CI.
+The book chapter **`src/getting-started/installation.md`** is **timeless** — it points operators to **[btcdecoded.org/install](https://btcdecoded.org/install)** for versioned downloads, filenames, and checksum commands. Edit that Markdown directly; the **website** repo owns release-driven install JSON via **`fetch-blvm-release.mjs`**.
 
 ## Documentation sources
 

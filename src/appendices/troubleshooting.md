@@ -71,7 +71,7 @@ See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a
 - Check data directory permissions and sufficient disk space
 - Set backend explicitly in config if needed: `[storage] database_backend = "rocksdb"` / `"heed3"` / `"redb"` / `"sled"` / `"tidesdb"`, or keep **`"auto"`** (default builds usually pick **heed3** first). See [Configuration Reference](../reference/configuration-reference.md).
 
-### Corrupted Database
+### Corrupted Database {#corrupted-database}
 
 **Error**: Database corruption or inconsistent state
 
@@ -82,7 +82,7 @@ See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a
 3. Back up the datadir, then remove only the corrupted backend subtree (not generic `data/blocks` / `data/chainstate` Core paths unless you intentionally reset a Core-import layout).
 4. Restart; expect resync or migration depending on what you removed.
 
-For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb` + `.sst` index), see [Storage backends — Interop](../node/storage-backends.md) and use `blvm config convert-core` / migration tooling rather than blind `rm -rf`.
+For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb` + `.sst` index), see [Storage backends — Core LevelDB interop](../node/storage-backends.md#core-leveldb-interop) and use `blvm config convert-core` / migration tooling rather than blind `rm -rf`.
 
 ## Network Issues
 
@@ -124,6 +124,7 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 **Solutions**:
 - Configure **`[rpc_auth]`** tokens (or `RPC_AUTH_TOKENS` / `token_file`) when `required = true`
 - Send `Authorization: Bearer <token>` on HTTP JSON-RPC requests
+- For **admin-only** methods (`generatetoaddress`, `getblocktemplate`, `submitblock`, `loadmodule`, …), use a token listed in **`admin_tokens`** or HTTP Basic **`password`** — otherwise HTTP **403** (not JSON-RPC -32603). See [JSON-RPC error reference](../reference/rpc-errors.md#admin-only-methods)
 - For local development only, leave **`[rpc_auth].required = false`** (not for production)
 
 ### `savemempool` / mempool.dat errors
@@ -134,7 +135,7 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 
 **Solutions**:
 - Use a current build: `savemempool` creates the data directory (parent of `mempool.dat`) before writing
-- Ensure **`--datadir`** / `DATA_DIR` points to the intended location
+- Ensure **`--data-dir`** / `DATA_DIR` points to the intended location
 - Check disk space and permissions on the data directory path
 
 ## Module System Issues
@@ -144,21 +145,22 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 **Error**: Module fails to load or start
 
 **Solutions**:
-- Verify `module.toml` exists and is valid
-- Check module binary exists at expected path
-- Review module logs in `data/modules/logs/`
-- Verify module has required permissions in manifest
-- Check IPC socket directory permissions
+- Verify `module.toml` exists and is valid (manifest **`name`** matches `[modules]` pin and `[modules.<name>]` table keys)
+- Check module binary exists at the path expected by `module.toml` `entry_point` under **`[modules].modules_dir`**
+- Review **node stdout** / **`RUST_LOG`** (module subprocess output is forwarded over IPC; there is no fixed `data/modules/logs/` tree in core)
+- Inspect module state under **`{modules.data_dir}/<manifest-name>/`** (default `{modules.data_dir}` is `data/modules` relative to the process unless configured)
+- Verify module capabilities in `module.toml` match what the module requests at runtime
+- Ensure **`[modules].socket_dir`** exists and is writable (default `data/modules/sockets`)
 
 ### IPC Connection Failures
 
 **Error**: Module cannot connect to node IPC
 
 **Solutions**:
-- Ensure socket directory exists: `data/modules/sockets/`
-- Check file permissions on socket directory
-- Verify module process has access to socket
-- Restart node to recreate sockets
+- Ensure **`[modules].socket_dir`** exists (default `data/modules/sockets` under the node working directory unless overridden in `blvm.toml`)
+- Check file permissions on the socket directory
+- Verify the module process can access Unix domain sockets on the host
+- Restart the node to recreate IPC sockets after crashes
 
 ## Performance Issues
 
@@ -184,7 +186,7 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 
 ## Getting Help
 
-- Check node logs: `data/logs/` or console output
+- Check node logs: **console output** from `blvm --verbose`, or **`RUST_LOG`** / `[logging]` filter in config
 - Review [Configuration](../node/configuration.md) for options
 - See [RPC API](../node/rpc-api.md) for available methods
 - Check GitHub issues for known problems

@@ -23,7 +23,7 @@ Create a `blvm.toml` configuration file. Keys are **top-level** or in nested tab
 **RPC bind address** is set by the **`blvm`** binary (`--rpc-addr` / `BLVM_RPC_ADDR`), not by a `port`/`host` table. The optional **`[rpc]`** table holds **RPC server limits** only (e.g. `max_request_size_bytes`, IP rate limits). **Auth** uses **`[rpc_auth]`**. See the [configuration reference](../reference/configuration-reference.md).
 
 ```toml
-# P2P listen address (NodeConfig default in library: 127.0.0.1:8333; `blvm` CLI default listen: 0.0.0.0:8333)
+# P2P listen address (NodeConfig library default: 127.0.0.1:8333; `blvm` CLI without config file uses network-aware ports)
 listen_addr = "127.0.0.1:8333"
 
 # TOML uses serde enum tags (lowercase, no underscore): tcponly, irohonly, quinnonly, hybrid, all
@@ -44,7 +44,7 @@ database_backend = "auto"  # auto | rocksdb | tidesdb | heed3 | redb | sled — 
 ```
 
 **Defaults (two layers)**:
-- **`blvm` operator binary** (no config file): `--network regtest`, `--rpc-addr 127.0.0.1:18332`, `--listen-addr 0.0.0.0:8333`. That RPC port is **not** Bitcoin Core’s usual regtest port; override `--rpc-addr` / `BLVM_RPC_ADDR` to match your deployment.
+- **`blvm` operator binary** (no config file): `--network regtest`, RPC `127.0.0.1:18332`, P2P `0.0.0.0:18444` (mainnet `8333`, testnet `18333`). Override with `--listen-addr` / `BLVM_LISTEN_ADDR`. RPC port is **not** Bitcoin Core’s usual regtest port (`18443`); override `--rpc-addr` / `BLVM_RPC_ADDR` when tooling assumes Core defaults.
 - **`NodeConfig` library default** (used when embedding `blvm-node`): `listen_addr` localhost `8333`, `protocol_version` `"BitcoinV1"`, `transport_preference` TCP-only, `max_peers` 100.
 
 Configuration is organized in logical sections (`storage`, `ibd`, `modules`, optional `[stratum_v2]`, etc.) in the node codebase. Initial block download uses parallel IBD only.
@@ -118,7 +118,7 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 |--------|-------|---------|-------------|
 | `--network` | `-n` | `regtest` | Network: `regtest`, `testnet`, `mainnet` |
 | `--rpc-addr` | `-r` | network-aware when omitted | RPC bind: mainnet `127.0.0.1:8332`; testnet/regtest `127.0.0.1:18332` |
-| `--listen-addr` | `-l` | `0.0.0.0:8333` | P2P listen address |
+| `--listen-addr` | `-l` | network-aware when omitted | P2P listen: mainnet `0.0.0.0:8333`, testnet `0.0.0.0:18333`, regtest `0.0.0.0:18444` |
 | `--data-dir` | `-d` | — | Data directory (overrides ENV and config) |
 | `--config` | `-c` | — | Configuration file path (TOML or JSON) |
 | `--verbose` | `-v` | false | Enable verbose logging |
@@ -132,31 +132,33 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 
 **BIP158:** `--enable-bip158` / `--disable-bip158` adjust **logged** preference only—compact block filter code is compiled without a separate `bip158` Cargo feature (present in typical `blvm` / `blvm-node` builds).
 
+**REST API:** enable in `blvm.toml` with **`[rest_api].enabled = true`** (requires **`rest-api`** in the binary). Binds a separate loopback port (default **8080** / **18080** when RPC is **18332**). See [RPC API — REST](rpc-api.md#rest-api).
+
 ### Advanced Options
 
 `--assumevalid`, `--noassumevalid`, `--assumeutxo`, `--target-peer-count`, `--async-request-timeout`, `--module-max-cpu-percent`, `--module-max-memory-bytes`.
 
 ### Commands
 
-`start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path`, `migrate core` (requires `rocksdb`), `rpc`.
+`start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path|set|convert-core`, `configpath <module>` (offline module config path), `load` / `unload` / `reload` / `module list` (admin RPC to a running node), `migrate core` (requires `rocksdb`), `rpc`, plus dynamic module CLI (e.g. `blvm sync-policy list` when selective-sync is loaded). Remote subcommands use **`[rpc_auth]` from the same `--config`** as the node (admin Bearer token or Basic password).
 
 ```bash
 blvm --network mainnet -d /var/lib/blvm
 blvm migrate core --source ~/.bitcoin --destination ~/.bitcoin/blvm --network mainnet --verify
-blvm start --datadir ~/.bitcoin --migrate-core-only   # migrate only, then exit
+blvm start --data-dir ~/.bitcoin --migrate-core-only   # migrate only, then exit
 blvm config show
 blvm status --rpc-addr 127.0.0.1:8332
 ```
 
 ## Bitcoin Core drop-in
 
-BLVM does not read Core chainstate in place. With **`rocksdb`**, a synced Core **`--datadir`** triggers one-time migration into **`<datadir>/blvm/`** unless disabled. After migrate, point **`--datadir`** at the BLVM store or keep the Core path (node opens `blvm/` when marked).
+BLVM does not read Core chainstate in place. With **`rocksdb`**, a synced Core **`--data-dir`** triggers one-time migration into **`<datadir>/blvm/`** unless disabled. After migrate, point **`--data-dir`** at the BLVM store or keep the Core path (node opens `blvm/` when marked).
 
 **Default behavior:** migrate UTXOs and indexes only; **do not copy** Core **`blocks/`** (~700 GB on mainnet). BLVM reads block bodies from the original Core **`blocks/`** directory via a fallback reader. Set **`storage.reuse_core_block_files = false`** (or **`BLVM_REUSE_CORE_BLOCK_FILES=0`**) only if you want a self-contained BLVM store that duplicates block files.
 
 | Mechanism | Purpose |
 |-----------|---------|
-| `--datadir` / `BLVM_DATA_DIR` | Core path for detect/migrate, or BLVM store after migrate |
+| `--data-dir` / `BLVM_DATA_DIR` | Core path for detect/migrate, or BLVM store after migrate |
 | `--no-auto-migrate` | Skip auto-import |
 | `--migrate-destination` | Override `<datadir>/blvm` |
 | `--migrate-core-only` | Migrate and exit |
@@ -297,8 +299,10 @@ Enable address and value range indexing for efficient queries:
 [storage.indexing]
 enable_address_index = true
 enable_value_index = true
-strategy = "eager"  # or "lazy"
-max_indexed_addresses = 1000000
+strategy = "eager"   # or "lazy"
+max_indexed_addresses = 0   # 0 = unlimited
+enable_compression = false  # zstd index blobs; requires compression (blvm default features)
+background_indexing = false # lazy only: index on txindex-bg thread
 ```
 
 ## Module Configuration

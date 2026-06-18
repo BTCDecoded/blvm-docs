@@ -1,6 +1,6 @@
 # UTXO Commitments
 
-> **Experimental build** — Not in stable GitHub Release binaries (`production` features). Requires [experimental source build](../getting-started/installation.md#experimental-variant) or local `cargo build` with `utxo-commitments`.
+> **Build** — `utxo-commitments` is in **`blvm` default features** (Linux x86_64 release artifacts; also in portable Windows/aarch64 CI subset). Enable at runtime via config when your deployment uses it.
 
 ## Overview
 

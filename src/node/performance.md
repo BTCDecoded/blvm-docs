@@ -377,7 +377,6 @@ The performance optimization system includes:
 - [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 - [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs), [transaction-indexing.md](transaction-indexing.md)
 - [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
-- [blvm-consensus/src/optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs), [blvm-consensus/src/block/](https://github.com/BTCDecoded/blvm-consensus/tree/main/src/block/), [blvm-consensus/src/config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs), [blvm-node/src/validation/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/validation/mod.rs), `heed3`, `database_backend = "rocksdb"` (blvm-consensus/src/block/blvm-consensus/src/config.rsblvm-node/src/validation/mod.rsheed3database_backend = "rocksdb"` for RocksDB.)
 ## See Also
 
 - [Node Overview](overview.md) - Node implementation details

@@ -52,9 +52,8 @@ When the crate is not on crates.io, use [registry bootstrap](overview.md#install
 Pin in `blvm.toml`:
 
 ```toml
+[modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-
-[enabled_modules]
 blvm-lightning = "0.1.*"
 ```
 
@@ -62,15 +61,14 @@ Module config: `<modules.data_dir>/blvm-lightning/config.toml` (same schema as e
 
 ## Configuration
 
-The module supports multiple Lightning providers. Create a `config.toml` file in the module directory:
+The module supports multiple Lightning providers. Create a `config.toml` file in the module directory with **flat top-level keys** (no `[lightning]` wrapper — invalid tables are **silently ignored** and the module falls back to **`stub`**):
 
 ### LNBits Provider (Recommended)
 
 ```toml
-[lightning]
 provider = "lnbits"
 
-[lightning.lnbits]
+[lnbits]
 api_url = "https://lnbits.example.com"
 api_key = "your_lnbits_api_key"
 wallet_id = "optional_wallet_id"  # Optional
@@ -79,28 +77,36 @@ wallet_id = "optional_wallet_id"  # Optional
 ### LDK Provider (Rust-native)
 
 ```toml
-[lightning]
 provider = "ldk"
 
-[lightning.ldk]
-data_dir = "data/ldk"
+[ldk]
 network = "testnet"  # or "mainnet" or "regtest"
-node_private_key = "hex_encoded_private_key"  # Optional, will generate if not provided
+node_private_key = "hex_encoded_private_key"  # optional; generated when unset
 ```
 
-### Stub Provider (Testing)
+### Stub Provider (Testing, default)
 
 ```toml
-[lightning]
 provider = "stub"
 ```
 
-### Configuration Options
+When `provider` is omitted, the default is **`stub`** (safe for local dev; no real Lightning).
 
-- `provider` (required): Lightning provider to use (`"lnbits"`, `"ldk"`, or `"stub"`)
-- **LNBits**: `api_url`, `api_key`, `wallet_id` (optional)
-- **LDK**: `data_dir`, `network`, `node_private_key` (optional)
-- **Stub**: No additional configuration needed
+### Global limits (all providers)
+
+```toml
+provider = "lnbits"
+min_payment_sats = 1000      # optional; enforced in create_invoice
+max_payment_sats = 1000000   # optional
+channel_reserve = 10000      # optional; LDK channel reserve in sats
+```
+
+### Configuration options
+
+- `provider`: `"lnbits"`, `"ldk"`, or `"stub"` (default **`stub`**)
+- **LNBits** (`[lnbits]`): `api_url`, `api_key`, `wallet_id` (optional)
+- **LDK** (`[ldk]`): `network` (default `testnet`), `node_private_key` (optional)
+- **Stub**: no extra keys
 
 ### Provider Comparison
 
@@ -122,8 +128,7 @@ The module includes a `module.toml` manifest (see [Building modules](../sdk/modu
 
 ```toml
 name = "blvm-lightning"
-version = "0.1.0"
-description = "Lightning Network payment processor"
+description = "Lightning Network payment processor module for blvm-node"
 author = "Bitcoin Commons Team"
 entry_point = "blvm-lightning"
 
@@ -133,25 +138,30 @@ capabilities = [
 ]
 ```
 
+Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`** — do not hardcode it in the book.
+
 ## Events
 
-### Subscribed Events
+### Subscribed events
 
-The module subscribes to the following node events:
+Via `#[on_event(...)]` in the module:
 
-- `PaymentRequestCreated` - New payment request created
-- `PaymentSettled` - Payment confirmed on-chain
-- `PaymentFailed` - Payment failed
+- `PaymentRequestCreated`
+- `PaymentSettled`
+- `PaymentFailed`
 
-### Published Events
+### Published events
 
-The module publishes the following events:
+`LightningProcessor` may publish (depending on provider path):
 
-- `PaymentVerified` - Lightning payment verified
-- `PaymentRouteFound` - Payment route discovered
-- `PaymentRouteFailed` - Payment routing failed
-- `ChannelOpened` - Lightning channel opened
-- `ChannelClosed` - Lightning channel closed
+- `PaymentRequestCreated` — new invoice / payment request
+- `PaymentVerified` — Lightning payment verified
+- `PaymentSettled` — on-chain settlement observed (when applicable)
+- `PaymentFailed` — verification or payment failed
+- `PaymentRouteFound` / `PaymentRouteFailed` — outgoing payment routing
+- `ChannelClosed` — channel close notification
+
+`ChannelOpened` exists on the shared `EventType` enum but is **not emitted** by this module today.
 
 ## Usage
 
@@ -215,13 +225,12 @@ The module uses module storage to persist configuration and statistics:
 |---------|--------|
 | Module not loading | Binary at `target/release/blvm-lightning`; valid `module.toml`; node logs |
 | LNBits errors | `api_url`, `api_key`; HTTPS reachability |
-| LDK errors | `data_dir` writable; `network` matches node |
+| LDK errors | `network` matches node; optional `node_private_key` valid hex |
 | No payment events | Node publishes `PaymentRequestCreated`; provider not `stub` for real traffic |
 
 ## Repository
 
-- **GitHub**: [blvm-lightning](https://github.com/BTCDecoded/blvm-lightning)
-- **Version**: 0.1.0
+- **GitHub**: [blvm-lightning](https://github.com/BTCDecoded/blvm-lightning) — releases and current `module.toml` **`version`**
 
 ## See Also
 

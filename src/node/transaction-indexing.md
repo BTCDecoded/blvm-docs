@@ -23,8 +23,8 @@ Indexes transactions by output addresses:
 - **Key**: Address hash (20 bytes for P2PKH, 32 bytes for P2SH/P2WPKH)
 - **Value**: List of (transaction hash, output index) pairs
 - **Lookup**: Fast address balance and transaction history queries
-- **Lazy Indexing**: Built on-demand when first queried
-- **Configuration**: Enable with `storage.indexing.enable_address_index = true`
+- **Indexing**: Built during block connect when `enable_address_index = true` (off by default)
+- **Configuration**: `storage.indexing.enable_address_index = true`
 
 
 ### Value Range Index (Optional)
@@ -34,30 +34,18 @@ Indexes transactions by output value ranges:
 - **Key**: Value bucket (logarithmic buckets: 0-1, 1-10, 10-100, 100-1000, etc.)
 - **Value**: List of (transaction hash, output index, value) tuples
 - **Lookup**: Efficient queries for transactions in specific value ranges
-- **Lazy Indexing**: Built on-demand when first queried
-- **Configuration**: Enable with `storage.indexing.enable_value_index = true`
+- **Indexing**: Built during block connect when `enable_value_index = true` (off by default)
+- **Configuration**: `storage.indexing.enable_value_index = true`
 
 
 ## Indexing Strategy
 
-### Lazy Indexing
+| `strategy` | Behavior |
+|------------|----------|
+| **`eager`** (default) | Address and value indexes updated during block connect when `enable_*` is true |
+| **`lazy`** | Advanced indexes deferred until first query (`get_transactions_by_address` / value-range query scans and persists), or built in a background thread when **`background_indexing = true`** |
 
-Indexes are built on-demand to minimize impact on block processing:
-
-1. **Basic Indexing**: All transactions are indexed with basic metadata (hash, block, height)
-2. **On-Demand**: Address and value indexes are built when first queried
-3. **Caching**: Indexed addresses are cached to avoid re-indexing
-4. **Batch Operations**: Multiple transactions indexed together for efficiency
-
-
-### Batch Indexing
-
-Block-level indexing optimizations:
-
-- **Single Pass**: Processes all transactions in a block at once
-- **Deduplication**: Uses HashSet for O(1) duplicate checking
-- **Batching**: Groups updates per unique address/bucket to reduce DB I/O
-- **Conditional Writes**: Only writes to DB if updates were made
+**`max_indexed_addresses`**: cap distinct address keys in the address index (`0` = unlimited). **`enable_compression`**: zstd-compress auxiliary index blobs when enabled in config (requires **`compression`** in the binary — part of **`blvm` default features**; omitted from portable Windows/aarch64 release builds). **`background_indexing`**: with **`lazy`**, enqueue per-block advanced indexing on a `txindex-bg` thread instead of blocking connect or waiting for a query.
 
 
 ## Configuration

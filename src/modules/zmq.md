@@ -29,9 +29,8 @@ If the module cannot fetch a full block or transaction from the node API, it sti
 Pin in `blvm.toml` (example):
 
 ```toml
+[modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-
-[enabled_modules]
 blvm-zmq = "0.1.*"
 ```
 

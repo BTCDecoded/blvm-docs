@@ -2,7 +2,7 @@
 
 ## Overview
 
-The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by build features: **heed3 (LMDB)** when the `heed3` feature is enabled, then RocksDB, TidesDB, Redb, Sled. **Official `blvm` / `blvm-node` default features include `heed3` and `rocksdb`**, so **`auto` usually means heed3** unless you build with `--no-default-features` or a custom feature set. See [Configuration Reference](../reference/configuration-reference.md) for the full `database_backend` options. The system falls back gracefully if the preferred backend is unavailable.
+The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by **build features** via `default_backend()` — **not** by host OS. **heed3 (LMDB)** wins when the `heed3` feature is compiled in, then RocksDB, TidesDB, Redb, Sled. **`blvm` / `blvm-node` Cargo.toml defaults enable `heed3`**, so **`auto` → heed3** on a normal local build and on **Linux x86_64** release artifacts. **Windows portable** release CI omits heed3/rocksdb (`redb` + `sled` only) — there **`auto` → redb**. **Linux aarch64** should match other Linux builds (`auto` → heed3); the cross-compiled release artifact currently ships a minimal feature set without heed3 until CI links **liblmdb** for `aarch64-unknown-linux-gnu` (native `cargo build` on a Pi with default features already gets heed3). See [Configuration Reference](../reference/configuration-reference.md).
 
 ## Supported Backends
 
@@ -78,6 +78,20 @@ When `database_backend = "auto"`, the node chooses the backend by **build featur
 At least one backend feature must be enabled at build time. If the chosen backend fails to open (e.g. missing data dir or lock), the node may fall back to another enabled backend where implemented.
 
 **Interop:** When RocksDB is enabled, the node may detect and use existing LevelDB-format chain data. That is separate from the `auto` selection order above.
+
+### Core LevelDB interop {#core-leveldb-interop}
+
+Bitcoin Core **`chainstate/`** uses **LevelDB** (`.ldb` / `.log` files). BLVM’s **`rocksdb`** migration path reads typical Core layouts via a dedicated LevelDB reader — **not** by opening chainstate as a native RocksDB database.
+
+| Layout | Expected use |
+|--------|----------------|
+| Core **`chainstate/`** + **`blocks/`** | **`blvm start --data-dir …`** or **`blvm migrate core`** with **`rocksdb`** feature; imports into **`<datadir>/blvm/`** |
+| Mixed or corrupt index (`.ldb` + stray `.sst`, wrong magic) | Migration fails — **do not** `rm -rf` blindly; stop the node, back up the datadir, fix or use a fresh Core sync |
+| Existing **`{datadir}/heed3/`** or **`rocksdb/`** BLVM store | Core drop-in does **not** overwrite; use a fresh datadir or explicit backend choice |
+
+Portable Windows/aarch64 builds without **`rocksdb`** cannot run Core chainstate migration — use Linux x86_64 / default-feature builds or sync without Core import.
+
+See [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir) and [Troubleshooting — Corrupted database](../appendices/troubleshooting.md#corrupted-database).
 
 
 ### Automatic Fallback
@@ -225,7 +239,7 @@ header_cache_mb = 10
 
 ### RocksDB Backend
 
-- **When**: `database_backend = "rocksdb"`, or **`auto`** fallback when heed3 is not in the build
+- **When**: Explicit `database_backend = "rocksdb"`, or **`auto`** when the `heed3` feature is absent from the build (Windows portable CI). Standard Linux / default-feature builds use heed3 for `auto`.
 - **Read/Write**: Tuned for large chain-state workloads; required for Core LevelDB migration reader
 
 ### sled Backend
@@ -240,7 +254,7 @@ header_cache_mb = 10
 
 ### Bitcoin Core drop-in (migrate on start)
 
-With the **`rocksdb`** feature (default in release builds), point **`--datadir`** at a **synced Core** tree (`chainstate/` + `blocks/`) to import once into **`<datadir>/blvm/`**. Stop **`bitcoind`** first; match **`--network`** to the datadir.
+With the **`rocksdb`** feature (**`blvm` default features**; omitted from portable Windows/aarch64 release builds), point **`--data-dir`** at a **synced Core** tree (`chainstate/` + `blocks/`) to import once into **`<datadir>/blvm/`**. Stop **`bitcoind`** first; match **`--network`** to the datadir.
 
 **Operator steps:** [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir). **Flags and ENV:** [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in). **Config keys:** `storage.auto_migrate_core`, `core_migrate_destination`, `storage.reuse_core_block_files`.
 
@@ -294,21 +308,11 @@ The storage layer handles backend failures gracefully:
 
 ## Source
 
-- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs), [bitcoin_core_storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_storage.rs)
-- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs)
-- [database/heed3_impl.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/heed3_impl.rs)
-- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`default_backend()`, `fallback_backend()`), [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
-- [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs)
-- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`Database` trait)
-- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`Tree` trait)
-- [blockstore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/blockstore.rs)
-- [utxostore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore.rs)
-- [chainstate.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/chainstate.rs)
-- [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
-- [config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/) (storage / database_backend)
-- [bitcoin_core_detection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_detection.rs)
-- [config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/)
-- [PruningConfig in `config/storage.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/storage.rs), [runtime pruning logic](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/pruning.rs)
+- [database/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/mod.rs) (`default_backend()`, `fallback_backend()`, `Database` / `Tree` traits)
+- [heed3_impl.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/database/heed3_impl.rs)
+- [storage/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/mod.rs), [bitcoin_core_migrate.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_migrate.rs)
+- [blockstore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/blockstore.rs), [utxostore.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/utxostore.rs), [chainstate.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/chainstate.rs), [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs)
+- [config/storage.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/storage.rs), [bitcoin_core_detection.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/bitcoin_core_detection.rs)
 ## See Also
 
 - [Node Configuration](configuration.md) - Storage configuration options

@@ -19,7 +19,7 @@ The LAN peering system automatically discovers and prioritizes local network (LA
 During node startup, the system automatically:
 
 1. **Detects Local Network Interfaces**: Identifies private network interfaces (10.x, 172.16-31.x, 192.168.x)
-2. **Scans Local Subnet**: Scans /24 subnets (254 IPs per subnet) for Bitcoin nodes on port 8333
+2. **Scans Local Subnet**: Scans /24 subnets (254 IPs per subnet) for Bitcoin nodes on your node's **P2P listen port** (same as `--listen-addr`, e.g. mainnet **8333**, testnet **18333**). **Regtest** skips LAN discovery entirely.
 3. **Parallel Scanning**: Uses up to 64 concurrent connection attempts for fast discovery
 4. **Verifies Peers**: Performs protocol handshake and chain verification before accepting
 

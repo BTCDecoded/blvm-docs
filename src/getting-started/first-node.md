@@ -43,7 +43,7 @@ level = "info"
 From any directory, using the same `blvm` binary you will run:
 
 ```bash
-/path/to/blvm config validate --path ~/.config/blvm/blvm.toml
+/path/to/blvm config validate ~/.config/blvm/blvm.toml
 ```
 
 You should see **`Configuration file is valid`**. If not, fix the TOML; do not start sync until this passes.
@@ -90,25 +90,28 @@ curl -X POST http://localhost:18332 \
   -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
 ```
 
-**Expected Response:**
+**Expected Response** (fresh regtest, genesis only):
+
 ```json
 {
   "jsonrpc": "2.0",
   "result": {
     "chain": "regtest",
     "blocks": 0,
-    "headers": 0,
+    "headers": 1,
     "bestblockhash": "...",
-    "difficulty": 4.656542373906925e-10,
-    "mediantime": 1231006505,
-    "verificationprogress": 1.0,
-    "chainwork": "0000000000000000000000000000000000000000000000000000000000000001",
+    "difficulty": 1.0,
+    "mediantime": 0,
+    "verificationprogress": 0.0,
+    "chainwork": "...",
     "pruned": false,
-    "initialblockdownload": false
+    "initialblockdownload": true
   },
   "id": 1
 }
 ```
+
+After a synced peer or successful block generation, `"blocks"` increases and `"initialblockdownload"` may become `false`. To mine via **BLVM** JSON-RPC (`generatetoaddress`), add an **admin** Bearer token like [Quick Start](quick-start.md) step 4 — the method returns HTTP **403** without one.
 
 ## Configuration examples (other networks)
 

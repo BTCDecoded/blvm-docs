@@ -88,7 +88,15 @@ Stable **GitHub Releases** ship one **base** binary set per tag (see [Release ar
 
 **Purpose**: Default binaries on GitHub Releases and GHCR stable tags.
 
-**Cargo features:** `blvm` is built with **`production`** only (not the full `cargo build` default feature set from `blvm/Cargo.toml`). Core P2P, RPC, storage, and modules work; compile-time extras (Dandelion++, CTV, Stratum V2, UTXO commitments, Iroh, sigop counting, etc.) require the [experimental variant](#experimental-variant-source-build) or a local build with explicit `--features`.
+**Cargo features** (platform-specific — see CI `ci.yml`):
+
+| Platform | Build command (summary) | Feature set |
+|----------|-------------------------|-------------|
+| **Linux x86_64** | `cargo build --release` | Full `blvm` **default** features (`production`, `rest-api`, `bip70-http`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, …) |
+| **Linux aarch64** | Cross-build, `--no-default-features` | Portable subset: `sled`, `redb`, `production`, `protocol-verification`, `utxo-commitments` |
+| **Windows x86_64** | Cross-build, `--no-default-features` | Same portable subset as aarch64 |
+
+Core P2P, RPC, storage, and modules work on all platforms. **BIP70 payment RPC**, **REST `/api/v1/*`**, and **storage/index zstd compression** require `bip70-http` / `rest-api` / `compression` (included in **`blvm` default features** and GitHub **Linux x86_64** release artifacts; omitted from portable **Windows** / **Linux aarch64** CI builds). Runtime compression stays **off** until configured (`[storage.compression]` or `storage.indexing.enable_compression`). Other extras (CTV, Stratum V2, sigop counting) still require explicit `--features` or the [experimental CI bundle](#experimental-variant-source-build) when not in your binary.
 
 #### Experimental variant (source build)
 
@@ -136,7 +144,7 @@ Stable release archives include:
 
 ### Archive Formats
 
-Each release tag produces platform archives (Linux `.tar.gz`, Windows `.zip`, plus `SHA256SUMS`). See [Installation](../getting-started/installation.md) for the current matrix.
+Each release tag produces platform archives (Linux `.tar.gz`, Windows `.zip`, plus checksum files). Download matrix: **[btcdecoded.org/install](https://btcdecoded.org/install)**. Platform/feature notes: [Installation](../getting-started/installation.md#platform--feature-notes).
 
 ### Release Notes
 
@@ -181,7 +189,7 @@ All repositories run their test suites:
 | **Stable** | `main` release job | Versioned GitHub Release + `ghcr.io/btcdecoded/blvm:{version}` | Stable crate versions |
 | **Develop / nightly** | `develop` branch | Rolling `nightly` tag, `ghcr.io/btcdecoded/blvm:nightly` | Coordinated pre-release set when published |
 
-Stable releases trigger `repository_dispatch(blvm-release)` to refresh `website`, `commons-website`, and `blvm-docs` install metadata.
+Stable releases trigger `repository_dispatch(blvm-release)` on **`website`** and **`commons-website`** so [btcdecoded.org/install](https://btcdecoded.org/install) picks up new artifacts. The **`blvm-docs`** book points there for downloads and does not redeploy on each **`blvm`** tag.
 
 ## Git Tagging
 

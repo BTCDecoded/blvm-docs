@@ -74,7 +74,7 @@ graph TB
 ### RPC Server
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
 - **Bearer token RBAC** (`tokens`, `admin_tokens`) and **HTTP Basic** (`username`, `password`) for ckpool / Core-style clients
-- REST API (optional feature, runs alongside JSON-RPC)
+- Optional REST `/api/v1/*` when built with `rest-api` and **`[rest_api].enabled`** (separate bind; off by default — see [RPC API — REST](rpc-api.md#rest-api))
 - Optional QUIC transport support (see [QUIC RPC](quic-rpc.md))
 - Authentication and rate limiting
 - Method coverage
@@ -103,11 +103,10 @@ graph TB
 
 
 ### Payment Processing
-- CTV (CheckTemplateVerify) when `ctv` feature enabled
-- Lightning Network integration
-- Payment vaults
-- Covenant support
-- Payment state management
+- CTV (CheckTemplateVerify) payment state machine when `ctv` compile-time feature is enabled
+- BIP70 HTTP payment RPC when `bip70-http` is in the binary (**`blvm` default features**; omitted from portable release builds — see [Installation](../getting-started/installation.md))
+- Lightning Network via optional **`blvm-lightning`** module (not core node RPC)
+- Payment vaults / covenant tooling in `blvm-node` payment layer (CTV-gated at runtime)
 
 
 ### Governance Integration
@@ -129,7 +128,7 @@ graph TB
 - [Transaction relay](privacy-relay.md) (Dandelion++; FIBRE via `blvm-fibre` module)
 - High-performance block relay (FIBRE module)
 - [Package relay](package-relay.md) (BIP331)
-Available in [experimental build variant](../getting-started/installation.md#experimental-variant) or local builds with `utxo-commitments`: [UTXO commitments](../consensus/utxo-commitments.md)
+- [UTXO commitments](../consensus/utxo-commitments.md) (compile-time feature in release binaries; enable at runtime when used)
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
 - [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with optional [IBD UTXO engine](ibd-engine.md) (`BLVM_IBD_ENGINE=1`)
 
@@ -158,15 +157,15 @@ Available in [experimental build variant](../getting-started/installation.md#exp
 - [Mining pool coordination](mining.md)
 
 ### Payment Features
-- Lightning Network module support
-- Payment vault management
-- Covenant enforcement
-- Payment state machines
+- Lightning Network via optional **`blvm-lightning`** module
+- CTV payment vaults and covenant proofs (requires `ctv` feature at build time)
+- BIP70 payment RPC (requires `bip70-http` in the binary)
+- Payment state machines (BIP70 / on-chain verify paths)
 
 ### Integration Features
 - Governance webhook integration
 - ZeroMQ notifications (optional **`blvm-zmq`** module — see [ZMQ module](../modules/zmq.md))
-- REST API alongside JSON-RPC
+- Optional REST `/api/v1/*` (same caveats as [RPC Server](#rpc-server))
 - Module registry (P2P discovery)
 
 ## Node Lifecycle

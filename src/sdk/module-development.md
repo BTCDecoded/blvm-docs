@@ -493,7 +493,7 @@ while let Some(event) = event_receiver.recv().await {
 }
 ```
 
-**Available Event Types:**
+**Available Event Types:** Catalog of shared **`EventType`** variants on the node bus — **individual modules subscribe/publish subsets only** (see [module pages](../modules/overview.md)).
 
 **Core Blockchain Events:**
 - `NewBlock` - New block connected to chain

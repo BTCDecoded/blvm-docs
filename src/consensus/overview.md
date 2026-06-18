@@ -81,5 +81,5 @@ Declare versions from [`blvm-consensus` `Cargo.toml`](https://github.com/BTCDeco
 - [API Index — Consensus functions](../reference/api-index.md#consensus-function-catalog-orange-paper-names)
 - [Consensus Architecture](architecture.md) — Internal design
 - [Formal Verification](formal-verification.md) — Methodology
-- [UTXO Commitments](utxo-commitments.md) — Optional fast-sync feature (experimental build)
+- [UTXO Commitments](utxo-commitments.md) — Optional fast-sync feature (included in release binaries; configure at runtime)
 - [Orange Paper](../reference/orange-paper.md) — Normative spec

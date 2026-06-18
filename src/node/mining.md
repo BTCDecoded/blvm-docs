@@ -2,6 +2,20 @@
 
 The reference node includes mining coordination functionality as part of the Bitcoin protocol. The system provides block template generation, mining coordination, and optional Stratum V2 protocol support.
 
+## Mining RPC and admin auth
+
+These JSON-RPC methods require **admin** credentials ([admin-only methods](../reference/rpc-errors.md#admin-only-methods)):
+
+| Method | Use |
+|--------|-----|
+| `getblocktemplate` | Pool / solo template (ckpool, Stratum module via NodeAPI) |
+| `submitblock` | Submit mined block |
+| `generatetoaddress` | Regtest/test lab block generation |
+| `prioritisetransaction` | Adjust effective mempool fee priority |
+| `savemempool` | Persist mempool snapshot to disk |
+
+Configure **`[rpc_auth].admin_tokens`**, list tokens in **`admin_tokens`**, or set HTTP Basic **`password`** (auto-admin). Non-admin callers get HTTP **403**. Regtest labs: see [Quick Start](../getting-started/quick-start.md) for Bearer + `generatetoaddress`.
+
 ## Block Template Generation
 
 Block templates are built from **`blvm-consensus`** helpers (e.g. template construction) aligned with Orange Paper Section 12.4, with tests and spec-lock proofs on the relevant consensus paths.
@@ -127,7 +141,7 @@ password = "change-me-to-a-strong-secret"
 blvm --network mainnet --rpc-addr 127.0.0.1:8332
 ```
 
-HTTP Basic password is auto-granted **admin** (required for `getblocktemplate` / `submitblock`). Point ckpool `btcd.url` at the RPC port with matching `auth` / `pass`. Regtest lab: seed with `generatetoaddress` before GBT. Smoke test: `blvm-node/examples/ckpool-solo/smoke-rpc.sh`. See the [blvm-node Integration Guide — ckpool](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#ckpool-solo-mining--bitaxe--stratum-v1).
+HTTP Basic password is auto-granted **admin** (required for `getblocktemplate` / `submitblock`). Point ckpool `btcd.url` at the RPC port with matching `auth` / `pass`. Regtest lab: seed chain height with `generatetoaddress` (**admin** Bearer or Basic — see [Quick Start](../getting-started/quick-start.md)) before GBT. Smoke test: `blvm-node/examples/ckpool-solo/smoke-rpc.sh`. See the [blvm-node Integration Guide — ckpool](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#ckpool-solo-mining--bitaxe--stratum-v1).
 
 ### Stratum V2 (node + module)
 
@@ -143,7 +157,7 @@ See [Stratum V2 + Merge Mining](mining-stratum-v2.md) for split **node** vs **mo
 ## See Also
 
 - [Node Operations](operations.md) - Node operation and management
-- [RPC API Reference](rpc-api.md) - Mining-related RPC methods (`getblocktemplate`, `submitblock`)
+- [RPC API Reference](rpc-api.md) - Mining RPC (`getblocktemplate`, `submitblock`, `generatetoaddress`) and admin auth
 - [Stratum V2 + Merge Mining](mining-stratum-v2.md) - Stratum V2 protocol details
 - [Node Configuration](configuration.md) - Mining configuration options
 - [Protocol Specifications](../reference/protocol-specifications.md) - Stratum V2 and mining protocols

@@ -17,10 +17,11 @@ Copy **`module.toml`** from the repo into the same module directory.
 
 ## Configure
 
-Module config: `<modules.data_dir>/blvm-mesh/config.toml`. Node override: `[modules.blvm-mesh]` or `[modules.mesh]` in `blvm.toml`.
+Module config: `<modules.data_dir>/blvm-mesh/config.toml`. Node override: `[modules.blvm-mesh]` in `blvm.toml` (table name must match manifest `name`).
+
+Use **flat top-level keys** in `config.toml` (no `[mesh]` wrapper — a `[mesh]` table is **silently ignored** and `enabled` stays **`false`**):
 
 ```toml
-[mesh]
 enabled = true
 mode = "payment_gated"   # open | payment_gated | bitcoin_only
 max_peers = 50
@@ -28,12 +29,14 @@ rate_limit_per_minute = 120   # 0 = off
 # peers = [{ address = "127.0.0.1:8333", node_id_hex = "..." }]
 ```
 
-Enable in node config (pin version or use legacy unpinned allowlist):
+> **Note:** `identity_seed_hex` for mesh identity may appear under a **`[mesh]`** table in some tooling paths; **`MeshConfig`** fields (`enabled`, `mode`, …) must be at the **root** of `config.toml`.
+
+Enable in node config (merge into your full `blvm.toml` — include `transport_preference` and network keys):
 
 ```toml
 [modules]
+registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
 blvm-mesh = "0.1.*"
-# or: enabled_modules = ["blvm-mesh"]
 ```
 
 **`module.toml` capabilities:** `read_blockchain`, `subscribe_events`, `register_module_api`, `network_access`, `publish_events`, `read_payment`.
