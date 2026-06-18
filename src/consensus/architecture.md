@@ -17,12 +17,12 @@ The consensus layer is designed as a pure mathematical implementation with no si
 ### Transaction Validation
 - Transaction structure and limit validation
 - Input validation against UTXO set
-- [Script execution](overview.md#transaction-validation) and verification
+- [Script execution](#transaction-validation) and verification
 
 ### Block Validation
-- [Block connection](overview.md#block-validation) and validation
+- [Block connection](#block-validation) and validation
 - Transaction application to UTXO set
-- [Proof of work verification](overview.md#block-validation)
+- [Proof of work verification](#block-validation)
 
 ### Economic Model
 - Block reward calculation

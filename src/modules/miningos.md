@@ -160,7 +160,7 @@ miner_tag = "t-miner"
 update_interval_seconds = 60
 ```
 
-Node overrides: `[modules.blvm-miningos]` in `blvm.toml` or `MODULE_CONFIG_*` env vars (see [Configuration Reference](../reference/configuration-reference.md#modules-configuration)).
+Node overrides: `[modules.blvm-miningos]` in `blvm.toml` or `MODULE_CONFIG_*` env vars (see [Configuration Reference](../reference/configuration-reference.md#module-system-configuration)).
 
 ### Configuration options
 

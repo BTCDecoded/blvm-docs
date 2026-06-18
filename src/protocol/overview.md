@@ -138,11 +138,19 @@ Distributed ban list management:
 
 ## BIP Support
 
+### Compact block relay (BIP152) {#compact-blocks}
+
+Short transaction IDs and block reconstruction (`SendCmpct`, `CmpctBlock`). See [Network messages](#network-messages) above.
+
+### Client-side block filtering (BIP157/158) {#bip157-158}
+
+GCS compact block filters and filter header chain. Node handlers and UTXO-commitment integration: [BIP158 in UTXO Commitments](../node/utxo-commitments.md#bip158-compact-block-filters).
+
 Implemented Bitcoin Improvement Proposals:
 
-- **BIP152**: Compact Block Relay
-- **BIP157**: Client-side Block Filtering
-- **BIP158**: Compact Block Filters
+- **BIP152**: Compact Block Relay — [above](#compact-blocks)
+- **BIP157**: Client-side Block Filtering — [above](#bip157-158)
+- **BIP158**: Compact Block Filters — [above](#bip157-158)
 - **BIP173/350/351**: Bech32/Bech32m Address Encoding
 - **BIP70**: Payment Protocol
 

@@ -135,7 +135,7 @@ graph TB
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → heed3 (LMDB)** in typical release builds; optional RocksDB, redb, sled, tidesdb)
-- [Common on-disk chain layouts](storage-backends.md#rocksdb-optional-common-on-disk-layouts) via RocksDB backend
+- [Common on-disk chain layouts](storage-backends.md#bitcoin-core-drop-in-migrate-on-start) via RocksDB backend
 - Automatic backend fallback on failure
 - Pruning support
 - [Advanced transaction indexing](transaction-indexing.md) (address and value range indexes)

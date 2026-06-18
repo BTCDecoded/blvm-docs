@@ -39,7 +39,9 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Spec Drift Detection** - Automated detection when implementation code diverges from the [Orange Paper](orange-paper.md) mathematical specification.
 
-**Compiler-Like Architecture** - The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** that spec through tests, review, and [BLVM Specification Lock](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [Stack overview](../architecture/system-overview.md).
+### Compiler-Like Architecture {#compiler-like-architecture}
+
+The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** that spec through tests, review, and [BLVM Specification Lock](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [Stack overview](../architecture/system-overview.md).
 
 **Process Isolation** - [Module system](../architecture/module-system.md) design where each module runs in a separate process with isolated memory, preventing failures from propagating to the base node.
 
@@ -61,7 +63,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **HTTP Basic RPC** - `Authorization: Basic` using **`[rpc_auth].username`** / **`password`**. Used by ckpool and Bitcoin Core–style tools; bind RPC to loopback when using Basic auth.
 
-**ckpool** - Solo mining pool software that talks to the node over JSON-RPC (HTTP Basic). See [Mining Integration](../node/mining.md#ckpool-solo-bitaxe--stratum-v1).
+**ckpool** - Solo mining pool software that talks to the node over JSON-RPC (HTTP Basic). See [Mining Integration](../node/mining.md#ckpool-solo-bitaxe-stratum-v1).
 
 **Core drop-in** - Import a synced Bitcoin Core datadir into BLVM’s native store at `<datadir>/blvm/` (requires `rocksdb` build). Stop Core before migrate. See [Storage Backends — Bitcoin Core drop-in](../node/storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
 

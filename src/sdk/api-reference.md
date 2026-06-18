@@ -474,7 +474,7 @@ When building modules against **`blvm-sdk`** with the **`node`** feature, the SD
 | `open_module_db` | Open module-local embedded DB under the module data dir |
 | `Permission`, `PermissionSet` | Capability checks |
 
-Subprocess modules that register **`ModuleAPI`** over IPC should use **`run_module_with_setup_and_api`** (not plain **`run_module!`**) — see [Building modules — ModuleAPI](module-development.md#subprocess-moduleapi-registration) and [Module IPC Protocol](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration).
+Subprocess modules that register **`ModuleAPI`** over IPC should use **`run_module_with_setup_and_api`** (not plain **`run_module!`**) — see [Module IPC Protocol — Subprocess ModuleAPI registration](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Building modules](module-development.md#spawned-modules-and-moduleapi).
 
 Governance **`NestedMultisig`** lives in **`blvm_sdk::governance::nested_multisig`** (not re-exported at crate root).
 

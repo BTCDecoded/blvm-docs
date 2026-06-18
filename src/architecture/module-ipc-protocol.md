@@ -144,7 +144,7 @@ The node sends **`Invocation`** messages to a connected module subprocess:
 
 The module replies with **`InvocationResult`** (same **`correlation_id`**). For **`ModuleApi`**, the payload is opaque bytes (`InvocationResultPayload::ModuleApi`).
 
-### Subprocess ModuleAPI registration
+### Subprocess ModuleAPI registration {#subprocess-moduleapi-registration}
 
 Spawned modules use **`blvm-sdk`** **`run_module_with_setup_and_api`** (not plain **`run_module!`**) when they register a ModuleAPI over IPC.
 

@@ -160,6 +160,10 @@ Per-method and per-user overrides are configurable. Violations return **HTTP 429
 | Unknown method | **-32601** |
 | Module RPC (mesh, miniscript, …) | **-32601** if module not loaded; **-32001** for miniscript descriptor methods |
 
+### Module RPC not loaded {#module-not-loaded}
+
+Dynamic module methods (mesh, miniscript overrides, …) return **-32601** *Method not found* when the module is not loaded. Load the module with `loadmodule` before calling module RPCs.
+
 ## See Also
 
 - [RPC API Reference](../node/rpc-api.md) — methods, auth, examples

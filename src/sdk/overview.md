@@ -31,7 +31,7 @@ Requires the **`node`** feature on `blvm-sdk`. See [Building modules](module-dev
 Cryptographic primitives for governance operations:
 
 - **Key Management**: Generate and manage governance keypairs
-- **Signature Creation**: Sign governance messages using [Bitcoin-compatible standards](api-reference.md#bitcoin-compatible-signing)
+- **Signature Creation**: Sign governance messages using [Bitcoin-compatible secp256k1 keys](api-reference.md#publickey)
 - **Signature Verification**: Verify signatures and [multisig thresholds](../governance/multisig-configuration.md)
 - **Multisig Logic**: Threshold-based collective decision making
 - **Nested Multisig**: Team-based governance with hierarchical multisig support
