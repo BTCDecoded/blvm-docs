@@ -1,8 +1,20 @@
 # IBD Bandwidth Protection
 
+Protects **your node when serving** block data to peers during their IBD — not the same as download tuning. If you are **downloading** the chain, see [IBD UTXO engine — Sync tuning guide](ibd-engine.md#sync-tuning-guide) and [Performance — Parallel IBD](performance.md#parallel-initial-block-download-ibd).
+
 ## Overview
 
 The node protects against Initial Block Download (IBD) bandwidth exhaustion attacks.
+
+## Protection summary
+
+| Layer | Limit | Default (config key) |
+|-------|-------|----------------------|
+| Per peer | Daily / hourly GB | 50 / 10 (`max_bandwidth_per_peer_per_day_gb`, …) |
+| Per IP | Daily / hourly GB | 100 / 20 |
+| Per subnet | Daily / hourly GB | 500 / 100 |
+| Concurrent servers | Max peers served at once | 3 (`max_concurrent_ibd_serving`) |
+| Reputation | Cooldown after suspicious reconnects | 3600 s cooldown |
 
 ## Protection Mechanisms
 

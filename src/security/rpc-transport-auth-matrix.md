@@ -2,6 +2,21 @@
 
 Operator reference for **which JSON-RPC surface supports which auth model**. P2P transport comparison (**TCP vs QUIC**) lives under **[Transport abstraction](../node/transport-abstraction.md)** — different scope.
 
+## Choose a surface
+
+```mermaid
+flowchart TD
+  Q[Client needs node API?] --> TCP[Default: JSON-RPC over TCP HTTP]
+  Q --> QUIC[Optional: JSON-RPC over QUIC HTTP/3]
+  Q --> REST[Optional: REST /api/v1]
+  TCP --> AUTH[[rpc_auth] once]
+  QUIC --> AUTH
+  REST --> AUTH
+  AUTH --> BEAR[Bearer tokens]
+  AUTH --> BASIC[HTTP Basic — loopback ckpool]
+  AUTH --> CERT[TLS client certs — when configured]
+```
+
 ## Matrix
 
 | Surface | Feature / bind | Bearer / token auth (`[rpc_auth]`) | HTTP Basic (`username` / `password`) | TLS client certs | Notes |

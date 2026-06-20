@@ -14,6 +14,21 @@ Operational guide for running and maintaining a BLVM node.
 | RPC hardening before exposure | [Deployment posture](../security/deployment-posture.md) |
 | IBD stuck / slow | [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
 
+### Operator lifecycle
+
+```mermaid
+flowchart LR
+  A[Install] --> B[Configure blvm.toml]
+  B --> C{First sync?}
+  C -->|Mainnet| D[IBD example config]
+  C -->|Testnet / regtest| E[Start node]
+  D --> E
+  E --> F[Monitor health / sync]
+  F --> G[Backup datadir]
+  G --> H[Upgrade binary]
+  H --> E
+```
+
 ## Starting the Node
 
 ### Basic Startup
@@ -99,36 +114,34 @@ Requires the **`rocksdb`** Cargo feature (**`blvm` default features**; omitted f
 
 The node follows a lifecycle with multiple states and transitions.
 
-### Lifecycle States
+### Sync state machine
 
-The node operates in the following states:
-
+```mermaid
+stateDiagram-v2
+  [*] --> Initial
+  Initial --> Headers: sync begins
+  Headers --> Blocks: headers complete
+  Blocks --> Synced: blocks complete
+  Initial --> Error: failure
+  Headers --> Error: failure
+  Blocks --> Error: failure
+  Synced --> Error: failure
+  Error --> Initial: recovery / restart
 ```
-Initial → Headers → Blocks → Synced
-   ↓         ↓         ↓         ↓
- Error    Error    Error    Error
-```
 
-**State Descriptions**:
+**State descriptions**:
 
-1. **Initial**: Node starting up, initializing components
-2. **Headers**: Downloading and validating block headers
-3. **Blocks**: Downloading and validating full blocks
-4. **Synced**: Fully synchronized, normal operation
-5. **Error**: Error state (can transition from any state)
+| State | Meaning |
+|-------|---------|
+| **Initial** | Startup; components initializing |
+| **Headers** | Downloading and validating block headers |
+| **Blocks** | Downloading and validating full blocks |
+| **Synced** | Caught up; normal relay and RPC |
+| **Error** | Recoverable or fatal fault (logged) |
 
+State transitions are managed by the `SyncStateMachine` (`Initial → Headers → Blocks → Synced`). Progress weighting in UI/logs uses ~30% at headers complete and ~60% at blocks complete before full sync.
 
-### State Transitions
-
-State transitions are managed by the `SyncStateMachine`:
-
-- **Initial → Headers**: When sync begins
-- **Headers → Blocks**: When headers are complete (30% progress)
-- **Blocks → Synced**: When blocks are complete (60% progress)
-- **Any → Error**: On error conditions
-
-
-### Initial Sync
+### Initial sync checklist
 
 When starting for the first time, the node will:
 

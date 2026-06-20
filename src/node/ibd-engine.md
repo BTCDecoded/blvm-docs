@@ -1,5 +1,35 @@
 # IBD UTXO engine
 
+## Sync tuning guide
+
+Use this decision tree before changing IBD settings. First mainnet sync always starts from [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (release IBD example config).
+
+```mermaid
+flowchart TD
+  START[Starting or tuning sync] --> FIRST{First mainnet sync?}
+  FIRST -->|Yes| EX[Use blvm-mainnet-ibd.toml.example]
+  FIRST -->|No| ROLE{Your role?}
+  ROLE -->|Downloading chain| DL[Parallel IBD — performance.md]
+  ROLE -->|Serving blocks to peers| SRV[IBD bandwidth protection]
+  DL --> LAN{Core on same LAN?}
+  LAN -->|Yes| AUTO[Auto LAN peer preference]
+  LAN -->|No WAN| WAN[BLVM_IBD_PEERS or multi-peer default]
+  WAN --> SLOW{Single peer enough?}
+  SLOW -->|Force one peer| ONE[BLVM_IBD_WAN_SINGLE_PEER=1]
+  SLOW -->|Default| STEAL[multi-peer work-stealing]
+  DL --> ENG{Need engine checkpoints?}
+  ENG -->|Advanced| ENGINE[BLVM_IBD_ENGINE=1 — this page]
+  ENG -->|Default| LEG[Legacy in-process UTXO store]
+  SLOW --> STUCK[Stalled? — Troubleshooting Mainnet IBD]
+```
+
+| Topic | Page |
+|-------|------|
+| Parallel download, pipelining, assume-valid | [Performance optimizations](performance.md) |
+| `[ibd]` keys and `BLVM_IBD_*` | [Configuration reference — IBD](../reference/configuration-reference.md#ibd-configuration) |
+| Serving-side bandwidth limits | [IBD bandwidth protection](ibd-protection.md) |
+| LAN Core / same-subnet peers | [LAN peering](lan-peering.md) |
+
 ## Overview
 
 During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. By default, UTXO updates use the legacy in-process store. When enabled, an **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `storage/ibd_engine/`, with mid-sync checkpoints for crash-safe resume.

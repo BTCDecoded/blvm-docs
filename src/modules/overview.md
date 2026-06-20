@@ -23,6 +23,18 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 
 ## Module system architecture
 
+```mermaid
+flowchart LR
+  TOML[blvm.toml pin] --> REG{Registry URL?}
+  REG -->|Yes| DL[Download release binary]
+  REG -->|No| DISK[modules_dir on disk]
+  DL --> VERIFY[sha256sums.txt verify]
+  DISK --> SPAWN
+  VERIFY --> SPAWN[Spawn process]
+  SPAWN --> IPC[Module IPC / events]
+  IPC --> RPC[Optional JSON-RPC extensions]
+```
+
 Modules run in separate processes with IPC ([Module System Architecture](../architecture/module-system.md)):
 
 - **Process isolation** — Module crash does not take down the node
@@ -62,6 +74,19 @@ cargo install blvm-lightning   # when published on crates.io
 Each module uses `module.toml` plus optional `config.toml`. See per-module pages linked above and [Node configuration](../node/configuration.md).
 
 ## Module lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> Pinned: [modules] version pin
+  Pinned --> Bootstrap: missing on disk + registry_url
+  Bootstrap --> Loaded: auto-load at startup
+  Pinned --> Loaded: binary already on disk
+  Loaded --> Running: IPC handshake OK
+  Running --> Unloaded: unload RPC / shutdown
+  Unloaded --> Loaded: loadmodule RPC
+  Running --> Crashed: process exit
+  Crashed --> Loaded: reload
+```
 
 - **Load** at startup when pinned under **`[modules]`** (inline `blvm-zmq = "0.1.*"`) or loaded at runtime via RPC
 - **Unload** without stopping the base node

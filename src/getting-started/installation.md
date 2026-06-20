@@ -6,13 +6,16 @@ Pre-built **`blvm`** binaries, Linux packages, Windows builds, and Docker images
 
 Always verify `checksums.sha256` (or the release checksum file) before running a downloaded artifact.
 
-## Platform / feature notes
+## Platform matrix
 
-Release artifacts are **platform-specific** (see [Release process — Build variants](../development/release-process.md#build-variants)):
+| Artifact | Platform | Feature set | Typical use |
+|----------|----------|-------------|-------------|
+| Release tarball / package | Linux **x86_64** | Full defaults (`rest-api`, `bip70-http`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, …) | Production mainnet / testnet |
+| Release tarball / package | Linux **aarch64**, Windows **x86_64** | Portable subset (`sled`, `redb`, `production`, `protocol-verification`, `utxo-commitments`; **no** REST / BIP70 HTTP / compression) | Lighter deployments |
+| Docker | GHCR [`ghcr.io/btcdecoded/blvm`](https://github.com/BTCDecoded/blvm/pkgs/container/blvm) | Per-release tag | Container ops |
+| Source build | Any supported Rust target | Explicit `--features` | Experimental flags, custom arch |
 
-- **Linux x86_64** — full `blvm` default feature set (`rest-api`, `bip70-http`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, …)
-- **Linux aarch64 / Windows x86_64** — portable CI builds (`--no-default-features` subset: typically `sled`, `redb`, `production`, `protocol-verification`, `utxo-commitments`; **no** `bip70-http` / `rest-api` / `compression`)
-- **Docker (GHCR)** — tagged per release on [`ghcr.io/btcdecoded/blvm`](https://github.com/BTCDecoded/blvm/pkgs/container/blvm)
+Details: [Release process — Build variants](../development/release-process.md#build-variants).
 
 Local `cargo build` in the `blvm` repo uses default features unless you pass `--no-default-features` or explicit `--features`.
 
