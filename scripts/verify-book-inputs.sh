@@ -6,7 +6,6 @@ ROOT="${1:-.}"
 cd "$ROOT"
 
 required=(
-  modules/blvm-spec/THE_ORANGE_PAPER.md
   modules/governance/README.md
   modules/governance/GOVERNANCE.md
   modules/governance/config/action-tiers.yml
@@ -22,11 +21,6 @@ for f in "${required[@]}"; do
   fi
   echo "OK $f"
 done
-
-if grep -R -l '\[\[gov:' modules/blvm-spec 2>/dev/null; then
-  echo "::error::Orange Paper includes must not contain [[gov: placeholders]"
-  exit 1
-fi
 
 if grep -R -l '\[\[gov:' modules/governance/README.md modules/governance/GOVERNANCE.md 2>/dev/null; then
   echo "::error::Governance narrative includes must not contain [[gov: placeholders (use blvm-docs src/ only)"

@@ -79,18 +79,18 @@ repository-root/
    git clone https://github.com/BTCDecoded/blvm-docs.git
    ```
 
-2. **Populate `modules/`** — `mdbook build` fails if required include paths are missing:
+2. **Populate `modules/governance/`** — required when building chapters that `{{#include}}` governance prose or when running `./scripts/verify-book-inputs.sh`:
 
-   - `modules/blvm-spec/THE_ORANGE_PAPER.md`
    - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md`
    - (CI also requires `modules/governance/config/action-tiers.yml`, `repository-layers.yml`, and `emergency-tiers.yml` for deploy checks.)
 
-   Clone from GitHub if needed (`https://github.com/BTCDecoded/blvm-spec`, `https://github.com/BTCDecoded/governance`). With sibling checkouts, from `blvm-docs/modules/`:
+   Clone from GitHub if needed ([governance](https://github.com/BTCDecoded/governance)). With a sibling checkout, from `blvm-docs/modules/`:
 
    ```bash
-   ln -sf ../../blvm-spec blvm-spec
    ln -sf ../../governance governance
    ```
+
+   The **[Orange Paper](https://thebitcoincommons.org/protocol.html)** is **not** included in this book—see [reference/orange-paper.md](src/reference/orange-paper.md).
 
 3. Serve locally:
 

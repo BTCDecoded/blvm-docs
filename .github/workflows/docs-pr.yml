@@ -38,14 +38,10 @@ jobs:
             mdbook-governance-vars/target/
           key: ${{ runner.os }}-gov-vars-${{ hashFiles('mdbook-governance-vars/Cargo.lock') }}
 
-      - name: Fetch mdBook include sources (Orange Paper, governance)
+      - name: Fetch mdBook include sources (governance)
         run: |
           set -eux
           mkdir -p modules
-          if [ ! -f modules/blvm-spec/THE_ORANGE_PAPER.md ]; then
-            rm -rf modules/blvm-spec
-            git clone --depth 1 https://github.com/BTCDecoded/blvm-spec.git modules/blvm-spec
-          fi
           need_governance_clone=false
           if [ ! -f modules/governance/README.md ] || [ ! -f modules/governance/GOVERNANCE.md ]; then
             need_governance_clone=true

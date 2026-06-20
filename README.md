@@ -4,7 +4,7 @@ Unified documentation site for the Bitcoin Commons BLVM ecosystem, built with [m
 
 ## Overview
 
-This repository builds the [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org) site with [mdBook](https://rust-lang.github.io/mdBook/). **Most chapters are written in `src/`** here. A **few** pages embed upstream Markdown at build time via mdBook's **`{{#include}}`**, which reads from a local **`modules/`** tree (Orange Paper, governance narrative, and governance **config YAML** checked in CI—see `.github/workflows/deploy.yml`). Governance policy numbers in wired chapters use **`[[gov:KEY]]`** placeholders expanded by **`mdbook-governance-vars`** at build time—edit [governance](https://github.com/BTCDecoded/governance) `config/*.yml`, not hand-copied literals (see `docs/GOVERNANCE_MDBOOK.md` and `mdbook-governance-vars/README.md`). Optional **git submodules** under `modules/` can mirror those repos for local work. Component-specific documentation (for example under `blvm-consensus/docs/`) remains in each crate's repository; this book **links** there or summarizes unless you add an explicit include.
+This repository builds the [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org) site with [mdBook](https://rust-lang.github.io/mdBook/). **Most chapters are written in `src/`** here. A **few** pages embed upstream Markdown at build time via mdBook's **`{{#include}}`** from **`modules/governance/`** (governance narrative and **config YAML** checked in CI—see `.github/workflows/deploy.yml`). The **[Orange Paper](https://thebitcoincommons.org/protocol.html)** is published on the Bitcoin Commons website—not embedded in this book ([pointer chapter](src/reference/orange-paper.md)). Governance policy numbers in wired chapters use **`[[gov:KEY]]`** placeholders expanded by **`mdbook-governance-vars`** at build time—edit [governance](https://github.com/BTCDecoded/governance) `config/*.yml`, not hand-copied literals (see `docs/GOVERNANCE_MDBOOK.md` and `mdbook-governance-vars/README.md`). Optional **git submodules** under `modules/` can mirror upstream repos for local work. Component-specific documentation (for example under `blvm-consensus/docs/`) remains in each crate's repository; this book **links** there or summarizes unless you add an explicit include.
 
 **Live Site:** [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org)
 
@@ -12,7 +12,7 @@ This repository builds the [docs.thebitcoincommons.org](https://docs.thebitcoinc
 
 - `book.toml` - mdBook configuration
 - `src/` - Documentation source files and navigation structure
-- `modules/` - External sources included into the book (Orange Paper, governance); see Local Development
+- `modules/` - Governance sources included into the book; see Local Development
 - `.github/workflows/` - Automated build and deployment
 
 ## Local Development
@@ -29,15 +29,13 @@ This repository builds the [docs.thebitcoincommons.org](https://docs.thebitcoinc
    git clone https://github.com/BTCDecoded/blvm-docs.git
    ```
 
-2. **Wire `modules/` includes** (required for `mdbook build`). Pages that use `{{#include}}` expect at least:
-   - `modules/blvm-spec/THE_ORANGE_PAPER.md`
+2. **Wire `modules/` includes** (required for `mdbook build` when using governance includes). Pages that use `{{#include}}` expect at least:
    - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md`
    - Deploy CI also expects `modules/governance/config/action-tiers.yml`, `repository-layers.yml`, and `emergency-tiers.yml` (for policy parity checks); clone **governance** fully if you rely on those paths locally.
 
-   Clone sources if needed: [blvm-spec](https://github.com/BTCDecoded/blvm-spec), [governance](https://github.com/BTCDecoded/governance). If you keep them as sibling directories next to `blvm-docs`, symlink from `blvm-docs/modules/`:
+   Clone [governance](https://github.com/BTCDecoded/governance) if needed. If you keep it as a sibling directory next to `blvm-docs`, symlink from `blvm-docs/modules/`:
    ```bash
    cd blvm-docs/modules
-   ln -sf ../../blvm-spec blvm-spec
    ln -sf ../../governance governance
    ```
    Adjust paths for your checkout. CI clones these repos instead of symlinks. If `git status` errors with *expected submodule path … not to be a symbolic link*, use `git -c submodule.recurse=false status` or `git submodule update --init` for `modules/governance` instead of a symlink.
