@@ -10,15 +10,20 @@
   height: auto;
 }
 
-/* Tables — left align (mdBook default centers with margin: 0 auto) */
+/* Tables — left align; wide matrices scroll horizontally instead of squishing */
 .content .table-wrapper {
   text-align: left;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .content table,
 .content .table-wrapper table {
   margin-left: 0;
   margin-right: auto;
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
 }
 
 .content table th,
@@ -26,6 +31,14 @@
 .content .table-wrapper th,
 .content .table-wrapper td {
   text-align: left;
+  vertical-align: top;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.content .table-wrapper th,
+.content .table-wrapper td {
+  min-width: 9rem;
 }
 
 .admonition {

@@ -4,11 +4,11 @@ Operator reference for **which JSON-RPC surface supports which auth model**. P2P
 
 ## Matrix
 
-| Surface | Feature / bind | Bearer / token auth (`[rpc_auth]`) | HTTP Basic (`username` / `password`) | TLS client certs | Notes |
-|---------|----------------|--------------------------------------|--------------------------------------|------------------|--------|
-| **JSON-RPC over TCP (HTTP)** | Default **`blvm`** RPC | **Supported** — **`Authorization: Bearer`** | **Supported** — **`Authorization: Basic`** (ckpool; password auto-admin) | **Supported** (when configured) | Prefer **loopback** bind for Basic auth (cleartext). |
-| **JSON-RPC over QUIC (HTTP/3)** | **`quinn`** QUIC RPC listener | **Supported** — same **`RpcAuthManager`** as TCP HTTP | **Supported** on HTTP/3 request headers | QUIC presents a server TLS identity on the UDP listener (**distinct certificate lifecycle** from TCP HTTP TLS unless you terminate equivalently at a proxy) | **ALPN `h3`**. Shares the live **`Arc<RpcServer>`** so handlers and limits align with TCP HTTP. |
-| **REST (`/api/v1/`)** | **`rest-api`** feature; **`[rest_api].enabled`** at startup | **Supported** via shared **`RpcAuthManager`** when REST server built **`with_auth`** | Same stack as RPC auth layer; **admin RBAC** via `rest/rbac.rs` (maps paths → `admin_rpc_methods()`) | Off by default; separate bind (default **8080** / **18080**). See [RPC API — REST](../node/rpc-api.md#rest-api). |
+| Surface | Feature / bind | Bearer (`[rpc_auth]`) | HTTP Basic | TLS client certs | Notes |
+|---------|----------------|----------------------|------------|------------------|-------|
+| **JSON-RPC (TCP HTTP)** | Default **`blvm`** RPC | **Yes** — `Authorization: Bearer` | **Yes** — `Authorization: Basic` (ckpool; password auto-admin) | When configured | Prefer **loopback** for Basic (cleartext on wire). |
+| **JSON-RPC (QUIC HTTP/3)** | **`quinn`** listener; ALPN **`h3`** | **Yes** — same **`RpcAuthManager`** as TCP | **Yes** — HTTP/3 request headers | Server TLS on UDP listener | Shares live **`Arc<RpcServer>`** with TCP HTTP. UDP TLS cert lifecycle may differ from TCP unless you terminate at a proxy. |
+| **REST (`/api/v1/`)** | **`rest-api`** feature; **`[rest_api].enabled`** | **Yes** — when REST server built **`with_auth`** | Same auth stack; **admin RBAC** via `rest/rbac.rs` | Off by default | Separate bind (default **8080** / **18080** / **28443**). See [RPC API — REST](../node/rpc-api.md#rest-api). |
 
 ## Practical guidance
 
