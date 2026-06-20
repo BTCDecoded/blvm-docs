@@ -184,21 +184,22 @@ blvm --network mainnet --rpc-addr 127.0.0.1:8332 health
 
 # HTTP health on the RPC port (GET — same port as JSON-RPC)
 curl -s http://127.0.0.1:8332/health            # mainnet — quick status
-curl -s http://127.0.0.1:18332/health           # testnet / regtest
-curl -s http://127.0.0.1:18332/health/live      # liveness (same body as /health)
-curl -s http://127.0.0.1:18332/health/ready     # readiness (healthy only)
-curl -s http://127.0.0.1:18332/health/detailed  # full gethealth JSON
+curl -s http://127.0.0.1:18332/health           # testnet
+curl -s http://127.0.0.1:18443/health           # regtest
+curl -s http://127.0.0.1:18443/health/live      # liveness (same body as /health)
+curl -s http://127.0.0.1:18443/health/ready     # readiness (healthy only)
+curl -s http://127.0.0.1:18443/health/detailed  # full gethealth JSON
 
 # Prometheus metrics (GET /metrics — requires auth when [rpc_auth] is enabled)
 curl -s http://127.0.0.1:8332/metrics
 
-# JSON-RPC node health extension (blvm-node; not Bitcoin Core)
-curl -X POST http://127.0.0.1:18332 \
+# JSON-RPC node health extension (blvm-node; not Bitcoin Core) — use your RPC port
+curl -X POST http://127.0.0.1:18443 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "gethealth", "params": [], "id": 1}'
 
 # JSON-RPC metrics extension (blvm-node; not Bitcoin Core)
-curl -X POST http://127.0.0.1:18332 \
+curl -X POST http://127.0.0.1:18443 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "getmetrics", "params": [], "id": 1}'
 

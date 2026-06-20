@@ -130,7 +130,7 @@ let response_str = String::from_utf8(response)?;
 
 ## Limitations
 
-- **Ecosystem tooling**: Most off-the-shelf JSON-RPC clients assume TCP HTTP to port 8332/18332
+- **Ecosystem tooling**: Most off-the-shelf JSON-RPC clients assume TCP HTTP to port 8332 (mainnet), 18332 (testnet), or 18443 (regtest)
 - **Client Support**: Requires QUIC-capable clients
 - **Certificate Management**: Self-signed certs need proper handling for production
 - **Network Requirements**: Some networks may block UDP/QUIC

@@ -36,16 +36,16 @@ blvm --config ~/.local/share/blvm-quickstart/blvm.toml --verbose
 In the first log lines, confirm:
 
 - `Network: Regtest` (or equivalent)
-- RPC listening on **`127.0.0.1:18332`** (default for testnet/regtest)
+- RPC listening on **`127.0.0.1:18443`** (regtest default; testnet uses **18332**)
 
 Leave this process running. On a **fresh datadir**, wait until logs show **`Component startup complete`** or **`NodeStartupCompleted`** (~10–15 seconds) before mining in step 4 — RPC listens earlier, but `generatetoaddress` needs an initialized chain tip.
 
 ## 3. Check chain state
 
-Regtest uses RPC port **18332** (not mainnet 8332):
+Regtest uses RPC port **18443** (Core-aligned; mainnet **8332**, testnet **18332**):
 
 ```bash
-curl -s -X POST http://127.0.0.1:18332 \
+curl -s -X POST http://127.0.0.1:18443 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"getblockchaininfo","params":[],"id":1}'
 ```
@@ -57,7 +57,7 @@ Expected at genesis: `"chain":"regtest"` and `"blocks":0`.
 `generatetoaddress` requires an **admin** Bearer token (listed in `[rpc_auth].admin_tokens`):
 
 ```bash
-curl -s -X POST http://127.0.0.1:18332 \
+curl -s -X POST http://127.0.0.1:18443 \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer quickstart" \
   -d '{"jsonrpc":"2.0","method":"generatetoaddress","params":[1,"bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"],"id":2}'
@@ -73,7 +73,7 @@ You now have a running regtest node that processed at least one block.
 
 ## Next steps
 
-- **Regtest with config file and peers:** [First Node Setup (regtest)](first-node.md)
+- **Config file and mainnet/testnet:** [First Node Setup](first-node.md)
 - **Mainnet:** [Mainnet initial sync](mainnet-sync.md) and [Deployment posture](../security/deployment-posture.md)
 - **Core datadir import:** [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir)
 - **Build a module:** [Building your first module](first-module.md)

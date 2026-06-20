@@ -31,10 +31,10 @@ registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/
 blvm-miniscript = "0.1.*"
 ```
 
-Runtime load (admin RPC):
+Runtime load (admin RPC; use the port from `--rpc-addr` — mainnet **8332**, testnet **18332**, regtest **18443**):
 
 ```bash
-curl -s -X POST http://127.0.0.1:18332 \
+curl -s -X POST http://127.0.0.1:18443 \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <admin-token>" \
   -d '{"jsonrpc":"2.0","method":"loadmodule","params":["blvm-miniscript"],"id":1}'

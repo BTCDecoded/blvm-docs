@@ -15,7 +15,7 @@ Reference for BLVM node configuration options. Configuration can be provided via
 | Goal | Where to look |
 |------|----------------|
 | P2P listen address | `listen_addr` (top level) |
-| RPC bind | CLI `--rpc-addr` / `BLVM_RPC_ADDR` (not a `NodeConfig` port key) |
+| RPC bind | CLI `--rpc-addr` / `BLVM_RPC_ADDR` (not a `NodeConfig` port key). Defaults: mainnet `127.0.0.1:8332`, testnet `127.0.0.1:18332`, regtest `127.0.0.1:18443` |
 | RPC auth | `[rpc_auth]` — `required`, `tokens`, `admin_tokens`, `username`, `password` |
 | Data directory | `[storage].data_dir` |
 | Database backend | `[storage].database_backend` (`auto`, `heed3`, `rocksdb`, …) |
@@ -575,7 +575,7 @@ module_socket_max_attempts = 50
 
 ### `[rest_api]` (config file only)
 
-Requires **`rest-api`** compile-time feature. When **`enabled = true`**, the node starts REST at startup on **`listen_addr`** or the default loopback port (**8080** when RPC is **8332**, **18080** when RPC is **18332**). See [RPC API — REST](../node/rpc-api.md#rest-api).
+Requires **`rest-api`** compile-time feature. When **`enabled = true`**, the node starts REST at startup on **`listen_addr`** or the default loopback port (**8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000**). See [RPC API — REST](../node/rpc-api.md#rest-api).
 
 ```toml
 [rest_api]

@@ -6,12 +6,12 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet and regtest **`127.0.0.1:18332`** (not Bitcoin Core’s regtest port `18443`).
-- **REST API** (optional): Requires **`rest-api`** feature and **`[rest_api].enabled = true`** in `blvm.toml`. Binds a separate port (default **8080** mainnet / **18080** when RPC is **18332**). See [REST API](#rest-api).
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, regtest **`127.0.0.1:18443`** (Core-aligned).
+- **REST API** (optional): Requires **`rest-api`** feature and **`[rest_api].enabled = true`** in `blvm.toml`. Binds a separate port (default **8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000**). See [REST API](#rest-api).
 
 ## Connection
 
-Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. The default is `http://127.0.0.1:8332` (mainnet). Use `http://127.0.0.1:18332` for testnet or regtest. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
+Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. Defaults: mainnet `http://127.0.0.1:8332`, testnet `http://127.0.0.1:18332`, regtest `http://127.0.0.1:18443`. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
 
 ## Authentication
 
@@ -48,7 +48,7 @@ See **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md
 ### Get Blockchain Info
 
 ```bash
-# Mainnet uses port 8332, testnet/regtest use 18332
+# Mainnet 8332; testnet 18332; regtest 18443
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{
@@ -62,7 +62,7 @@ curl -X POST http://localhost:8332 \
 ### Get Block
 
 ```bash
-# Mainnet uses port 8332, testnet/regtest use 18332
+# Mainnet 8332; testnet 18332; regtest 18443
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{
@@ -76,7 +76,7 @@ curl -X POST http://localhost:8332 \
 ### Get Network Info
 
 ```bash
-# Mainnet uses port 8332, testnet/regtest use 18332
+# Mainnet 8332; testnet 18332; regtest 18443
 curl -X POST http://localhost:8332 \
   -H "Content-Type: application/json" \
   -d '{
@@ -130,6 +130,7 @@ On regtest at genesis, `"blocks": 0`, `"difficulty": 1.0`, and `"initialblockdow
 Submit hex-encoded signed transaction. Returns txid on success; errors if policy or consensus rejects the tx.
 
 ```bash
+# Testnet example (18332); regtest uses 18443, mainnet 8332
 curl -X POST http://127.0.0.1:18332 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"sendrawtransaction","params":["<hex>"],"id":1}'
@@ -159,7 +160,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 | `meshsendpacket` / `meshpollreceived` | Module | Requires `blvm-mesh` |
 | REST `/api/v1/*` | BLVM-specific | `rest-api` feature + `[rest_api].enabled`; separate bind — see [REST API](#rest-api) |
 
-**Ports:** BLVM defaults RPC to `18332` for testnet and regtest (Core regtest often uses `18443`). Set `--rpc-addr` explicitly when tooling assumes Core defaults.
+**Ports:** BLVM defaults RPC to **`18332`** (testnet) and **`18443`** (regtest, Core-aligned). Set **`--rpc-addr`** / **`BLVM_RPC_ADDR`** when you need a different bind.
 
 ## Available Methods
 
@@ -325,7 +326,7 @@ RPC authentication is optional but recommended for production:
 ### Token-Based Authentication
 
 ```bash
-# Mainnet uses port 8332, testnet/regtest use 18332
+# Mainnet 8332; testnet 18332; regtest 18443
 curl -X POST http://localhost:8332 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
@@ -415,7 +416,7 @@ The REST API is a **separate HTTP server** from JSON-RPC (`blvm-node/src/rpc/res
 
 > **Operator note** — REST is **off by default** (`[rest_api].enabled = false`). When enabled, it binds its **own** address (default loopback **8080** / **18080** from RPC port). Handler coverage matches **`rest/server.rs` routing**, not every function in `rest/*.rs`.
 
-When enabled programmatically, REST binds its **own** address (tests use `127.0.0.1:8080`). It does **not** share the JSON-RPC port (`8332` / `18332`). HTTP **`GET /health`** on the RPC port is separate (see [Node Operations](operations.md)).
+When enabled programmatically, REST binds its **own** address (tests use `127.0.0.1:8080`). It does **not** share the JSON-RPC port (**8332** / **18332** / **18443**). HTTP **`GET /health`** on the RPC port is separate (see [Node Operations](operations.md)).
 
 **Base URL (when running):** `http://<rest-bind>/api/v1/`
 

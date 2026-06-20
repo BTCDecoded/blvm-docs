@@ -81,4 +81,4 @@ Then meet **Required** items under **Supported contexts → Mainnet** above.
 ## Relationship to other docs
 
 - **[Threat models](threat-models.md)** — Attack surfaces and boundaries (developer + operator framing).
-- **[First node](../getting-started/first-node.md)** — Hands-on regtest path; links here for production-facing posture.
+- **[First node](../getting-started/first-node.md)** — Config-based setup; links here for production-facing posture.

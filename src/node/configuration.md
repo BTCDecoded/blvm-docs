@@ -44,7 +44,7 @@ database_backend = "auto"  # auto | rocksdb | tidesdb | heed3 | redb | sled — 
 ```
 
 **Defaults (two layers)**:
-- **`blvm` operator binary** (no config file): `--network regtest`, RPC `127.0.0.1:18332`, P2P `0.0.0.0:18444` (mainnet `8333`, testnet `18333`). Override with `--listen-addr` / `BLVM_LISTEN_ADDR`. RPC port is **not** Bitcoin Core’s usual regtest port (`18443`); override `--rpc-addr` / `BLVM_RPC_ADDR` when tooling assumes Core defaults.
+- **`blvm` operator binary** (no config file): default network **`regtest`**. RPC when `--rpc-addr` is omitted: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, regtest **`127.0.0.1:18443`** (Core-aligned). P2P: mainnet **`0.0.0.0:8333`**, testnet **`0.0.0.0:18333`**, regtest **`0.0.0.0:18444`**. Override with `--listen-addr` / `BLVM_LISTEN_ADDR` and `--rpc-addr` / `BLVM_RPC_ADDR`.
 - **`NodeConfig` library default** (used when embedding `blvm-node`): `listen_addr` localhost `8333`, `protocol_version` `"BitcoinV1"`, `transport_preference` TCP-only, `max_peers` 100.
 
 Configuration is organized in logical sections (`storage`, `ibd`, `modules`, optional `[stratum_v2]`, etc.) in the node codebase. Initial block download uses parallel IBD only.
@@ -98,7 +98,7 @@ You can also configure via environment variables (ENV overrides config file):
 ```bash
 export BLVM_NETWORK=testnet
 export BLVM_DATA_DIR=/var/lib/blvm
-# Use the RPC socket your node binds (mainnet-style 8332 here; CLI default without overrides is 127.0.0.1:18332)
+# Use the RPC socket your node binds (example: mainnet 8332; testnet 18332; regtest 18443)
 export BLVM_RPC_ADDR=127.0.0.1:8332
 export BLVM_IBD_EVICTION=dynamic
 export BLVM_NETWORK_TARGET_PEER_COUNT=125
@@ -117,7 +117,7 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 | Option | Short | Default | Description |
 |--------|-------|---------|-------------|
 | `--network` | `-n` | `regtest` | Network: `regtest`, `testnet`, `mainnet` |
-| `--rpc-addr` | `-r` | network-aware when omitted | RPC bind: mainnet `127.0.0.1:8332`; testnet/regtest `127.0.0.1:18332` |
+| `--rpc-addr` | `-r` | network-aware when omitted | RPC bind: mainnet `127.0.0.1:8332`; testnet `127.0.0.1:18332`; regtest `127.0.0.1:18443` |
 | `--listen-addr` | `-l` | network-aware when omitted | P2P listen: mainnet `0.0.0.0:8333`, testnet `0.0.0.0:18333`, regtest `0.0.0.0:18444` |
 | `--data-dir` | `-d` | — | Data directory (overrides ENV and config) |
 | `--config` | `-c` | — | Configuration file path (TOML or JSON) |
@@ -132,7 +132,7 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 
 **BIP158:** `--enable-bip158` / `--disable-bip158` adjust **logged** preference only—compact block filter code is compiled without a separate `bip158` Cargo feature (present in typical `blvm` / `blvm-node` builds).
 
-**REST API:** enable in `blvm.toml` with **`[rest_api].enabled = true`** (requires **`rest-api`** in the binary). Binds a separate loopback port (default **8080** / **18080** when RPC is **18332**). See [RPC API — REST](rpc-api.md#rest-api).
+**REST API:** enable in `blvm.toml` with **`[rest_api].enabled = true`** (requires **`rest-api`** in the binary). Binds a separate loopback port (default **8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000** — e.g. **28443** for regtest **18443**). See [RPC API — REST](rpc-api.md#rest-api).
 
 ### Advanced Options
 

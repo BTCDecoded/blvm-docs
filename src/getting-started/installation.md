@@ -31,7 +31,7 @@ For other architectures, experimental compile-time features, or development: [bl
 
 ## Who is this for?
 
-- **Operators:** [Quick Start](../getting-started/quick-start.md) → [Mainnet initial sync](../getting-started/mainnet-sync.md) or [First Node (regtest)](../getting-started/first-node.md)
+- **Operators:** [Quick Start](../getting-started/quick-start.md) (regtest) → [First Node Setup](../getting-started/first-node.md) → [Mainnet initial sync](../getting-started/mainnet-sync.md)
 - **Module developers:** [Building your first module](../getting-started/first-module.md)
 - **Researchers:** [Introduction](../introduction.md#who-is-this-for)
 
