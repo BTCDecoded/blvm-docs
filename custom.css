@@ -1,3 +1,15 @@
+/* Mermaid diagrams — align with mdBook navy theme (see postprocess-mermaid.py) */
+.mermaid {
+  margin: 1.25rem 0;
+  text-align: center;
+}
+
+.mermaid svg {
+  background: transparent !important;
+  max-width: 100%;
+  height: auto;
+}
+
 .admonition {
   border-left: 4px solid #6c757d;
   padding: 0.75rem 1rem;

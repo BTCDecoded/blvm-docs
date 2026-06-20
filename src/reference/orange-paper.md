@@ -2,6 +2,8 @@
 
 The normative Bitcoin consensus specification lives on **[thebitcoincommons.org](https://thebitcoincommons.org)**—not inside this book. **docs.thebitcoincommons.org** (this site) documents how BLVM implements and operates on the network; the commons site hosts the auditable spec text itself.
 
+**Read the Orange Paper:** [thebitcoincommons.org/orange-paper.html](https://thebitcoincommons.org/orange-paper.html) · **Consensus Spec (rule register):** [spec.html](https://thebitcoincommons.org/spec.html)
+
 ## Where to read the spec
 
 Bitcoin Commons publishes several linked viewers, all sourced from [blvm-spec](https://github.com/BTCDecoded/blvm-spec) on GitHub:
