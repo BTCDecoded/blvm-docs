@@ -4,18 +4,7 @@ Common issues and solutions when running BLVM nodes. See [Node Operations](../no
 
 ## Symptom guide
 
-```mermaid
-flowchart TD
-  S[Something wrong] --> START{Node starts?}
-  START -->|No| PORT[Port in use / permissions — below]
-  START -->|Yes| RPC{RPC works?}
-  RPC -->|No| RPCSEC[RPC bind + rpc_auth]
-  RPC -->|Yes| SYNC{Syncing / height moving?}
-  SYNC -->|Stuck / slow| IBD[Mainnet IBD table]
-  SYNC -->|Yes| OK[Check logs / gethealth]
-  START -->|DB error| STORE[Storage / corruption]
-  RPC -->|401/403| AUTH[Admin token or Basic auth]
-```
+Start from what you observe — each row links to a section on this page.
 
 | If you see… | Go to |
 |-------------|--------|
