@@ -12,7 +12,7 @@ flowchart TD
   Q -->|Study or change consensus| SPEC[Orange Paper + verification]
 ```
 
-**Running a Bitcoin node?** [Operator guide](getting-started/operator-guide.md) — [Installation](getting-started/installation.md), [Quick Start](getting-started/quick-start.md), [First Node Setup](getting-started/first-node.md) ([mainnet IBD](getting-started/first-node.md#mainnet-initial-sync)). Read [Deployment posture](security/deployment-posture.md) before exposing RPC on mainnet.
+**Running a Bitcoin node?** [Operator guide](getting-started/operator-guide.md) — [Installation](getting-started/installation.md), [Quick Start](getting-started/quick-start.md), [First Node Setup](getting-started/first-node.md) ([mainnet IBD hub](getting-started/operator-guide.md#initial-block-download-ibd)). Read [Deployment posture](security/deployment-posture.md) before exposing RPC on mainnet.
 
 **Building a module or integrating with the SDK?** [Developer guide](getting-started/developer-guide.md) — [Building your first module](getting-started/first-module.md), then [Building modules](sdk/module-development.md).
 
@@ -41,7 +41,7 @@ BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Pa
 - **Architecture** – System design, module system, events
 - **Layers** – Consensus, protocol, node (each with overview and detailed pages)
 - **Developer SDK** – Module development, API reference, examples
-- **Governance** – Model, configuration, procedures
+- **Governance** – [Overview hub](governance/overview.md), model, configuration, procedures
 - **Reference** – Specifications, [API Index](reference/api-index.md), glossary
 
 Documentation is maintained in source repositories alongside code and is aggregated at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org).

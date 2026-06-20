@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons uses [BLVM Specification Lock](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](fuzzing.md), integration tests, runtime assertions, and MIRI. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Bitcoin Commons uses [BLVM Specification Lock](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](#fuzzing), integration tests, runtime assertions, and MIRI. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Testing Strategy
 
@@ -10,7 +10,7 @@ Bitcoin Commons uses [BLVM Specification Lock](../consensus/formal-verification.
 
 1. **[Formal Verification](../consensus/formal-verification.md)**: Z3 proofs via **BLVM Specification Lock** on spec-locked consensus code
 2. **[Property-Based Testing](property-based-testing.md) (Proptest)**: Randomized invariant checks
-3. **[Fuzzing](fuzzing.md) (libFuzzer)**: Random input exploration
+3. **[Fuzzing](#fuzzing) (libFuzzer)**: Random input exploration
 4. **Integration Tests**: End-to-end scenarios
 5. **Unit Tests**: Per-function tests
 6. **Runtime Assertions**: Optional invariant checks (feature-gated)
@@ -45,9 +45,36 @@ Integration tests verify end-to-end correctness:
 - **Examples**: BIP compliance, historical replay, mempool mining
 
 
-### Fuzz tests
+### Fuzzing {#fuzzing}
 
-Coverage-guided fuzzing (libFuzzer / cargo-fuzz). Inventory: `fuzz/Cargo.toml` in each fuzz crate—see [Fuzzing](fuzzing.md).
+Coverage-guided fuzzing uses **libFuzzer** via **cargo-fuzz** on unstructured byte inputs. It complements spec-lock, unit tests, and property tests; it does not replace them.
+
+#### Source of truth
+
+Harness names and crate wiring live in each repo’s **`fuzz/Cargo.toml`** (`[[bin]]` entries). Implementation sources are under **`fuzz/fuzz_targets/`**. Do not treat prose (here or in READMEs) as an inventory—it goes stale.
+
+| Crate | Location |
+|-------|----------|
+| blvm-consensus | [`blvm-consensus/fuzz`](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz) |
+| blvm-protocol | [`blvm-protocol/fuzz`](https://github.com/BTCDecoded/blvm-protocol/tree/main/fuzz) |
+| blvm-node | [`blvm-node/fuzz`](https://github.com/BTCDecoded/blvm-node/tree/main/fuzz) |
+| blvm-sdk | [`blvm-sdk/fuzz`](https://github.com/BTCDecoded/blvm-sdk/tree/main/fuzz) |
+
+Local monorepo checkouts often use **`[patch.crates-io]`** in **`fuzz/Cargo.toml`** so fuzz crates resolve **path** dependencies; **continuous integration** may build fuzz targets against **crates.io** instead (see comments in each repo’s **`fuzz/Cargo.toml`**—for example **`blvm-consensus/fuzz`** and **`blvm-protocol/fuzz`**).
+
+#### Quick start (consensus)
+
+```bash
+cd blvm-consensus/fuzz
+./init_corpus.sh    # optional: seed corpora
+cargo +nightly fuzz run <target_name>
+```
+
+Pick `<target_name>` from `fuzz/Cargo.toml`. The `fuzz/` directory also contains scripts (e.g. campaign runners, corpus helpers, sanitizer build helpers)—use what matches your workflow.
+
+#### CI
+
+Fuzz jobs are defined in the relevant repository’s GitHub Actions. Matrix steps and timeouts may not exercise every harness on every run; read the workflow for actual behavior.
 
 ### Formal Verification (spec-lock)
 
@@ -236,7 +263,6 @@ The testing infrastructure includes:
 ## See Also
 
 - [Property-Based Testing](property-based-testing.md) - Verify mathematical invariants
-- [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
 - [Differential Testing](differential-testing.md) - Cross-check vs Core (RPC, historical, full-chain)
 - [Benchmarking](benchmarking.md) - Performance measurement
 - [Snapshot Testing](snapshot-testing.md) - Output consistency verification

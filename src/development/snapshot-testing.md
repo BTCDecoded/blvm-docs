@@ -268,7 +268,7 @@ Tests for GitHub integration:
 
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques
 - [Property-Based Testing](property-based-testing.md) - Verify invariants with random inputs
-- [Fuzzing Infrastructure](fuzzing.md) - Automated bug discovery
+- [Fuzzing Infrastructure](testing.md#fuzzing) - Automated bug discovery
 - [Contributing](contributing.md) - Testing requirements for contributions
 
 ## Benefits

@@ -44,6 +44,7 @@ How-to hub for building modules and integrating with the SDK. Consensus and gove
 | Orange Paper | [Orange Paper](../reference/orange-paper.md) |
 | Consensus overview | [Consensus overview](../consensus/overview.md) |
 | Formal verification | [Formal Verification](../consensus/formal-verification.md) |
+| In-book math digest | [Mathematical Specifications](../consensus/mathematical-specifications.md) |
 | Repository layout | [Repository layout](../development/repository-architecture.md) |
 
 ## Architecture context

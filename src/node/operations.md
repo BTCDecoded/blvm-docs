@@ -248,7 +248,7 @@ Regular backups recommended:
 tar -czf blvm-backup-$(date +%Y%m%d).tar.gz /var/lib/blvm
 ```
 
-### Updates
+### Updates {#updates}
 
 When updating the node:
 

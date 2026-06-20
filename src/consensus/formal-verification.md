@@ -100,7 +100,7 @@ Runtime assertions provide invariant checking during execution.
 
 ### Fuzz targets (libFuzzer)
 
-Harnesses live under `fuzz/fuzz_targets/`; names are registered in `fuzz/Cargo.toml`. Overview: [Fuzzing](../development/fuzzing.md).
+Harnesses live under `fuzz/fuzz_targets/`; names are registered in `fuzz/Cargo.toml`. Overview: [Fuzzing](../development/testing.md#fuzzing).
 
 ```bash
 cd fuzz
@@ -370,8 +370,8 @@ Proof bounds and policy: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/bl
 ## See Also
 
 - [Consensus Overview](overview.md) - Consensus layer introduction
-- [Consensus Architecture](architecture.md) - Consensus layer design
+- [Consensus Overview](overview.md) - Consensus layer design
 - [Mathematical Specifications](mathematical-specifications.md) - Mathematical spec details
 - [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
-- [Fuzzing](../development/fuzzing.md) - Fuzzing infrastructure
+- [Fuzzing](../development/testing.md#fuzzing) - Fuzzing infrastructure
 - [Testing Infrastructure](../development/testing.md) - Complete testing overview

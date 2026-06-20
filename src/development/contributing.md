@@ -171,7 +171,7 @@ Before submitting your PR, ensure:
 
 ## Review Process
 
-**Canonical review docs** (maintainer expectations vs AI “review intelligence”) live in the [governance](https://github.com/BTCDecoded/governance) repository; this book summarizes PR mechanics only. See [Review standards](../governance/review-standards.md) in the Governance section for links.
+**Canonical review docs** (maintainer expectations vs AI “review intelligence”) live in the [governance](https://github.com/BTCDecoded/governance) repository; this book summarizes PR mechanics only. See [Review standards](../governance/overview.md#review-standards) in the Governance section for links.
 
 ### What Happens After You Submit a PR
 
@@ -221,7 +221,7 @@ See [Testing Infrastructure](testing.md) for testing documentation. Key points:
 - **Unit tests** - Test individual functions
 - **Integration tests** - Test cross-module functionality
 - **[Property-based testing](property-based-testing.md)** - Test with generated inputs
-- **[Fuzzing](fuzzing.md)** - Find edge cases automatically
+- **[Fuzzing](testing.md#fuzzing)** - Find edge cases automatically
 - **[Differential testing](differential-testing.md)** — Cross-check vs Bitcoin Core (blvm-bench; full-chain program)
 
 ## CI/CD Workflows

@@ -13,6 +13,7 @@
 
 # Running a node
 
+- [Node overview](node/overview.md)
 - [Node Operations](node/operations.md)
 - [Node configuration guide](node/configuration.md)
 - [RPC API Reference](node/rpc-api.md)
@@ -28,11 +29,9 @@
 - [Transaction relay](node/privacy-relay.md)
 - [Package Relay (BIP331)](node/package-relay.md)
 - [Performance Optimizations](node/performance.md)
-- [QUIC RPC](node/quic-rpc.md)
 - [Mining Integration](node/mining.md)
 - [Stratum V2 + Merge Mining](node/mining-stratum-v2.md)
 - [Transport abstraction](node/transport-abstraction.md)
-- [Node overview](node/overview.md)
 
 # Security
 
@@ -77,21 +76,17 @@
 # Consensus Layer
 
 - [Overview](consensus/overview.md)
-- [Architecture](consensus/architecture.md)
 - [Formal Verification](consensus/formal-verification.md)
 - [Mathematical Specifications](consensus/mathematical-specifications.md)
 
 # Protocol Layer
 
 - [Overview](protocol/overview.md)
-- [Architecture](protocol/architecture.md)
-- [Message Formats](protocol/message-formats.md)
 - [Network Protocol](protocol/network-protocol.md)
 
 # Governance
 
 - [Overview](governance/overview.md)
-- [Review standards](governance/review-standards.md)
 - [blvm-commons](governance/blvm-commons.md)
 - [Governance Model](governance/governance-model.md)
 - [Governance layers and tiers](governance/layer-tier-model.md)
@@ -128,7 +123,6 @@
 ## Testing
 
 - [Testing Infrastructure](development/testing.md)
-- [Fuzzing Infrastructure](development/fuzzing.md)
 - [Property-Based Testing](development/property-based-testing.md)
 - [Benchmarking](development/benchmarking.md)
 - [Differential Testing](development/differential-testing.md)
@@ -136,8 +130,6 @@
 
 # Appendices
 
-- [RBF Configuration Example](examples/rbf-configuration-example.md)
-- [Migration Guides](appendices/migration-guides.md)
 - [FAQ](appendices/faq.md)
 - [Troubleshooting](appendices/troubleshooting.md)
 - [Contributing to Documentation](appendices/contributing-docs.md)

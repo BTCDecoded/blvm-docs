@@ -40,7 +40,7 @@ All spec markdown is maintained in **[blvm-spec](https://github.com/BTCDecoded/b
 ## See also
 
 - [Consensus overview](../consensus/overview.md)
-- [Consensus architecture](../consensus/architecture.md)
+- [Consensus overview](../consensus/overview.md)
 - [Formal verification](../consensus/formal-verification.md)
 - [Stack overview](../architecture/system-overview.md)
 - [Bitcoin Commons homepage](https://thebitcoincommons.org)

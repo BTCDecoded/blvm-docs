@@ -8,7 +8,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Orange Paper** - Normative mathematical specification of Bitcoin consensus (the reference IR for BLVM). Canonical edition: [thebitcoincommons.org/orange-paper.html](https://thebitcoincommons.org/orange-paper.html) (overview hub); auditable rule register: [spec.html](https://thebitcoincommons.org/spec.html). This book: [Orange Paper](orange-paper.md). See [compiler-like architecture](#compiler-like-architecture).
 
-**Optimization Passes** - Runtime optimizations in [blvm-consensus](../consensus/overview.md) (constant folding, SIMD, etc.). See [Consensus architecture](../consensus/architecture.md#optimization-passes).
+**Optimization Passes** - Runtime optimizations in [blvm-consensus](../consensus/overview.md) (constant folding, SIMD, etc.). See [Optimization passes](../consensus/overview.md#optimization-passes).
 
 **blvm-primitives** - Shared foundation crate: Bitcoin types, serialization, crypto, opcodes, constants. Used by blvm-consensus and blvm-protocol; consensus re-exports for API compatibility. See [API Index](api-index.md#foundation-blvm-primitives).
 
@@ -41,7 +41,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ### Compiler-Like Architecture {#compiler-like-architecture}
 
-The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** that spec through tests, review, and [BLVM Specification Lock](../consensus/formal-verification.md). [Optimization passes](../consensus/architecture.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [Stack overview](../architecture/system-overview.md).
+The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consensus/overview.md) is the implementation, **validated against** that spec through tests, review, and [BLVM Specification Lock](../consensus/formal-verification.md). [Optimization passes](../consensus/overview.md#optimization-passes) optimize the implementation. No code is generated from the IR. See [Stack overview](../architecture/system-overview.md).
 
 **Process Isolation** - [Module system](../architecture/module-system.md) design where each module runs in a separate process with isolated memory, preventing failures from propagating to the base node.
 

@@ -213,4 +213,5 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 - [Node Configuration](../node/configuration.md) - Configuration options
 - [Getting Started](../getting-started/first-node.md) - First node setup
 - [FAQ](faq.md) - Frequently asked questions
-- [Migration Guides](migration-guides.md) - Migration from other implementations
+- [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) - Import a synced Core datadir
+- [Upgrading an existing deployment](../development/release-process.md#upgrading-an-existing-deployment) - Version upgrades

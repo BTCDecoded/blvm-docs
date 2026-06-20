@@ -2,7 +2,7 @@
 
 BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surface) and a modern REST API for interacting with the node.
 
-**On this page:** [API Overview](#api-overview) · [Connection](#connection) · [Authentication](#authentication) · [Methods operators use most](#methods-operators-use-most) · [Core parity matrix](#bitcoin-core-rpc-parity-selected) · [Available Methods](#available-methods) · [Errors](#error-codes) · [REST API](#rest-api)
+**On this page:** [API Overview](#api-overview) · [Connection](#connection) · [Authentication](#authentication) · [JSON-RPC over QUIC](#quic-rpc) · [Methods operators use most](#methods-operators-use-most) · [Core parity matrix](#bitcoin-core-rpc-parity-selected) · [Available Methods](#available-methods) · [Errors](#error-codes) · [REST API](#rest-api)
 
 ## API Overview
 
@@ -44,6 +44,72 @@ Optional: `token_file`, `certificates`, `RPC_AUTH_TOKENS`. **`[rpc]`** in `NodeC
 **TLS client certificates** are supported when QUIC transport and certificate fingerprints are configured (`certificates` in `[rpc_auth]`).
 
 See **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** and **[Deployment posture](../security/deployment-posture.md)**.
+
+## JSON-RPC over QUIC (HTTP/3) {#quic-rpc}
+
+Bitcoin Commons optionally serves JSON-RPC over **HTTP/3 on QUIC** (Quinn + **`h3`**) alongside the default TCP HTTP server. Both paths share **`RpcServer`** and **`RpcAuthManager`**.
+
+**Authentication:** Send **`Authorization: Bearer …`** on HTTP/3 requests; **`rpc_auth.required`** and token configuration match TCP HTTP. Read **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** before exposing QUIC RPC beyond localhost.
+
+**When to use:** High-throughput internal services where clients support QUIC and you want built-in TLS without a separate layer.
+
+**When not to use:** Most ecosystem tooling assumes TCP HTTP to port 8332 (mainnet), 18332 (testnet), or 18443 (regtest). Prefer TCP for scripts, `curl`, and Core-compatible clients.
+
+### Enable QUIC RPC
+
+QUIC RPC requires the **`quinn`** feature:
+
+```toml
+[dependencies]
+blvm-node = { path = "../blvm-node", features = ["quinn"] }
+```
+
+```bash
+cargo build --features quinn
+```
+
+### Server setup
+
+```rust
+use blvm_node::rpc::RpcManager;
+use std::net::SocketAddr;
+
+let tcp_addr: SocketAddr = "127.0.0.1:8332".parse().unwrap();
+let quinn_addr: SocketAddr = "127.0.0.1:18332".parse().unwrap();
+
+#[cfg(feature = "quinn")]
+let mut rpc_manager = RpcManager::with_quinn(tcp_addr, quinn_addr);
+
+// Or enable after creation:
+// let mut rpc_manager = RpcManager::new(tcp_addr);
+// #[cfg(feature = "quinn")]
+// rpc_manager.enable_quinn(quinn_addr);
+
+rpc_manager.start().await?;
+```
+
+`QuinnRpcServer` generates self-signed certificates for development; production deployments need proper certificate management. QUIC adds transport encryption; **same security boundaries** as TCP RPC (no wallet access).
+
+### QUIC client (example)
+
+```rust
+use quinn::Endpoint;
+use std::net::SocketAddr;
+
+let server_addr: SocketAddr = "127.0.0.1:18332".parse().unwrap();
+let endpoint = Endpoint::client("0.0.0.0:0".parse().unwrap())?;
+let connection = endpoint.connect(server_addr, "localhost")?.await?;
+let (mut send, mut recv) = connection.open_bi().await?;
+
+let request = r#"{"jsonrpc":"2.0","method":"getblockchaininfo","params":[],"id":1}"#;
+send.write_all(request.as_bytes()).await?;
+send.finish().await?;
+
+let mut response = Vec::new();
+recv.read_to_end(&mut response).await?;
+```
+
+Source: [QUIC_RPC.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_RPC.md), [`quinn_server.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/quinn_server.rs).
 
 ## Example Requests
 

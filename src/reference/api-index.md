@@ -23,7 +23,7 @@ Shared types, serialization, and crypto live in **blvm-primitives**. **blvm-cons
 
 **Key areas:** types (Transaction, Block, BlockHeader, UTXO, Script, etc.), serialization, cryptographic operations, opcodes, constants.
 
-**Documentation:** See [Consensus Architecture](../consensus/architecture.md) and [Stack overview](../architecture/system-overview.md).
+**Documentation:** See [Consensus Overview](../consensus/overview.md) and [Stack overview](../architecture/system-overview.md).
 
 ### Consensus Layer (blvm-consensus)
 
@@ -44,7 +44,7 @@ Block and script logic live in the `block/` and `script/` submodules (directorie
 - `Script`, `ScriptOpcode`
 - `ValidationResult`
 
-**Documentation:** See [Consensus Overview](../consensus/overview.md), [Consensus Architecture](../consensus/architecture.md), and [Formal Verification](../consensus/formal-verification.md).
+**Documentation:** See [Consensus Overview](../consensus/overview.md) and [Formal Verification](../consensus/formal-verification.md).
 
 #### Consensus function catalog (Orange Paper names)
 
@@ -71,7 +71,7 @@ Reference list for contributors and spec readers. Rust paths: [blvm-consensus](h
 - `PeerConnection`, `ConnectionState`
 - `BlockTemplate` (for mining)
 
-**Documentation:** See [Protocol Overview](../protocol/overview.md), [Network Protocol](../protocol/network-protocol.md), and [Protocol Architecture](../protocol/architecture.md).
+**Documentation:** See [Protocol Overview](../protocol/overview.md) and [Network Protocol](../protocol/network-protocol.md).
 
 ### Node Implementation (blvm-node)
 

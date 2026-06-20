@@ -66,7 +66,7 @@ graph TB
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
 - **Bearer token RBAC** (`tokens`, `admin_tokens`) and **HTTP Basic** (`username`, `password`) for ckpool / Core-style clients
 - Optional REST `/api/v1/*` when built with `rest-api` and **`[rest_api].enabled`** (separate bind; off by default — see [RPC API — REST](rpc-api.md#rest-api))
-- Optional QUIC transport support (see [QUIC RPC](quic-rpc.md))
+- Optional JSON-RPC over QUIC / HTTP/3 (see [RPC API — QUIC](rpc-api.md#quic-rpc))
 - Authentication and rate limiting
 - Method coverage
 

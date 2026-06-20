@@ -83,6 +83,6 @@ BLVM targets long-horizon Bitcoin infrastructure:
 
 - [Stack overview](system-overview.md) — Six-layer stack summary
 - [Crate dependencies](component-relationships.md) — Dependency graph
-- [Consensus Architecture](../consensus/architecture.md) — How correctness is structured in code
+- [Consensus Overview](../consensus/overview.md) — How correctness is structured in code
 - [Governance Overview](../governance/overview.md) — Cryptographic governance
 - [Orange Paper](../reference/orange-paper.md) — Mathematical foundation

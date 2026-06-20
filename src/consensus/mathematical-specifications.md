@@ -1,5 +1,7 @@
 # Mathematical Specifications
 
+**Canonical spec:** The [Orange Paper](../reference/orange-paper.md) on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) ([Consensus Spec](https://thebitcoincommons.org/spec.html)). **This page** is an in-book digest of formal properties and notation used when reasoning about **blvm-consensus**—checked by tests and **BLVM Specification Lock**, not a substitute for the full commons spec.
+
 ## Overview
 
 Bitcoin Commons documents **Orange Paper–aligned** mathematical specifications for consensus behavior. The Rust code implements this spec, checked by tests and **BLVM Specification Lock** on spec-locked functions. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
@@ -209,11 +211,10 @@ The mathematical specifications system includes:
 - [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 - [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)
-- [blvm-consensus/docs/VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [blvm-consensus/docs/PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md), [blvm-consensus/docs/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md) (blvm-consensus/docs/PROOF_LIMITATIONS.mdblvm-consensus/docs/README.md` (index))
+
 ## See Also
 
-- [Consensus Overview](overview.md) - Consensus layer introduction
-- [Consensus Architecture](architecture.md) - Consensus layer design
-- [Formal Verification](formal-verification.md) - BLVM Specification Lock verification details
-- [Formal Verification](formal-verification.md#primary-verification-areas) - Correctness guarantees
-- [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
+- [Consensus Overview](overview.md) — Consensus layer introduction
+- [Formal Verification](formal-verification.md) — BLVM Specification Lock methodology
+- [Orange Paper](../reference/orange-paper.md) — Normative specification on Bitcoin Commons
+- [Property-Based Testing](../development/property-based-testing.md) — Property-based testing

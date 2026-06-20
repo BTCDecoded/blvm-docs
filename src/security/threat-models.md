@@ -130,7 +130,7 @@ Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (publi
 
 **Mitigations**:
 - Input validation and sanitization
-- Fuzzing ([overview](../development/fuzzing.md))
+- Fuzzing ([overview](../development/testing.md#fuzzing))
 - Formal verification
 - Property-based testing
 - Network protocol validation

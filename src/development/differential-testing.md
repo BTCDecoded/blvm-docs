@@ -4,7 +4,7 @@
 
 Differential testing compares BLVM validation against an independent reference—primarily Bitcoin Core—so consensus disagreements show up as test failures. Tooling lives in [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench). A local stub in [`blvm-consensus/tests/integration/differential_tests.rs`](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs) defers to bench for RPC and full-chain work.
 
-This complements [formal verification](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), and [fuzzing](fuzzing.md).
+This complements [formal verification](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), and [fuzzing](testing.md#fuzzing).
 
 ## Consensus vs policy
 
@@ -97,7 +97,7 @@ Clean run: per-height JSONL with `"match": true`; empty `*.divergences.jsonl`. B
 
 - **`script_validation.rs`** — targeted BLVM vs `bitcoinconsensus` (`differential` feature); not the Phase 1 engine.
 - **JSON vectors** — blvm-consensus unit tests; provenance in [`TEST_DATA_SOURCES.md`](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/TEST_DATA_SOURCES.md).
-- **Internal fuzz** — `cd blvm-consensus/fuzz && cargo +nightly fuzz run differential_fuzzing` ([Fuzzing](fuzzing.md)).
+- **Internal fuzz** — `cd blvm-consensus/fuzz && cargo +nightly fuzz run differential_fuzzing` ([Fuzzing](testing.md#fuzzing)).
 
 ## CI
 
@@ -111,5 +111,5 @@ Clean run: per-height JSONL with `"match": true`; empty `*.divergences.jsonl`. B
 ## See also
 
 - [Testing](testing.md)
-- [Fuzzing](fuzzing.md)
+- [Fuzzing](testing.md#fuzzing)
 - [Formal Verification](../consensus/formal-verification.md)

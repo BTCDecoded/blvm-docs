@@ -1,6 +1,6 @@
 # IBD Bandwidth Protection
 
-Protects **your node when serving** block data to peers during their IBD — not the same as download tuning. If you are **downloading** the chain, see [IBD UTXO engine — Sync tuning guide](ibd-engine.md#sync-tuning-guide) and [Performance — Parallel IBD](performance.md#parallel-initial-block-download-ibd).
+Protects **your node when serving** block data to peers during their IBD — not the same as download tuning. IBD doc map: [Operator guide — IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd). If you are **downloading** the chain, see [IBD UTXO engine — Sync tuning guide](ibd-engine.md#sync-tuning-guide) and [Performance — Parallel IBD](performance.md#parallel-initial-block-download-ibd).
 
 ## Overview
 

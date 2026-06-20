@@ -83,6 +83,7 @@ See **[IBD Configuration](../reference/configuration-reference.md#ibd-configurat
 
 ## See Also
 
+- [Operator guide — IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) — Map of all IBD docs
 - [Performance Optimizations](performance.md) — Parallel download, pipelining, reorder buffer
 - [IBD Bandwidth Protection](ibd-protection.md) — Serving-side bandwidth limits
 - [LAN Peering System](lan-peering.md) — LAN peer preference during download

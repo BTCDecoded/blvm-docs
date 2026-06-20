@@ -1,6 +1,6 @@
 # RBF and Mempool Policies
 
-Configure Replace-By-Fee (RBF) behavior and mempool policies to control transaction acceptance, eviction, and limits. Worked examples: [RBF configuration example](../examples/rbf-configuration-example.md).
+Configure Replace-By-Fee (RBF) behavior and mempool policies to control transaction acceptance, eviction, and limits.
 
 ## RBF and Mempool Flow
 
@@ -266,6 +266,8 @@ mempool_persistence_path = "data/mempool.dat"
 
 ### Exchange Node (Conservative)
 
+For exchanges that need to protect users from unexpected transaction replacements:
+
 ```toml
 [rbf]
 mode = "conservative"
@@ -285,7 +287,11 @@ max_descendant_count = 25
 persist_mempool = true
 ```
 
+**Why:** Conservative RBF (2× fee increase), 1 confirmation before replacement, higher relay fee (2 sat/vB), and mempool persistence for restart reliability.
+
 ### Mining Pool (Aggressive)
+
+For mining pools that want to maximize fee revenue:
 
 ```toml
 [rbf]
@@ -305,11 +311,17 @@ max_ancestor_count = 50
 max_descendant_count = 50
 ```
 
+**Why:** Aggressive RBF (5% fee bump), package replacements, 1 GB mempool, relaxed ancestor limits for larger packages.
+
 ### Standard Node (Default)
+
+For general-purpose nodes using conventional mempool defaults:
 
 ```toml
 [rbf]
 mode = "standard"
+min_fee_rate_multiplier = 1.1
+min_fee_bump_satoshis = 1000
 
 [mempool]
 max_mempool_mb = 300
@@ -318,7 +330,44 @@ min_relay_fee_rate = 1
 eviction_strategy = "lowest_fee_rate"
 max_ancestor_count = 25
 max_descendant_count = 25
+mempool_expiry_hours = 336
 ```
+
+**Why:** BIP125-compliant standard RBF (10% fee increase) with conventional mainnet mempool parameters.
+
+## Testing RBF configuration
+
+### Test transaction replacement
+
+1. **Create initial transaction** (RBF signaling: sequence &lt; `0xffffffff`):
+
+```bash
+bitcoin-cli sendtoaddress <address> 0.001 "" "" true
+```
+
+2. **Replace with higher fee:**
+
+```bash
+bitcoin-cli bumpfee <txid> --fee_rate 20
+```
+
+3. **Verify replacement:**
+
+```bash
+curl -X POST http://localhost:8332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "getmempoolentry", "params": ["<new_txid>"], "id": 1}'
+```
+
+### Monitor RBF activity
+
+```bash
+curl -X POST http://localhost:8332 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "getmempoolinfo", "params": [], "id": 1}'
+```
+
+Expected fields include `size`, `bytes`, `maxmempool`, `mempoolminfee`, and `minrelaytxfee`.
 
 ## Best Practices
 

@@ -1,6 +1,6 @@
 # Pull Request Process
 
-For **human maintainer expectations** and the **AI review intelligence** operating document (alternative implementation vs Core fork, flags, Compact alignment), see [Review standards](../governance/review-standards.md).
+For **human maintainer expectations** and the **AI review intelligence** operating document (alternative implementation vs Core fork, flags, Compact alignment), see [Review standards](../governance/overview.md#review-standards).
 
 ## Overview
 

@@ -65,7 +65,7 @@ The dependency graph above is the accurate picture for **crate dependencies**. A
 
 - [Stack overview](system-overview.md) - Six-layer stack and component summary
 - [Design Philosophy](design-philosophy.md) - Core design principles
-- [Consensus Architecture](../consensus/architecture.md) - Consensus layer details
-- [Protocol Architecture](../protocol/architecture.md) - Protocol layer details
+- [Consensus Overview](../consensus/overview.md) - Consensus layer details
+- [Protocol Overview](../protocol/overview.md) - Protocol layer details
 - [Node Overview](../node/overview.md) - Node implementation details
 

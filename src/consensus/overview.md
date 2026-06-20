@@ -6,7 +6,7 @@
 
 Consensus code is the **trust anchor** of the stack. Wallets, pools, and modules depend on the node reporting chain state that matches what every other Bitcoin mainnet participant would accept. If validation is wrong here, every higher layer is wrong.
 
-The layer implements rules from the [Orange Paper](../reference/orange-paper.md) as deterministic Rust: script execution, block connection, subsidy and difficulty math, mempool acceptance rules used by the node, and soft-fork behavior at documented activation heights.
+The layer implements rules from the [Orange Paper](../reference/orange-paper.md) as deterministic Rust: script execution, block connection, subsidy and difficulty math, mempool acceptance rules used by the node, and soft-fork behavior at documented activation heights. Block and script logic live in `block/` and `script/` submodules; canonical types, serialization, and crypto come from **blvm-primitives** (re-exported by blvm-consensus for API stability).
 
 ## Relationship to the Orange Paper
 
@@ -47,6 +47,59 @@ Details: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/mai
 3. **Controlled dependencies** — `Cargo.toml` pins and ranges are the source of truth for crypto and BLVM crates
 4. **Testing in depth** — [Testing](../development/testing.md), [property-based tests](../development/property-based-testing.md), [differential testing](../development/differential-testing.md) via **blvm-bench**
 5. **Formal verification** — Spec-lock proofs complement tests; see [Formal Verification](formal-verification.md)
+6. **No consensus rule interpretation** — Only mathematical implementation of the Orange Paper
+7. **Optimization passes** — Runtime optimizations speed the code without changing specified meaning; see [Optimization passes](#optimization-passes)
+
+## Core functions
+
+### Transaction validation
+- Transaction structure and limit validation
+- Input validation against UTXO set
+- Script execution and verification
+
+### Block validation
+- Block connection and validation
+- Transaction application to UTXO set
+- Proof of work verification
+
+### Economic model
+- Block reward calculation
+- Total supply computation
+- Difficulty adjustment
+
+### Mempool protocol
+- Transaction mempool validation
+- Standard transaction checks
+- Transaction replacement (RBF) logic
+
+### Mining protocol
+- Block creation from mempool
+- Block mining and nonce finding
+- Block template generation
+
+### Chain management
+- Reorganization primitives in **blvm-consensus** (`reorganization.rs`); **blvm-node** wires them for the live `process_block` path (block index, chainwork tip selection, undo persistence, events — see **blvm-node** `docs/FORK_CHOICE_AND_REORG.md`)
+- P2P network message processing
+
+### Advanced features
+- **SegWit**: Witness data validation and weight calculation (see [BIP141](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki))
+- **Taproot**: P2TR output validation and key aggregation (see [BIP341](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki))
+
+## Optimization passes {#optimization-passes}
+
+The implementation is validated against the [Orange Paper](../reference/orange-paper.md); optimization passes optimize the implementation code (not the spec). Meaning is defined by the Orange Paper; see [compiler-like architecture](../reference/glossary.md#compiler-like-architecture). Production and Rayon feature flags: `blvm-consensus/docs/FEATURES.md`.
+
+- **Constant folding** — Pre-computed constants and constant propagation
+- **Memory layout optimization** — Cache-aligned structures and compact stack frames
+- **SIMD vectorization** — Batch hash operations with parallel processing
+- **Bounds check optimization** — Removes redundant runtime bounds checks using [BLVM Specification Lock](formal-verification.md)-proven bounds
+- **Dead code elimination** — Removes unused code paths
+- **Inlining hints** — Aggressive inlining of hot functions
+
+## Spec maintenance workflow
+
+![Spec Maintenance Workflow](../images/spec-maintenance-workflow.png)
+*Figure: Specification maintenance workflow showing how changes are detected, verified, and integrated.*
 
 ## Formal verification (summary)
 
@@ -58,7 +111,9 @@ Consensus integrates consensus-critical BIPs in validation paths—for example B
 
 ## Performance
 
-Consensus hot paths support PGO builds (`./scripts/pgo-build.sh` in **blvm-consensus**), batch script verification, and documented optimization passes. Optimize after correctness gates; measure on your workload.
+Consensus hot paths support PGO builds (`./scripts/pgo-build.sh` in **blvm-consensus**), batch script verification, and [optimization passes](#optimization-passes). Optimize after correctness gates; measure on your workload.
+
+Mathematical protection mechanisms and formal properties are documented in [Mathematical Specifications](mathematical-specifications.md).
 
 ## Dependencies
 
@@ -80,6 +135,6 @@ Declare versions from [`blvm-consensus` `Cargo.toml`](https://github.com/BTCDeco
 ## See Also
 
 - [API Index — Consensus functions](../reference/api-index.md#consensus-function-catalog-orange-paper-names)
-- [Consensus Architecture](architecture.md) — Internal design
 - [Formal Verification](formal-verification.md) — Methodology
+- [Mathematical Specifications](mathematical-specifications.md) — Formal properties
 - [Orange Paper](../reference/orange-paper.md) — Normative spec

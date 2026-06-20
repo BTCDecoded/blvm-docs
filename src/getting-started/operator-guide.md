@@ -17,6 +17,19 @@ How-to hub for running a BLVM node. You do not need the Consensus, Protocol, or 
 | Configuration file and env | [Node configuration](../node/configuration.md) |
 | All config keys (reference) | [Configuration Reference](../reference/configuration-reference.md) |
 
+## Initial block download (IBD) {#initial-block-download-ibd}
+
+Mainnet first sync touches several docs—use this map instead of reading them in arbitrary order.
+
+| Topic | Guide |
+|------|--------|
+| First mainnet sync (config, RPC verify, checklist) | [First Node Setup — Mainnet IBD](first-node.md#mainnet-initial-sync) |
+| Parallel download, chunk tuning, assume-valid | [Performance — Parallel IBD](../node/performance.md#parallel-initial-block-download-ibd) |
+| Optional age-tiered UTXO store (`BLVM_IBD_ENGINE=1`) | [IBD UTXO engine](../node/ibd-engine.md) |
+| Bandwidth limits when **serving** peers during their IBD | [IBD bandwidth protection](../node/ibd-protection.md) |
+| Stuck, slow, or quiet sync | [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
+| `[ibd]` keys and `BLVM_IBD_*` env vars | [Configuration Reference — IBD](../reference/configuration-reference.md#ibd-configuration) |
+
 ## Security before mainnet
 
 | Task | Guide |
@@ -33,13 +46,12 @@ How-to hub for running a BLVM node. You do not need the Consensus, Protocol, or 
 | Error codes | [JSON-RPC error reference](../reference/rpc-errors.md) |
 | Health / metrics / logs | [Operations — Monitoring](../node/operations.md#monitoring) |
 
-## Storage, sync, and network
+## Storage and network
 
 | Task | Guide |
 |------|--------|
 | Database backends | [Storage Backends](../node/storage-backends.md) |
-| IBD tuning and protection | [IBD UTXO engine](../node/ibd-engine.md), [IBD bandwidth protection](../node/ibd-protection.md) |
-| LAN peering | [LAN Peering](../node/lan-peering.md) |
+| LAN peering (faster sync when LAN peers exist) | [LAN Peering](../node/lan-peering.md) |
 | Transports (TCP default) | [Transport abstraction](../node/transport-abstraction.md) |
 | Mempool / RBF policies | [RBF and Mempool Policies](../node/rbf-mempool-policies.md) |
 
@@ -62,7 +74,7 @@ How-to hub for running a BLVM node. You do not need the Consensus, Protocol, or 
 
 ## Examples and troubleshooting
 
-- [RBF configuration example](../examples/rbf-configuration-example.md)
+- [RBF configuration examples](../node/rbf-mempool-policies.md#configuration-examples)
 - [FAQ](../appendices/faq.md)
 - [Troubleshooting](../appendices/troubleshooting.md)
 

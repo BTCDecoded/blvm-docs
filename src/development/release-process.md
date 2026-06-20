@@ -385,6 +385,10 @@ Announce releases through:
 - Verify token permissions
 - Use `skip_tagging` option for testing
 
+## Upgrading an existing deployment {#upgrading-an-existing-deployment}
+
+Before upgrading, read [GitHub Releases](https://github.com/BTCDecoded/blvm/releases) for breaking config, storage, or RPC changes. Stop the node, back up the datadir, then replace the binary — see [Node Operations — Updates](../node/operations.md#updates).
+
 ## Additional Resources
 
 - [CI/CD Workflows](ci-cd-workflows.md) - Detailed CI/CD documentation

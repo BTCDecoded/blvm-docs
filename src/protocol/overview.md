@@ -6,6 +6,15 @@ The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple var
 
 **Stack layer 3** — protocol abstraction between [blvm-consensus](../consensus/overview.md) and [blvm-node](../node/overview.md).
 
+```
+1. Orange Paper (mathematical foundation)
+2. blvm-consensus (pure math implementation)
+3. blvm-protocol (Bitcoin abstraction) ← THIS CRATE
+4. blvm-node (full node implementation)
+5. blvm-sdk (developer toolkit)
+6. blvm-commons (governance enforcement)
+```
+
 Full stack: [Stack overview](../architecture/system-overview.md).
 
 ## Protocol Variants
@@ -165,6 +174,7 @@ The protocol layer supports protocol evolution:
 - **Feature Management**: Enable/disable features based on version
 - **Breaking Changes**: Track and manage protocol evolution
 - **Backward Compatibility**: Maintain compatibility with existing nodes
+- **Wire and transport**: P2P message formats and Bitcoin-compatible peer behavior live in **blvm-protocol**; the reference node delivers them over [transports](../node/transport-abstraction.md) (TCP by default; optional QUIC-based paths where features enable them). Treat **encrypted Bitcoin P2P (BIP324)** and other transport experiments as **build- and release-specific**—see **`blvm-protocol`** and **`blvm-node`** features and release notes rather than assuming one global default.
 
 ## Usage Example
 
@@ -198,8 +208,6 @@ if engine.supports_feature("segwit") {
 - [bip157.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/bip157.rs)
 ## See Also
 
-- [Protocol Architecture](architecture.md) - Protocol layer design and components
-- [Network Protocol](network-protocol.md) - Transport abstraction and protocol details
-- [Message Formats](message-formats.md) - P2P message specifications
+- [Network Protocol](network-protocol.md) - Transport abstraction, wire framing, and message types
 - [Protocol Specifications](../reference/protocol-specifications.md) - BIP implementations
 - [Node Configuration](../node/configuration.md) - Configuring protocol variants

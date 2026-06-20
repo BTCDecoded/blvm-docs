@@ -364,11 +364,12 @@ The performance optimization system includes:
 - [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 ## See Also
 
+- [Operator guide — IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) — Map of all IBD docs
 - [Node Overview](overview.md) - Node implementation details
 - [Node Configuration](configuration.md) - `[ibd]`, `[block_validation]`, and CLI flags
 - [Benchmarking](../development/benchmarking.md) - Performance benchmarking
 - [Storage Backends](storage-backends.md) - Storage performance
-- [Consensus Architecture](../consensus/architecture.md) - Optimization passes
+- [Consensus Overview](../consensus/overview.md#optimization-passes) - Optimization passes
 - [UTXO Commitments](utxo-commitments.md) - UTXO proof verification and fast sync
 - [IBD UTXO engine](ibd-engine.md) — Optional age-tiered UTXO store during sync
 - [IBD Bandwidth Protection](ibd-protection.md) - IBD bandwidth management
