@@ -168,18 +168,6 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 
 **Core JSON-RPC:** **75** methods in `CORE_RPC_METHODS` (see `blvm-node/src/rpc/methods.rs`). Module RPC (mesh, miniscript overrides, etc.) registers at runtime.
 
-```mermaid
-flowchart TB
-  RPC[JSON-RPC 2.0]
-  RPC --> BC[Blockchain<br/>getblock, getblockchaininfo, …]
-  RPC --> NET[Network<br/>getpeerinfo, getnetworkinfo, …]
-  RPC --> MEM[Mempool<br/>getrawmempool, testmempoolaccept, …]
-  RPC --> RAW[Raw transactions<br/>sendrawtransaction, decoderawtransaction, …]
-  RPC --> MIN[Mining admin<br/>getblocktemplate, submitblock, …]
-  RPC --> CTL[Control admin<br/>stop, loadmodule, …]
-  RPC --> MOD[Module methods<br/>runtime registration]
-```
-
 ### Blockchain Methods
 
 | Method | Description |

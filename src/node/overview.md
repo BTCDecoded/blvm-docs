@@ -38,15 +38,6 @@ graph TB
     RS --> SL
     RS --> MP
     RS --> MC
-    
-    style NM fill:#bbf,stroke:#333,stroke-width:2px
-    style SL fill:#bfb,stroke:#333,stroke-width:2px
-    style RS fill:#fbf,stroke:#333,stroke-width:2px
-    style MM fill:#ffb,stroke:#333,stroke-width:2px
-    style MP fill:#fbb,stroke:#333,stroke-width:2px
-    style MC fill:#bbf,stroke:#333,stroke-width:2px
-    style PROTO fill:#bfb,stroke:#333,stroke-width:3px
-    style CONS fill:#fbb,stroke:#333,stroke-width:3px
 ```
 
 ## Key Components

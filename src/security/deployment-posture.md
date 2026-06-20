@@ -16,15 +16,14 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 
 ```mermaid
 flowchart TD
-  subgraph exposure["Exposure vs controls"]
-    R[Regtest / loopback]
-    T[Testnet]
-    M[Mainnet]
-  end
-  R --> R1[rpc_auth optional on 127.0.0.1]
-  T --> T1[Recommended auth + firewall]
-  M --> M1[Required auth for non-loopback]
-  M --> M2[Monitor P2P + RPC separately]
+  B[Where is RPC bound?] --> LOOP{127.0.0.1 or ::1 only?}
+  LOOP -->|Yes| NET{Network}
+  LOOP -->|LAN / WAN / 0.0.0.0| AUTH["rpc_auth.required = true"]
+  NET -->|Regtest dev| OK[Loopback + optional auth OK]
+  NET -->|Testnet| REC[Recommended: auth + firewall]
+  NET -->|Mainnet| AUTH
+  AUTH --> BASIC[HTTP Basic only on loopback — cleartext on wire]
+  AUTH --> BEAR[Bearer tokens for admin RPC]
 ```
 
 - **Regtest / local development** — **Supported** for day-to-day work when P2P and RPC are unreachable from untrusted networks (typical loopback defaults). **`rpc_auth.required = false`** is acceptable **only** while RPC stays on **`127.0.0.1`**, **`::1`**, or equivalent loopback.

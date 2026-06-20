@@ -12,11 +12,15 @@ The node supports multiple Bitcoin protocol variants: **Regtest** (default, regr
 
 ```mermaid
 flowchart TD
-  CLI[blvm CLI flags] --> WIN{Conflict?}
+  CLI[CLI flags] --> WIN[Effective NodeConfig]
   ENV[BLVM_* environment] --> WIN
-  FILE[blvm.toml / JSON] --> WIN
+  TOML[blvm.toml] --> WIN
   DEF[Code defaults] --> WIN
-  WIN -->|Highest wins| RUN[Effective NodeConfig]
+  CLI -.->|wins over| ENV
+  ENV -.->|wins over| TOML
+  TOML -.->|wins over| DEF
+  WIN --> RPC[RPC bind: CLI / BLVM_RPC_ADDR only — not TOML host:port]
+  WIN --> FILE[TOML-only: transport_preference required when loading a file]
 ```
 
 Environment variables (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`) override config file values. See [Environment variables](../reference/configuration-reference.md#environment-variables) in the configuration reference for the full list. Some options (relay, fibre, dandelion) are config-file-only; use CLI flags like `--enable-dandelion` for common overrides.

@@ -12,26 +12,6 @@ Parallel IBD downloads and validates blocks from multiple peers concurrently. Th
 
 The node uses parallel IBD for initial sync. **Code**: [parallel_ibd/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/mod.rs)
 
-### Architecture
-
-```mermaid
-flowchart LR
-  subgraph download["Download"]
-    CP[Checkpoint headers]
-    PL[Block pipelining]
-  end
-  subgraph validate["Validate"]
-    RB[Reorder buffer]
-    AV[Assume-valid skip]
-    PV[Parallel tx validation]
-  end
-  subgraph store["Store"]
-    BW[Batch UTXO writes]
-    ENG[Optional IBD engine]
-  end
-  CP --> PL --> RB --> AV --> PV --> BW --> ENG
-```
-
 The parallel IBD system consists of several coordinated optimizations:
 
 1. **Checkpoint Parallel Headers**: Download headers in parallel using hardcoded checkpoints

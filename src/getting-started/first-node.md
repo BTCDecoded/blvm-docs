@@ -14,6 +14,19 @@ Config-file walkthrough: create `~/.config/blvm/blvm.toml`, validate it, start t
 
 Use a **separate `[storage].data_dir` per network** so chain state never mixes.
 
+```mermaid
+flowchart TD
+  N[Choose network] --> M{Which network?}
+  M -->|Mainnet — first sync| IBD[Use IBD example config<br/>not bare --network mainnet]
+  M -->|Testnet| STEPS[Steps 1–4 below]
+  M -->|Regtest — quick try| QS[Quick Start]
+  IBD --> SYNC[Mainnet initial sync section]
+  STEPS --> RPC[Validate config → start → curl RPC]
+  IBD --> DIR[Unique data_dir per network]
+  STEPS --> DIR
+  QS --> DIR
+```
+
 ---
 
 ## Step 1: Create configuration directory
@@ -79,24 +92,6 @@ See [RPC API Reference](../node/rpc-api.md) for authentication and the full meth
 ## Mainnet initial sync {#mainnet-initial-sync}
 
 After [Installation](installation.md). **Do not** start first mainnet sync with bare `blvm --network mainnet` — use the release **IBD example config** (pruning, `[ibd].mode = "parallel"`, `[modules].enabled = false` during sync). Source: [blvm-mainnet-ibd.toml.example](https://github.com/BTCDecoded/blvm/blob/main/blvm-mainnet-ibd.toml.example).
-
-```mermaid
-sequenceDiagram
-  participant Op as Operator
-  participant Blvm as blvm
-  participant Peers as P2P peers
-  participant Disk as data_dir
-
-  Op->>Blvm: start-ibd-mainnet.sh or --config ibd example
-  Blvm->>Peers: discover (15–60s quiet)
-  loop Parallel IBD
-    Peers->>Blvm: headers + blocks
-    Blvm->>Blvm: validate (assume-valid below height)
-    Blvm->>Disk: batch UTXO / chain writes
-  end
-  Op->>Blvm: blvm sync (same flags)
-  Blvm-->>Op: height / IBD progress
-```
 
 **From a release directory** (contains `blvm`, `scripts/`, and the example TOML):
 

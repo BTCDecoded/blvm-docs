@@ -6,45 +6,15 @@ Configure Replace-By-Fee (RBF) behavior and mempool policies to control transact
 
 ```mermaid
 flowchart TD
-    TX[New Transaction]
-    RBF{RBF Mode?}
-    DISABLED[Disabled<br/>Reject Replacement]
-    CONSERVATIVE[Conservative<br/>2x fee, 1 conf]
-    STANDARD[Standard<br/>1.1x fee, BIP125]
-    AGGRESSIVE[Aggressive<br/>1.05x fee, packages]
-    
-    TX --> RBF
-    RBF -->|disabled| DISABLED
-    RBF -->|conservative| CONSERVATIVE
-    RBF -->|standard| STANDARD
-    RBF -->|aggressive| AGGRESSIVE
-    
-    CONSERVATIVE --> MP[Mempool Check]
-    STANDARD --> MP
-    AGGRESSIVE --> MP
-    DISABLED --> REJECT[Reject]
-    
-    MP --> SIZE{Size Limit?}
-    SIZE -->|OK| FEE{Fee Threshold?}
-    SIZE -->|Full| EVICT[Eviction Strategy]
-    FEE -->|OK| ACCEPT[Accept to Mempool]
-    FEE -->|Low| REJECT
-    
-    EVICT --> LOW[Lowest Fee Rate]
-    EVICT --> OLD[Oldest First]
-    EVICT --> LARGE[Largest First]
-    EVICT --> DESC[No Descendants First]
-    EVICT --> HYBRID[Hybrid]
-    
-    LOW --> ACCEPT
-    OLD --> ACCEPT
-    LARGE --> ACCEPT
-    DESC --> ACCEPT
-    HYBRID --> ACCEPT
-    
-    style TX fill:#bbf,stroke:#333,stroke-width:2px
-    style ACCEPT fill:#bfb,stroke:#333,stroke-width:2px
-    style REJECT fill:#fbb,stroke:#333,stroke-width:2px
+    TX[Incoming transaction] --> RBF{RBF mode?}
+    RBF -->|disabled| REJ[Reject replacement]
+    RBF -->|conservative / standard / aggressive| RULES[Mode fee rules — see below]
+    RULES --> CAP{Mempool has room?}
+    CAP -->|yes| FEE{Meets min fee?}
+    CAP -->|no| EVICT[Evict per strategy]
+    FEE -->|yes| ACC[Accept]
+    FEE -->|no| REJ
+    EVICT --> ACC
 ```
 
 ## RBF Configuration

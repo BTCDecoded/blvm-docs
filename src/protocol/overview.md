@@ -6,14 +6,6 @@ The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple var
 
 **Stack layer 3** — protocol abstraction between [blvm-consensus](../consensus/overview.md) and [blvm-node](../node/overview.md).
 
-```mermaid
-flowchart TB
-  CONS[blvm-consensus<br/>rules & validation]
-  PROTO[blvm-protocol<br/>wire + network params]
-  NODE[blvm-node<br/>P2P + storage + RPC]
-  CONS --> PROTO --> NODE
-```
-
 Full stack: [Stack overview](../architecture/system-overview.md).
 
 ## Protocol Variants

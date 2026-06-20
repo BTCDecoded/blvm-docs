@@ -73,21 +73,6 @@ cargo install blvm-lightning   # when published on crates.io
 
 Each module uses `module.toml` plus optional `config.toml`. See per-module pages linked above and [Node configuration](../node/configuration.md).
 
-## Module lifecycle
-
-```mermaid
-stateDiagram-v2
-  [*] --> Pinned: [modules] version pin
-  Pinned --> Bootstrap: missing on disk + registry_url
-  Bootstrap --> Loaded: auto-load at startup
-  Pinned --> Loaded: binary already on disk
-  Loaded --> Running: IPC handshake OK
-  Running --> Unloaded: unload RPC / shutdown
-  Unloaded --> Loaded: loadmodule RPC
-  Running --> Crashed: process exit
-  Crashed --> Loaded: reload
-```
-
 - **Load** at startup when pinned under **`[modules]`** (inline `blvm-zmq = "0.1.*"`) or loaded at runtime via RPC
 - **Unload** without stopping the base node
 - **Reload** configuration where the module supports hot reload

@@ -7,43 +7,15 @@
 Verification approach follows: **"Rust + Tests + Math Specs = Source of Truth"**
 
 ```mermaid
-graph TB
-    subgraph "Layer 1: Empirical Testing"
-        UT[Unit Tests]
-        PT[Property Tests<br/>Randomized Edge Cases]
-        IT[Integration Tests<br/>Cross-System Validation]
-    end
-    
-    subgraph "Layer 2: Symbolic Verification"
-        SPECLOCK[BLVM Specification Lock<br/>Tiered Execution]
-        SPEC[Math Specifications<br/>Orange Paper]
-        SSE[State Space Exploration<br/>Contract-Checked Paths]
-    end
-    
-    subgraph "Layer 3: CI Enforcement"
-        AUTO[Automated Testing<br/>Required for Merge]
-        PROOF[Formal Proofs<br/>Separate Execution]
-        OTS[OpenTimestamps<br/>Immutable Audit Trail]
-    end
-    
-    UT --> AUTO
-    PT --> AUTO
-    IT --> AUTO
-    
-    SPECLOCK --> PROOF
-    SPEC --> SPECLOCK
-    SSE --> SPECLOCK
-    
-    PROOF --> OTS
-    AUTO --> OTS
-    
-    style UT fill:#bbf,stroke:#333,stroke-width:2px
-    style PT fill:#bbf,stroke:#333,stroke-width:2px
-    style IT fill:#bbf,stroke:#333,stroke-width:2px
-    style SPECLOCK fill:#bfb,stroke:#333,stroke-width:3px
-    style SPEC fill:#fbf,stroke:#333,stroke-width:2px
-    style AUTO fill:#ffb,stroke:#333,stroke-width:2px
-    style OTS fill:#fbb,stroke:#333,stroke-width:2px
+flowchart TB
+  SPEC[Orange Paper / CONSENSUS_SPEC]
+  CODE[blvm-consensus implementation]
+  SPEC -->|contracts| LOCK[BLVM Specification Lock — Z3]
+  CODE --> LOCK
+  CODE --> TEST[Unit + property + integration tests]
+  LOCK --> GATE[CI merge gate]
+  TEST --> GATE
+  SPEC -->|drift check| GATE
 ```
 
 ### Layer 1: Empirical Testing

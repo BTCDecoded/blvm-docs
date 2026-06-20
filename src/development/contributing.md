@@ -2,18 +2,6 @@
 
 Developer workflow from environment setup through merge.
 
-```mermaid
-flowchart LR
-  A[Read repository layout] --> B[Fork + clone crate]
-  B --> C[feature/ branch]
-  C --> D[Code + tests + docs]
-  D --> E[cargo fmt / clippy / test]
-  E --> F[Open PR]
-  F --> G{Tier / layer?}
-  G --> H[Review + signatures]
-  H --> I[Merge]
-```
-
 New to the project? Read [Repository layout](repository-architecture.md) first — why Bitcoin Commons uses separate repositories, how the crates fit together, and how local development and CI differ.
 
 ## Code of Conduct

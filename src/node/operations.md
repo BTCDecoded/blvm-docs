@@ -14,21 +14,6 @@ Operational guide for running and maintaining a BLVM node.
 | RPC hardening before exposure | [Deployment posture](../security/deployment-posture.md) |
 | IBD stuck / slow | [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
 
-### Operator lifecycle
-
-```mermaid
-flowchart LR
-  A[Install] --> B[Configure blvm.toml]
-  B --> C{First sync?}
-  C -->|Mainnet| D[IBD example config]
-  C -->|Testnet / regtest| E[Start node]
-  D --> E
-  E --> F[Monitor health / sync]
-  F --> G[Backup datadir]
-  G --> H[Upgrade binary]
-  H --> E
-```
-
 ## Starting the Node
 
 ### Basic Startup
@@ -61,6 +46,17 @@ Use when Core is **fully synced** and you want the same tip without full IBD.
 Stop **`bitcoind`** before migrate or start against a Core datadir. Running both nodes against the same chainstate can corrupt data.
 
 </div>
+
+```mermaid
+flowchart TD
+  STOP[Stop bitcoind] --> CHOICE{How to migrate?}
+  CHOICE -->|Recommended| AUTO["blvm start --data-dir ~/.bitcoin<br/>auto-migrate on first start"]
+  CHOICE -->|Explicit| MAN["blvm migrate core --verify<br/>then start --data-dir .../blvm"]
+  AUTO --> OUT["UTXO + indexes → datadir/blvm/"]
+  MAN --> OUT
+  OUT --> BLOCKS["blocks/ stays in Core path<br/>BLVM reads block files in place"]
+  BLOCKS --> KEEP[Do not delete blocks/ while node runs]
+```
 
 ```bash
 # Recommended: auto-migrate on start → ~/.bitcoin/blvm/

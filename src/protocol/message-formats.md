@@ -4,16 +4,6 @@ Bitcoin P2P messages share a common wire envelope; payload layout depends on com
 
 ## Wire envelope
 
-```mermaid
-flowchart LR
-  NET[Network bytes] --> HDR[Header 24 bytes]
-  HDR --> MAGIC[Magic 4B — network ID]
-  HDR --> CMD[Command 12B — e.g. block, tx]
-  HDR --> LEN[Length 4B]
-  HDR --> CS[Checksum 4B — first 4 bytes of payload hash]
-  LEN --> PAY[Payload — command-specific]
-```
-
 | Field | Size | Role |
 |-------|------|------|
 | Magic | 4 bytes | Separates mainnet / testnet / regtest on the wire |

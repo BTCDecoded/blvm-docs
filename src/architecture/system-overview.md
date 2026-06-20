@@ -22,13 +22,6 @@ graph TB
     L3 -->|full node| L4
     L4 -->|ergonomic API| L5
     L5 -->|cryptographic governance| L6
-    
-    style L1 fill:#f9f,stroke:#333,stroke-width:2px
-    style L2 fill:#bbf,stroke:#333,stroke-width:2px
-    style L3 fill:#bfb,stroke:#333,stroke-width:2px
-    style L4 fill:#fbf,stroke:#333,stroke-width:2px
-    style L5 fill:#ffb,stroke:#333,stroke-width:2px
-    style L6 fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
 ## Component Overview

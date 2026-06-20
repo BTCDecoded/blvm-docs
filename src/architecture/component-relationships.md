@@ -23,13 +23,6 @@ flowchart LR
     S --> C
     G --> S
     G --> P
-
-    style OP fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
-    style P fill:#bfb,stroke:#333,stroke-width:2px
-    style N fill:#fbf,stroke:#333,stroke-width:2px
-    style S fill:#ffb,stroke:#333,stroke-width:2px
-    style G fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
 **blvm-primitives** (types, serialization, crypto) sits under **blvm-consensus** and **blvm-protocol**; it is not shown as its own stack layer here.
