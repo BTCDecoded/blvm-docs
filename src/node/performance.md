@@ -183,14 +183,16 @@ for prevout in &all_prevouts {
 ```
 
 
-### Configuration
+### Tuning (environment variables)
 
-```toml
-[performance]
-enable_batch_utxo_lookups = true
-parallel_batch_size = 8
+Batch UTXO lookups and parallel validation batch size are **not** `blvm.toml` keys — `NodeConfig` has no `[performance]` table (unknown tables are ignored). Tune via consensus env vars loaded at node startup:
+
+```bash
+export BLVM_BATCH_UTXO_LOOKUPS=1      # default true
+export BLVM_PARALLEL_BATCH_SIZE=8     # transactions per parallel batch
 ```
 
+See [Performance configuration](#performance-configuration) for the full env list.
 
 ## Assume-Valid Height
 
@@ -314,36 +316,21 @@ pub struct CacheAlignedHash([u8; 32]);
 ```
 
 
-## Performance Configuration
+## Performance configuration
 
-### Configuration Options
+Consensus performance tuning uses **environment variables** (see [`blvm-consensus` `config.rs`](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)). There is **no** `[performance]` section in `blvm.toml`.
 
-```toml
-[performance]
-# Script verification threads (0 = auto-detect)
-script_verification_threads = 0
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `BLVM_SCRIPT_THREADS` | `0` (auto CPU count) | Script verification thread pool |
+| `BLVM_PARALLEL_BATCH_SIZE` | `8` | Transactions per parallel validation batch |
+| `BLVM_SIMD` | `true` | SIMD / vectorization when available |
+| `BLVM_CACHE_OPTIMIZATIONS` | `true` | Cache-friendly memory layouts |
+| `BLVM_BATCH_UTXO_LOOKUPS` | `true` | Pre-fetch UTXOs before batch validation |
+| `BLVM_IBD_CHUNK_THRESHOLD` | hardware-derived | Parallelize IBD when sig count exceeds threshold |
+| `BLVM_IBD_MIN_CHUNK_SIZE` | hardware-derived | Minimum chunk size for parallel IBD batches |
 
-# Parallel batch size
-parallel_batch_size = 8
-
-# Enable SIMD optimizations
-enable_simd_optimizations = true
-
-# Enable cache optimizations
-enable_cache_optimizations = true
-
-# Enable batch UTXO lookups
-enable_batch_utxo_lookups = true
-```
-
-
-### Default Values
-
-- `script_verification_threads`: 0 (auto-detect from CPU count)
-- `parallel_batch_size`: 8 transactions per batch
-- `enable_simd_optimizations`: true
-- `enable_cache_optimizations`: true
-- `enable_batch_utxo_lookups`: true
+Assume-valid height is configured in **`blvm.toml`** under **`[block_validation]`** or via **`BLVM_ASSUME_VALID_HEIGHT`** (see above). IBD download tuning uses **`[ibd]`** and **`BLVM_IBD_*`** env vars ([configuration-reference](../reference/configuration-reference.md#ibd-configuration)).
 
 
 ## Benchmark Results
@@ -380,7 +367,7 @@ The performance optimization system includes:
 ## See Also
 
 - [Node Overview](overview.md) - Node implementation details
-- [Node Configuration](configuration.md) - Performance configuration options
+- [Node Configuration](configuration.md) - `[ibd]`, `[block_validation]`, and CLI flags
 - [Benchmarking](../development/benchmarking.md) - Performance benchmarking
 - [Storage Backends](storage-backends.md) - Storage performance
 - [Consensus Architecture](../consensus/architecture.md) - Optimization passes

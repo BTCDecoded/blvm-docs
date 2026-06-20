@@ -45,7 +45,7 @@ The blvm-protocol sits between the pure mathematical consensus rules (blvm-conse
 - **Difficulty**: Proof-of-work targets
 - **Halving**: Block subsidy intervals
 
-For more details, see the [blvm-protocol README](../../../blvm-protocol/README.md).
+For more details, see the [blvm-protocol README](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md).
 
 ## See Also
 
