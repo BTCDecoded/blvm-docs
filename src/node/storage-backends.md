@@ -75,29 +75,32 @@ max_readers = 512
 
 ## Backend Selection
 
-When `database_backend = "auto"`, the node chooses the backend by **compile-time features** — not OS. Use this flow before pinning an explicit backend:
+When `database_backend = "auto"`, the node picks the **first compiled-in backend** below (not OS). Explicit values skip this chain.
 
 ```mermaid
 flowchart TD
-  START[database_backend in blvm.toml] --> AUTO{auto?}
-  AUTO -->|No| EXPLICIT[Use heed3 / rocksdb / redb / tidesdb / sled]
-  AUTO -->|Yes| FEAT{Build features enabled?}
-  FEAT --> H[heed3 — default Linux x86_64]
-  FEAT --> R[rocksdb]
-  FEAT --> T[tidesdb]
-  FEAT --> RD[redb — Windows portable / minimal builds]
-  FEAT --> S[sled — last resort]
-  H --> OPEN{Opens OK?}
+  START[database_backend] --> AUTO{auto?}
+  AUTO -->|No| PIN[Use pinned backend]
+  AUTO -->|Yes| P1{heed3 feature?}
+  P1 -->|yes| H[heed3]
+  P1 -->|no| P2{rocksdb feature?}
+  P2 -->|yes| R[rocksdb]
+  P2 -->|no| P3{tidesdb feature?}
+  P3 -->|yes| T[tidesdb]
+  P3 -->|no| P4{redb feature?}
+  P4 -->|yes| RD[redb]
+  P4 -->|no| S[sled]
+  PIN --> OPEN{Opens OK?}
+  H --> OPEN
   R --> OPEN
   T --> OPEN
   RD --> OPEN
   S --> OPEN
-  EXPLICIT --> OPEN
-  OPEN -->|No| FB[fallback_backend — next enabled backend]
-  OPEN -->|Yes| RUN[Node uses store under data_dir]
-  CORE{Migrating Core chainstate?} --> NEED[Requires rocksdb feature]
-  NEED --> MIG[blvm migrate core / auto-migrate]
+  OPEN -->|No| FB[fallback_backend — next enabled]
+  OPEN -->|Yes| RUN[Store under data_dir]
 ```
+
+**Core chainstate import** requires the **`rocksdb`** feature — use `blvm migrate core` / auto-migrate, independent of `auto` selection above.
 
 ### Selection order (`auto`)
 
