@@ -2,7 +2,7 @@
 
 ## Documentation Philosophy
 
-The public book is built from **`blvm-docs`**: most content is authored in **`src/`**. A **small, explicit** set of pages uses mdBook **`{{#include}}`** to embed files from a local **`modules/`** checkout (Orange Paper, governance narrative, and governance **config YAML** verified in deploy CI). Crate-specific documentation (e.g. `blvm-consensus/docs/`) stays in those repositories; this book **links** to them or summarizes them unless you add another include.
+The public book is built from **`blvm-docs`**: most content is authored in **`src/`**. A **small, explicit** set of pages uses mdBook **`{{#include}}`** to embed files from a local **`modules/`** checkout (governance narrative and governance **config YAML** verified in deploy CI). The Orange Paper and Consensus Spec live on [thebitcoincommons.org](https://thebitcoincommons.org)—see [Orange Paper](../reference/orange-paper.md). Crate-specific documentation (e.g. `blvm-consensus/docs/`) stays in those repositories; this book **links** to them or summarizes them unless you add another include.
 
 **Where to contribute:**
 - Component-specific documentation → Edit in the source repository (e.g., `blvm-consensus/docs/`)
@@ -113,7 +113,7 @@ Before submitting changes:
    ln -sf ../../governance governance
    ```
 
-   The **[Orange Paper](https://thebitcoincommons.org/protocol.html)** is on the Bitcoin Commons website—not embedded here. This book links via [Orange Paper](../reference/orange-paper.md).
+   The **[Orange Paper](https://thebitcoincommons.org/orange-paper.html)** and **[Consensus Spec](https://thebitcoincommons.org/spec.html)** are on the Bitcoin Commons website—not embedded here. This book links via [Orange Paper](../reference/orange-paper.md).
 
 3. Serve locally:
    ```bash

@@ -6,7 +6,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **BLVM** (Bitcoin Low-Level Virtual Machine) - Compiler-like infrastructure for Bitcoin implementations. See [Introduction](../introduction.md#what-is-blvm) and [compiler-like architecture](#compiler-like-architecture).
 
-**Orange Paper** - Normative mathematical specification of Bitcoin consensus (the reference IR for BLVM). Canonical edition: [thebitcoincommons.org/protocol.html](https://thebitcoincommons.org/protocol.html). This book: [Orange Paper](orange-paper.md). See [compiler-like architecture](#compiler-like-architecture).
+**Orange Paper** - Normative mathematical specification of Bitcoin consensus (the reference IR for BLVM). Canonical edition: [thebitcoincommons.org/orange-paper.html](https://thebitcoincommons.org/orange-paper.html) (overview hub); auditable rule register: [spec.html](https://thebitcoincommons.org/spec.html). This book: [Orange Paper](orange-paper.md). See [compiler-like architecture](#compiler-like-architecture).
 
 **Optimization Passes** - Runtime optimizations in [blvm-consensus](../consensus/overview.md) (constant folding, SIMD, etc.). See [Consensus architecture](../consensus/architecture.md#optimization-passes).
 

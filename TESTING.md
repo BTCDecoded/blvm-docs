@@ -31,7 +31,7 @@ dig docs.thebitcoincommons.org CNAME
 
 ### 5. Test Content Inclusion
 - Check that included content from source repositories renders:
-  - Orange Paper — [thebitcoincommons.org/protocol.html](https://thebitcoincommons.org/protocol.html) (pointer: `reference/orange-paper.md`)
+  - Orange Paper — [thebitcoincommons.org/orange-paper.html](https://thebitcoincommons.org/orange-paper.html); Consensus Spec — [spec.html](https://thebitcoincommons.org/spec.html) (pointer: `reference/orange-paper.md`)
   - Consensus overview (consensus/overview.md)
   - Governance model (governance/governance-model.md)
   - Stack overview (architecture/system-overview.md)

@@ -4,7 +4,7 @@ Thank you for your interest in improving BLVM documentation!
 
 ## Documentation philosophy
 
-Most of the published book is authored in **`src/`** in this repository. A **small set** of pages embed upstream Markdown at build time using mdBook’s **`{{#include}}`** from a populated **`modules/`** directory (Orange Paper, governance narrative, and governance **config YAML** verified in CI—see `.github/workflows/deploy.yml`).
+Most of the published book is authored in **`src/`** in this repository. A **small set** of pages embed upstream Markdown at build time using mdBook’s **`{{#include}}`** from a populated **`modules/`** directory (governance narrative and governance **config YAML** verified in CI—see `.github/workflows/deploy.yml`).
 
 **Governance policy numbers** (tier/layer/emergency thresholds and review days) use **`[[gov:KEY]]`** placeholders expanded at build by **`mdbook-governance-vars`** from that YAML. Do not hand-edit those literals—change [governance](https://github.com/BTCDecoded/governance) `config/*.yml` and allowlisted keys in `mdbook-governance-vars/`. See [Contributing to Documentation](src/appendices/contributing-docs.md) for wired chapters and `docs/GOVERNANCE_MDBOOK.md` for the ADR.
 
@@ -90,7 +90,7 @@ repository-root/
    ln -sf ../../governance governance
    ```
 
-   The **[Orange Paper](https://thebitcoincommons.org/protocol.html)** is **not** included in this book—see [reference/orange-paper.md](src/reference/orange-paper.md).
+   The **[Orange Paper](https://thebitcoincommons.org/orange-paper.html)** and **[Consensus Spec](https://thebitcoincommons.org/spec.html)** are **not** included in this book—see [reference/orange-paper.md](src/reference/orange-paper.md).
 
 3. Serve locally:
 

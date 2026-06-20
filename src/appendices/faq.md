@@ -100,7 +100,7 @@ Use the [Introduction — Who is this for](../introduction.md#who-is-this-for) p
 
 ### What is the Orange Paper?
 
-The normative mathematical specification of Bitcoin consensus—the reference “IR” for BLVM. [Orange Paper](../reference/orange-paper.md).
+The normative mathematical specification of Bitcoin consensus—the reference “IR” for BLVM. Hosted on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) with the auditable [Consensus Spec](https://thebitcoincommons.org/spec.html) as the primary rule register. This book: [Orange Paper](../reference/orange-paper.md).
 
 ### How does formal verification work?
 
