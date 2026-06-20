@@ -3,5 +3,8 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+# additional-css resolves under src/; root custom.css is canonical (CI copies it to book/)
+cp custom.css src/custom.css
 mdbook build
+cp custom.css book/custom.css
 python3 "$ROOT/scripts/postprocess-mermaid.py" "$ROOT/book"
