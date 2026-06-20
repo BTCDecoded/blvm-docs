@@ -10,7 +10,27 @@ The node supports multiple Bitcoin protocol variants: **Regtest** (default, regr
 
 **CLI > ENV > config file > defaults**
 
+```mermaid
+flowchart TD
+  CLI[blvm CLI flags] --> WIN{Conflict?}
+  ENV[BLVM_* environment] --> WIN
+  FILE[blvm.toml / JSON] --> WIN
+  DEF[Code defaults] --> WIN
+  WIN -->|Highest wins| RUN[Effective NodeConfig]
+```
+
 Environment variables (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`) override config file values. See [Environment variables](../reference/configuration-reference.md#environment-variables) in the configuration reference for the full list. Some options (relay, fibre, dandelion) are config-file-only; use CLI flags like `--enable-dandelion` for common overrides.
+
+### Network defaults (`blvm` binary, no `--rpc-addr` override)
+
+| Network | `protocol_version` | P2P (`--listen-addr`) | RPC (`--rpc-addr`) |
+|---------|-------------------|------------------------|---------------------|
+| Mainnet | `BitcoinV1` | `0.0.0.0:8333` | `127.0.0.1:8332` |
+| Testnet | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` |
+| Regtest (CLI default) | `Regtest` | `0.0.0.0:18444` | `127.0.0.1:18443` |
+| Signet | (signet) | `0.0.0.0:38333` | `127.0.0.1:38332` |
+
+Separate **`data_dir` per network**. REST bind (when enabled) derives from RPC port: **8080** / **18080** / **28443** for the rows above.
 
 ## Path Expansion
 

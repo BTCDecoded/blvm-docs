@@ -6,13 +6,26 @@ How-to hub for running a BLVM node. You do not need the Consensus, Protocol, or 
 
 **New to BLVM?** [Installation](installation.md) → [Quick Start](quick-start.md) (regtest, ~5 minutes) → this page for ongoing tasks.
 
+```mermaid
+flowchart TD
+  A[Install blvm] --> B{Goal?}
+  B -->|Try RPC in 5 min| C[Quick Start — regtest]
+  B -->|Configure a node| D[First Node Setup]
+  D --> E{Network?}
+  E -->|Mainnet first sync| F[Mainnet IBD example config]
+  E -->|Testnet / learning| G[blvm.toml + validate + start]
+  F --> H[Monitor with blvm sync]
+  G --> H
+  H --> I[Secure RPC before exposure]
+  I --> J[Operations — backup / Core import]
+```
+
 ## First sync and daily run
 
 | Task | Guide |
 |------|--------|
-| Config file and first start | [First Node Setup](first-node.md) |
-| Regtest local dev | [Quick Start](quick-start.md) |
-| Mainnet initial block download | [First Node Setup — Mainnet IBD](first-node.md#mainnet-initial-sync) |
+| Config, RPC verify, and mainnet IBD | [First Node Setup](first-node.md) ([mainnet IBD](first-node.md#mainnet-initial-sync)) |
+| Regtest local dev (5 min) | [Quick Start](quick-start.md) |
 | Start / stop / backup | [Node Operations](../node/operations.md) |
 | Import Bitcoin Core datadir | [Operations — Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) |
 | Configuration file and env | [Node configuration](../node/configuration.md) |

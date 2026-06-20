@@ -4,17 +4,27 @@ The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple var
 
 ## Architecture Position
 
-**Stack layer 3** — protocol abstraction between [blvm-consensus](../consensus/overview.md) and [blvm-node](../node/overview.md). Full stack: [Introduction](../introduction.md#what-is-blvm).
+**Stack layer 3** — protocol abstraction between [blvm-consensus](../consensus/overview.md) and [blvm-node](../node/overview.md).
+
+```mermaid
+flowchart TB
+  CONS[blvm-consensus<br/>rules & validation]
+  PROTO[blvm-protocol<br/>wire + network params]
+  NODE[blvm-node<br/>P2P + storage + RPC]
+  CONS --> PROTO --> NODE
+```
+
+Full stack: [Stack overview](../architecture/system-overview.md).
 
 ## Protocol Variants
 
 The protocol layer supports multiple Bitcoin network variants:
 
-| Variant | Network Name | Default Port | Purpose |
-|---------|--------------|--------------|---------|
-| **BitcoinV1** | mainnet | 8333 | Production Bitcoin network |
-| **Testnet3** | testnet | 18333 | Bitcoin test network |
-| **Regtest** | regtest | 18444 | Regression testing network |
+| Variant | Network Name | Default P2P | Default RPC (`blvm`) | Purpose |
+|---------|--------------|-------------|----------------------|---------|
+| **BitcoinV1** | mainnet | 8333 | 8332 | Production Bitcoin network |
+| **Testnet3** | testnet | 18333 | 18332 | Bitcoin test network |
+| **Regtest** | regtest | 18444 | 18443 | Regression testing network |
 
 ### Network Parameters
 

@@ -41,6 +41,8 @@ The password is registered as **admin** automatically (required for `getblocktem
 
 Optional: `token_file`, `certificates`, `RPC_AUTH_TOKENS`. **`[rpc]`** in `NodeConfig` is only for **limits / rate limits**, not credentials.
 
+**TLS client certificates** are supported when QUIC transport and certificate fingerprints are configured (`certificates` in `[rpc_auth]`).
+
 See **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)** and **[Deployment posture](../security/deployment-posture.md)**.
 
 ## Example Requests
@@ -165,6 +167,18 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 ## Available Methods
 
 **Core JSON-RPC:** **75** methods in `CORE_RPC_METHODS` (see `blvm-node/src/rpc/methods.rs`). Module RPC (mesh, miniscript overrides, etc.) registers at runtime.
+
+```mermaid
+flowchart TB
+  RPC[JSON-RPC 2.0]
+  RPC --> BC[Blockchain<br/>getblock, getblockchaininfo, …]
+  RPC --> NET[Network<br/>getpeerinfo, getnetworkinfo, …]
+  RPC --> MEM[Mempool<br/>getrawmempool, testmempoolaccept, …]
+  RPC --> RAW[Raw transactions<br/>sendrawtransaction, decoderawtransaction, …]
+  RPC --> MIN[Mining admin<br/>getblocktemplate, submitblock, …]
+  RPC --> CTL[Control admin<br/>stop, loadmodule, …]
+  RPC --> MOD[Module methods<br/>runtime registration]
+```
 
 ### Blockchain Methods
 - `getblockchaininfo` - Get blockchain information
@@ -318,25 +332,6 @@ BLVM uses standard JSON-RPC 2.0 codes, Bitcoin-style application codes (**-1**, 
   "id": 1
 }
 ```
-
-## Authentication
-
-RPC authentication is optional but recommended for production:
-
-### Token-Based Authentication
-
-```bash
-# Mainnet 8332; testnet 18332; regtest 18443
-curl -X POST http://localhost:8332 \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
-```
-
-### Certificate-Based Authentication
-
-TLS client certificates can be used for authentication when QUIC transport is enabled.
-
 
 ## Rate Limiting
 
