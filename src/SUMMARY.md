@@ -9,7 +9,6 @@
 - [Operator guide](getting-started/operator-guide.md)
 - [Developer guide](getting-started/developer-guide.md)
 - [First Node Setup](getting-started/first-node.md)
-- [Mainnet initial sync](getting-started/mainnet-sync.md)
 - [Building your first module](getting-started/first-module.md)
 
 # Running a node

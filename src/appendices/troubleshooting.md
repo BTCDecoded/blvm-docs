@@ -4,7 +4,7 @@ Common issues and solutions when running BLVM nodes. See [Node Operations](../no
 
 ## Mainnet IBD
 
-See [Mainnet initial sync](../getting-started/mainnet-sync.md).
+First-time sync setup: [First Node Setup — Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync).
 
 | Symptom | Fix |
 |---------|-----|

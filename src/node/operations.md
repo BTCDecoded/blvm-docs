@@ -10,7 +10,7 @@ Operational guide for running and maintaining a BLVM node.
 | Import Bitcoin Core datadir | [Starting from a Bitcoin Core datadir](#starting-from-a-bitcoin-core-datadir) |
 | Graceful shutdown | [Maintenance — Updates](#updates) (stop before upgrade; RPC `stop` or SIGTERM) |
 | Backup datadir | [Maintenance — Backup](#backup) |
-| Mainnet first sync | [Mainnet initial sync](../getting-started/mainnet-sync.md) |
+| Mainnet first sync | [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) |
 | RPC hardening before exposure | [Deployment posture](../security/deployment-posture.md) |
 | IBD stuck / slow | [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
 
@@ -25,8 +25,8 @@ blvm
 # Testnet mode
 blvm --network testnet
 
-# Mainnet mode (use with caution)
-blvm --network mainnet
+# Mainnet — first sync: see First Node Setup (IBD example config), not bare mainnet
+# blvm --network mainnet
 ```
 
 ### With Configuration

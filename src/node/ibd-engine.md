@@ -40,7 +40,7 @@ Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-
 - On **SIGTERM** / **SIGINT** during parallel IBD, the node drains in-flight validation and flushes the UTXO watermark before exit when possible.
 - **`io_uring`** accelerates engine table I/O on **Linux**; other platforms use a `pread` fallback (engine still runs on Windows).
 - **[Assume-valid](../reference/configuration-reference.md#block_validationassume_valid_height)** skips signature verification below a configured height; block structure, Merkle roots, and proof-of-work are still checked.
-- For tarball mainnet sync, follow [Mainnet initial sync](../getting-started/mainnet-sync.md). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
+- First mainnet sync: [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
 
 ## Configuration
 

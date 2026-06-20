@@ -2,7 +2,7 @@
 
 The node implementation (`blvm-node`) is a minimal **reference** Bitcoin node: it adds only non-consensus infrastructure on top of the consensus and protocol layers. Treat mainnet and high-value deployments like any consensus-adjacent system—hardening, monitoring, and review are required. Consensus logic comes from [blvm-consensus](../consensus/overview.md), and protocol abstraction from [blvm-protocol](../protocol/overview.md).
 
-**Release mainnet IBD:** use the **`blvm`** binary — [Mainnet initial sync](../getting-started/mainnet-sync.md).
+**Release mainnet IBD:** [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync).
 
 ## Architecture
 

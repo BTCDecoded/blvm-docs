@@ -1,6 +1,6 @@
 # Quick Start
 
-Tutorial: install the binary, run a **regtest** node, query RPC, and mine one block. About five minutes. For mainnet, use [Mainnet initial sync](mainnet-sync.md) instead of the steps below.
+Tutorial: install the binary, run a **regtest** node, query RPC, and mine one block. About five minutes. For mainnet, use [First Node Setup — Mainnet IBD](first-node.md#mainnet-initial-sync) instead of the steps below.
 
 **Prerequisites:** [Installation](installation.md) completed (`blvm` on your `PATH`).
 
@@ -74,7 +74,7 @@ You now have a running regtest node that processed at least one block.
 ## Next steps
 
 - **Config file and mainnet/testnet:** [First Node Setup](first-node.md)
-- **Mainnet:** [Mainnet initial sync](mainnet-sync.md) and [Deployment posture](../security/deployment-posture.md)
+- **Mainnet:** [First Node Setup — Mainnet IBD](first-node.md#mainnet-initial-sync) and [Deployment posture](../security/deployment-posture.md)
 - **Core datadir import:** [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir)
 - **Build a module:** [Building your first module](first-module.md)
 - **RPC details:** [RPC API Reference](../node/rpc-api.md)

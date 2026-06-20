@@ -28,7 +28,7 @@ Pre-built packages and binaries: **[btcdecoded.org/install](https://btcdecoded.o
 
 ### How do I run my first node?
 
-[Quick Start](../getting-started/quick-start.md) (regtest, ~5 minutes) or [First Node Setup](../getting-started/first-node.md) (config file). **Mainnet:** [Mainnet initial sync](../getting-started/mainnet-sync.md) — not bare `blvm --network mainnet`.
+[Quick Start](../getting-started/quick-start.md) (regtest, ~5 minutes) or [First Node Setup](../getting-started/first-node.md) (config file; [mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) for first sync).
 
 ### What must I do before mainnet?
 

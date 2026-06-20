@@ -64,7 +64,7 @@ To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-c
 
 ## IBD Configuration
 
-Default **`mode = "parallel"`**. LAN peers are auto-preferred for download. On WAN-only sync, **`parallel` mode uses multi-peer work-stealing**; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to force a single download peer. Overrides: **`BLVM_IBD_PEERS`**, **`BLVM_IBD_MODE`**, **`BLVM_IBD_ENGINE`**. Release path: [Mainnet initial sync](../getting-started/mainnet-sync.md). Engine details: [IBD UTXO engine](ibd-engine.md).
+Default **`mode = "parallel"`**. LAN peers are auto-preferred for download. On WAN-only sync, **`parallel` mode uses multi-peer work-stealing**; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to force a single download peer. Overrides: **`BLVM_IBD_PEERS`**, **`BLVM_IBD_MODE`**, **`BLVM_IBD_ENGINE`**. First sync: [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Engine details: [IBD UTXO engine](ibd-engine.md).
 
 ```toml
 [ibd]

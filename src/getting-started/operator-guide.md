@@ -12,7 +12,7 @@ How-to hub for running a BLVM node. You do not need the Consensus, Protocol, or 
 |------|--------|
 | Config file and first start | [First Node Setup](first-node.md) |
 | Regtest local dev | [Quick Start](quick-start.md) |
-| Mainnet initial block download | [Mainnet initial sync](mainnet-sync.md) |
+| Mainnet initial block download | [First Node Setup — Mainnet IBD](first-node.md#mainnet-initial-sync) |
 | Start / stop / backup | [Node Operations](../node/operations.md) |
 | Import Bitcoin Core datadir | [Operations — Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) |
 | Configuration file and env | [Node configuration](../node/configuration.md) |

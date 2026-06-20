@@ -63,7 +63,7 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 Complete before running a mainnet node or exposing RPC beyond loopback:
 
 1. **Release verification** — Download from [btcdecoded.org/install](https://btcdecoded.org/install) or [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
-2. **Sync path** — Use [Mainnet initial sync](../getting-started/mainnet-sync.md) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
+2. **Sync path** — [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
 3. **Data directory** — Dedicated path (e.g. `~/.local/share/blvm-mainnet`); restrict filesystem permissions to the node OS user.
 4. **IBD tuning** — Review bundled `blvm-mainnet-ibd.toml.example`; optional `BLVM_IBD_ENGINE` per [IBD UTXO engine](../node/ibd-engine.md).
 5. **Modules** — Keep third-party modules disabled during first sync; verify maintainer policy before production enablement.

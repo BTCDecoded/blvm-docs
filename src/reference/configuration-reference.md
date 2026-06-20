@@ -22,7 +22,7 @@ Reference for BLVM node configuration options. Configuration can be provided via
 | Network variant | `protocol_version` (`BitcoinV1`, `Testnet3`, `Regtest`) |
 | Transport stack | `transport_preference` (`tcponly`, `hybrid`, …) |
 | Module directory | `[modules].modules_dir`, inline pins under `[modules]` |
-| IBD tuning | `[ibd]` and `BLVM_IBD_*` env vars — [Mainnet initial sync](../getting-started/mainnet-sync.md) |
+| IBD tuning | `[ibd]` and `BLVM_IBD_*` env vars — [Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync) |
 | Pruning | `[storage.pruning]` |
 | Logging | `[logging].level` |
 
@@ -229,7 +229,7 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 | `enable_emergency_throttle` | `false` |
 | `emergency_throttle_percent` | `50` |
 
-**Additional IBD environment variables** (no `[ibd]` table key): **`BLVM_IBD_ENGINE`**, **`BLVM_IBD_ENGINE_PATH`**, **`BLVM_IBD_WAN_SINGLE_PEER`**, **`BLVM_IBD_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_DEFER_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_EXPORT_HEIGHT_OVERRIDE`**, **`BLVM_IBD_MAX_PARALLEL`**, **`BLVM_IBD_PIPELINE_DEPTH`**. See [IBD UTXO engine](../node/ibd-engine.md) and [Mainnet initial sync](../getting-started/mainnet-sync.md).
+**Additional IBD environment variables** (no `[ibd]` table key): **`BLVM_IBD_ENGINE`**, **`BLVM_IBD_ENGINE_PATH`**, **`BLVM_IBD_WAN_SINGLE_PEER`**, **`BLVM_IBD_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_DEFER_CHECKPOINT_INTERVAL`**, **`BLVM_IBD_EXPORT_HEIGHT_OVERRIDE`**, **`BLVM_IBD_MAX_PARALLEL`**, **`BLVM_IBD_PIPELINE_DEPTH`**. See [IBD UTXO engine](../node/ibd-engine.md) and [Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync).
 
 
 ## Storage Configuration

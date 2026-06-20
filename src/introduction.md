@@ -4,7 +4,7 @@ BLVM (Bitcoin Low-Level Virtual Machine) implements Bitcoin consensus from the [
 
 ## Who is this for?
 
-**Running a Bitcoin node?** [Operator guide](getting-started/operator-guide.md) — [Installation](getting-started/installation.md), [Quick Start](getting-started/quick-start.md), [Mainnet initial sync](getting-started/mainnet-sync.md). Read [Deployment posture](security/deployment-posture.md) before exposing RPC on mainnet.
+**Running a Bitcoin node?** [Operator guide](getting-started/operator-guide.md) — [Installation](getting-started/installation.md), [Quick Start](getting-started/quick-start.md), [First Node Setup](getting-started/first-node.md) ([mainnet IBD](getting-started/first-node.md#mainnet-initial-sync)). Read [Deployment posture](security/deployment-posture.md) before exposing RPC on mainnet.
 
 **Building a module or integrating with the SDK?** [Developer guide](getting-started/developer-guide.md) — [Building your first module](getting-started/first-module.md), then [Building modules](sdk/module-development.md).
 
