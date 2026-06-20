@@ -181,122 +181,135 @@ flowchart TB
 ```
 
 ### Blockchain Methods
-- `getblockchaininfo` - Get blockchain information
-- `getblock` - Get block by hash
-- `getblockhash` - Get block hash by height
-- `getblockheader` - Get block header by hash
-- `getbestblockhash` - Get best block hash
-- `getblockcount` - Get current block height
-- `getdifficulty` - Get current difficulty
-- `gettxoutsetinfo` - Get UTXO set statistics
-- `verifychain` - Verify blockchain database
-- `getblockfilter` - Get block filter (BIP158)
-- `getindexinfo` - Get index information
-- `getblockchainstate` - Get blockchain state
-- `invalidateblock` - Invalidate a block
-- `reconsiderblock` - Reconsider a previously invalidated block
-- `waitfornewblock` - Wait for a new block
-- `waitforblock` - Wait for a specific block
-- `waitforblockheight` - Wait for a specific block height
-- `getchaintips` - Report all known chain tips (active, invalid, headers-only)
-- `getchaintxstats` - Statistics about confirmed transactions up to a block height
-- `getblockstats` - Per-block statistics (fees, sizes, counts)
-- `getpruneinfo` - Pruning state (height, manual prune target, automatic pruning)
-- `pruneblockchain` - Prune blocks up to a height (**admin**)
-- `loadtxoutset` - Load UTXO set from a snapshot file path
+
+| Method | Description |
+|--------|-------------|
+| `getblockchaininfo` | Chain, height, IBD flag, best block |
+| `getblock` | Block by hash (verbosity levels) |
+| `getblockhash` | Hash at height |
+| `getblockheader` | Header by hash |
+| `getbestblockhash` | Best block hash |
+| `getblockcount` | Current height |
+| `getdifficulty` | Current difficulty |
+| `gettxoutsetinfo` | UTXO set statistics |
+| `verifychain` | Verify blockchain database |
+| `getblockfilter` | Block filter (BIP158) |
+| `getindexinfo` | Index status |
+| `getblockchainstate` | Extended chain state |
+| `invalidateblock` / `reconsiderblock` | Mark block invalid / reconsider |
+| `waitfornewblock` / `waitforblock` / `waitforblockheight` | Block wait helpers |
+| `getchaintips` | All known tips |
+| `getchaintxstats` | Confirmed tx statistics to height |
+| `getblockstats` | Per-block fees, sizes, counts |
+| `getpruneinfo` | Pruning state |
+| `pruneblockchain` | Prune to height (**admin**) |
+| `loadtxoutset` | Load UTXO snapshot from file |
 
 ### Raw Transaction Methods
-- `getrawtransaction` - Get transaction by txid
-- `sendrawtransaction` - Submit transaction to mempool
-- `testmempoolaccept` - Test if transaction would be accepted
-- `decoderawtransaction` - Decode raw transaction hex
-- `createrawtransaction` - Create a raw transaction
-- `gettxout` - Get UTXO information
-- `gettxoutproof` - Get merkle proof for transaction
-- `verifytxoutproof` - Verify merkle proof
-- `getdescriptorinfo` - Descriptor metadata (**requires `blvm-miniscript` loaded**; core stub returns -32001 until override)
-- `analyzepsbt` - Analyze a PSBT (**requires `blvm-miniscript` loaded**)
+
+| Method | Description |
+|--------|-------------|
+| `getrawtransaction` | Transaction by txid |
+| `sendrawtransaction` | Submit to mempool |
+| `testmempoolaccept` | Policy / consensus dry-run |
+| `decoderawtransaction` / `createrawtransaction` | Decode / build raw hex |
+| `gettxout` | UTXO by outpoint |
+| `gettxoutproof` / `verifytxoutproof` | Merkle proof |
+| `getdescriptorinfo` | Descriptor metadata (**needs `blvm-miniscript`**) |
+| `analyzepsbt` | PSBT analysis (**needs `blvm-miniscript`**) |
 
 ### Mempool Methods
-- `getmempoolinfo` - Get mempool statistics
-- `getrawmempool` - List transactions in mempool
-- `savemempool` - Persist mempool to disk (`{datadir}/mempool.dat`; creates the data directory if missing)
-- `getmempoolancestors` - Get mempool ancestors of a transaction
-- `getmempooldescendants` - Get mempool descendants of a transaction
-- `getmempoolentry` - Get mempool entry for a transaction
+
+| Method | Description |
+|--------|-------------|
+| `getmempoolinfo` | Mempool statistics |
+| `getrawmempool` | Txids or verbose entries |
+| `savemempool` | Write `{datadir}/mempool.dat` |
+| `getmempoolancestors` / `getmempooldescendants` | Dependency graph |
+| `getmempoolentry` | Single mempool entry |
 
 ### Network Methods
-- `getnetworkinfo` - Get network information
-- `getpeerinfo` - Get connected peers
-- `getconnectioncount` - Get number of connections
-- `ping` - Ping connected peers
-- `addnode` - Add/remove node from peer list
-- `disconnectnode` - Disconnect specific node
-- `getnettotals` - Get network statistics
-- `clearbanned` - Clear banned nodes
-- `setban` - Ban/unban a subnet
-- `listbanned` - List banned nodes
-- `getaddednodeinfo` - Get information about manually added nodes
-- `getnodeaddresses` - Get known node addresses
-- `setnetworkactive` - Enable or disable network activity
+
+| Method | Description |
+|--------|-------------|
+| `getnetworkinfo` | Network and client info |
+| `getpeerinfo` / `getconnectioncount` | Peers |
+| `ping` | Ping peers |
+| `addnode` / `disconnectnode` | Manual peer control |
+| `getnettotals` | Traffic totals |
+| `setban` / `listbanned` / `clearbanned` | Ban management |
+| `getaddednodeinfo` / `getnodeaddresses` | Manual / addrman entries |
+| `setnetworkactive` | Enable/disable P2P |
 
 ### Mining Methods
-- `getmininginfo` - Get mining information
-- `getblocktemplate` - Get block template for mining
-- `submitblock` - Submit a mined block
-- `estimatesmartfee` - Estimate smart fee rate
-- `prioritisetransaction` - Prioritize a transaction in mempool (**admin**)
-- `generatetoaddress` - Mine regtest blocks to an address (**regtest only**; **admin**; requires protocol engine)
+
+| Method | Description |
+|--------|-------------|
+| `getmininginfo` | Mining status |
+| `getblocktemplate` | Block template (**admin**; ckpool) |
+| `submitblock` | Submit solved block (**admin**) |
+| `estimatesmartfee` | Fee estimate |
+| `prioritisetransaction` | Mempool priority (**admin**) |
+| `generatetoaddress` | Regtest mine to address (**admin**, regtest only) |
 
 ### Module Methods
 
-Lifecycle and CLI dispatch for the module system (**admin** for load/unload/reload/runmodulecli):
+| Method | Description |
+|--------|-------------|
+| `loadmodule` / `unloadmodule` / `reloadmodule` | Lifecycle (**admin**) |
+| `listmodules` | Loaded modules |
+| `getmoduleclispecs` / `runmodulecli` | Module CLI via RPC (**admin**) |
 
-- `loadmodule` - Load a module by manifest name (local discovery first; marketplace auto-fetch **off by default** — enable with **`[modules].marketplace_fetch_enabled`**; see [Marketplace module](../modules/marketplace-module.md))
-- `unloadmodule` - Stop and unload a module
-- `reloadmodule` - Reload a module (unload + load)
-- `listmodules` - List loaded modules and status
-- `getmoduleclispecs` - List CLI command groups registered by loaded modules
-- `runmodulecli` - Invoke a module CLI handler via RPC (**admin**)
-
-Dynamic module RPC methods (e.g. mesh, miniscript overrides) register at load time; see module pages and [JSON-RPC error reference](../reference/rpc-errors.md#module-not-loaded).
+Dynamic module RPC (mesh, miniscript overrides, …) registers at load time. See module pages and [JSON-RPC error reference](../reference/rpc-errors.md#module-not-loaded).
 
 ### Control Methods
-- `stop` - Stop the node
-- `uptime` - Get node uptime
-- `getmemoryinfo` - Get memory usage information
-- `getrpcinfo` - Get RPC server information
-- `help` - Get help for RPC methods
-- `logging` - Control logging levels
-- `gethealth` - Get node health status (**blvm-node** extension; not in Bitcoin Core)
-- `getmetrics` - Get node metrics (**blvm-node** extension)
+
+| Method | Description |
+|--------|-------------|
+| `stop` | Graceful shutdown (**admin**) |
+| `uptime` | Process uptime |
+| `getmemoryinfo` | Memory stats |
+| `getrpcinfo` | RPC server info |
+| `help` / `logging` | Help and log levels |
+| `gethealth` / `getmetrics` | **blvm-node** extensions (not Core) |
 
 ### Mesh Methods
 
-**Requires:** `blvm-mesh` loaded. The mesh module registers these JSON-RPC methods via the module RPC extender (`register_rpc_endpoint`); core `blvm-node` does not implement mesh handlers.
+**Requires `blvm-mesh` loaded.**
 
-- `meshsendpacket` — Forward a hex-encoded bincode `SendPacketRequest` (`request_hex`; optional `mesh_module_id`, default `blvm-mesh`)
-- `meshpollreceived` — Poll locally delivered mesh app payloads (`protocol_id`; optional `max_packets`, `mesh_module_id`)
-- `meshquoteroute` — Quote route cost to a destination (`destination` hex or node id per module API)
-- `meshrequesthopinvoice` — Request a hop invoice for mesh routing (`params` per `blvm-mesh` API)
+| Method | Description |
+|--------|-------------|
+| `meshsendpacket` | Send mesh payload (hex bincode) |
+| `meshpollreceived` | Poll delivered packets |
+| `meshquoteroute` | Quote route cost |
+| `meshrequesthopinvoice` | Hop invoice for routing |
 
-See [Commons Mesh Module](../modules/mesh.md) and [`blvm-mesh/docs/TRANSPORT.md`](https://github.com/BTCDecoded/blvm-mesh/blob/main/docs/TRANSPORT.md).
+See [Commons Mesh Module](../modules/mesh.md).
 
 ### Address Methods
-- `validateaddress` - Validate a Bitcoin address
-- `getaddressinfo` - Get detailed address information
+
+| Method | Description |
+|--------|-------------|
+| `validateaddress` | Address validity |
+| `getaddressinfo` | Detailed address info |
 
 ### Transaction Methods
-- `gettransactiondetails` - Get detailed transaction information
+
+| Method | Description |
+|--------|-------------|
+| `gettransactiondetails` | Extended transaction view |
 
 ### Payment Methods (BIP70)
 
-> **Build / platform** — `bip70-http` (and REST payment endpoints) require compile-time features in **`blvm` default features**; portable **Windows** and **Linux aarch64** release CI builds omit them via `--no-default-features`. `ctv` remains a separate compile-time feature. See [Installation](../getting-started/installation.md) and [Release process — Build variants](../development/release-process.md#build-variants).
+> **Build / platform** — `bip70-http` requires full `blvm` features; portable Windows/aarch64 CI builds omit it. `ctv` is a separate compile-time feature. See [Installation](../getting-started/installation.md).
 
-- `createpaymentrequest` - Create a BIP70 payment request (requires `bip70-http` feature)
-- `verifyonchainpayment` - Verify on-chain payment state for a payment request (`payment_request_id`, `tx_hash` hex) using the local payment state machine
-- `verifyonchainpaymentbytx` - Verify payment by transaction lookup (`payment_request_id`, `tx_hash` hex, `min_amount_sats`); consults mempool and chain when local state is not sufficient (path-3 verify)
-- `verifycovenantproof` - Verify a covenant proof for instant settlement (requires `ctv` feature)
+| Method | Description |
+|--------|-------------|
+| `createpaymentrequest` | BIP70 payment request (`bip70-http`) |
+| `verifyonchainpayment` / `verifyonchainpaymentbytx` | On-chain payment verification |
+| `verifycovenantproof` | Covenant proof (`ctv` feature) |
+
+**Source of truth:** `blvm-node/src/rpc/methods.rs` (`CORE_RPC_METHODS`).
 
 ## Error Codes
 

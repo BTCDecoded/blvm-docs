@@ -6,6 +6,14 @@ The node supports multiple database backends for persistent storage of blocks, U
 
 ## Supported Backends
 
+| Backend | Typical `auto` rank | Production | Core migrate | Notes |
+|---------|---------------------|------------|--------------|-------|
+| **heed3** (LMDB) | 1st (default builds) | Yes | No | `{datadir}/heed3/`; needs liblmdb |
+| **rocksdb** | 2nd | Yes | **Yes** | Explicit or fallback; needs libclang |
+| **tidesdb** | 3rd | When enabled | No | Optional feature |
+| **redb** | 4th (Windows portable) | Yes | No | Pure Rust |
+| **sled** | Last | Dev / fallback | No | Not recommended for production |
+
 ### rocksdb (optional; explicit config or fallback)
 
 **RocksDB** remains available when the `rocksdb` feature is enabled (default builds include both `heed3` and `rocksdb`). Use **`database_backend = "rocksdb"`** to keep or create a RocksDB store, or when migrating from Core LevelDB layouts:
@@ -67,7 +75,31 @@ max_readers = 512
 
 ## Backend Selection
 
-When `database_backend = "auto"`, the node chooses the backend by **build features** in this order:
+When `database_backend = "auto"`, the node chooses the backend by **compile-time features** — not OS. Use this flow before pinning an explicit backend:
+
+```mermaid
+flowchart TD
+  START[database_backend in blvm.toml] --> AUTO{auto?}
+  AUTO -->|No| EXPLICIT[Use heed3 / rocksdb / redb / tidesdb / sled]
+  AUTO -->|Yes| FEAT{Build features enabled?}
+  FEAT --> H[heed3 — default Linux x86_64]
+  FEAT --> R[rocksdb]
+  FEAT --> T[tidesdb]
+  FEAT --> RD[redb — Windows portable / minimal builds]
+  FEAT --> S[sled — last resort]
+  H --> OPEN{Opens OK?}
+  R --> OPEN
+  T --> OPEN
+  RD --> OPEN
+  S --> OPEN
+  EXPLICIT --> OPEN
+  OPEN -->|No| FB[fallback_backend — next enabled backend]
+  OPEN -->|Yes| RUN[Node uses store under data_dir]
+  CORE{Migrating Core chainstate?} --> NEED[Requires rocksdb feature]
+  NEED --> MIG[blvm migrate core / auto-migrate]
+```
+
+### Selection order (`auto`)
 
 1. **heed3 / LMDB** (if the `heed3` feature is enabled — default in standard builds)
 2. **RocksDB** (if the `rocksdb` feature is enabled)

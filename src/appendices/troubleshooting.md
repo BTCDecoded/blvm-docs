@@ -2,6 +2,33 @@
 
 Common issues and solutions when running BLVM nodes. See [Node Operations](../node/operations.md) for operational details.
 
+## Symptom guide
+
+```mermaid
+flowchart TD
+  S[Something wrong] --> START{Node starts?}
+  START -->|No| PORT[Port in use / permissions — below]
+  START -->|Yes| RPC{RPC works?}
+  RPC -->|No| RPCSEC[RPC bind + rpc_auth]
+  RPC -->|Yes| SYNC{Syncing / height moving?}
+  SYNC -->|Stuck / slow| IBD[Mainnet IBD table]
+  SYNC -->|Yes| OK[Check logs / gethealth]
+  START -->|DB error| STORE[Storage / corruption]
+  RPC -->|401/403| AUTH[Admin token or Basic auth]
+```
+
+| If you see… | Go to |
+|-------------|--------|
+| Quiet after start, no `IBD:` lines | [Mainnet IBD](#mainnet-ibd) |
+| `Address already in use` | [Port already in use](#port-already-in-use) |
+| `Connection refused` on RPC | [RPC connection refused](#rpc-connection-refused) |
+| `Unauthorized` / 403 on mining RPC | [RPC authentication](#rpc-authentication-errors) |
+| Core migrate fails / lock error | [Core drop-in migration](#bitcoin-core-drop-in-migration) |
+| `Failed to initialize database` | [Database backend fails](#database-backend-fails) |
+| Corruption / inconsistent chain | [Corrupted database](#corrupted-database) |
+| 0 peers | [No peer connections](#no-peer-connections) |
+| Module won't load | [Module not loading](#module-not-loading) |
+
 ## Mainnet IBD
 
 First-time sync setup: [First Node Setup — Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync).
