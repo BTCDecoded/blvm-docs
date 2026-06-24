@@ -2,26 +2,7 @@
 
 ## Sync tuning guide
 
-Use this decision tree before changing IBD settings. First mainnet sync always starts from [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (release IBD example config).
-
-```mermaid
-flowchart TD
-  START[Starting or tuning sync] --> FIRST{First mainnet sync?}
-  FIRST -->|Yes| EX[Use blvm-mainnet-ibd.toml.example]
-  FIRST -->|No| ROLE{Your role?}
-  ROLE -->|Downloading chain| DL[Parallel IBD — performance.md]
-  ROLE -->|Serving blocks to peers| SRV[IBD bandwidth protection]
-  DL --> LAN{Core on same LAN?}
-  LAN -->|Yes| AUTO[Auto LAN peer preference]
-  LAN -->|No WAN| WAN[BLVM_IBD_PEERS or multi-peer default]
-  WAN --> SLOW{Single peer enough?}
-  SLOW -->|Force one peer| ONE[BLVM_IBD_WAN_SINGLE_PEER=1]
-  SLOW -->|Default| STEAL[multi-peer work-stealing]
-  DL --> ENG{Need engine checkpoints?}
-  ENG -->|Advanced| ENGINE[BLVM_IBD_ENGINE=1 — this page]
-  ENG -->|Default| LEG[Legacy in-process UTXO store]
-  SLOW --> STUCK[Stalled? — Troubleshooting Mainnet IBD]
-```
+First mainnet sync always starts from [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (release IBD example config). For other IBD topics, use the [operator IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) or:
 
 | Topic | Page |
 |-------|------|
