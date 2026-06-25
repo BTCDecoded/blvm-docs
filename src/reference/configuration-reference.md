@@ -243,7 +243,7 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 - **Type**: `string` (enum)
 - **Default**: `"auto"`
 - **Options**:
-  - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default** and Linux releases), else RocksDB, else TidesDB, else Redb, else Sled. **Not OS-specific** — only the compile-time feature set matters. **Windows portable** release CI (`redb` + `sled` only) resolves **`auto` → redb**. **Linux aarch64** should use heed3 like x86_64; the cross-compiled release artifact is a known CI subset until liblmdb cross-link is wired.
+  - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default**, Linux x86_64 releases, and portable **Windows** / **Linux aarch64** cross-releases), else RocksDB, else TidesDB, else Redb, else Sled. **Not OS-specific** — only the compile-time feature set matters. Portable cross-builds omit rocksdb/nix but include heed3 (bundled LMDB via `lmdb-master3-sys`).
   - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
   - `"tidesdb"` - Use TidesDB (if available)
   - `"heed3"` - Use heed3 / LMDB (requires `heed3` feature; UTXO values use rkyv encoding)

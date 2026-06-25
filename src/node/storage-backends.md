@@ -2,7 +2,7 @@
 
 ## Overview
 
-The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by **build features** via `default_backend()` — **not** by host OS. **heed3 (LMDB)** wins when the `heed3` feature is compiled in, then RocksDB, TidesDB, Redb, Sled. **`blvm` / `blvm-node` Cargo.toml defaults enable `heed3`**, so **`auto` → heed3** on a normal local build and on **Linux x86_64** release artifacts. **Windows portable** release CI omits heed3/rocksdb (`redb` + `sled` only) — there **`auto` → redb**. **Linux aarch64** should match other Linux builds (`auto` → heed3); the cross-compiled release artifact currently ships a minimal feature set without heed3 until CI links **liblmdb** for `aarch64-unknown-linux-gnu` (native `cargo build` on a Pi with default features already gets heed3). See [Configuration Reference](../reference/configuration-reference.md).
+The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by **build features** via `default_backend()` — **not** by host OS. **heed3 (LMDB)** wins when the `heed3` feature is compiled in, then RocksDB, TidesDB, Redb, Sled. **`blvm` / `blvm-node` Cargo.toml defaults enable `heed3`**, so **`auto` → heed3** on a normal local build and on **Linux x86_64** release artifacts. **Windows portable** and **Linux aarch64** cross-release builds include **heed3** (bundled LMDB) plus **redb/sled** fallbacks — omit **rocksdb** and other native-heavy deps. There **`auto` → heed3**. See [Configuration Reference](../reference/configuration-reference.md).
 
 ## Supported Backends
 
