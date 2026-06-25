@@ -92,11 +92,11 @@ Stable **GitHub Releases** ship one **base** binary set per tag (see [Release ar
 
 | Platform | Build command (summary) | Feature set |
 |----------|-------------------------|-------------|
-| **Linux x86_64** | `cargo build --release` | Full `blvm` **default** features (`production`, `rest-api`, `bip70-http`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, …) |
-| **Linux aarch64** | Cross-build, `--no-default-features` | Portable subset: `heed3`, `sled`, `redb`, `production`, `protocol-verification`, `utxo-commitments` |
-| **Windows x86_64** | Cross-build, `--no-default-features` | Same portable subset as aarch64 |
+| **Linux x86_64** | `cargo build --release` | `blvm` **default** features (see `blvm/Cargo.toml`; `rocksdb` optional, not in defaults) |
+| **Linux aarch64** | Cross-build via `scripts/ci-build-aarch64.sh` | Same as Linux x86_64 (`BLVM_LINUX_RELEASE_FEATURES` in `scripts/ci-portable-cross-features.sh`) |
+| **Windows x86_64** | Cross-build, `--no-default-features` | Linux defaults minus Unix-only `nix` / `libc` (`BLVM_PORTABLE_CROSS_FEATURES`) |
 
-Core P2P, RPC, storage, and modules work on all platforms. **BIP70 payment RPC**, **REST `/api/v1/*`**, and **storage/index zstd compression** require `bip70-http` / `rest-api` / `compression` (included in **`blvm` default features** and GitHub **Linux x86_64** release artifacts; omitted from portable **Windows** / **Linux aarch64** CI builds). Runtime compression stays **off** until configured (`[storage.compression]` or `storage.indexing.enable_compression`). Other extras (CTV, Stratum V2, sigop counting) still require explicit `--features` or the [experimental CI bundle](#experimental-variant-source-build) when not in your binary.
+Core P2P, RPC, storage, modules, **iroh**, **dandelion**, **sigop**, **governance**, **REST `/api/v1/*`**, **BIP70 payment RPC**, and **storage/index zstd compression** are in the shared release feature set on all platforms. Runtime compression stays **off** until configured (`[storage.compression]` or `storage.indexing.enable_compression`). **RocksDB** remains opt-in (`--features rocksdb`). Other extras (CTV, Stratum V2, …) still require explicit `--features` or the [experimental CI bundle](#experimental-variant-source-build) when not in your binary.
 
 #### Experimental variant (source build)
 
