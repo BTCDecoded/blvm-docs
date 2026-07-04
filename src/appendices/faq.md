@@ -1,6 +1,8 @@
 # Frequently Asked Questions
 
-Short answers for operators and developers. Governance philosophy and tier mechanics: [Governance Overview](../governance/overview.md) and [Governance Model](../governance/governance-model.md).
+Short answers for operators and developers. **Project positioning** (Bitcoin Commons narrative, governance framing): [thebitcoincommons.org FAQ](https://thebitcoincommons.org/#faq).
+
+Governance philosophy and tier mechanics: [Governance Overview](../governance/overview.md) and [Governance Model](../governance/governance-model.md).
 
 ## General
 
