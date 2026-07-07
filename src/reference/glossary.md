@@ -33,7 +33,15 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## Technical Concepts
 
-**Formal Verification** - **BLVM Specification Lock**: Z3-backed proofs tying spec-locked consensus code to Orange Paper contracts. See [Formal Verification](../consensus/formal-verification.md).
+### Verification and cryptography {#verification-and-cryptography}
+
+**BLVM Specification Lock** — Z3-backed regression tests tying `#[spec_locked]` Rust functions to Orange Paper contracts. See [Formal Verification](../consensus/formal-verification.md).
+
+**Orange Paper (primary spec)** — Normative mathematical specification; audit surface for mathematicians independent of any implementation language. Not generated from code.
+
+**Differential testing** — Empirical cross-check of BLVM vs Bitcoin Core (and `libbitcoinkernel` in Phase 2). Complements spec-lock; full-chain runs are operator-driven. See [Differential Testing](../development/differential-testing.md).
+
+**Constant-time (secret-path crypto)** — Side-channel discipline in **`blvm-secp256k1`** for signing and secret scalars; consensus verify paths use public data only. [TIMING.md](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md). Distinct from spec-lock.
 
 **Proofs Locked to Code** - Spec-lock proofs live with the functions they verify; code changes require proof updates. See [Formal Verification](../consensus/formal-verification.md).
 

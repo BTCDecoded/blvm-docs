@@ -6,13 +6,13 @@ How the Bitcoin Commons Rust implementation is split across repositories, why, a
 
 Bitcoin Commons is a specification-first project. The canonical artifact is the specification, the Orange Paper together with the formal spec, and implementations conform to it. The Rust codebase under the BTCDecoded organization is the first implementation of that specification, not the reference and not a privileged one. The project anticipates multiple independent implementations over time, in other languages, each conforming to the same specification. No implementation is meant to be the one others defer to. That deference is reserved for the spec.
 
-The rest of this document describes how that first implementation is organized: as independent, individually versioned crates across separate repositories rather than a single monorepo, with a local development workflow that recovers workspace ergonomics and a CI workflow that verifies the published dependency graph.
+The rest of this document describes how that first implementation is organized: as independent, individually versioned crates across separate repositories rather than a single monorepo, with a local development workflow that recovers workspace ergonomics and a CI workflow that verifies the published dependency graph. The decisive reason is **partial forkability**: someone can fork or replace one volatile layer (for example the SDK) while continuing to consume stable lower layers from crates.io—unlike Bitcoin Core forks, which inherit an all-or-nothing maintenance burden.
 
 ## What the Codebase Contains
 
 The repositories described here make up the Rust implementation, the first implementation of the Bitcoin Commons specification. They fall into a few categories.
 
-The layered core consists of blvm-primitives, blvm-consensus, blvm-protocol, blvm-node, and blvm-sdk. These form the spine of the system, from foundational types up through the node binary and the software development kit.
+The layered core consists of blvm-primitives, blvm-consensus, blvm-protocol, blvm-node, and blvm-sdk. These form the spine of the system, from foundational types up through the node binary and the software development kit. Dependencies point **inward only**, with a deliberate **volatility gradient**: SDK and node change most often; consensus and primitives change least. That ordering is what makes per-layer forks practical—a fork of the SDK depends on published consensus crates, not on maintaining a copy of the whole core.
 
 The standalone cryptographic and infrastructure crates include blvm-secp256k1, blvm-muhash, and blvm-miniscript. These have value entirely independent of Bitcoin Commons. Any Rust project that needs a fast secp256k1 implementation or a MuHash accumulator can consume these directly without adopting anything else from the project.
 
@@ -32,9 +32,13 @@ In a typical layered application the layers agree because they are compiled toge
 
 Because the spec rather than the structure holds the system together, the repositories can be arranged to serve other goals, independent consumption, clear boundaries, and resistance to structural drift, without sacrificing the guarantee that the components remain coherent. The same property that lets a separate C or Go implementation stand as a first-class citizen alongside the Rust one lets the Rust implementation's own crates live in separate repositories without losing coherence.
 
+Historically, alternative Bitcoin implementations treated Core's source as the de facto specification because no implementation-agnostic formal spec existed. The Orange Paper changes that: coherence is a property of the specification and spec-lock, not of repository proximity. A monorepo is therefore not required to keep layers aligned—though it would still improve onboarding and atomic cross-layer edits, which is a real trade-off (see [On the Choice of Structure](#on-the-choice-of-structure)).
+
 ## Why Separate Repositories
 
-Separate repositories are published rather than a single workspace for three reasons.
+Separate repositories are published rather than a single workspace for four reasons.
+
+Partial forkability. Independent, versioned crates let an alternative implementation adopt or fork one layer while continuing to receive upstream releases of stable layers beneath it via normal Cargo resolution. Consolidating the core into one workspace would flatten the volatility gradient and turn every layer fork into a full-core fork—the maintenance model this project exists to avoid.
 
 Independent consumption. Several crates have value outside the project. A separately published crate with its own version history can be adopted by any project in the ecosystem without taking on a dependency relationship to the node or its release cadence. This is ordinary practice in the Rust ecosystem for infrastructure and cryptographic libraries, where primitives are published as independent crates that unrelated projects consume piecemeal. That is the relevant comparison class, not single-product application monorepos.
 
@@ -54,7 +58,11 @@ A workspace always builds against the in-tree code, so it never verifies that th
 
 ## On the Choice of Structure
 
-The conventional default for a multi-crate Rust effort is a workspace monorepo, and for most projects that is the better choice. Bitcoin Commons departs from it because its constraints differ: a specification-first consensus system built for multiple independent implementations, with independently consumable components and a multi-decade horizon. A monorepo would optimize for compile-time convenience, which the local patch already provides, while giving up the independent consumption, boundary enforcement, and capture resistance described above.
+The conventional default for a multi-crate Rust effort is a workspace monorepo, and for most projects that is the better choice. A monorepo improves discoverability, atomic cross-layer changes, and IDE/refactoring ergonomics—real advantages this structure pays for in coordination overhead and a higher onboarding bar (which subset of repos to clone, patch checkouts without automatic fallback to published crates).
+
+A **hybrid**—workspace for the layered core, separate repos only for crypto primitives—was considered. It would recover much of the monorepo DX but would still flatten the volatility gradient: an SDK fork would become a fork of the entire core workspace, recreating Core-style all-or-nothing maintenance. That cost is unacceptable for a project whose purpose is sustainable partial adoption of alternative implementations.
+
+Bitcoin Commons keeps separate published repositories because partial forkability, hard governance boundaries, and CI verification of the **published** dependency graph matter more than workspace convenience—which the local `[patch.crates-io]` workflow already approximates for day-to-day development. Mitigations for onboarding friction live in [Contributing](contributing.md) and ongoing docs/tooling work.
 
 ## See Also
 

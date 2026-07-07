@@ -27,6 +27,8 @@ Consensus mismatches are bugs. Mempool-policy mismatches may be intentional—do
 
 The **full-chain program** (Phase 1 + Phase 2) is the mainnet consensus differential. Integration and historical tests are faster dev/CI loops.
 
+**Full-chain status:** Phase 1 and Phase 2 are **operator-driven** (resource-intensive; default target height ~900,000 blocks in `blvm-bench` tooling). They are complementary to spec-lock: local Z3 obligations on annotated functions vs global empirical agreement with Core across history. The self-hosted differential CI workflow may be paused—do not assume full-chain zero-divergence claims are CI-gated to chain tip without checking current operator logs. Clean runs: Phase 1 step 6 `Failed: 0`; Phase 2 per-height `"match": true`.
+
 Operator detail: [`docs/FULL_CHAIN_DIFFERENTIAL.md`](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md), [`README_DIFFERENTIAL_TESTING.md`](https://github.com/BTCDecoded/blvm-bench/blob/main/README_DIFFERENTIAL_TESTING.md).
 
 ## Integration tests

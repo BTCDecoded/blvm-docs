@@ -20,7 +20,7 @@ flowchart TD
 
 ## What is BLVM?
 
-BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR). **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture) in the glossary.
+BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR)—readable by mathematicians without implementation code. **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) (Z3), differential testing, fuzzing, and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture) and [Formal Verification — scope](consensus/formal-verification.md#scope-and-limits).
 
 **Stack:**
 

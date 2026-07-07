@@ -10,7 +10,7 @@ BLVM is built for teams who need Bitcoin consensus correctness to be **checkable
 
 **Alternative:** Interpret Bitcoin Core’s C++ informally and patch when differential tests fail.
 
-**Choice:** The [Orange Paper](../reference/orange-paper.md) is the normative spec. **blvm-consensus** implements it directly; **BLVM Specification Lock**, tests, and review validate spec-locked code against that document. Pure functions where the design allows so behavior is reproducible in tests and proofs.
+**Choice:** The [Orange Paper](../reference/orange-paper.md) is the normative spec—written so consensus can be reviewed in mathematical notation without reading implementation code. **blvm-consensus** implements it; **BLVM Specification Lock**, differential testing, fuzzing, and review keep the code aligned with that document. Pure functions where the design allows so behavior is reproducible in tests and proofs.
 
 ### 2. Layered architecture
 
@@ -52,7 +52,7 @@ Deterministic, side-effect-free validation makes **differential testing against 
 
 ### Why formal verification alongside tests?
 
-Tests cannot exhaust script and block combinatorics. **BLVM Specification Lock** discharges proofs on annotated functions; fuzzing and full-chain diffs catch integration gaps. Neither alone is sufficient; together they reduce “we didn’t think of that opcode path.”
+Tests cannot exhaust script and block combinatorics. **BLVM Specification Lock** (Z3) regression-tests spec-derived contracts on annotated functions; differential testing compares BLVM against Bitcoin Core on mainnet history; fuzzing and proptest explore generated inputs. Neither layer replaces the others—all are in the merge gate where applicable. Spec-lock is **consensus conformance**, not side-channel resistance (that lives in **blvm-secp256k1** for secret-path crypto). The Orange Paper remains the human-auditable spec. See [Formal Verification — scope](../consensus/formal-verification.md#scope-and-limits).
 
 ### Why process-isolated modules?
 

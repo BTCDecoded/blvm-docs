@@ -29,6 +29,8 @@ Cross-links between viewers rewrite internal markdown references (for example `�
 
 The **Orange Paper** name refers to the extended formal specification (`THE_ORANGE_PAPER.md` and its PROTOCOL / ARCHITECTURE companions). In BLVM discussions it is also treated as the **intermediate representation (IR)**—the reference against which **blvm-consensus** is validated, not generated.
 
+**Audience:** [PROTOCOL.md](https://thebitcoincommons.org/protocol.html) is written for **mathematicians and protocol reviewers**—rules, invariants, and state transitions in standard notation, independent of any implementation language. Implementations in Rust (or future languages) conform to this document; they do not replace it as the normative audit surface.
+
 ## Source and changes
 
 All spec markdown is maintained in **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** (Layer 1 constitutional repo). The commons viewers fetch live content from GitHub; edit the markdown there and open a pull request—do not expect the full spec text in **blvm-docs**.

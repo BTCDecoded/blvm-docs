@@ -33,6 +33,22 @@ flowchart TB
 - **BLVM Specification Lock**: Tiered runs; policy in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - **OpenTimestamps audit logging**: Optional timestamps of verification artifacts
 
+## Scope and limits
+
+**Primary artifact:** The [Orange Paper](../reference/orange-paper.md) (`PROTOCOL.md` + `ARCHITECTURE.md` in [blvm-spec](https://github.com/BTCDecoded/blvm-spec))—implementation-agnostic mathematical rules auditors can read without Rust, C++, or proof-assistant syntax.
+
+**What spec-lock does:** Regression-tests **spec-derived contracts** on functions annotated with `#[spec_locked]`—not a single atomic proof of the whole node binary. Current inventory (reconfirm with `cargo spec-lock coverage`): **168** consensus functions, ~**433** parseable obligations. Gaps and policy: [SPEC_LOCK_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+
+**What spec-lock does not do:**
+
+- **Proof instead of testing** — differential testing, fuzz, and proptest run alongside Z3; see [Differential Testing](../development/differential-testing.md).
+- **Constant-time / side-channels** — consensus verification operates on **public** signatures and keys; variable-time verify paths are intentional. Secret-path timing is **`blvm-secp256k1`** ([TIMING.md](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md)): signing, pubkey-from-secret, ECDH, MuSig secrets. Governance signing in **blvm-sdk** delegates to that stack. Dudect-style timing tests exist but are **manual** (`#[ignore]` in `ct_timing.rs`), not CI-gated.
+- **Proof-to-code extraction** — consensus is implemented in Rust and checked against the Orange Paper via spec-lock and empirical layers; BLVM does not generate executable code from proofs.
+
+**Gödel / Halting objections:** Bitcoin consensus validation is a **bounded decision procedure** (Script limits, finite UTXO structures, fixed-width signatures)—not a self-referential formal system or unbounded program. Those theorems do not block spec-lock on finite specs or human audit of the Orange Paper.
+
+**Production readiness:** Published crates, CI, and verification tooling **exist**; governance enforcement and operator-grade mainnet posture are **Phase 1** — see [FAQ — production ready](../appendices/faq.md#is-the-system-production-ready) and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md). Prefer “artifacts exist” over an unqualified “ships today.”
+
 ### Verify JSON semantics (`blvm-spec-lock`)
 
 `cargo spec-lock verify` emits structured status per function. **Failed** means the proof obligation did not pass — CI gates on these when strict mode is enabled. **Partial** marks obligations demoted or skipped (timeout, translation gap, advisory tier) — read the log and [VERIFY_JSON.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/VERIFY_JSON.md) for jq filters; do not treat Partial as a green release gate without explicit policy.

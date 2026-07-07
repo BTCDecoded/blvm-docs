@@ -16,7 +16,7 @@ No. BLVM does not fork Bitcoin’s chain or consensus rules. It implements the s
 
 ### Is the system production ready?
 
-BLVM ships a full node stack with tests and formal verification tooling, but **readiness depends on your deployment**: apply your own security review, RPC hardening, and monitoring. Governance is not universally activated. See [Deployment posture](../security/deployment-posture.md) and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md).
+BLVM publishes a full node stack, crates, tests, and formal verification tooling, but **readiness depends on your deployment** and project phase: apply your own security review, RPC hardening, and monitoring. Governance enforcement is **not universally activated** (Phase 1; test keys). See [Deployment posture](../security/deployment-posture.md) and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md). “Artifacts exist” is accurate; “production mainnet node with live governance” is not yet.
 
 ### Where is the code?
 
@@ -102,8 +102,20 @@ Use the [Introduction — Who is this for](../introduction.md#who-is-this-for) p
 
 ### What is the Orange Paper?
 
-The normative mathematical specification of Bitcoin consensus—the reference “IR” for BLVM. Hosted on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) with the auditable [Consensus Spec](https://thebitcoincommons.org/spec.html) as the primary rule register. This book: [Orange Paper](../reference/orange-paper.md).
+The normative mathematical specification of Bitcoin consensus—the reference “IR” for BLVM. **[PROTOCOL.md](https://thebitcoincommons.org/protocol.html)** states consensus rules in implementation-agnostic mathematical notation so reviewers (including mathematicians who do not read Rust or C++) can audit rules directly. Hosted on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) with the auditable [Consensus Spec](https://thebitcoincommons.org/spec.html) as the primary rule register. This book: [Orange Paper](../reference/orange-paper.md).
+
+### What is the primary verification artifact?
+
+**The Orange Paper** is the normative spec. **BLVM Specification Lock** (Z3), differential testing, fuzzing, and proptest are downstream enforcement—they keep the Rust implementation aligned with that spec; they do not replace it. See [Formal Verification](../consensus/formal-verification.md).
+
+### Is formal verification “proof instead of testing”?
+
+**No.** Philosophy: **Rust + Tests + Math Specs = Source of Truth**. Spec-lock regression-tests spec-derived contracts on annotated consensus functions; differential testing compares BLVM against Bitcoin Core across mainnet history; fuzz and proptest cover generated inputs. All layers are in the merge gate where applicable. [Formal Verification](../consensus/formal-verification.md), [Differential Testing](../development/differential-testing.md).
+
+### Does spec-lock prove constant-time cryptography?
+
+**No.** Spec-lock checks **consensus conformance** (functional properties from the Orange Paper). **Side-channel resistance** for secret-path crypto is handled in **`blvm-secp256k1`** (signing, pubkey-from-secret, ECDH); consensus **verification** uses variable-time math on public inputs only—the same correct split as libsecp256k1. See [Formal Verification — scope](../consensus/formal-verification.md#scope-and-limits) and [blvm-secp256k1 TIMING.md](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md).
 
 ### How does formal verification work?
 
-**BLVM Specification Lock** links spec-locked Rust code to Orange Paper properties; Z3 proofs and tests complement differential and integration testing. [Formal Verification](../consensus/formal-verification.md).
+**BLVM Specification Lock** links `#[spec_locked]` Rust functions to Orange Paper contracts; Z3 checks those obligations on merge. Inventory and policy: [SPEC_LOCK_COVERAGE](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md). Full stack: [Formal Verification](../consensus/formal-verification.md).

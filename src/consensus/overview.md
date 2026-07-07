@@ -13,8 +13,10 @@ The layer implements rules from the [Orange Paper](../reference/orange-paper.md)
 The Orange Paper is the **specification** (treated as an intermediate representation). **blvm-consensus** is the **implementation**, checked by:
 
 - Unit, integration, and [differential tests](../development/differential-testing.md) (full-chain harness in **blvm-bench**)
-- [Formal verification](formal-verification.md) via **BLVM Specification Lock** on spec-locked functions
+- [Formal verification](formal-verification.md) via **BLVM Specification Lock** on spec-locked functions (Z3)
 - Review and CI gates on security-critical paths
+
+Consensus code **verifies** signatures on public block data only; secret-path constant-time signing is **`blvm-secp256k1`**, not this crate. See [Formal Verification — scope](formal-verification.md#scope-and-limits).
 
 The implementation is **not generated** from the Orange Paper; it is **validated against** it. Optimization passes (constant folding, batch script verification) speed the code without changing the specified meaning.
 

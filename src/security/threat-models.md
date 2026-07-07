@@ -26,6 +26,8 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Cryptographic key generation (delegated to blvm-sdk or modules)
 - Governance enforcement (delegated to blvm-commons)
 
+**Consensus validation and timing:** `blvm-consensus` **verifies** signatures and scripts on **public** block data only—variable-time verify paths are appropriate. It does **not** sign or hold private keys. Secret-path **constant-time** signing lives in **`blvm-secp256k1`** ([TIMING.md](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md)); governance signing in **blvm-sdk** delegates there. Spec-lock ([Formal Verification](../consensus/formal-verification.md)) checks consensus **conformance**, not side-channels.
+
 
 ### Module System Security Boundaries
 
