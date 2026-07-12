@@ -102,20 +102,20 @@ Use the [Introduction: Who is this for](../introduction.md#who-is-this-for) path
 
 ### What is the Orange Paper?
 
-The normative mathematical specification of Bitcoin consensus, the reference “IR” for BLVM. **[protocol specification](https://thebitcoincommons.org/protocol.html)** states consensus rules in implementation-agnostic mathematical notation so reviewers (including mathematicians who do not read Rust or C++) can audit rules directly. Hosted on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) with the auditable [Consensus Spec](https://thebitcoincommons.org/spec.html) as the primary rule register. This book: [Orange Paper](../reference/orange-paper.md).
+The normative mathematical specification of Bitcoin consensus (implementation-agnostic IR). Hosted on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html); in-book digest: [Orange Paper](../reference/orange-paper.md).
 
 ### What is the primary verification artifact?
 
-**The Orange Paper** is the normative spec. **BLVM Specification Lock** (Z3), differential testing, fuzzing, and proptest are downstream enforcement; they keep the Rust implementation aligned with that spec; they do not replace it. See [Formal Verification](../consensus/formal-verification.md).
+**The Orange Paper** is the normative spec. Spec-lock, differential testing, fuzzing, and proptest enforce alignment with it; they do not replace it. Details: [Formal Verification](../consensus/formal-verification.md).
 
 ### Is formal verification “proof instead of testing”?
 
-**No.** Philosophy: **Rust + Tests + Math Specs = Source of Truth**. Spec-lock regression-tests spec-derived contracts on annotated consensus functions; differential testing compares BLVM against Bitcoin Core across mainnet history; fuzz and proptest cover generated inputs. All layers are in the merge gate where applicable. [Formal Verification](../consensus/formal-verification.md), [Differential Testing](../development/differential-testing.md).
+**No.** **Rust + Tests + Math Specs = Source of Truth.** See [Formal Verification](../consensus/formal-verification.md) and [Differential Testing](../development/differential-testing.md).
 
 ### Does spec-lock prove constant-time cryptography?
 
-**No.** Spec-lock checks **consensus conformance** (functional properties from the Orange Paper). **Side-channel resistance** for secret-path crypto is handled in **`blvm-secp256k1`** (signing, pubkey-from-secret, ECDH); consensus **verification** uses variable-time math on public inputs only, the same correct split as libsecp256k1. See [Formal Verification](../consensus/formal-verification.md#what-formal-verification-delivers) and [blvm-secp256k1 timing policy](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md).
+**No.** Spec-lock checks consensus conformance on public inputs; secret-path timing is **`blvm-secp256k1`**. See [Formal Verification → What formal verification delivers](../consensus/formal-verification.md#what-formal-verification-delivers).
 
 ### How does formal verification work?
 
-**BLVM Specification Lock** links `#[spec_locked]` Rust functions to Orange Paper contracts; Z3 checks those obligations on merge. Inventory and policy: [spec-lock coverage inventory](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md). Full stack: [Formal Verification](../consensus/formal-verification.md).
+**BLVM Specification Lock** binds `#[spec_locked]` functions to Orange Paper contracts; Z3 checks obligations on merge. [Formal Verification](../consensus/formal-verification.md), [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).

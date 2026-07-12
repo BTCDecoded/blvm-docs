@@ -450,60 +450,7 @@ Catalog of shared **`EventType`** variants on the node bus. **Individual modules
 
 For a complete list of all event types, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs).
 
-### Event Delivery Guarantees
-
-**At-Most-Once Delivery:**
-- Events are delivered at most once per subscriber
-- If channel is full, event is dropped (not retried)
-- If channel is closed, module is removed from subscriptions
-
-**Best-Effort Delivery:**
-- Events are delivered on a best-effort basis
-- No guaranteed delivery (modules can be slow/dead)
-- Statistics track delivery success/failure rates
-
-**Ordering Guarantees:**
-- Events are delivered in order per module (single channel)
-- No cross-module ordering guarantees
-- ModuleLoaded events are ordered: subscription → ModuleLoaded
-
-### Event Timing and Consistency
-
-**ModuleLoaded Event Timing:**
-- `ModuleLoaded` events are **only published AFTER a module has subscribed** (after startup is complete)
-- This ensures modules are fully ready before receiving ModuleLoaded events
-- Hotloaded modules automatically receive all already-loaded modules when subscribing
-
-**Event Flow:**
-1. Module process is spawned
-2. Module connects via IPC and sends Handshake
-3. Module sends `SubscribeEvents` request
-4. **At subscription time**:
- - Module receives `ModuleLoaded` events for all already-loaded modules (hotloaded modules get existing modules)
- - `ModuleLoaded` is published for the newly subscribing module (if it's loaded)
-5. Module is now fully operational
-
-### Event Delivery Reliability
-
-**Channel Buffering:**
-- 100-event buffer per module (prevents unbounded memory growth)
-- Non-blocking delivery (publisher never blocks)
-- Channel full events are tracked in statistics
-
-**Error Handling:**
-- **Channel Full**: Event dropped with warning, module subscription NOT removed (module is slow, not dead)
-- **Channel Closed**: Module subscription removed, statistics track failed delivery
-- **Serialization Errors**: Event dropped with warning, module subscription NOT removed
-
-**Delivery Statistics:**
-- Track success/failure/channel-full counts per module
-- Available via `EventManager::get_delivery_stats()`
-- Useful for monitoring and debugging
-
-
-For detailed event system documentation, see:
-- [Module events](module-events.md) - Delivery, timing, and integration patterns
-- [Janitorial Events](janitorial-events.md) - Maintenance and lifecycle events
+Delivery guarantees, timing (`ModuleLoaded` ordering), backpressure, and monitoring: [Module events](module-events.md). Maintenance payloads: [Janitorial events](janitorial-events.md).
 
 ## Module Registry
 

@@ -202,17 +202,7 @@ Reviewers will check:
 
 ## Governance tiers and review time
 
-Your PR gets a **governance tier** (what kind of change) and applies on a **repository layer** (which repo). **Signature requirements and review clocks use the more restrictive of layer vs tier** (“most restrictive wins”). See [Layer-Tier Model](../governance/layer-tier-model.md) and [PR Process](pr-process.md).
-
-The list below is **tier-only** review-period floors **when the repository layer does not impose something stricter** (the matrix in the Layer-Tier Model shows combined results, for example, **Tier 1** in **Layer 3** can still be **[[gov:matrix_3_1_review_days]] days**).
-
-- **Tier 1: Routine maintenance**: bug fixes, documentation, performance optimizations in non-consensus areas; **[[gov:tier_1_review_days]] days** tier floor
-- **Tier 2: Feature changes**: new RPC, P2P, wallet, SDK features; **[[gov:tier_2_review_days]] days** tier floor
-- **Tier 3: Consensus-adjacent**: changes affecting consensus validation paths; **[[gov:tier_3_review_days]] days** tier floor
-- **Tier 4: Emergency actions**: critical security / network-threatening PR path; **[[gov:tier_4_review_days]] days** once requirements met
-- **Tier 5: Governance changes**: rules that change governance itself; **[[gov:tier_5_review_days]] days** tier floor
-
-**Emergency response classes** (critical / urgent / elevated incidents, **[[gov:emergency_critical_activation]] keyholder activation**) are separate from these PR tiers; see [PR Process → Emergency Procedures](pr-process.md#emergency-procedures).
+Your PR gets a **governance tier** (what kind of change) and applies on a **repository layer** (which repo). **Signature requirements and review clocks use the more restrictive of layer vs tier** (“most restrictive wins”). Tier definitions, review periods, signatures, and emergency procedures: [PR Process](pr-process.md) and [Layer-Tier Model](../governance/layer-tier-model.md).
 
 ## Testing Your Changes
 

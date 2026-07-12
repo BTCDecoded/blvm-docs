@@ -207,14 +207,7 @@ Edge cases beyond blvm-spec-lock proof bounds are covered by:
 
 ## Differential Testing
 
-Cross-implementation checks compare BLVM validation with Bitcoin Core (RPC, historical replay, and a two-phase full-chain program). Primary harness: [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench) `tests/integration.rs`; consensus stub: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs).
-
-```bash
-cd blvm-bench
-cargo test --test integration --features differential
-```
-
-See [Differential Testing](differential-testing.md) for layers (BIP/regtest, historical, full-chain Phase 1/2), env vars, and operator docs.
+Cross-implementation checks compare BLVM validation with Bitcoin Core (RPC, historical replay, and a two-phase full-chain program). Primary harness: [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench). See [Differential Testing](differential-testing.md) for layers, env vars, commands, and operator docs.
 
 
 ## CI Integration

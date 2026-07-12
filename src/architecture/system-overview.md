@@ -81,10 +81,7 @@ graph TB
 
 ## Cross-Layer Validation
 
-- Dependencies between layers are strictly enforced in the **crate graph** (application layers do not reimplement consensus).
-- Consensus rule modifications are prevented in application layers by design (validation calls into **blvm-consensus**).
-- The [Orange Paper](../reference/orange-paper.md) is the specification; **blvm-consensus** is checked with [formal verification](../consensus/formal-verification.md), tests, and review, not a single proof of the entire spec in one step.
-- Version coordination (Cargo / release sets) keeps compatible crate versions together.
+Dependency rules, crate-graph boundaries, and version coordination: [Component Relationships](component-relationships.md#cross-layer-validation).
 
 ## Key Features
 

@@ -124,125 +124,17 @@ There is no `--tier` flag. CI runs one full **`verify`** pass on self-hosted run
 - **Tier 2**: Invariant + proptest coverage for complex bodies
 - **Tier 3**: Differential equivalence harnesses (crypto backends, FFI boundaries)
 
-Local development uses the same **`verify`** command as CI.
-
-### Property-Based Tests
-
-Property-based tests in `tests/consensus_property_tests.rs` cover economic rules, proof of work, transaction validation, script execution, performance, deterministic execution, integer overflow safety, temporal/state transitions, compositional verification, and SHA256 correctness.
-
-**Verification Command**:
-```bash
-cargo test --test consensus_property_tests
-```
-
-### Runtime Assertions
-
-Runtime assertions provide invariant checking during execution.
-
-**Runtime Invariant Feature Flag**:
-- `#[cfg(any(debug_assertions, feature = "runtime-invariants"))]` enables assertions
-- `src/block/mod.rs`: Supply invariant checks in `connect_block`
-
-**Verification**: Runtime assertions execute during debug builds and can be enabled in production with `--features runtime-invariants`.
-
-### Fuzz targets (libFuzzer)
-
-Harnesses live under `fuzz/fuzz_targets/`; names are registered in `fuzz/Cargo.toml`. Overview: [Fuzzing](../development/testing.md#fuzzing).
-
-```bash
-cd fuzz
-cargo +nightly fuzz run <target_name>
-```
-
-### MIRI Runtime Checks
-
-**Status**: Integrated in CI
-
-**Checks**:
-- Property tests under MIRI
-- Critical unit tests under MIRI
-- Undefined behavior detection
-
-**Verification Command**:
-```bash
-cargo +nightly miri test --test consensus_property_tests
-```
-
-### Related specifications
-
-Formal properties, notation, and invariants for consensus functions are documented on [Mathematical Specifications](mathematical-specifications.md). Spec-lock discharges obligations derived from those Orange Paper contracts on annotated Rust entry points.
-
-## Verification Tools
-
-### BLVM Specification Lock
-
-**Purpose**: Z3-backed proofs for `#[spec_locked]` Rust functions against Orange Paper contracts.
-
-**Usage**: `cargo spec-lock verify`
-
-**Coverage**: Spec-locked functions (`#[spec_locked]` and related tooling). See [spec-lock coverage inventory](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md).
-
-### Proptest Property Testing
-
-**Purpose**: Randomized testing to discover edge cases
-
-**Usage**: `cargo test` (runs automatically)
-
-**Coverage**: Property tests using `proptest!` and related harnesses in the crate
-
-**Strategy**: Generates random inputs within specified bounds
-
-**Example:**
-```rust
-proptest! {
- #[test]
- fn prop_function_invariant(input in strategy) {
- let result = function_under_test(input);
- prop_assert!(result.property_holds());
- }
-}
-```
+Local development uses the same **`verify`** command as CI. For property tests, fuzz, MIRI, and the full test matrix, see [Testing Infrastructure](../development/testing.md).
 
 ## CI Integration
 
-### Verification Workflow
-
 The **Verify** / **verify** jobs in [blvm-consensus](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml), [blvm-node](https://github.com/BTCDecoded/blvm-node/blob/main/.github/workflows/ci.yml), and [blvm-protocol](https://github.com/BTCDecoded/blvm-protocol/blob/main/.github/workflows/ci.yml) CI are the authoritative **`cargo-spec-lock`** gates. Optional umbrella **`workflow_dispatch`** mirrors exist for multi-repo workspace checkouts.
 
-1. **Unit & Property Tests** (required in each crate CI)
- - `cargo test --all-features`
-
-2. **BLVM Specification Lock Verification** (**required** where **`#[spec_locked]`** is enabled)
- - `cargo spec-lock verify` per the [spec-lock dependency guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)
-
+1. **Unit & Property Tests** (required in each crate CI): `cargo test --all-features`
+2. **BLVM Specification Lock** (required where **`#[spec_locked]`** is enabled): `check-drift` then `verify` per the [spec-lock dependency guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)
 3. **OpenTimestamps Audit** (non-blocking: consensus umbrella CI parity / monorepo only where enabled)
 
-### Local Development
-
-**Run all tests:**
-```bash
-cargo test --all-features
-```
-
-**Run BLVM Specification Lock verification** (mirror CI):
-```bash
-export SPEC_LOCK_STRICT=1
-export SPEC_LOCK_Z3_TIMEOUT_SECS=120
-cargo spec-lock check-drift --crate-path . --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md --scoped-unparseables
-cargo spec-lock verify --crate-path . --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md --timeout 120 --json-out spec_lock_verify.json
-```
-
-**Run a single function or section:**
-```bash
-cargo spec-lock verify --name get_block_subsidy --crate-path . --spec-path ../blvm-spec/PROTOCOL.md
-cargo test --test consensus_property_tests
-```
-
-**Other subcommands:** `coverage`, `summary`, `list`, `check-formulas`, `verify-formulas`. Full CLI reference: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/README.md).
-
-## Verification Coverage
-
-Consensus combines **BLVM Specification Lock**, property tests, fuzzing, and integration tests across economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization.
+Run commands locally: [Testing Infrastructure](../development/testing.md#running-tests). Other subcommands: `coverage`, `summary`, `list`, `check-formulas`, `verify-formulas`. Full CLI reference: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/README.md).
 
 ## Network Protocol Verification
 
@@ -271,17 +163,7 @@ Use the `verify` feature for full protocol verification builds; see [protocol ov
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 
-## Primary verification areas
-
-Functions and paths commonly covered by tests and spec-lock proofs:
-
-- **Chain selection**: `should_reorganize`, `calculate_chain_work`
-- **Block subsidy**: `get_block_subsidy` halving schedule
-- **Proof of work**: `check_proof_of_work`, target expansion
-- **Transaction validation**: `check_transaction` structure rules
-- **Block connection**: `connect_block`, UTXO consistency
-
-Policy and inventory: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Policy and inventory: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md). Formal properties per rule: [Mathematical Specifications](mathematical-specifications.md).
 
 ## Source
 

@@ -262,14 +262,7 @@ Consensus repository references (see [consensus docs index](https://github.com/B
 
 ## Components
 
-The mathematical specifications system includes:
-- Formal mathematical notation for consensus functions
-- Mathematical invariants documentation
-- Integer-based arithmetic (prevents floating-point bugs)
-- Runtime assertions (verify invariants)
-- Checked arithmetic (prevents overflow)
-- BLVM Specification Lock / Z3 where enabled on annotated functions
-- Property-based tests (invariant verification)
+The mathematical specifications system includes formal notation, invariants, integer-based arithmetic, runtime assertions, and checked arithmetic on consensus paths. Verification tooling and CI: [Formal Verification](formal-verification.md) and [Testing Infrastructure](../development/testing.md).
 
 
 ## Source
