@@ -1,8 +1,8 @@
 # Formal Verification
 
-Bitcoin consensus is too important to trust on tests alone, and too precise to leave as folklore in a C++ codebase. **Formal verification in BLVM** makes the rules **readable**, the implementation **checkable against those rules**, and the check **continuous** on every merge.
+How BLVM checks consensus against the [Orange Paper](../reference/orange-paper.md): spec-lock methodology, coverage, CI gates, and tooling. For what **blvm-consensus** implements and how it relates to the spec, see [Consensus Overview](overview.md).
 
-The [Orange Paper](../reference/orange-paper.md) states consensus in mathematical notation, an implementation-agnostic IR auditors can review without Rust or C++. **blvm-consensus** implements those rules. **BLVM Specification Lock** binds annotated Rust functions to Orange Paper contracts and discharges the obligations with Z3. Empirical layers (unit tests, property tests, fuzzing, and [differential testing](../development/differential-testing.md)) stress the same surface from different angles. Together they are the verification posture: **Rust + Tests + Math Specs = Source of Truth**.
+**BLVM Specification Lock** binds `#[spec_locked]` Rust functions to Orange Paper contracts and discharges obligations with Z3. Empirical layers ([testing](../development/testing.md), [differential testing](../development/differential-testing.md), fuzz, MIRI) stress the same surface from complementary angles. Together: **Rust + Tests + Math Specs = Source of Truth**.
 
 Inventory and verification policy: [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [spec-lock coverage inventory](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
@@ -171,7 +171,7 @@ Policy and inventory: [verification policy](https://github.com/BTCDecoded/blvm-c
 
 ## See Also
 
-- [Consensus Overview](overview.md): Consensus layer design
+- [Consensus Overview](overview.md): What the consensus layer implements
 - [Mathematical Specifications](mathematical-specifications.md): Mathematical spec details
 - [Property-Based Testing](../development/property-based-testing.md): Property-based testing
 - [Differential Testing](../development/differential-testing.md): BLVM vs Bitcoin Core

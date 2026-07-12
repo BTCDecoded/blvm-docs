@@ -10,23 +10,11 @@ The layer implements rules from the [Orange Paper](../reference/orange-paper.md)
 
 ## Relationship to the Orange Paper
 
-The Orange Paper is the **specification** (treated as an intermediate representation). **blvm-consensus** is the **implementation**, checked by:
+The Orange Paper is the **specification** (implementation-agnostic IR). **blvm-consensus** is the **implementation**, **validated against** that spec, not generated from it. Optimization passes speed the code without changing specified meaning; see [Optimization passes](#optimization-passes).
 
-- Unit, integration, and [differential tests](../development/differential-testing.md) (full-chain harness in **blvm-bench**)
-- [Formal verification](formal-verification.md) via **BLVM Specification Lock** on spec-locked functions (Z3)
-- Review and CI gates on security-critical paths
+**Chain of trust:** `Orange Paper → blvm-consensus → tests + spec-lock → node deployment`
 
-Consensus code **verifies** signatures on public block data only; secret-path constant-time signing is **`blvm-secp256k1`**, not this crate. See [Formal Verification](formal-verification.md#what-formal-verification-delivers).
-
-The implementation is **not generated** from the Orange Paper; it is **validated against** it. Optimization passes (constant folding, batch script verification) speed the code without changing the specified meaning.
-
-**Chain of trust:**
-
-```
-Orange Paper → blvm-consensus → tests + spec-lock → node deployment
-```
-
-Details: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Verification methodology, coverage, and CI: [Formal Verification](formal-verification.md). Policy: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## What lives here vs elsewhere
 
@@ -40,7 +28,7 @@ Details: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob
 
 ## Architecture position
 
-**Stack layer 2**: between the Orange Paper (layer 1) and protocol abstraction (layer 3). Full stack: [Introduction](../introduction.md#what-is-blvm).
+**Stack layer 2**: between the Orange Paper (layer 1) and protocol abstraction (layer 3). Full stack: [Stack overview](../architecture/system-overview.md).
 
 ## Design principles
 
@@ -102,10 +90,6 @@ The implementation is validated against the [Orange Paper](../reference/orange-p
 
 ![Spec Maintenance Workflow](../images/spec-maintenance-workflow.png)
 *Figure: Specification maintenance workflow showing how changes are detected, verified, and integrated.*
-
-## Formal verification (summary)
-
-Critical properties (chain work, subsidy halving, proof of work, transaction structure, `connect_block` UTXO consistency) are among the primary verification targets. CI runs spec-lock on annotated functions; coverage and limitations are documented in the consensus repo.
 
 ## BIP implementation
 
