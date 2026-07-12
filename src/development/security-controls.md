@@ -163,7 +163,7 @@ The validator detects placeholder implementations in security-critical files:
 - `0x03[PLACEHOLDER`
 - `0x04[PLACEHOLDER`
 - `return None as a placeholder`
-- `return vec![] as a placeholder`
+- return vec![] as a placeholder
 - `This is a placeholder`
 
 

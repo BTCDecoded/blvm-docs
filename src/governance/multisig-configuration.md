@@ -2,7 +2,7 @@
 
 Bitcoin Commons uses multisig thresholds for governance decisions, with different thresholds based on the layer and tier of the change. See [Layer-Tier Model](layer-tier-model.md) for details.
 
-Policy numbers below are expanded from governance YAML at book build time. **Action tiers** (PR classification 1–5) are documented separately in [governance `docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md) and [`config/action-tiers.yml`](https://github.com/BTCDecoded/governance/blob/main/config/action-tiers.yml).
+Policy numbers below are expanded from governance YAML at book build time. **Action tiers** (PR classification 1-5) are documented separately in [governance action tiers](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md) and [config/action-tiers.yml](https://github.com/BTCDecoded/governance/blob/main/config/action-tiers.yml).
 
 ## Layer-Based Thresholds
 
@@ -44,7 +44,7 @@ Policy numbers below are expanded from governance YAML at book build time. **Act
 - **Scope**: Critical security patches, network-threatening bugs
 
 ### Tier 5: Governance Changes
-- **Signatures**: Special process — see [governance `GOVERNANCE.md`](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md) (not the `tier_5_governance` row in `action-tiers.yml` alone)
+- **Signatures**: Special process: see [governance policy](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md) (not the `tier_5_governance` row in `action-tiers.yml` alone)
 - **Review Period**: [[gov:tier_5_review_days]] days
 - **Scope**: Changes to governance rules themselves
 
@@ -62,11 +62,11 @@ When both layer and tier apply, the system uses **"most restrictive wins"** rule
 ![Governance Signature Thresholds](../images/governance-signature-thresholds.png)
 *Figure: Signature thresholds by layer showing the graduated security model.*
 
-For configuration details, see the [governance `config/` directory](https://github.com/BTCDecoded/governance/tree/main/config) in the governance repository.
+For configuration details, see the [governance config/ directory](https://github.com/BTCDecoded/governance/tree/main/config) in the governance repository.
 
 ## Nested multisig (SDK)
 
-Flat **N-of-M** thresholds above describe maintainer rules per layer. The [SDK overview](../sdk/overview.md) also documents **nested multisig** for team-based and hierarchical governance setups using **`blvm-sdk`** primitives—see that chapter for APIs beyond a single flat quorum.
+Flat **N-of-M** thresholds above describe maintainer rules per layer. The [SDK overview](../sdk/overview.md) also documents **nested multisig** for team-based and hierarchical governance setups using **`blvm-sdk`** primitives, see that chapter for APIs beyond a single flat quorum.
 
 ## See Also
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons uses [BLVM Specification Lock](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](#fuzzing), integration tests, runtime assertions, and MIRI. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Bitcoin Commons uses [BLVM Specification Lock](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](#fuzzing), integration tests, runtime assertions, and MIRI. Proof scope: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Testing Strategy
 
@@ -51,26 +51,26 @@ Coverage-guided fuzzing uses **libFuzzer** via **cargo-fuzz** on unstructured by
 
 #### Source of truth
 
-Harness names and crate wiring live in each repo’s **`fuzz/Cargo.toml`** (`[[bin]]` entries). Implementation sources are under **`fuzz/fuzz_targets/`**. Do not treat prose (here or in READMEs) as an inventory—it goes stale.
+Harness names and crate wiring live in each repo’s **`fuzz/Cargo.toml`** (`[[bin]]` entries). Implementation sources are under **`fuzz/fuzz_targets/`**. Do not treat prose (here or in READMEs) as an inventory; it goes stale.
 
 | Crate | Location |
 |-------|----------|
-| blvm-consensus | [`blvm-consensus/fuzz`](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz) |
-| blvm-protocol | [`blvm-protocol/fuzz`](https://github.com/BTCDecoded/blvm-protocol/tree/main/fuzz) |
-| blvm-node | [`blvm-node/fuzz`](https://github.com/BTCDecoded/blvm-node/tree/main/fuzz) |
-| blvm-sdk | [`blvm-sdk/fuzz`](https://github.com/BTCDecoded/blvm-sdk/tree/main/fuzz) |
+| blvm-consensus | [blvm-consensus/fuzz](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz) |
+| blvm-protocol | [blvm-protocol/fuzz](https://github.com/BTCDecoded/blvm-protocol/tree/main/fuzz) |
+| blvm-node | [blvm-node/fuzz](https://github.com/BTCDecoded/blvm-node/tree/main/fuzz) |
+| blvm-sdk | [blvm-sdk/fuzz](https://github.com/BTCDecoded/blvm-sdk/tree/main/fuzz) |
 
-Local monorepo checkouts often use **`[patch.crates-io]`** in **`fuzz/Cargo.toml`** so fuzz crates resolve **path** dependencies; **continuous integration** may build fuzz targets against **crates.io** instead (see comments in each repo’s **`fuzz/Cargo.toml`**—for example **`blvm-consensus/fuzz`** and **`blvm-protocol/fuzz`**).
+Local monorepo checkouts often use **`[patch.crates-io]`** in **`fuzz/Cargo.toml`** so fuzz crates resolve **path** dependencies; **continuous integration** may build fuzz targets against **crates.io** instead (see comments in each repo’s **`fuzz/Cargo.toml`**, for example **`blvm-consensus/fuzz`** and **`blvm-protocol/fuzz`**).
 
 #### Quick start (consensus)
 
 ```bash
 cd blvm-consensus/fuzz
-./init_corpus.sh    # optional: seed corpora
+./init_corpus.sh # optional: seed corpora
 cargo +nightly fuzz run <target_name>
 ```
 
-Pick `<target_name>` from `fuzz/Cargo.toml`. The `fuzz/` directory also contains scripts (e.g. campaign runners, corpus helpers, sanitizer build helpers)—use what matches your workflow.
+Pick `<target_name>` from `fuzz/Cargo.toml`. The `fuzz/` directory also contains scripts (e.g. campaign runners, corpus helpers, sanitizer build helpers), use what matches your workflow.
 
 #### CI
 
@@ -81,8 +81,8 @@ Fuzz jobs are defined in the relevant repository’s GitHub Actions. Matrix step
 [Formal verification](../consensus/formal-verification.md) uses **blvm-spec-lock** / **BLVM Specification Lock** in **blvm-consensus**:
 
 - **Location**: `src/`, `tests/`
-- **Command**: `cargo spec-lock verify` (tiered: strong / medium / slow)
-- **Inventory**: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- **Command**: `cargo spec-lock verify` (same command as CI; self-hosted runners in production workflows)
+- **Inventory**: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - **Tool**: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)
 
 **See also**: [UTXO Commitments](../node/utxo-commitments.md#formal-verification)
@@ -109,7 +109,7 @@ MIRI detects undefined behavior:
 
 | Verification Technique | Status |
 |----------------------|--------|
-| **Formal Proofs (spec-lock)** | ✅ Tiered Z3 proofs on spec-locked code |
+| **Formal Proofs (spec-lock)** | ✅ Z3 proofs on spec-locked code (self-hosted CI) |
 | **Property Tests** | ✅ Broad invariant coverage |
 | **Runtime Assertions** | ✅ Feature-gated on selected paths |
 | **Fuzz Targets** | ✅ Critical validation surfaces |
@@ -118,7 +118,7 @@ MIRI detects undefined behavior:
 
 ### Coverage by Consensus Area
 
-Economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization are covered by unit, property, integration, and fuzz tests, with **BLVM Specification Lock** on critical spec-locked paths. Details: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+Economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization are covered by unit, property, integration, and fuzz tests, with **BLVM Specification Lock** on critical spec-locked paths. Details: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 ## Running Tests
 
@@ -161,15 +161,19 @@ cargo spec-lock verify
 ### Run Spec-Lock Verification
 
 ```bash
-# Run spec-lock verification (requires cargo-spec-lock)
-cargo spec-lock verify --crate-path .
+export SPEC_LOCK_STRICT=1
+export SPEC_LOCK_Z3_TIMEOUT_SECS=120
+cargo spec-lock check-drift --crate-path . --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md --scoped-unparseables
+cargo spec-lock verify --crate-path . --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md --timeout 120 --json-out spec_lock_verify.json
 ```
+
+Filter to one function: `cargo spec-lock verify --name <function> …`. There is no `--tier` or `--proof` flag.
 
 ## Coverage Goals
 
 ### Target Coverage
 
-Ongoing expansion of spec-lock coverage, property tests, fuzz corpora, runtime assertions, and integration scenarios. Status: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Ongoing expansion of spec-lock coverage, property tests, fuzz corpora, runtime assertions, and integration scenarios. Status: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Test Organization
 
@@ -177,15 +181,15 @@ Ongoing expansion of spec-lock coverage, property tests, fuzz corpora, runtime a
 
 ```
 blvm-consensus/
-├── src/                    # Source; spec-lock on marked functions
+├── src/ # Source; spec-lock on marked functions
 ├── tests/
-│   ├── consensus_property_tests.rs  # Main property tests
-│   ├── integration/         # Integration tests
-│   ├── unit/               # Unit tests
-│   ├── fuzzing/            # Fuzzing helpers
-│   └── verification/       # Verification tests
+│ ├── consensus_property_tests.rs # Main property tests
+│ ├── integration/ # Integration tests
+│ ├── unit/ # Unit tests
+│ ├── fuzzing/ # Fuzzing helpers
+│ └── verification/ # Verification tests
 └── fuzz/
-    └── fuzz_targets/        # Fuzz targets
+ └── fuzz_targets/ # Fuzz targets
 ```
 
 
@@ -203,7 +207,7 @@ Edge cases beyond blvm-spec-lock proof bounds are covered by:
 
 ## Differential Testing
 
-Cross-implementation checks compare BLVM validation with Bitcoin Core (RPC, historical replay, and a two-phase full-chain program). Primary harness: [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench) `tests/integration.rs`; consensus stub: [`differential_tests.rs`](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs).
+Cross-implementation checks compare BLVM validation with Bitcoin Core (RPC, historical replay, and a two-phase full-chain program). Primary harness: [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench) `tests/integration.rs`; consensus stub: [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs).
 
 ```bash
 cd blvm-bench
@@ -223,7 +227,7 @@ All tests run in CI:
 - **Property Tests**: Required for merge
 - **Integration Tests**: Required for merge
 - **Fuzz Tests**: Run on schedule
-- **Differential Tests**: **blvm-bench** integration suite (self-hosted workflow currently paused; see [differential-testing.md](differential-testing.md))
+- **Differential Tests**: **blvm-bench** integration suite (self-hosted workflow currently paused; see [Differential Testing](differential-testing.md))
 - **blvm-spec-lock Proofs**: Run separately, not blocking
 - **MIRI**: Run on property tests and critical unit tests
 
@@ -245,20 +249,20 @@ The testing infrastructure includes:
 - blvm-spec-lock proofs for formal verification
 - Runtime assertions for execution-time checks
 - MIRI integration for undefined behavior detection
-- Differential tests (see [differential-testing.md](differential-testing.md))
+- Differential tests (see [Differential Testing](differential-testing.md))
 
 
 ## Source
 
-- [scripts/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/scripts/README.md) (test data helpers); [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) (verification workflows)
+- [test scripts guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/scripts/README.md) (test data helpers); [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) (verification workflows)
 - [consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
 - [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/mod.rs)
-- [formal-verification.md](../consensus/formal-verification.md)
+- [Formal Verification](../consensus/formal-verification.md)
 - [tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests)
-- [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
+- [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 - [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs) (consensus stub)
-- [blvm-bench integration tests](https://github.com/BTCDecoded/blvm-bench/blob/main/tests/integration.rs), [FULL_CHAIN_DIFFERENTIAL.md](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md)
-- [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- [blvm-bench integration tests](https://github.com/BTCDecoded/blvm-bench/blob/main/tests/integration.rs), [full-chain differential testing](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md)
+- [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - [blvm-consensus/tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/), [blvm-consensus/fuzz/](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz/), [blvm-consensus/src/](https://github.com/BTCDecoded/blvm-consensus/tree/main/src/) (blvm-consensus/fuzz/blvm-consensus/src/`)
 ## See Also
 

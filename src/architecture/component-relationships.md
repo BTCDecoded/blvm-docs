@@ -8,21 +8,21 @@ Edges point **from a crate toward a crate it depends on** (library import direct
 
 ```mermaid
 flowchart LR
-    OP[Orange Paper]
-    C[blvm-consensus]
-    P[blvm-protocol]
-    N[blvm-node]
-    S[blvm-sdk]
-    G[blvm-commons]
+ OP[Orange Paper]
+ C[blvm-consensus]
+ P[blvm-protocol]
+ N[blvm-node]
+ S[blvm-sdk]
+ G[blvm-commons]
 
-    OP -.->|informs| C
-    P --> C
-    N --> P
-    N --> C
-    S --> P
-    S --> C
-    G --> S
-    G --> P
+ OP -.->|informs| C
+ P --> C
+ N --> P
+ N --> C
+ S --> P
+ S --> C
+ G --> S
+ G --> P
 ```
 
 **blvm-primitives** (types, serialization, crypto) sits under **blvm-consensus** and **blvm-protocol**; it is not shown as its own stack layer here.
@@ -31,12 +31,12 @@ flowchart LR
 
 | Stack layer | Crate | Governance layer |
 |-------------|-------|------------------|
-| 1 | blvm-spec (Orange Paper) | Layer 1 — [[gov:layer_1_signatures]], [[gov:layer_1_review_days]] days |
-| 2 | blvm-consensus | Layer 2 — [[gov:layer_2_signatures]], [[gov:layer_2_review_days]] days |
-| 3 | blvm-protocol | Layer 3 — [[gov:layer_3_signatures]], [[gov:layer_3_review_days]] days |
-| 4 | blvm-node | Layer 4 — [[gov:layer_4_signatures]], [[gov:layer_4_review_days]] days |
-| 5 | blvm-sdk | Layer 5 — [[gov:layer_5_signatures]], [[gov:layer_5_review_days]] days |
-| 6 | blvm-commons | Layer 5 — [[gov:layer_5_signatures]], [[gov:layer_5_review_days]] days |
+| 1 | blvm-spec (Orange Paper) | Layer 1: [[gov:layer_1_signatures]], [[gov:layer_1_review_days]] days |
+| 2 | blvm-consensus | Layer 2: [[gov:layer_2_signatures]], [[gov:layer_2_review_days]] days |
+| 3 | blvm-protocol | Layer 3: [[gov:layer_3_signatures]], [[gov:layer_3_review_days]] days |
+| 4 | blvm-node | Layer 4: [[gov:layer_4_signatures]], [[gov:layer_4_review_days]] days |
+| 5 | blvm-sdk | Layer 5: [[gov:layer_5_signatures]], [[gov:layer_5_review_days]] days |
+| 6 | blvm-commons | Layer 5: [[gov:layer_5_signatures]], [[gov:layer_5_review_days]] days |
 
 See [Governance layers and tiers](../governance/layer-tier-model.md) for how layers combine with PR tiers.
 
@@ -58,7 +58,7 @@ The dependency graph above is the accurate picture for **crate dependencies**. A
 
 - Dependencies between layers are strictly enforced in the **crate graph** (no application layer should reimplement consensus).
 - Consensus rule modifications are prevented in application layers by design (validation calls into **blvm-consensus**).
-- The [Orange Paper](../reference/orange-paper.md) is the specification; **blvm-consensus** is checked with [formal verification](../consensus/formal-verification.md), tests, and review—not a single “one-shot” equivalence proof of the whole spec.
+- The [Orange Paper](../reference/orange-paper.md) is the specification; **blvm-consensus** is checked with [formal verification](../consensus/formal-verification.md), tests, and review, not a single “one-shot” equivalence proof of the whole spec.
 - Version coordination (Cargo / release sets) keeps compatible crate versions together.
 
 ## See Also

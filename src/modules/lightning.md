@@ -24,28 +24,28 @@ When the crate is not on crates.io, use [registry bootstrap](overview.md#install
 ### Manual Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/BTCDecoded/blvm-lightning.git
-   cd blvm-lightning
-   ```
+ ```bash
+ git clone https://github.com/BTCDecoded/blvm-lightning.git
+ cd blvm-lightning
+ ```
 
 2. Build the module:
-   ```bash
-   cargo build --release
-   ```
+ ```bash
+ cargo build --release
+ ```
 
 3. Install to node modules directory:
-   ```bash
-   mkdir -p /path/to/node/modules/blvm-lightning/target/release
-   cp target/release/blvm-lightning /path/to/node/modules/blvm-lightning/target/release/
-   cp module.toml /path/to/node/modules/blvm-lightning/
-   ```
+ ```bash
+ mkdir -p /path/to/node/modules/blvm-lightning/target/release
+ cp target/release/blvm-lightning /path/to/node/modules/blvm-lightning/target/release/
+ cp module.toml /path/to/node/modules/blvm-lightning/
+ ```
 
 ## Requirements
 
 - `blvm-node` with the module system enabled.
 - External Lightning backend for real payments: **LNBits** (HTTP API) or **LDK** (embedded). **Stub** is for tests only.
-- Secrets (`api_key`, `node_private_key`) in module config — never commit to git.
+- Secrets (`api_key`, `node_private_key`) in module config: never commit to git.
 
 ## Loading
 
@@ -61,7 +61,7 @@ Module config: `<modules.data_dir>/blvm-lightning/config.toml` (same schema as e
 
 ## Configuration
 
-The module supports multiple Lightning providers. Create a `config.toml` file in the module directory with **flat top-level keys** (no `[lightning]` wrapper — invalid tables are **silently ignored** and the module falls back to **`stub`**):
+The module supports multiple Lightning providers. Create a `config.toml` file in the module directory with **flat top-level keys** (no `[lightning]` wrapper: invalid tables are **silently ignored** and the module falls back to **`stub`**):
 
 ### LNBits Provider (Recommended)
 
@@ -71,7 +71,7 @@ provider = "lnbits"
 [lnbits]
 api_url = "https://lnbits.example.com"
 api_key = "your_lnbits_api_key"
-wallet_id = "optional_wallet_id"  # Optional
+wallet_id = "optional_wallet_id" # Optional
 ```
 
 ### LDK Provider (Rust-native)
@@ -80,8 +80,8 @@ wallet_id = "optional_wallet_id"  # Optional
 provider = "ldk"
 
 [ldk]
-network = "testnet"  # or "mainnet" or "regtest"
-node_private_key = "hex_encoded_private_key"  # optional; generated when unset
+network = "testnet" # or "mainnet" or "regtest"
+node_private_key = "hex_encoded_private_key" # optional; generated when unset
 ```
 
 ### Stub Provider (Testing, default)
@@ -96,9 +96,9 @@ When `provider` is omitted, the default is **`stub`** (safe for local dev; no re
 
 ```toml
 provider = "lnbits"
-min_payment_sats = 1000      # optional; enforced in create_invoice
-max_payment_sats = 1000000   # optional
-channel_reserve = 10000      # optional; LDK channel reserve in sats
+min_payment_sats = 1000 # optional; enforced in create_invoice
+max_payment_sats = 1000000 # optional
+channel_reserve = 10000 # optional; LDK channel reserve in sats
 ```
 
 ### Configuration options
@@ -133,12 +133,12 @@ author = "Bitcoin Commons Team"
 entry_point = "blvm-lightning"
 
 capabilities = [
-    "read_blockchain",
-    "subscribe_events",
+ "read_blockchain",
+ "subscribe_events",
 ]
 ```
 
-Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`** — do not hardcode it in the book.
+Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`**: do not hardcode it in the book.
 
 ## Events
 
@@ -154,12 +154,12 @@ Via `#[on_event(...)]` in the module:
 
 `LightningProcessor` may publish (depending on provider path):
 
-- `PaymentRequestCreated` — new invoice / payment request
-- `PaymentVerified` — Lightning payment verified
-- `PaymentSettled` — on-chain settlement observed (when applicable)
-- `PaymentFailed` — verification or payment failed
-- `PaymentRouteFound` / `PaymentRouteFailed` — outgoing payment routing
-- `ChannelClosed` — channel close notification
+- `PaymentRequestCreated`: new invoice / payment request
+- `PaymentVerified`: Lightning payment verified
+- `PaymentSettled`: on-chain settlement observed (when applicable)
+- `PaymentFailed`: verification or payment failed
+- `PaymentRouteFound` / `PaymentRouteFailed`: outgoing payment routing
+- `ChannelClosed`: channel close notification
 
 `ChannelOpened` exists on the shared `EventType` enum but is **not emitted** by this module today.
 
@@ -192,9 +192,9 @@ use blvm_lightning::processor::LightningProcessor;
 
 // Verify multiple payments in parallel
 let payments = vec![
-    ("invoice1", "payment_id_1"),
-    ("invoice2", "payment_id_2"),
-    ("invoice3", "payment_id_3"),
+ ("invoice1", "payment_id_1"),
+ ("invoice2", "payment_id_2"),
+ ("invoice3", "payment_id_3"),
 ];
 
 let results = processor.verify_payments_batch(&payments).await?;
@@ -230,7 +230,7 @@ The module uses module storage to persist configuration and statistics:
 
 ## Repository
 
-- **GitHub**: [blvm-lightning](https://github.com/BTCDecoded/blvm-lightning) — releases and current `module.toml` **`version`**
+- **GitHub**: [blvm-lightning](https://github.com/BTCDecoded/blvm-lightning): releases and current `module.toml` **`version`**
 
 ## See Also
 

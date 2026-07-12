@@ -1,6 +1,6 @@
 # Commons Mesh Module
 
-Payment-gated mesh overlay for **blvm-node**: route discovery, replay prevention, optional payment proofs, and subprocess ModuleAPI. Wire format and smoke tests live in the [blvm-mesh](https://github.com/BTCDecoded/blvm-mesh) repo (`docs/TRANSPORT.md`, `API.md`).
+Payment-gated mesh overlay for **blvm-node**: route discovery, replay prevention, optional payment proofs, and subprocess ModuleAPI. Wire format and smoke tests live in the [blvm-mesh](https://github.com/BTCDecoded/blvm-mesh) repo ([mesh transport](https://github.com/BTCDecoded/blvm-mesh/blob/main/docs/TRANSPORT.md), [mesh API](https://github.com/BTCDecoded/blvm-mesh/blob/main/API.md)).
 
 ## Install
 
@@ -19,19 +19,19 @@ Copy **`module.toml`** from the repo into the same module directory.
 
 Module config: `<modules.data_dir>/blvm-mesh/config.toml`. Node override: `[modules.blvm-mesh]` in `blvm.toml` (table name must match manifest `name`).
 
-Use **flat top-level keys** in `config.toml` (no `[mesh]` wrapper — a `[mesh]` table is **silently ignored** and `enabled` stays **`false`**):
+Use **flat top-level keys** in `config.toml` (no `[mesh]` wrapper: a `[mesh]` table is **silently ignored** and `enabled` stays **`false`**):
 
 ```toml
 enabled = true
-mode = "payment_gated"   # open | payment_gated | bitcoin_only
+mode = "payment_gated" # open | payment_gated | bitcoin_only
 max_peers = 50
-rate_limit_per_minute = 120   # 0 = off
+rate_limit_per_minute = 120 # 0 = off
 # peers = [{ address = "127.0.0.1:8333", node_id_hex = "..." }]
 ```
 
 > **Note:** `identity_seed_hex` for mesh identity may appear under a **`[mesh]`** table in some tooling paths; **`MeshConfig`** fields (`enabled`, `mode`, …) must be at the **root** of `config.toml`.
 
-Enable in node config (merge into your full `blvm.toml` — include `transport_preference` and network keys):
+Enable in node config (merge into your full `blvm.toml`: include `transport_preference` and network keys):
 
 ```toml
 [modules]
@@ -55,7 +55,7 @@ Routing policy uses **`packet_type`** on mesh packets, not payload sniffing. Fee
 
 ## Node integration
 
-Spawned modules register a ModuleAPI descriptor over IPC; the node installs **`IpcForwardingModuleAPI`** and forwards **`call_module`**. See [Module IPC Protocol — Subprocess ModuleAPI](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration).
+Spawned modules register a ModuleAPI descriptor over IPC; the node installs **`IpcForwardingModuleAPI`** and forwards **`call_module`**. See [Module IPC Protocol: Subprocess ModuleAPI](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration).
 
 | RPC | Purpose |
 |-----|---------|
@@ -64,7 +64,7 @@ Spawned modules register a ModuleAPI descriptor over IPC; the node installs **`I
 | `meshquoteroute` | Quote route to a destination (`blvm-mesh` JSON-RPC) |
 | `meshrequesthopinvoice` | Request hop invoice for mesh routing |
 
-Details: [RPC API — Mesh Methods](../node/rpc-api.md#mesh-methods). Core `blvm-node` does not register mesh JSON-RPC handlers; load **`blvm-mesh`** to expose the four methods above.
+Details: [RPC API: Mesh Methods](../node/rpc-api.md#mesh-methods). Core `blvm-node` does not register mesh JSON-RPC handlers; load **`blvm-mesh`** to expose the four methods above.
 
 ## ModuleAPI
 
@@ -76,7 +76,7 @@ Details: [RPC API — Mesh Methods](../node/rpc-api.md#mesh-methods). Core `blvm
 | `get_routing_stats` / `get_node_id` | Stats and local node id |
 | `register_protocol_handler` | Legacy; prefer `metadata.protocol` + poll |
 
-Full request/response types: [API.md](https://github.com/BTCDecoded/blvm-mesh/blob/main/API.md).
+Full request/response types: [mesh API](https://github.com/BTCDecoded/blvm-mesh/blob/main/API.md).
 
 ### Call from another module
 
@@ -85,13 +85,13 @@ use blvm_mesh::MeshClient;
 
 let mesh = MeshClient::new(node_api.clone(), "blvm-mesh".into());
 let resp = mesh
-    .send_packet("caller-id", destination, payload, payment_proof, Some("my-proto".into()))
-    .await?;
+ .send_packet("caller-id", destination, payload, payment_proof, Some("my-proto".into()))
+ .await?;
 ```
 
 Or `node_api.call_module(Some("blvm-mesh"), "send_packet", bincode::serialize(&req)?)`.
 
-**Edge radios (Meshtastic, Reticulum):** use a separate adapter; do not duplicate mesh policy in the adapter. See **`docs/TRANSPORT.md`** in the mesh repo.
+**Edge radios (Meshtastic, Reticulum):** use a separate adapter; do not duplicate mesh policy in the adapter. See **[mesh transport](https://github.com/BTCDecoded/blvm-mesh/blob/main/docs/TRANSPORT.md)** in the mesh repo.
 
 ## Troubleshooting
 

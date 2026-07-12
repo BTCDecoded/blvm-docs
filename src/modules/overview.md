@@ -6,46 +6,46 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 
 **Core integration modules** (documented in this book):
 
-- **[Lightning Network Module](lightning.md)** — Lightning payment processing (LNBits, LDK, Stub)
-- **[Commons Mesh Module](mesh.md)** — Payment-gated mesh overlay; four JSON-RPC methods when loaded
-- **[Stratum V2 Module](stratum-v2.md)** — Stratum V2 mining protocol
-- **[Datum Module](datum.md)** — DATUM Gateway (with Stratum V2)
-- **[Mining OS Module](miningos.md)** — MiningOS integration
-- **[Selective Sync Module](selective-sync.md)** — IBD sync policy and witness filtering
+- **[Lightning Network Module](lightning.md)**: Lightning payment processing (LNBits, LDK, Stub)
+- **[Commons Mesh Module](mesh.md)**: Payment-gated mesh overlay; four JSON-RPC methods when loaded
+- **[Stratum V2 Module](stratum-v2.md)**: Stratum V2 mining protocol
+- **[Datum Module](datum.md)**: DATUM Gateway (with Stratum V2)
+- **[Mining OS Module](miningos.md)**: MiningOS integration
+- **[Selective Sync Module](selective-sync.md)**: IBD sync policy and witness filtering
 
 **Registry modules** (bootstrap from `registry/modules.json`):
 
-- **blvm-zmq** — ZMQ PUB notifications ([ZMQ module](zmq.md))
-- **blvm-miniscript** — Descriptor / PSBT RPC overrides ([Miniscript module](miniscript.md))
-- **blvm-governance** — On-chain proposal webhook module ([Governance module](governance-module.md))
-- **blvm-marketplace** — Optional registry/payments ([Marketplace module](marketplace-module.md))
-- **blvm-fibre** — FIBRE UDP/FEC block relay ([FIBRE module](fibre.md))
+- **blvm-zmq**: ZMQ PUB notifications ([ZMQ module](zmq.md))
+- **blvm-miniscript**: Descriptor / PSBT RPC overrides ([Miniscript module](miniscript.md))
+- **blvm-governance**: On-chain proposal webhook module ([Governance module](governance-module.md))
+- **blvm-marketplace**: Optional registry/payments ([Marketplace module](marketplace-module.md))
+- **blvm-fibre**: FIBRE UDP/FEC block relay ([FIBRE module](fibre.md))
 
 ## Module system architecture
 
 ```mermaid
 flowchart LR
-  TOML[blvm.toml pin] --> REG{Registry URL?}
-  REG -->|Yes| DL[Download release binary]
-  REG -->|No| DISK[modules_dir on disk]
-  DL --> VERIFY[sha256sums.txt verify]
-  DISK --> SPAWN
-  VERIFY --> SPAWN[Spawn process]
-  SPAWN --> IPC[Module IPC / events]
-  IPC --> RPC[Optional JSON-RPC extensions]
+ TOML[blvm.toml pin] --> REG{Registry URL?}
+ REG -->|Yes| DL[Download release binary]
+ REG -->|No| DISK[modules_dir on disk]
+ DL --> VERIFY[sha256sums.txt verify]
+ DISK --> SPAWN
+ VERIFY --> SPAWN[Spawn process]
+ SPAWN --> IPC[Module IPC / events]
+ IPC --> RPC[Optional JSON-RPC extensions]
 ```
 
 Modules run in separate processes with IPC ([Module System Architecture](../architecture/module-system.md)):
 
-- **Process isolation** — Module crash does not take down the node
-- **Consensus isolation** — Modules cannot alter consensus rules or the UTXO set
-- **Defined APIs** — IPC, ModuleAPI, and optional JSON-RPC extension
+- **Process isolation**: Module crash does not take down the node
+- **Consensus isolation**: Modules cannot alter consensus rules or the UTXO set
+- **Defined APIs**: IPC, ModuleAPI, and optional JSON-RPC extension
 
 ## Installing modules
 
 ### Registry bootstrap (recommended)
 
-Pin modules in `blvm.toml` under **`[modules]`** (merge into your existing file — a standalone snippet still needs `transport_preference` and network keys elsewhere in the file):
+Pin modules in `blvm.toml` under **`[modules]`** (merge into your existing file: a standalone snippet still needs `transport_preference` and network keys elsewhere in the file):
 
 ```toml
 [modules]
@@ -54,12 +54,12 @@ blvm-mesh = "0.1.*"
 blvm-zmq = "0.1.*"
 ```
 
-The node downloads version-pinned binaries from GitHub Releases (`sha256sums.txt` on each tag) when a pinned module is missing on disk. See `blvm/README.md` in the `blvm` repository for the full bootstrap contract.
+The node downloads version-pinned binaries from GitHub Releases (`sha256sums.txt` on each tag) when a pinned module is missing on disk. See [blvm README](https://github.com/BTCDecoded/blvm/blob/main/README.md) in the `blvm` repository for the full bootstrap contract.
 
 ### Build from source
 
 ```bash
-cargo install blvm-lightning   # when published on crates.io
+cargo install blvm-lightning # when published on crates.io
 # or clone BTCDecoded/blvm-<name>, cargo build --release, place binary per module.toml
 ```
 
@@ -79,7 +79,7 @@ Each module uses `module.toml` plus optional `config.toml`. See per-module pages
 
 ## WASM modules (`wasm-modules`)
 
-When the node loads **WebAssembly** guests (**`wasm-modules`** / **`blvm-sdk`** embedding), treat them as trusted only if your governance policy says so. The embedder applies **wasmtime fuel** and **store limits** with conservative defaults; override per module via **`[modules.<name>]`** keys in **`blvm-node/docs/CONFIGURATION_GUIDE.md`**.
+When the node loads **WebAssembly** guests (**`wasm-modules`** / **`blvm-sdk`** embedding), treat them as trusted only if your governance policy says so. The embedder applies **wasmtime fuel** and **store limits** with conservative defaults; override per module via **`[modules.<name>]`** keys in **[node configuration guide](https://github.com/BTCDecoded/blvm-node/blob/main/docs/CONFIGURATION_GUIDE.md)**.
 
 ## See Also
 

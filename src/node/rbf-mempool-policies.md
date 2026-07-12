@@ -6,15 +6,15 @@ Configure Replace-By-Fee (RBF) behavior and mempool policies to control transact
 
 ```mermaid
 flowchart TD
-    TX[Incoming transaction] --> RBF{RBF mode?}
-    RBF -->|disabled| REJ[Reject replacement]
-    RBF -->|conservative / standard / aggressive| RULES[Mode fee rules — see below]
-    RULES --> CAP{Mempool has room?}
-    CAP -->|yes| FEE{Meets min fee?}
-    CAP -->|no| EVICT[Evict per strategy]
-    FEE -->|yes| ACC[Accept]
-    FEE -->|no| REJ
-    EVICT --> ACC
+ TX[Incoming transaction] --> RBF{RBF mode?}
+ RBF -->|disabled| REJ[Reject replacement]
+ RBF -->|conservative / standard / aggressive| RULES[Mode fee rules: see below]
+ RULES --> CAP{Mempool has room?}
+ CAP -->|yes| FEE{Meets min fee?}
+ CAP -->|no| EVICT[Evict per strategy]
+ FEE -->|yes| ACC[Accept]
+ FEE -->|no| REJ
+ EVICT --> ACC
 ```
 
 ## RBF Configuration
@@ -147,17 +147,17 @@ Configure mempool size limits, fee thresholds, eviction strategies, and transact
 
 ```toml
 [mempool]
-max_mempool_mb = 300      # Maximum mempool size in MB (default: 300)
-max_mempool_txs = 100000  # Maximum number of transactions (default: 100000)
+max_mempool_mb = 300 # Maximum mempool size in MB (default: 300)
+max_mempool_txs = 100000 # Maximum number of transactions (default: 100000)
 ```
 
 ### Fee Thresholds
 
 ```toml
 [mempool]
-min_relay_fee_rate = 1    # Minimum relay fee rate (sat/vB, default: 1)
-min_tx_fee = 1000         # Minimum transaction fee (satoshis, default: 1000)
-incremental_relay_fee = 1000  # Incremental relay fee (satoshis, default: 1000)
+min_relay_fee_rate = 1 # Minimum relay fee rate (sat/vB, default: 1)
+min_tx_fee = 1000 # Minimum transaction fee (satoshis, default: 1000)
+incremental_relay_fee = 1000 # Incremental relay fee (satoshis, default: 1000)
 ```
 
 ### Eviction Strategies
@@ -236,20 +236,20 @@ Prevent transaction package spam and ensure mempool stability:
 
 ```toml
 [mempool]
-max_ancestor_count = 25      # Maximum ancestor count (default: 25)
-max_ancestor_size = 101000   # Maximum ancestor size in bytes (default: 101000)
-max_descendant_count = 25   # Maximum descendant count (default: 25)
+max_ancestor_count = 25 # Maximum ancestor count (default: 25)
+max_ancestor_size = 101000 # Maximum ancestor size in bytes (default: 101000)
+max_descendant_count = 25 # Maximum descendant count (default: 25)
 max_descendant_size = 101000 # Maximum descendant size in bytes (default: 101000)
 ```
 
-**Ancestors**: Transactions that a given transaction depends on (parent transactions)  
+**Ancestors**: Transactions that a given transaction depends on (parent transactions) 
 **Descendants**: Transactions that depend on a given transaction (child transactions)
 
 ### Transaction Expiry
 
 ```toml
 [mempool]
-mempool_expiry_hours = 336  # Transaction expiry in hours (default: 336 = 14 days)
+mempool_expiry_hours = 336 # Transaction expiry in hours (default: 336 = 14 days)
 ```
 
 ### Mempool Persistence
@@ -355,16 +355,16 @@ bitcoin-cli bumpfee <txid> --fee_rate 20
 
 ```bash
 curl -X POST http://localhost:8332 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getmempoolentry", "params": ["<new_txid>"], "id": 1}'
+ -H "Content-Type: application/json" \
+ -d '{"jsonrpc": "2.0", "method": "getmempoolentry", "params": ["<new_txid>"], "id": 1}'
 ```
 
 ### Monitor RBF activity
 
 ```bash
 curl -X POST http://localhost:8332 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getmempoolinfo", "params": [], "id": 1}'
+ -H "Content-Type: application/json" \
+ -d '{"jsonrpc": "2.0", "method": "getmempoolinfo", "params": [], "id": 1}'
 ```
 
 Expected fields include `size`, `bytes`, `maxmempool`, `mempoolminfee`, and `minrelaytxfee`.

@@ -292,5 +292,5 @@ Use this template to plan and document security testing for new features, compon
 - [Threat Models](../../security/threat-models.md)
 - [Developer Security Checklist](DEVELOPER_SECURITY_CHECKLIST.md)
 - [Security Architecture Review Template](ARCHITECTURE_REVIEW_TEMPLATE.md)
-- [blvm-node SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md) (reference node security practices)
+- [blvm-node security policy](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md) (reference node security practices)
 

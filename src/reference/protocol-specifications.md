@@ -21,7 +21,7 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical beh
 
 - **BIP152**: Compact block relay - short transaction IDs, block reconstruction (see [Compact block relay (BIP152)](../protocol/overview.md#compact-blocks))
 - **BIP157/158**: Client-side block filtering - GCS filter construction, integrated with network layer, works over all transports (see [BIP157/158](../protocol/overview.md#bip157-158))
-- **BIP155** addrv2: Varint-length peer addresses (`addrv2`) on P2P wire ([serialization in **`blvm-protocol` `wire`**](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs)—`deserialize_addrv2` / `serialize_addrv2`; node handling in **`blvm-node`** [`protocol_adapter.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol_adapter.rs), [`wire_dispatch.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/wire_dispatch.rs))
+- **BIP155** addrv2: Varint-length peer addresses (`addrv2`) on P2P wire ([serialization in **blvm-protocol `wire`**](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs), `deserialize_addrv2` / `serialize_addrv2`; node handling in **`blvm-node`** [protocol_adapter.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol_adapter.rs), [wire_dispatch.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/wire_dispatch.rs))
 - **BIP331**: Package relay - efficient transaction relay (see [Package Relay](../node/package-relay.md))
 
 ## Application-Level BIPs
@@ -34,5 +34,5 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical beh
 
 ## Experimental Features
 
-Available with compile-time features (platform-dependent — see [Release process — Build variants](../development/release-process.md#build-variants)): [UTXO commitments](../node/utxo-commitments.md) and [Dandelion++](../node/privacy-relay.md) in **`blvm` default features** (omitted from portable Windows/aarch64 release CI); BIP119 CTV, [Stratum V2 node demux](../node/mining-stratum-v2.md), sigop counting, and Quinn transport typically require explicit `--features`.
+Available with compile-time features (platform-dependent: see [Release process: Build variants](../development/release-process.md#build-variants)): [UTXO commitments](../node/utxo-commitments.md) and [Dandelion++](../node/privacy-relay.md) in **`blvm` default features** (omitted from portable Windows/aarch64 release CI); BIP119 CTV, [Stratum V2 node demux](../node/mining-stratum-v2.md), sigop counting, and Quinn transport typically require explicit `--features`.
 

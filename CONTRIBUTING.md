@@ -4,9 +4,9 @@ Thank you for your interest in improving BLVM documentation!
 
 ## Documentation philosophy
 
-Most of the published book is authored in **`src/`** in this repository. A **small set** of pages embed upstream Markdown at build time using mdBook’s **`{{#include}}`** from a populated **`modules/`** directory (governance narrative and governance **config YAML** verified in CI—see `.github/workflows/deploy.yml`).
+Most of the published book is authored in **`src/`** in this repository. A **small set** of pages embed upstream Markdown at build time using mdBook’s **`{{#include}}`** from a populated **`modules/`** directory (governance narrative and governance **config YAML** verified in CI, see `.github/workflows/deploy.yml`).
 
-**Governance policy numbers** (tier/layer/emergency thresholds and review days) use **`[[gov:KEY]]`** placeholders expanded at build by **`mdbook-governance-vars`** from that YAML. Do not hand-edit those literals—change [governance](https://github.com/BTCDecoded/governance) `config/*.yml` and allowlisted keys in `mdbook-governance-vars/`. See [Contributing to Documentation](src/appendices/contributing-docs.md) for wired chapters and `docs/GOVERNANCE_MDBOOK.md` for the ADR.
+**Governance policy numbers** (tier/layer/emergency thresholds and review days) use **`[[gov:KEY]]`** placeholders expanded at build by **`mdbook-governance-vars`** from that YAML. Do not hand-edit those literals, change [governance](https://github.com/BTCDecoded/governance) `config/*.yml` and allowlisted keys in `mdbook-governance-vars/`. See [Contributing to Documentation](src/appendices/contributing-docs.md) for wired chapters and `docs/GOVERNANCE_MDBOOK.md` for the ADR.
 
 Crate-specific guides (for example `blvm-consensus/docs/`) stay in those repositories; the unified site **links** to them or summarizes them here unless you add an explicit include.
 
@@ -40,13 +40,13 @@ Each source repository may keep its own tree, for example:
 
 ```
 repository-root/
-├── README.md                 # High-level overview
+├── README.md # High-level overview
 ├── docs/
-│   ├── README.md            # Documentation index
-│   ├── architecture.md      # Component architecture
-│   ├── guides/              # How-to guides
-│   ├── reference/           # Reference documentation
-│   └── examples/            # Code examples
+│ ├── README.md # Documentation index
+│ ├── architecture.md # Component architecture
+│ ├── guides/ # How-to guides
+│ ├── reference/ # Reference documentation
+│ └── examples/ # Code examples
 ```
 
 ## Contribution workflow
@@ -75,36 +75,36 @@ repository-root/
 
 1. Clone this repository:
 
-   ```bash
-   git clone https://github.com/BTCDecoded/blvm-docs.git
-   ```
+ ```bash
+ git clone https://github.com/BTCDecoded/blvm-docs.git
+ ```
 
-2. **Populate `modules/governance/`** — required when building chapters that `{{#include}}` governance prose or when running `./scripts/verify-book-inputs.sh`:
+2. **Populate `modules/governance/`**: required when building chapters that `{{#include}}` governance prose or when running `./scripts/verify-book-inputs.sh`:
 
-   - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md`
-   - (CI also requires `modules/governance/config/action-tiers.yml`, `repository-layers.yml`, and `emergency-tiers.yml` for deploy checks.)
+ - `modules/governance/README.md` and `modules/governance/GOVERNANCE.md`
+ - (CI also requires `modules/governance/config/action-tiers.yml`, `repository-layers.yml`, and `emergency-tiers.yml` for deploy checks.)
 
-   Clone from GitHub if needed ([governance](https://github.com/BTCDecoded/governance)). With a sibling checkout, from `blvm-docs/modules/`:
+ Clone from GitHub if needed ([governance](https://github.com/BTCDecoded/governance)). With a sibling checkout, from `blvm-docs/modules/`:
 
-   ```bash
-   ln -sf ../../governance governance
-   ```
+ ```bash
+ ln -sf ../../governance governance
+ ```
 
-   The **[Orange Paper](https://thebitcoincommons.org/orange-paper.html)** and **[Consensus Spec](https://thebitcoincommons.org/spec.html)** are **not** included in this book—see [reference/orange-paper.md](src/reference/orange-paper.md).
+ The **[Orange Paper](https://thebitcoincommons.org/orange-paper.html)** and **[Consensus Spec](https://thebitcoincommons.org/spec.html)** are **not** included in this book, see [reference/orange-paper.md](src/reference/orange-paper.md).
 
 3. Serve locally:
 
-   ```bash
-   mdbook serve
-   ```
+ ```bash
+ mdbook serve
+ ```
 
 4. Open `http://localhost:3000` and review your changes.
 
 5. Check links where appropriate:
 
-   ```bash
-   mdbook test
-   ```
+ ```bash
+ mdbook test
+ ```
 
 ## Review process
 

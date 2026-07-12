@@ -2,7 +2,7 @@
 
 ## Overview
 
-The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by **build features** via `default_backend()` — **not** by host OS. **heed3 (LMDB)** wins when the `heed3` feature is compiled in, then RocksDB, TidesDB, Redb, Sled. **`blvm` / `blvm-node` Cargo.toml defaults enable `heed3`**, so **`auto` → heed3** on a normal local build and on **Linux x86_64** release artifacts. **Windows portable** and **Linux aarch64** cross-release builds include **heed3** (bundled LMDB) plus **redb/sled** fallbacks — omit **rocksdb** and other native-heavy deps. There **`auto` → heed3**. See [Configuration Reference](../reference/configuration-reference.md).
+The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by **build features** via `default_backend()`: **not** by host OS. **heed3 (LMDB)** wins when the `heed3` feature is compiled in, then RocksDB, TidesDB, Redb, Sled. **`blvm` / `blvm-node` Cargo.toml defaults enable `heed3`**, so **`auto` → heed3** on a normal local build and on **Linux x86_64** release artifacts. **Windows portable** and **Linux aarch64** cross-release builds include **heed3** (bundled LMDB) plus **redb/sled** fallbacks: omit **rocksdb** and other native-heavy deps. There **`auto` → heed3**. See [Configuration Reference](../reference/configuration-reference.md).
 
 ## Supported Backends
 
@@ -56,7 +56,7 @@ LMDB map size defaults to **64 GiB** (`max(65536, dbcache_mb × 128)` MB). Overr
 database_backend = "heed3"
 
 [storage.heed3]
-# map_size_mb = 65536   # default; required headroom for mainnet UTXO set
+# map_size_mb = 65536 # default; required headroom for mainnet UTXO set
 max_readers = 512
 ```
 
@@ -79,32 +79,32 @@ When `database_backend = "auto"`, the node picks the **first compiled-in backend
 
 ```mermaid
 flowchart TD
-  START[database_backend] --> AUTO{auto?}
-  AUTO -->|No| PIN[Use pinned backend]
-  AUTO -->|Yes| P1{heed3 feature?}
-  P1 -->|yes| H[heed3]
-  P1 -->|no| P2{rocksdb feature?}
-  P2 -->|yes| R[rocksdb]
-  P2 -->|no| P3{tidesdb feature?}
-  P3 -->|yes| T[tidesdb]
-  P3 -->|no| P4{redb feature?}
-  P4 -->|yes| RD[redb]
-  P4 -->|no| S[sled]
-  PIN --> OPEN{Opens OK?}
-  H --> OPEN
-  R --> OPEN
-  T --> OPEN
-  RD --> OPEN
-  S --> OPEN
-  OPEN -->|No| FB[fallback_backend — next enabled]
-  OPEN -->|Yes| RUN[Store under data_dir]
+ START[database_backend] --> AUTO{auto?}
+ AUTO -->|No| PIN[Use pinned backend]
+ AUTO -->|Yes| P1{heed3 feature?}
+ P1 -->|yes| H[heed3]
+ P1 -->|no| P2{rocksdb feature?}
+ P2 -->|yes| R[rocksdb]
+ P2 -->|no| P3{tidesdb feature?}
+ P3 -->|yes| T[tidesdb]
+ P3 -->|no| P4{redb feature?}
+ P4 -->|yes| RD[redb]
+ P4 -->|no| S[sled]
+ PIN --> OPEN{Opens OK?}
+ H --> OPEN
+ R --> OPEN
+ T --> OPEN
+ RD --> OPEN
+ S --> OPEN
+ OPEN -->|No| FB[fallback_backend: next enabled]
+ OPEN -->|Yes| RUN[Store under data_dir]
 ```
 
-**Core chainstate import** requires the **`rocksdb`** feature — use `blvm migrate core` / auto-migrate, independent of `auto` selection above.
+**Core chainstate import** requires the **`rocksdb`** feature: use `blvm migrate core` / auto-migrate, independent of `auto` selection above.
 
 ### Selection order (`auto`)
 
-1. **heed3 / LMDB** (if the `heed3` feature is enabled — default in standard builds)
+1. **heed3 / LMDB** (if the `heed3` feature is enabled: default in standard builds)
 2. **RocksDB** (if the `rocksdb` feature is enabled)
 3. **TidesDB** (if the `tidesdb` feature is enabled and neither heed3 nor RocksDB is)
 4. **Redb** (if the `redb` feature is enabled and no higher-priority backend is)
@@ -116,17 +116,17 @@ At least one backend feature must be enabled at build time. If the chosen backen
 
 ### Core LevelDB interop {#core-leveldb-interop}
 
-Bitcoin Core **`chainstate/`** uses **LevelDB** (`.ldb` / `.log` files). BLVM’s **`rocksdb`** migration path reads typical Core layouts via a dedicated LevelDB reader — **not** by opening chainstate as a native RocksDB database.
+Bitcoin Core **`chainstate/`** uses **LevelDB** (`.ldb` / `.log` files). BLVM’s **`rocksdb`** migration path reads typical Core layouts via a dedicated LevelDB reader: **not** by opening chainstate as a native RocksDB database.
 
 | Layout | Expected use |
 |--------|----------------|
 | Core **`chainstate/`** + **`blocks/`** | **`blvm start --data-dir …`** or **`blvm migrate core`** with **`rocksdb`** feature; imports into **`<datadir>/blvm/`** |
-| Mixed or corrupt index (`.ldb` + stray `.sst`, wrong magic) | Migration fails — **do not** `rm -rf` blindly; stop the node, back up the datadir, fix or use a fresh Core sync |
+| Mixed or corrupt index (`.ldb` + stray `.sst`, wrong magic) | Migration fails: **do not** `rm -rf` blindly; stop the node, back up the datadir, fix or use a fresh Core sync |
 | Existing **`{datadir}/heed3/`** or **`rocksdb/`** BLVM store | Core drop-in does **not** overwrite; use a fresh datadir or explicit backend choice |
 
-Portable Windows/aarch64 builds without **`rocksdb`** cannot run Core chainstate migration — use Linux x86_64 / default-feature builds or sync without Core import.
+Portable Windows/aarch64 builds without **`rocksdb`** cannot run Core chainstate migration: use Linux x86_64 / default-feature builds or sync without Core import.
 
-See [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir) and [Troubleshooting — Corrupted database](../appendices/troubleshooting.md#corrupted-database).
+See [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir) and [Troubleshooting: Corrupted database](../appendices/troubleshooting.md#corrupted-database).
 
 
 ### Automatic Fallback
@@ -147,8 +147,8 @@ The storage layer uses one database abstraction interface:
 
 ```rust
 pub trait Database: Send + Sync {
-    fn open_tree(&self, name: &str) -> Result<Box<dyn Tree>>;
-    fn flush(&self) -> Result<()>;
+ fn open_tree(&self, name: &str) -> Result<Box<dyn Tree>>;
+ fn flush(&self) -> Result<()>;
 }
 ```
 
@@ -157,12 +157,12 @@ pub trait Database: Send + Sync {
 
 ```rust
 pub trait Tree: Send + Sync {
-    fn insert(&self, key: &[u8], value: &[u8]) -> Result<()>;
-    fn get(&self, key: &[u8]) -> Result<Option<Vec<u8>>>;
-    fn remove(&self, key: &[u8]) -> Result<()>;
-    fn contains_key(&self, key: &[u8]) -> Result<bool>;
-    fn len(&self) -> Result<usize>;
-    fn iter(&self) -> Box<dyn Iterator<Item = Result<(Vec<u8>, Vec<u8>)>> + '_>;
+ fn insert(&self, key: &[u8], value: &[u8]) -> Result<()>;
+ fn get(&self, key: &[u8]) -> Result<Option<Vec<u8>>>;
+ fn remove(&self, key: &[u8]) -> Result<()>;
+ fn contains_key(&self, key: &[u8]) -> Result<bool>;
+ fn len(&self) -> Result<usize>;
+ fn iter(&self) -> Box<dyn Iterator<Item = Result<(Vec<u8>, Vec<u8>)>> + '_>;
 }
 ```
 
@@ -213,7 +213,7 @@ Transaction indexing:
 ```toml
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto"  # typical release: heed3 (LMDB); or "rocksdb" | "tidesdb" | "redb" | "sled"
+database_backend = "auto" # typical release: heed3 (LMDB); or "rocksdb" | "tidesdb" | "redb" | "sled"
 ```
 
 **Options**:
@@ -295,7 +295,7 @@ With the **`rocksdb`** feature (**`blvm` default features**; omitted from portab
 
 After success, **`blvm_meta/migration.json`** marks the store; interrupted runs resume via **`blvm_meta/migration_checkpoint.json`**.
 
-**Reuse Core block files (default):** `storage.reuse_core_block_files` defaults to **`true`**. Migration converts the UTXO set and builds indexes under **`blvm/`** but **leaves Core `blocks/` in place** — BLVM reads **`blk*.dat`** via a fallback reader. **Do not delete** the Core **`blocks/`** directory while this mode is active. Disable with **`storage.reuse_core_block_files = false`** or **`BLVM_REUSE_CORE_BLOCK_FILES=0`** to copy block bodies into the BLVM store (requires roughly double disk space for blocks).
+**Reuse Core block files (default):** `storage.reuse_core_block_files` defaults to **`true`**. Migration converts the UTXO set and builds indexes under **`blvm/`** but **leaves Core `blocks/` in place**: BLVM reads **`blk*.dat`** via a fallback reader. **Do not delete** the Core **`blocks/`** directory while this mode is active. Disable with **`storage.reuse_core_block_files = false`** or **`BLVM_REUSE_CORE_BLOCK_FILES=0`** to copy block bodies into the BLVM store (requires roughly double disk space for blocks).
 
 **Pruned Core:** migration may fail if block files do not cover the chain tip; use a full node datadir or disable reuse and accept limited coverage.
 
@@ -352,4 +352,4 @@ The storage layer handles backend failures gracefully:
 
 - [Node Configuration](configuration.md) - Storage configuration options
 - [Node Operations](operations.md) - Storage operations and maintenance
-- [Pruning](#pruning-support) — pruning configuration on this page; see also [Node configuration](configuration.md)
+- [Pruning](#pruning-support): pruning configuration on this page; see also [Node configuration](configuration.md)

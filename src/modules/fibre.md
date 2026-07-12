@@ -11,7 +11,7 @@ UDP/FEC **block** relay as a **loadable Commons module**. Distinct from Dandelio
 
 The node core advertises **`NODE_FIBRE`** on P2P and emits companion-UDP events when peers advertise FIBRE (UDP port = peer TCP port + 1) for dynamic peer registration.
 
-Wire types and `FibreConfig` live in **`blvm-protocol`** (`fibre` feature). The module crate owns UDP, Reed–Solomon, and relay logic.
+Wire types and `FibreConfig` live in **`blvm-protocol`** (`fibre` feature). The module crate owns UDP, Reed-Solomon, and relay logic.
 
 **Repository:** [BTCDecoded/blvm-fibre](https://github.com/BTCDecoded/blvm-fibre)
 
@@ -31,7 +31,7 @@ registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/
 blvm-fibre = "0.1.*"
 ```
 
-Or place a release binary + `module.toml` on the module search path. See [Module catalog — Installing modules](overview.md#installing-modules).
+Or place a release binary + `module.toml` on the module search path. See [Module catalog: Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
@@ -47,14 +47,14 @@ Module `config.toml` (or `[modules.blvm-fibre]` overrides):
 
 FEC and timeout options are under the nested **`fibre`** table (`FibreConfig` in protocol), including **`fibre.enabled`**.
 
-Example — follow node P2P port (mainnet P2P 8333 → FIBRE UDP 8334):
+Example: follow node P2P port (mainnet P2P 8333 → FIBRE UDP 8334):
 
 ```toml
 udp_follow_node_tcp_plus_one = true
 register_peers_from_p2p = true
 ```
 
-Example — static peer:
+Example: static peer:
 
 ```toml
 [[fibre_peers]]
@@ -97,6 +97,6 @@ udp_addr = "203.0.113.10:8334"
 
 ## See also
 
-- [Privacy relay](../node/privacy-relay.md) — Dandelion++ and `NODE_FIBRE` peer registration
+- [Privacy relay](../node/privacy-relay.md): Dandelion++ and `NODE_FIBRE` peer registration
 - [Module IPC Protocol](../architecture/module-ipc-protocol.md)
 - [Building modules](../sdk/module-development.md)

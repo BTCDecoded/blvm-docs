@@ -32,4 +32,4 @@ Before publishing or bumping MSRV:
 2. Update **`Cargo.toml`** **`rust-version`** when language features require it.
 3. Record MSRV changes in changelog / release notes.
 
-Operator-facing summary when policy shifts: **[Deployment posture](https://docs.thebitcoincommons.org/security/deployment-posture.html)** and repo **`CONTRIBUTING.md`**.
+Operator-facing summary when policy shifts: **[Deployment posture](https://docs.thebitcoincommons.org/security/deployment-posture.html)** and repo **[Contributing](../development/contributing.md)**.

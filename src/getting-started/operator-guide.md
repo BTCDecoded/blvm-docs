@@ -13,22 +13,22 @@ How-to hub for running a BLVM node. You do not need the Consensus, Protocol, or 
 | Config, RPC verify, and mainnet IBD | [First Node Setup](first-node.md) ([mainnet IBD](first-node.md#mainnet-initial-sync)) |
 | Regtest local dev (5 min) | [Quick Start](quick-start.md) |
 | Start / stop / backup | [Node Operations](../node/operations.md) |
-| Import Bitcoin Core datadir | [Operations — Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) |
+| Import Bitcoin Core datadir | [Operations: Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) |
 | Configuration file and env | [Node configuration](../node/configuration.md) |
 | All config keys (reference) | [Configuration Reference](../reference/configuration-reference.md) |
 
 ## Initial block download (IBD) {#initial-block-download-ibd}
 
-Mainnet first sync touches several docs—use this map instead of reading them in arbitrary order.
+Mainnet first sync touches several docs, use this map instead of reading them in arbitrary order.
 
 | Topic | Guide |
 |------|--------|
-| First mainnet sync (config, RPC verify, checklist) | [First Node Setup — Mainnet IBD](first-node.md#mainnet-initial-sync) |
-| Parallel download, chunk tuning, assume-valid | [Performance — Parallel IBD](../node/performance.md#parallel-initial-block-download-ibd) |
+| First mainnet sync (config, RPC verify, checklist) | [First Node Setup: Mainnet IBD](first-node.md#mainnet-initial-sync) |
+| Parallel download, chunk tuning, assume-valid | [Performance: Parallel IBD](../node/performance.md#parallel-initial-block-download-ibd) |
 | Optional age-tiered UTXO store (`BLVM_IBD_ENGINE=1`) | [IBD UTXO engine](../node/ibd-engine.md) |
 | Bandwidth limits when **serving** peers during their IBD | [IBD bandwidth protection](../node/ibd-protection.md) |
-| Stuck, slow, or quiet sync | [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
-| `[ibd]` keys and `BLVM_IBD_*` env vars | [Configuration Reference — IBD](../reference/configuration-reference.md#ibd-configuration) |
+| Stuck, slow, or quiet sync | [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
+| `[ibd]` keys and `BLVM_IBD_*` env vars | [Configuration Reference: IBD](../reference/configuration-reference.md#ibd-configuration) |
 
 ## Security before mainnet
 
@@ -44,7 +44,7 @@ Mainnet first sync touches several docs—use this map instead of reading them i
 |------|--------|
 | JSON-RPC methods and parity | [RPC API Reference](../node/rpc-api.md) |
 | Error codes | [JSON-RPC error reference](../reference/rpc-errors.md) |
-| Health / metrics / logs | [Operations — Monitoring](../node/operations.md#monitoring) |
+| Health / metrics / logs | [Operations: Monitoring](../node/operations.md#monitoring) |
 
 ## Storage and network
 
@@ -80,6 +80,6 @@ Mainnet first sync touches several docs—use this map instead of reading them i
 
 ## When you need deeper context
 
-- [Stack overview](../architecture/system-overview.md) — what the crates are
-- [Node overview](../node/overview.md) — node architecture
-- [API Index](../reference/api-index.md) — cross-repo API map
+- [Stack overview](../architecture/system-overview.md): what the crates are
+- [Node overview](../node/overview.md): node architecture
+- [API Index](../reference/api-index.md): cross-repo API map

@@ -38,7 +38,7 @@ After load, the module registers **`blvm sync-policy …`** CLI with the node (`
 
 Use `blvm sync-policy --help` when the module is loaded for current flags.
 
-**Auth:** Module CLI calls admin RPC (`runmodulecli`). Pass the **same `--config`** as the running node; the CLI uses `[rpc_auth].admin_tokens` (Bearer), `tokens`, or `username`/`password` from that file — see [Quick Start](../getting-started/quick-start.md).
+**Auth:** Module CLI calls admin RPC (`runmodulecli`). Pass the **same `--config`** as the running node; the CLI uses `[rpc_auth].admin_tokens` (Bearer), `tokens`, or `username`/`password` from that file: see [Quick Start](../getting-started/quick-start.md).
 
 ## Local development (workspace builds)
 
@@ -47,9 +47,9 @@ Release **governance** builds verify native module binaries against the GitHub r
 For workspace testing:
 
 - Install the built binary under `modules/blvm-selective-sync/` with matching `module.toml`, **and** either:
-  - add a `[binary].hash` for the built artifact, **or**
-  - clear the default registry: `registry_url = ""` in `[modules]`, **or**
-  - bootstrap from the published registry (pin + default `registry_url`).
+ - add a `[binary].hash` for the built artifact, **or**
+ - clear the default registry: `registry_url = ""` in `[modules]`, **or**
+ - bootstrap from the published registry (pin + default `registry_url`).
 - Confirm load with `listmodules` (non-empty) before `blvm sync-policy …`; `runmodulecli` blocks while the module subprocess is down.
 - **`loadmodule`** uses the same **`ModuleLoader`** discovery and checksum path as auto-load (registry governance when `registry_url` is set). The module must stay running; a crash removes it from `listmodules` immediately.
 
@@ -60,14 +60,14 @@ Module `config.toml` (under `<modules.data_dir>/blvm-selective-sync/`; overridab
 | Key | Purpose |
 |-----|---------|
 | `registries` | Registry URLs |
-| `min_registry_agreement` | Quorum threshold (0.0–1.0) |
+| `min_registry_agreement` | Quorum threshold (0.0-1.0) |
 | `registry_refresh_interval` | Periodic refresh interval (seconds) |
 | `witness_mode` | `strict` (default) or `relaxed` |
 | `ibd_filter_enabled` | Strip flagged witnesses during IBD persistence |
 | `on_chain_registry_builder` | Index flagged txs from each `NewBlock` |
 | `audit_log` / `audit_log_path` | Optional audit trail |
 
-Example — enable IBD witness filtering:
+Example: enable IBD witness filtering:
 
 ```toml
 ibd_filter_enabled = true
@@ -91,12 +91,12 @@ After `refresh` or `apply`, merged tx/block hashes are pushed to the node via `m
 
 When `ibd_filter_enabled = true`, the module exposes **`filter_block_before_store`** via `ModuleAPI`. During parallel IBD, the node calls this hook before writing witness blobs to the blockstore. Flagged witness stacks are emptied; the module publishes `IBDBlockFiltered` events.
 
-The node integration is generic (`blvm-node` `module/pipeline.rs`) — not selective-sync-specific code in `parallel_ibd/`. On IPC failure the node **fail-opens** (stores unfiltered data).
+The node integration is generic (`blvm-node` `module/pipeline.rs`): not selective-sync-specific code in `parallel_ibd/`. On IPC failure the node **fail-opens** (stores unfiltered data).
 
 ## Implementation notes
 
 - Binary uses `run_module_with_setup_and_api` (mesh pattern) for CLI + ModuleAPI IPC.
-- Periodic refresh uses module-local `tokio::interval` in `setup` — not `register_timer`.
+- Periodic refresh uses module-local `tokio::interval` in `setup`: not `register_timer`.
 - Repository: [blvm-selective-sync](https://github.com/BTCDecoded/blvm-selective-sync).
 
 ## See also

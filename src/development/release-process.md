@@ -12,7 +12,7 @@ The release pipeline automatically triggers when:
 
 - A commit is pushed to the `main` branch in any repository
 - The commit changes code files (not just documentation)
-- **Paths ignored**: `**.md`, `.github/**`, `docs/**`
+- **Paths ignored**: markdown files, `.github/**`, `docs/**`
 
 **What happens**:
 1. Version is auto-incremented (patch version: X.Y.Z → X.Y.(Z+1))
@@ -60,13 +60,13 @@ BLVM uses [Semantic Versioning](https://semver.org/):
 - **MINOR** (0.X.0): New features, backward compatible
 - **PATCH** (0.0.X): Bug fixes, backward compatible
 
-## Release notes — deployment maturity (**D4**)
+## Release notes: deployment maturity (**D4**)
 
 Operator-facing artifacts should include **one sentence** pointing at **[Deployment posture](https://docs.thebitcoincommons.org/security/deployment-posture.html)** (RPC exposure, QUIC × auth limits) and **[RPC transport × authentication](https://docs.thebitcoincommons.org/security/rpc-transport-auth-matrix.html)**.
 
 Example:
 
-> Operators remain responsible for `[rpc_auth]` on non-loopback RPC; QUIC JSON-RPC uses HTTP/3 and shares the Bearer/`RpcAuthManager` contract with TCP HTTP — still treat the UDP QUIC listener as its own exposure surface. See Deployment posture and RPC transport × authentication in the BLVM docs.
+> Operators remain responsible for `[rpc_auth]` on non-loopback RPC; QUIC JSON-RPC uses HTTP/3 and shares the Bearer/`RpcAuthManager` contract with TCP HTTP: still treat the UDP QUIC listener as its own exposure surface. See Deployment posture and RPC transport × authentication in the BLVM docs.
 
 ## Build Process
 
@@ -88,7 +88,7 @@ Stable **GitHub Releases** ship one **base** binary set per tag (see [Release ar
 
 **Purpose**: Default binaries on GitHub Releases and GHCR stable tags.
 
-**Cargo features** (platform-specific — see CI `ci.yml`):
+**Cargo features** (platform-specific: see CI `ci.yml`):
 
 | Platform | Build command (summary) | Feature set |
 |----------|-------------------------|-------------|
@@ -115,15 +115,15 @@ Core P2P, RPC, storage, modules, **iroh**, **dandelion**, **sigop**, **governanc
 
 **Use for**: Development, testing, and operators who compile locally.
 
-See [Installation — Experimental build variant](../getting-started/installation.md#experimental-variant).
+See [Installation: Experimental build variant](../getting-started/installation.md#experimental-variant).
 
 ### Platforms
 
 Stable release artifacts include:
 
-- **Linux x86_64** — `.deb`, `.rpm`, Arch `.pkg.tar.gz`, standalone binary, `.tar.gz`
-- **Linux aarch64** — standalone binary, `.tar.gz`
-- **Windows x86_64** — portable `.exe`, `.zip` (MinGW `gnu` target)
+- **Linux x86_64**: `.deb`, `.rpm`, Arch `.pkg.tar.gz`, standalone binary, `.tar.gz`
+- **Linux aarch64**: standalone binary, `.tar.gz`
+- **Windows x86_64**: portable `.exe`, `.zip` (MinGW `gnu` target)
 
 Rolling **nightly** binaries and `ghcr.io/btcdecoded/blvm:nightly` are published from the `develop` branch (see [Release channels](#release-channels)).
 
@@ -148,7 +148,7 @@ Each release tag produces platform archives (Linux `.tar.gz`, Windows `.zip`, pl
 
 ### Release Notes
 
-Automatically generated `RELEASE_NOTES.md` includes:
+Automatically generated release notes includes:
 
 - Release date
 - Component versions
@@ -223,7 +223,7 @@ The pipeline creates a GitHub release with:
 
 - **Tag**: Version tag (e.g., `v0.1.0`)
 - **Title**: `Bitcoin Commons v0.1.0`
-- **Body**: Generated from `RELEASE_NOTES.md`
+- **Body**: Generated from release notes
 - **Artifacts**: All binary archives and checksums
 - **Type**: Official release (not prerelease)
 
@@ -243,7 +243,7 @@ To avoid compiling all dependencies when building the final `blvm` binary, all l
 2. **blvm-consensus** (depends on primitives)
 3. **blvm-protocol** (depends on consensus + primitives)
 4. **blvm-node** (depends on protocol + consensus)
-5. **blvm-sdk** (depends on protocol + consensus; optional **blvm-node** via features)—**not** independent of the consensus stack
+5. **blvm-sdk** (depends on protocol + consensus; optional **blvm-node** via features), **not** independent of the consensus stack
 6. **blvm-commons** (depends on sdk + protocol)
 7. **`blvm`** binary crate (depends on **blvm-node**) when publishing the CLI
 
@@ -301,9 +301,9 @@ The `blvm/versions.toml` file tracks:
 1. **Download artifacts** from GitHub release
 2. **Download SHA256SUMS** file
 3. **Verify checksums**:
-   ```bash
-   sha256sum -c SHA256SUMS
-   ```
+ ```bash
+ sha256sum -c SHA256SUMS
+ ```
 4. **Verify signatures** (if GPG signing is enabled)
 
 ### Verifying Deterministic Builds
@@ -387,7 +387,7 @@ Announce releases through:
 
 ## Upgrading an existing deployment {#upgrading-an-existing-deployment}
 
-Before upgrading, read [GitHub Releases](https://github.com/BTCDecoded/blvm/releases) for breaking config, storage, or RPC changes. Stop the node, back up the datadir, then replace the binary — see [Node Operations — Updates](../node/operations.md#updates).
+Before upgrading, read [GitHub Releases](https://github.com/BTCDecoded/blvm/releases) for breaking config, storage, or RPC changes. Stop the node, back up the datadir, then replace the binary: see [Node Operations: Updates](../node/operations.md#updates).
 
 ## Additional Resources
 

@@ -10,18 +10,18 @@ The stack implements consensus from the spec, abstracts protocol variants, ships
 
 ```mermaid
 graph TB
-    L1[Orange Paper<br/>Mathematical Foundation]
-    L2[blvm-consensus<br/>Pure Math Implementation]
-    L3[blvm-protocol<br/>Protocol Abstraction]
-    L4[blvm-node<br/>Full Node Implementation]
-    L5[blvm-sdk<br/>Developer Toolkit]
-    L6[blvm-commons<br/>Governance Enforcement]
-    
-    L1 -->|direct implementation| L2
-    L2 -->|protocol abstraction| L3
-    L3 -->|full node| L4
-    L4 -->|ergonomic API| L5
-    L5 -->|cryptographic governance| L6
+ L1[Orange Paper<br/>Mathematical Foundation]
+ L2[blvm-consensus<br/>Pure Math Implementation]
+ L3[blvm-protocol<br/>Protocol Abstraction]
+ L4[blvm-node<br/>Full Node Implementation]
+ L5[blvm-sdk<br/>Developer Toolkit]
+ L6[blvm-commons<br/>Governance Enforcement]
+ 
+ L1 -->|direct implementation| L2
+ L2 -->|protocol abstraction| L3
+ L3 -->|full node| L4
+ L4 -->|ergonomic API| L5
+ L5 -->|cryptographic governance| L6
 ```
 
 ## Component Overview
@@ -83,7 +83,7 @@ graph TB
 
 - Dependencies between layers are strictly enforced in the **crate graph** (application layers do not reimplement consensus).
 - Consensus rule modifications are prevented in application layers by design (validation calls into **blvm-consensus**).
-- The [Orange Paper](../reference/orange-paper.md) is the specification; **blvm-consensus** is checked with [formal verification](../consensus/formal-verification.md), tests, and review—not a single proof of the entire spec in one step.
+- The [Orange Paper](../reference/orange-paper.md) is the specification; **blvm-consensus** is checked with [formal verification](../consensus/formal-verification.md), tests, and review, not a single proof of the entire spec in one step.
 - Version coordination (Cargo / release sets) keeps compatible crate versions together.
 
 ## Key Features
@@ -101,7 +101,7 @@ graph TB
 - Protocol evolution support
 
 ### Node and operational features
-- Full Bitcoin node–style functionality (when configured and secured appropriately)
+- Full Bitcoin node-style functionality (when configured and secured appropriately)
 - [Performance optimizations](../node/performance.md) (PGO, parallel validation)
 - [Multiple storage backends](../node/storage-backends.md) with automatic fallback
 - [Multi-transport networking](../node/transport-abstraction.md) (TCP, QUIC, Iroh)

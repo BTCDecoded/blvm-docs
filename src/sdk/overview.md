@@ -21,8 +21,8 @@ The developer SDK (`blvm-sdk`) provides governance infrastructure and a composit
 
 For **node modules** (process-isolated extensions), blvm-sdk provides:
 
-- **`blvm_sdk::module::prelude`** and **`run_module!` / `run_module_main!`** — bootstrap, DB, IPC main loop without hand-written event plumbing.
-- **`blvm-sdk-macros`** — `#[module]`, `#[command]`, `#[rpc_method]`, `#[on_event]`, `#[config]`, `#[migration]`, etc., to declare CLI, RPC, events, and config in one place.
+- **`blvm_sdk::module::prelude`** and **`run_module!` / `run_module_main!`**: bootstrap, DB, IPC main loop without hand-written event plumbing.
+- **`blvm-sdk-macros`**: `#[module]`, `#[command]`, `#[rpc_method]`, `#[on_event]`, `#[config]`, `#[migration]`, etc., to declare CLI, RPC, events, and config in one place.
 
 Requires the **`node`** feature on `blvm-sdk`. See [Building modules](module-development.md) (especially [SDK declarative style](module-development.md#sdk-declarative-style-recommended)) and the [hello-module](https://github.com/BTCDecoded/blvm-sdk/tree/main/examples/hello-module) example.
 
@@ -66,7 +66,7 @@ Declarative node composition from modules:
 
 ```rust
 use blvm_sdk::governance::{
-    GovernanceKeypair, GovernanceMessage, Multisig
+ GovernanceKeypair, GovernanceMessage, Multisig
 };
 
 // Generate a keypair
@@ -74,8 +74,8 @@ let keypair = GovernanceKeypair::generate()?;
 
 // Create a message to sign
 let message = GovernanceMessage::Release {
-    version: "v1.0.0".to_string(),
-    commit_hash: "abc123".to_string(),
+ version: "v1.0.0".to_string(),
+ commit_hash: "abc123".to_string(),
 };
 
 // Sign the message
@@ -111,7 +111,7 @@ Uses Bitcoin message signing standards:
 1. **Governance Crypto is Reusable**: Clean library API for external consumers
 2. **No GitHub Logic**: SDK is pure cryptography + composition, not enforcement
 3. **Bitcoin-Compatible**: Uses Bitcoin message signing standards
-4. **Test coverage**: Treat governance crypto as security-critical—target exhaustive unit and integration tests before release
+4. **Test coverage**: Treat governance crypto as security-critical, target exhaustive unit and integration tests before release
 5. **Document for Consumers**: Governance app developers are the customer
 
 ## What This Is NOT
@@ -131,18 +131,18 @@ blvm-keygen --output alice.key --format pem
 
 # Sign a release
 blvm-sign release \
-  --version v1.0.0 \
-  --commit abc123 \
-  --key alice.key \
-  --output signature.txt
+ --version v1.0.0 \
+ --commit abc123 \
+ --key alice.key \
+ --output signature.txt
 
 # Verify signatures
 blvm-verify release \
-  --version v1.0.0 \
-  --commit abc123 \
-  --signatures sig1.txt,sig2.txt,sig3.txt,sig4.txt,sig5.txt,sig6.txt \
-  --threshold [[gov:layer_1_signatures]] \
-  --pubkeys keys.json
+ --version v1.0.0 \
+ --commit abc123 \
+ --signatures sig1.txt,sig2.txt,sig3.txt,sig4.txt,sig5.txt,sig6.txt \
+ --threshold [[gov:layer_1_signatures]] \
+ --pubkeys keys.json
 ```
 
 ### Library Usage
@@ -155,8 +155,8 @@ let keypair = GovernanceKeypair::generate()?;
 
 // Sign message
 let message = GovernanceMessage::Release {
-    version: "v1.0.0".to_string(),
-    commit_hash: "abc123".to_string(),
+ version: "v1.0.0".to_string(),
+ commit_hash: "abc123".to_string(),
 };
 let signature = keypair.sign(&message.to_signing_bytes())?;
 ```

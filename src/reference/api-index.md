@@ -19,7 +19,7 @@ For full Rust type/signature documentation, build `cargo doc --open` in each cra
 
 ### Foundation (blvm-primitives)
 
-Shared types, serialization, and crypto live in **blvm-primitives**. **blvm-consensus** depends on primitives and re-exports many types; **blvm-protocol** and **blvm-node** use those types through the Cargo dependency graph on consensus and protocol crates—not ad hoc duplicated definitions.
+Shared types, serialization, and crypto live in **blvm-primitives**. **blvm-consensus** depends on primitives and re-exports many types; **blvm-protocol** and **blvm-node** use those types through the Cargo dependency graph on consensus and protocol crates, not ad hoc duplicated definitions.
 
 **Key areas:** types (Transaction, Block, BlockHeader, UTXO, Script, etc.), serialization, cryptographic operations, opcodes, constants.
 
@@ -29,7 +29,7 @@ Shared types, serialization, and crypto live in **blvm-primitives**. **blvm-cons
 
 Block and script logic live in the `block/` and `script/` submodules (directories), not single files. Canonical types and crypto are in blvm-primitives and re-exported by consensus.
 
-**Core Functions** (Orange Paper spec names) — full catalog: [Consensus function catalog](#consensus-function-catalog-orange-paper-names) below.
+**Core Functions** (Orange Paper spec names): full catalog: [Consensus function catalog](#consensus-function-catalog-orange-paper-names) below.
 
 - `CheckTransaction` - Validate transaction structure and signatures
 - `ConnectBlock` - Validate and connect block to chain
@@ -91,21 +91,21 @@ Reference list for contributors and spec readers. Rust paths: [blvm-consensus](h
 
 ```rust
 pub trait NodeAPI {
-    async fn get_block(&self, hash: &Hash) -> Result<Option<Block>, ModuleError>;
-    async fn get_block_header(&self, hash: &Hash) -> Result<Option<BlockHeader>, ModuleError>;
-    async fn get_transaction(&self, hash: &Hash) -> Result<Option<Transaction>, ModuleError>;
-    async fn has_transaction(&self, hash: &Hash) -> Result<bool, ModuleError>;
-    async fn get_chain_tip(&self) -> Result<Hash, ModuleError>;
-    async fn get_block_height(&self) -> Result<u64, ModuleError>;
-    async fn get_utxo(&self, outpoint: &OutPoint) -> Result<Option<UTXO>, ModuleError>;
-    async fn subscribe_events(&self, event_types: Vec<EventType>) -> Result<Receiver<ModuleMessage>, ModuleError>;
-    // … plus P2P serve denylists, get_sync_status, ban_peer, maintenance mode — see trait.
+ async fn get_block(&self, hash: &Hash) -> Result<Option<Block>, ModuleError>;
+ async fn get_block_header(&self, hash: &Hash) -> Result<Option<BlockHeader>, ModuleError>;
+ async fn get_transaction(&self, hash: &Hash) -> Result<Option<Transaction>, ModuleError>;
+ async fn has_transaction(&self, hash: &Hash) -> Result<bool, ModuleError>;
+ async fn get_chain_tip(&self) -> Result<Hash, ModuleError>;
+ async fn get_block_height(&self) -> Result<u64, ModuleError>;
+ async fn get_utxo(&self, outpoint: &OutPoint) -> Result<Option<UTXO>, ModuleError>;
+ async fn subscribe_events(&self, event_types: Vec<EventType>) -> Result<Receiver<ModuleMessage>, ModuleError>;
+ // … plus P2P serve denylists, get_sync_status, ban_peer, maintenance mode: see trait.
 }
 ```
 
 The full **`NodeAPI`** surface includes **events** (`subscribe_events`) and **targeted writes** for P2P policy (block/tx `getdata` denylists), **sync status**, **peer ban**, and **maintenance mode**; see [Module development](../sdk/module-development.md#querying-node-data).
 
-**Event Types:** Catalog of shared **`EventType`** variants (not every module emits every type — see [module pages](../modules/overview.md)).
+**Event Types:** Catalog of shared **`EventType`** variants (not every module emits every type: see [module pages](../modules/overview.md)).
 - `EventType::NewBlock` - New block connected to chain
 - `EventType::NewTransaction` - New transaction in mempool
 - `EventType::BlockDisconnected` - Block disconnected (chain reorg)
@@ -129,10 +129,10 @@ The full **`NodeAPI`** surface includes **events** (`subscribe_events`) and **ta
 
 ```rust
 pub struct ModuleContext {
-    pub module_id: String,
-    pub socket_path: String,
-    pub data_dir: String,
-    pub config: HashMap<String, String>,
+ pub module_id: String,
+ pub socket_path: String,
+ pub data_dir: String,
+ pub config: HashMap<String, String>,
 }
 ```
 
@@ -140,15 +140,15 @@ pub struct ModuleContext {
 
 #### RPC API
 
-**RPC Methods:** JSON-RPC methods aligned with widely documented Bitcoin node APIs. **75 core methods** in `CORE_RPC_METHODS` — full list in [RPC API Reference](../node/rpc-api.md#available-methods). Module-loaded methods (mesh, miniscript overrides) register at runtime.
+**RPC Methods:** JSON-RPC methods aligned with widely documented Bitcoin node APIs. **75 core methods** in `CORE_RPC_METHODS`: full list in [RPC API Reference](../node/rpc-api.md#available-methods). Module-loaded methods (mesh, miniscript overrides) register at runtime.
 
-**Key categories (summary — not exhaustive):**
-- **Blockchain / raw tx / mempool / network / mining / control** — Core parity surface (`getblockchaininfo`, `sendrawtransaction`, `getblocktemplate`, `generatetoaddress`, …)
-- **Module lifecycle** — `loadmodule`, `unloadmodule`, `listmodules`, `getmoduleclispecs`, `runmodulecli` (**admin**; local discovery; optional **`[modules].marketplace_fetch_enabled`** for remote fetch via `blvm-marketplace`)
+**Key categories (summary: not exhaustive):**
+- **Blockchain / raw tx / mempool / network / mining / control**: Core parity surface (`getblockchaininfo`, `sendrawtransaction`, `getblocktemplate`, `generatetoaddress`, …)
+- **Module lifecycle**: `loadmodule`, `unloadmodule`, `listmodules`, `getmoduleclispecs`, `runmodulecli` (**admin**; local discovery; optional **`[modules].marketplace_fetch_enabled`** for remote fetch via `blvm-marketplace`)
 - **Mesh** (requires `blvm-mesh` loaded): `meshsendpacket`, `meshpollreceived`, `meshquoteroute`, `meshrequesthopinvoice`
 - **Miniscript overrides** (requires `blvm-miniscript`): `getdescriptorinfo`, `analyzepsbt`
 - **Payment verification** (compile-time `bip70-http` / `ctv`; platform-dependent): `verifyonchainpayment`, `verifyonchainpaymentbytx`, `verifycovenantproof`, `createpaymentrequest`
-- **REST `/api/v1/*`** — separate server; enable with **`[rest_api].enabled`** (`rest-api` feature; see [REST API](../node/rpc-api.md#rest-api))
+- **REST `/api/v1/*`**: separate server; enable with **`[rest_api].enabled`** (`rest-api` feature; see [REST API](../node/rpc-api.md#rest-api))
 
 **Documentation:** See [RPC API Reference](../node/rpc-api.md).
 
@@ -227,13 +227,13 @@ let result = transaction::check_transaction(&tx)?;
 
 // Connect block using direct module function
 let (result, new_utxo_set, _undo_log) = block::connect_block(
-    &block,
-    &witnesses,
-    utxo_set,
-    height,
-    None,
-    network_time,
-    network,
+ &block,
+ &witnesses,
+ utxo_set,
+ height,
+ None,
+ network_time,
+ network,
 )?;
 ```
 

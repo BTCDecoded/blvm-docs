@@ -45,7 +45,7 @@ Indexes transactions by output value ranges:
 | **`eager`** (default) | Address and value indexes updated during block connect when `enable_*` is true |
 | **`lazy`** | Advanced indexes deferred until first query (`get_transactions_by_address` / value-range query scans and persists), or built in a background thread when **`background_indexing = true`** |
 
-**`max_indexed_addresses`**: cap distinct address keys in the address index (`0` = unlimited). **`enable_compression`**: zstd-compress auxiliary index blobs when enabled in config (requires **`compression`** in the binary — part of **`blvm` default features**; omitted from portable Windows/aarch64 release builds). **`background_indexing`**: with **`lazy`**, enqueue per-block advanced indexing on a `txindex-bg` thread instead of blocking connect or waiting for a query.
+**`max_indexed_addresses`**: cap distinct address keys in the address index (`0` = unlimited). **`enable_compression`**: zstd-compress auxiliary index blobs when enabled in config (requires **`compression`** in the binary: part of **`blvm` default features**; omitted from portable Windows/aarch64 release builds). **`background_indexing`**: with **`lazy`**, enqueue per-block advanced indexing on a `txindex-bg` thread instead of blocking connect or waiting for a query.
 
 
 ## Configuration

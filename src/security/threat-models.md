@@ -4,7 +4,7 @@
 
 Bitcoin Commons implements security boundaries and threat models to protect against various attack vectors. The system uses defense-in-depth principles with multiple layers of security.
 
-**Operator-facing maturity language** (required / recommended / unsupported for deployments) lives in **[Deployment posture](deployment-posture.md)** — use that page for bind addresses, RPC exposure, and QUIC × auth limitations.
+**Operator-facing maturity language** (required / recommended / unsupported for deployments) lives in **[Deployment posture](deployment-posture.md)**: use that page for bind addresses, RPC exposure, and QUIC × auth limitations.
 
 ## Security Boundaries
 
@@ -26,7 +26,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 - Cryptographic key generation (delegated to blvm-sdk or modules)
 - Governance enforcement (delegated to blvm-commons)
 
-**Consensus validation and timing:** `blvm-consensus` **verifies** signatures and scripts on **public** block data only—variable-time verify paths are appropriate. It does **not** sign or hold private keys. Secret-path **constant-time** signing lives in **`blvm-secp256k1`** ([TIMING.md](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md)); governance signing in **blvm-sdk** delegates there. Spec-lock ([Formal Verification](../consensus/formal-verification.md)) checks consensus **conformance**, not side-channels.
+**Consensus validation and timing:** `blvm-consensus` **verifies** signatures and scripts on **public** block data only, variable-time verify paths are appropriate. It does **not** sign or hold private keys. Secret-path **constant-time** signing lives in **`blvm-secp256k1`** ([timing policy](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md)); governance signing in **blvm-sdk** delegates there. Spec-lock ([Formal Verification](../consensus/formal-verification.md)) checks consensus **conformance**, not side-channels.
 
 
 ### Module System Security Boundaries
@@ -338,13 +338,13 @@ For complete documentation, see [LAN Peering System](../node/lan-peering.md).
 
 ## Source
 
-- [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
-- [MODULE_SYSTEM.md](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
-- [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
+- [security policy](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
+- [module system security](https://github.com/BTCDecoded/blvm-node/blob/main/docs/MODULE_SYSTEM.md)
+- [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 - [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/mod.rs)
 - [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/mod.rs)
 - [lan_security.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/lan_security.rs)
-- [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
+- [security policy](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 - [module/](https://github.com/BTCDecoded/blvm-node/tree/main/src/module/)
 ## See Also
 

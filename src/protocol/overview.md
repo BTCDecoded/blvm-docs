@@ -4,7 +4,7 @@ The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple var
 
 ## Architecture Position
 
-**Stack layer 3** — protocol abstraction between [blvm-consensus](../consensus/overview.md) and [blvm-node](../node/overview.md).
+**Stack layer 3**: protocol abstraction between [blvm-consensus](../consensus/overview.md) and [blvm-node](../node/overview.md).
 
 ```
 1. Orange Paper (mathematical foundation)
@@ -46,9 +46,9 @@ The `BitcoinProtocolEngine` is the main interface:
 
 ```rust
 pub struct BitcoinProtocolEngine {
-    version: ProtocolVersion,
-    network_params: NetworkParams,
-    config: ProtocolConfig,
+ version: ProtocolVersion,
+ network_params: NetworkParams,
+ config: ProtocolConfig,
 }
 ```
 
@@ -159,9 +159,9 @@ GCS compact block filters and filter header chain. Node handlers and UTXO-commit
 
 Implemented Bitcoin Improvement Proposals:
 
-- **BIP152**: Compact Block Relay — [above](#compact-blocks)
-- **BIP157**: Client-side Block Filtering — [above](#bip157-158)
-- **BIP158**: Compact Block Filters — [above](#bip157-158)
+- **BIP152**: Compact Block Relay: [above](#compact-blocks)
+- **BIP157**: Client-side Block Filtering: [above](#bip157-158)
+- **BIP158**: Compact Block Filters: [above](#bip157-158)
 - **BIP173/350/351**: Bech32/Bech32m Address Encoding
 - **BIP70**: Payment Protocol
 
@@ -174,7 +174,7 @@ The protocol layer supports protocol evolution:
 - **Feature Management**: Enable/disable features based on version
 - **Breaking Changes**: Track and manage protocol evolution
 - **Backward Compatibility**: Maintain compatibility with existing nodes
-- **Wire and transport**: P2P message formats and Bitcoin-compatible peer behavior live in **blvm-protocol**; the reference node delivers them over [transports](../node/transport-abstraction.md) (TCP by default; optional QUIC-based paths where features enable them). Treat **encrypted Bitcoin P2P (BIP324)** and other transport experiments as **build- and release-specific**—see **`blvm-protocol`** and **`blvm-node`** features and release notes rather than assuming one global default.
+- **Wire and transport**: P2P message formats and Bitcoin-compatible peer behavior live in **blvm-protocol**; the reference node delivers them over [transports](../node/transport-abstraction.md) (TCP by default; optional QUIC-based paths where features enable them). Treat **encrypted Bitcoin P2P (BIP324)** and other transport experiments as **build- and release-specific**, see **`blvm-protocol`** and **`blvm-node`** features and release notes rather than assuming one global default.
 
 ## Usage Example
 
@@ -191,7 +191,7 @@ println!("Port: {}", params.default_port);
 
 // Check feature support
 if engine.supports_feature("segwit") {
-    println!("SegWit is supported");
+ println!("SegWit is supported");
 }
 ```
 
@@ -199,7 +199,7 @@ if engine.supports_feature("segwit") {
 
 - [network_params.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network_params.rs)
 - [lib.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/lib.rs)
-- [`network.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network.rs) (`NetworkMessage`), [`wire/mod.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs) (command names and serialization)
+- [network.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/network.rs) (`NetworkMessage`), [wire/mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs) (command names and serialization)
 - [service_flags.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/service_flags.rs)
 - [validation.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/validation.rs)
 - [commons.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/commons.rs) (message structs); [utxo_commitments/mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/mod.rs) (UTXO commitment protocol)

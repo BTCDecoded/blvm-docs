@@ -1,6 +1,6 @@
 # Governance module (`blvm-governance`)
 
-On-chain proposal tracking and optional webhook notifications for **`blvm-node`**. Distinct from the **Bitcoin Commons governance framework** documented under [Governance](../governance/overview.md) — this page covers the **loadable module** only.
+On-chain proposal tracking and optional webhook notifications for **`blvm-node`**. Distinct from the **Bitcoin Commons governance framework** documented under [Governance](../governance/overview.md): this page covers the **loadable module** only.
 
 ## Overview
 
@@ -33,6 +33,6 @@ Module data dir config: `<modules.data_dir>/blvm-governance/config.toml` (same k
 
 ## See also
 
-- [Governance overview](../governance/overview.md) — tiers, layers, signatures (not this module)
+- [Governance overview](../governance/overview.md): tiers, layers, signatures (not this module)
 - [Module catalog](overview.md)
 - [Installing modules](overview.md#installing-modules)

@@ -105,9 +105,9 @@ The PR can be merged.
 - **Requirement**: Post-mortem required
 
 **Severity classes** (incident path; see [Emergency Procedures](#emergency-procedures)):
-- **Critical** — network-threatening (short maximum duration once activated)
-- **Urgent security** — serious issues (intermediate duration cap)
-- **Elevated priority** — important but not critical (longer cap)
+- **Critical**: network-threatening (short maximum duration once activated)
+- **Urgent security**: serious issues (intermediate duration cap)
+- **Elevated priority**: important but not critical (longer cap)
 
 **Examples**:
 - Critical security vulnerability
@@ -119,7 +119,7 @@ The PR can be merged.
 **Scope**: Changes to governance rules themselves
 
 **Requirements**:
-- **Signatures**: Special process (5-of-7 maintainers + 2-of-3 emergency keyholders) — see [governance `GOVERNANCE.md`](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md) and [`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md) (not the `action-tiers.yml` row alone)
+- **Signatures**: Special process (5-of-7 maintainers + 2-of-3 emergency keyholders): see [governance policy](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md) and [action tiers](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md) (not the `action-tiers.yml` row alone)
 - **Review Period**: [[gov:tier_5_review_days]] days
 
 **Examples**:
@@ -149,7 +149,7 @@ See [Layer-Tier Model](../governance/layer-tier-model.md) for the complete decis
 
 In addition to tier requirements, layers have their own signature requirements:
 
-- **Layer 1–2 (Constitutional)**: [[gov:layer_1_signatures]] maintainers, [[gov:layer_1_review_days]] days ([[gov:layer_1_consensus_review_days]] days for consensus changes)
+- **Layer 1-2 (Constitutional)**: [[gov:layer_1_signatures]] maintainers, [[gov:layer_1_review_days]] days ([[gov:layer_1_consensus_review_days]] days for consensus changes)
 - **Layer 3 (Implementation)**: [[gov:layer_3_signatures]] maintainers, [[gov:layer_3_review_days]] days
 - **Layer 4 (Application)**: [[gov:layer_4_signatures]] maintainers, [[gov:layer_4_review_days]] days
 - **Layer 5 (Extension)**: [[gov:layer_5_signatures]] maintainers, [[gov:layer_5_review_days]] days
@@ -162,13 +162,13 @@ The most restrictive requirement (layer or tier) applies.
 
 1. **Review PR**: Understand the change and its impact
 2. **Generate signature**: Use `blvm-sign` from blvm-sdk:
-   ```bash
-   blvm-sign --message "Approve PR #123" --key ~/.blvm/maintainer.key
-   ```
+ ```bash
+ blvm-sign --message "Approve PR #123" --key ~/.blvm/maintainer.key
+ ```
 3. **Post signature**: Comment on PR:
-   ```
-   /governance-sign <signature>
-   ```
+ ```
+ /governance-sign <signature>
+ ```
 4. **Governance App verifies**: Cryptographically verifies signature
 5. **Status check updates**: Shows signature count progress
 
@@ -182,7 +182,7 @@ The Governance App cryptographically verifies each signature:
 
 ## Emergency Procedures
 
-The numbered **governance tiers** (Tier 1–5) above describe normal pull-request classification. **Emergency response classes** are a separate axis: when incident handling is escalated, parameters follow the [governance](https://github.com/BTCDecoded/governance) repo's `config/emergency-tiers.yml` (activation by **[[gov:emergency_critical_activation]] emergency keyholders**, then the thresholds below). **Do not confuse "Critical emergency" here with governance Tier 1**, which means routine maintenance PRs.
+The numbered **governance tiers** (Tier 1-5) above describe normal pull-request classification. **Emergency response classes** are a separate axis: when incident handling is escalated, parameters follow the [governance](https://github.com/BTCDecoded/governance) repo's `config/emergency-tiers.yml` (activation by **[[gov:emergency_critical_activation]] emergency keyholders**, then the thresholds below). **Do not confuse "Critical emergency" here with governance Tier 1**, which means routine maintenance PRs.
 
 **Governance Tier 4** (PR classification for emergency merges) remains **[[gov:tier_4_signatures]]** maintainers and **[[gov:tier_4_review_days]]-day** review as in the Tier 4 section above. The classes below describe **post-activation** incident governance on the wider maintainer pool where the YAML specifies **7** eligible signers.
 
@@ -218,7 +218,7 @@ The numbered **governance tiers** (Tier 1–5) above describe normal pull-reques
 
 ### 2. Be Patient
 
-Effective review time is set by **combining [repository layer](../governance/layer-tier-model.md) and governance tier** (most restrictive wins). The bullets below are **tier-only** floors where the layer does not impose something stricter—for example, a **Tier 1** change in a **Layer 3** repository can still require **[[gov:matrix_3_1_review_days]] days** (see the matrix in the Layer-Tier Model).
+Effective review time is set by **combining [repository layer](../governance/layer-tier-model.md) and governance tier** (most restrictive wins). The bullets below are **tier-only** floors where the layer does not impose something stricter, for example, a **Tier 1** change in a **Layer 3** repository can still require **[[gov:matrix_3_1_review_days]] days** (see the matrix in the Layer-Tier Model).
 
 - **Tier 1**: [[gov:tier_1_review_days]] days minimum when layer allows
 - **Tier 2**: [[gov:tier_2_review_days]] days minimum when layer allows

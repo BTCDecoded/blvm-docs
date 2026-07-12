@@ -83,11 +83,11 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 use proptest::prelude::*;
 
 proptest! {
-    #[test]
-    fn prop_function_invariant(input in strategy) {
-        let result = function_under_test(input);
-        prop_assert!(result.property_holds());
-    }
+ #[test]
+ fn prop_function_invariant(input in strategy) {
+ let result = function_under_test(input);
+ prop_assert!(result.property_holds());
+ }
 }
 ```
 
@@ -104,7 +104,7 @@ let tx_strategy = prop::collection::vec(tx_strategy, 1..1000);
 
 // Custom strategy
 let block_strategy = (height_strategy, tx_strategy).prop_map(|(h, txs)| {
-    Block::new(h, txs)
+ Block::new(h, txs)
 });
 ```
 
@@ -129,11 +129,11 @@ Test that invariants hold across all inputs:
 
 ```rust
 proptest! {
-    #[test]
-    fn prop_subsidy_non_negative(height in 0u64..10_000_000) {
-        let subsidy = get_block_subsidy(height);
-        prop_assert!(subsidy >= 0);
-    }
+ #[test]
+ fn prop_subsidy_non_negative(height in 0u64..10_000_000) {
+ let subsidy = get_block_subsidy(height);
+ prop_assert!(subsidy >= 0);
+ }
 }
 ```
 
@@ -143,12 +143,12 @@ Test that operations are reversible:
 
 ```rust
 proptest! {
-    #[test]
-    fn prop_serialization_round_trip(tx in tx_strategy()) {
-        let serialized = serialize(&tx);
-        let deserialized = deserialize(&serialized)?;
-        prop_assert_eq!(tx, deserialized);
-    }
+ #[test]
+ fn prop_serialization_round_trip(tx in tx_strategy()) {
+ let serialized = serialize(&tx);
+ let deserialized = deserialize(&serialized)?;
+ prop_assert_eq!(tx, deserialized);
+ }
 }
 ```
 
@@ -158,12 +158,12 @@ Test that functions are deterministic:
 
 ```rust
 proptest! {
-    #[test]
-    fn prop_deterministic(input in input_strategy()) {
-        let result1 = function(input.clone());
-        let result2 = function(input);
-        prop_assert_eq!(result1, result2);
-    }
+ #[test]
+ fn prop_deterministic(input in input_strategy()) {
+ let result1 = function(input.clone());
+ let result2 = function(input);
+ prop_assert_eq!(result1, result2);
+ }
 }
 ```
 
@@ -173,11 +173,11 @@ Test that values stay within bounds:
 
 ```rust
 proptest! {
-    #[test]
-    fn prop_value_bounded(value in 0i64..MAX_MONEY) {
-        let result = process_value(value);
-        prop_assert!(result >= 0 && result <= MAX_MONEY);
-    }
+ #[test]
+ fn prop_value_bounded(value in 0i64..MAX_MONEY) {
+ let result = process_value(value);
+ prop_assert!(result >= 0 && result <= MAX_MONEY);
+ }
 }
 ```
 
@@ -258,11 +258,11 @@ Default: 256 test cases per property test
 
 ```rust
 proptest! {
-    #![proptest_config(ProptestConfig::with_cases(1000))]
-    #[test]
-    fn prop_test(input in strategy) {
-        // ...
-    }
+ #![proptest_config(ProptestConfig::with_cases(1000))]
+ #[test]
+ fn prop_test(input in strategy) {
+ // ...
+ }
 }
 ```
 
@@ -272,14 +272,14 @@ Default: 65536 shrink iterations
 
 ```rust
 proptest! {
-    #![proptest_config(ProptestConfig {
-        max_shrink_iters: 10000,
-        ..ProptestConfig::default()
-    })]
-    #[test]
-    fn prop_test(input in strategy) {
-        // ...
-    }
+ #![proptest_config(ProptestConfig {
+ max_shrink_iters: 10000,
+ ..ProptestConfig::default()
+ })]
+ #[test]
+ fn prop_test(input in strategy) {
+ // ...
+ }
 }
 ```
 
@@ -289,7 +289,7 @@ Property tests complement **BLVM Specification Lock** (Z3 proofs on spec-locked 
 
 - **Spec-lock**: Formal proofs tied to Orange Paper contracts
 - **Proptest**: Randomized invariant sampling over strategies
-- **Together**: Complementary layers; see [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
+- **Together**: Complementary layers; see [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 
 ## Components
 
@@ -306,7 +306,7 @@ The property-based testing system includes:
 ## Source
 
 - [blvm-consensus/tests/consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
-- [blvm-consensus/tests/unit/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/unit/) — comprehensive, script opcode, segwit/taproot property tests
+- [blvm-consensus/tests/unit/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/unit/): comprehensive, script opcode, segwit/taproot property tests
 - [blvm-consensus/tests/cross_bip_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/cross_bip_property_tests.rs)
 ## See Also
 

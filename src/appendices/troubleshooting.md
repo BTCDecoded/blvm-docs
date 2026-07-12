@@ -4,7 +4,7 @@ Common issues and solutions when running BLVM nodes. See [Node Operations](../no
 
 ## Symptom guide
 
-Start from what you observe — each row links to a section on this page.
+Start from what you observe: each row links to a section on this page.
 
 | If you see… | Go to |
 |-------------|--------|
@@ -20,11 +20,11 @@ Start from what you observe — each row links to a section on this page.
 
 ## Mainnet IBD
 
-First-time sync setup: [First Node Setup — Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync).
+First-time sync setup: [First Node Setup: Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync).
 
 | Symptom | Fix |
 |---------|-----|
-| Quiet 15–60s after start | Wait for peer discovery → `IBD:` lines |
+| Quiet 15-60s after start | Wait for peer discovery → `IBD:` lines |
 | P2P **8333** in use | Stop Core or change `listen_addr` |
 | `blvm sync` won't connect | `blvm --network mainnet --config … sync` |
 | Slow / stalled sync | Auto-LAN when Core on LAN; else `BLVM_IBD_PEERS=<ip>:8333` |
@@ -73,7 +73,7 @@ blvm --data-dir ~/.blvm
 | Wrong chain after migrate | Set **`--network`** to match the Core datadir (mainnet / testnet / regtest) |
 | Re-import on every start | Check **`blvm_meta/migration.json`** under the BLVM store; use **`--no-auto-migrate`** after a successful migrate |
 | Pruned Core datadir | Use a full node copy; default **`reuse_core_block_files`** requires readable block files at the tip |
-| Disk filling during migrate | Default should **not** copy blocks; if copying, set **`reuse_core_block_files = false`** explicitly — otherwise check you are not re-migrating into a fresh store with reuse disabled |
+| Disk filling during migrate | Default should **not** copy blocks; if copying, set **`reuse_core_block_files = false`** explicitly: otherwise check you are not re-migrating into a fresh store with reuse disabled |
 | Interrupted migrate | Resume with **`blvm migrate core`** or restart with auto-migrate; checkpoint at **`blvm_meta/migration_checkpoint.json`** |
 
 See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
@@ -94,11 +94,11 @@ See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a
 **Solution**:
 
 1. **Stop the node** before deleting anything.
-2. Identify the active backend under `{data_dir}` — e.g. `heed3/`, `rocksdb/`, `redb/`, `sled/`, `tidesdb/` (see [Storage backends](../node/storage-backends.md)).
+2. Identify the active backend under `{data_dir}`: e.g. `heed3/`, `rocksdb/`, `redb/`, `sled/`, `tidesdb/` (see [Storage backends](../node/storage-backends.md)).
 3. Back up the datadir, then remove only the corrupted backend subtree (not generic `data/blocks` / `data/chainstate` Core paths unless you intentionally reset a Core-import layout).
 4. Restart; expect resync or migration depending on what you removed.
 
-For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb` + `.sst` index), see [Storage backends — Core LevelDB interop](../node/storage-backends.md#core-leveldb-interop) and use `blvm config convert-core` / migration tooling rather than blind `rm -rf`.
+For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb` + `.sst` index), see [Storage backends: Core LevelDB interop](../node/storage-backends.md#core-leveldb-interop) and use `blvm config convert-core` / migration tooling rather than blind `rm -rf`.
 
 ## Network Issues
 
@@ -120,7 +120,7 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 - Check network stability
 - Verify protocol version compatibility
 - Review node logs for specific error messages
-- Adjust transport in **`blvm.toml`** (`transport_preference = "tcponly"`, etc.) or set **`BLVM_NODE_TRANSPORT`** (e.g. `tcp_only`) — there is no `--transport` flag on **`blvm`**
+- Adjust transport in **`blvm.toml`** (`transport_preference = "tcponly"`, etc.) or set **`BLVM_NODE_TRANSPORT`** (e.g. `tcp_only`): there is no `--transport` flag on **`blvm`**
 
 ## RPC Issues
 
@@ -140,7 +140,7 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 **Solutions**:
 - Configure **`[rpc_auth]`** tokens (or `RPC_AUTH_TOKENS` / `token_file`) when `required = true`
 - Send `Authorization: Bearer <token>` on HTTP JSON-RPC requests
-- For **admin-only** methods (`generatetoaddress`, `getblocktemplate`, `submitblock`, `loadmodule`, …), use a token listed in **`admin_tokens`** or HTTP Basic **`password`** — otherwise HTTP **403** (not JSON-RPC -32603). See [JSON-RPC error reference](../reference/rpc-errors.md#admin-only-methods)
+- For **admin-only** methods (`generatetoaddress`, `getblocktemplate`, `submitblock`, `loadmodule`, …), use a token listed in **`admin_tokens`** or HTTP Basic **`password`**: otherwise HTTP **403** (not JSON-RPC -32603). See [JSON-RPC error reference](../reference/rpc-errors.md#admin-only-methods)
 - For local development only, leave **`[rpc_auth].required = false`** (not for production)
 
 ### `savemempool` / mempool.dat errors

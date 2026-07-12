@@ -1,8 +1,8 @@
 # Node Implementation Overview
 
-The node implementation (`blvm-node`) is a minimal **reference** Bitcoin node: it adds only non-consensus infrastructure on top of the consensus and protocol layers. Treat mainnet and high-value deployments like any consensus-adjacent system—hardening, monitoring, and review are required. Consensus logic comes from [blvm-consensus](../consensus/overview.md), and protocol abstraction from [blvm-protocol](../protocol/overview.md).
+The node implementation (`blvm-node`) is a minimal **reference** Bitcoin node: it adds only non-consensus infrastructure on top of the consensus and protocol layers. Treat mainnet and high-value deployments like any consensus-adjacent system, hardening, monitoring, and review are required. Consensus logic comes from [blvm-consensus](../consensus/overview.md), and protocol abstraction from [blvm-protocol](../protocol/overview.md).
 
-**Release mainnet IBD:** [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync).
+**Release mainnet IBD:** [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync).
 
 ## Architecture
 
@@ -10,34 +10,34 @@ The node follows a layered architecture:
 
 ```mermaid
 graph TB
-    subgraph "blvm-node"
-        NM[Network Manager<br/>P2P networking, peer management]
-        SL[Storage Layer<br/>Block/UTXO storage]
-        RS[RPC Server<br/>JSON-RPC 2.0 API]
-        MM[Module Manager<br/>Process-isolated modules]
-        MP[Mempool Manager<br/>Transaction mempool]
-        MC[Mining Coordinator<br/>Block template generation]
-        PP[Payment Processor<br/>CTV support]
-    end
-    
-    PROTO[blvm-protocol<br/>Protocol abstraction]
-    CONS[blvm-consensus<br/>Consensus validation]
-    
-    NM --> PROTO
-    SL --> PROTO
-    MP --> PROTO
-    MC --> PROTO
-    PP --> PROTO
-    
-    PROTO --> CONS
-    
-    MM --> NM
-    MM --> SL
-    MM --> MP
-    
-    RS --> SL
-    RS --> MP
-    RS --> MC
+ subgraph "blvm-node"
+ NM[Network Manager<br/>P2P networking, peer management]
+ SL[Storage Layer<br/>Block/UTXO storage]
+ RS[RPC Server<br/>JSON-RPC 2.0 API]
+ MM[Module Manager<br/>Process-isolated modules]
+ MP[Mempool Manager<br/>Transaction mempool]
+ MC[Mining Coordinator<br/>Block template generation]
+ PP[Payment Processor<br/>CTV support]
+ end
+ 
+ PROTO[blvm-protocol<br/>Protocol abstraction]
+ CONS[blvm-consensus<br/>Consensus validation]
+ 
+ NM --> PROTO
+ SL --> PROTO
+ MP --> PROTO
+ MC --> PROTO
+ PP --> PROTO
+ 
+ PROTO --> CONS
+ 
+ MM --> NM
+ MM --> SL
+ MM --> MP
+ 
+ RS --> SL
+ RS --> MP
+ RS --> MC
 ```
 
 ## Key Components
@@ -53,7 +53,7 @@ graph TB
 
 ### Storage Layer
 - Database abstraction with multiple backends (see [Storage Backends](storage-backends.md))
-- **Bitcoin Core drop-in**: one-time import from a synced Core datadir into `<datadir>/blvm/` when the `rocksdb` feature is enabled (see [Operations — Starting from a Core datadir](operations.md#starting-from-a-bitcoin-core-datadir))
+- **Bitcoin Core drop-in**: one-time import from a synced Core datadir into `<datadir>/blvm/` when the `rocksdb` feature is enabled (see [Operations: Starting from a Core datadir](operations.md#starting-from-a-bitcoin-core-datadir))
 - Automatic backend fallback on failure
 - Block storage and indexing
 - UTXO set management
@@ -65,8 +65,8 @@ graph TB
 ### RPC Server
 - JSON-RPC 2.0 compliant API (see [RPC API Reference](rpc-api.md))
 - **Bearer token RBAC** (`tokens`, `admin_tokens`) and **HTTP Basic** (`username`, `password`) for ckpool / Core-style clients
-- Optional REST `/api/v1/*` when built with `rest-api` and **`[rest_api].enabled`** (separate bind; off by default — see [RPC API — REST](rpc-api.md#rest-api))
-- Optional JSON-RPC over QUIC / HTTP/3 (see [RPC API — QUIC](rpc-api.md#quic-rpc))
+- Optional REST `/api/v1/*` when built with `rest-api` and **`[rest_api].enabled`** (separate bind; off by default: see [RPC API: REST](rpc-api.md#rest-api))
+- Optional JSON-RPC over QUIC / HTTP/3 (see [RPC API: QUIC](rpc-api.md#quic-rpc))
 - Authentication and rate limiting
 - Method coverage
 
@@ -95,7 +95,7 @@ graph TB
 
 ### Payment Processing
 - CTV (CheckTemplateVerify) payment state machine when `ctv` compile-time feature is enabled
-- BIP70 HTTP payment RPC when `bip70-http` is in the binary (**`blvm` default features**; omitted from portable release builds — see [Installation](../getting-started/installation.md))
+- BIP70 HTTP payment RPC when `bip70-http` is in the binary (**`blvm` default features**; omitted from portable release builds: see [Installation](../getting-started/installation.md))
 - Lightning Network via optional **`blvm-lightning`** module (not core node RPC)
 - Payment vaults / covenant tooling in `blvm-node` payment layer (CTV-gated at runtime)
 
@@ -110,7 +110,7 @@ graph TB
 1. **Zero Consensus Re-implementation**: All consensus logic delegated to [blvm-consensus](../consensus/overview.md)
 2. **Protocol Abstraction**: Uses [blvm-protocol](../protocol/overview.md) for variant support (mainnet, testnet, regtest)
 3. **Pure Infrastructure**: Adds storage, networking, RPC, orchestration only
-4. **Feature-complete infrastructure**: Full node–style behavior (storage, P2P, RPC, modules) with [performance optimizations](performance.md); not a substitute for operational security review before production
+4. **Feature-complete infrastructure**: Full node-style behavior (storage, P2P, RPC, modules) with [performance optimizations](performance.md); not a substitute for operational security review before production
 
 ## Features
 
@@ -156,7 +156,7 @@ graph TB
 
 ### Integration Features
 - Governance webhook integration
-- ZeroMQ notifications (optional **`blvm-zmq`** module — see [ZMQ module](../modules/zmq.md))
+- ZeroMQ notifications (optional **`blvm-zmq`** module: see [ZMQ module](../modules/zmq.md))
 - Optional REST `/api/v1/*` (same caveats as [RPC Server](#rpc-server))
 - Module registry (P2P discovery)
 

@@ -4,11 +4,11 @@ Reference for BLVM node configuration options. Configuration can be provided via
 
 **On this page:** [Quick lookup](#quick-lookup-common-keys) · [File format](#configuration-file-format) · [Primary settings](#primary-settings) · [IBD](#ibd-configuration) · [Storage](#storage-configuration) · [Modules](#module-system-configuration) · [RPC](#rpc-configuration) · [Network](#network-configuration) · [Experimental](#experimental-features) · [CLI & ENV](#command-line-arguments)
 
-**Precedence:** CLI > ENV > config file > defaults. **Canonical defaults:** This reference is the source of truth; other docs (e.g. first-node, storage-backends) give examples—use this page when you need exact defaults.
+**Precedence:** CLI > ENV > config file > defaults. **Canonical defaults:** This reference is the source of truth; other docs (e.g. first-node, storage-backends) give examples, use this page when you need exact defaults.
 
 **Path expansion:** Path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, `ibd.snapshot_dir`) expand `~` to the home directory when loading from file.
 
-**Operator security:** Exposure classes (RPC / P2P / QUIC), **`[rpc_auth]`** expectations, and maturity language (**required / recommended / unsupported**) — **[Deployment posture](../security/deployment-posture.md)** and **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)**.
+**Operator security:** Exposure classes (RPC / P2P / QUIC), **`[rpc_auth]`** expectations, and maturity language (**required / recommended / unsupported**): **[Deployment posture](../security/deployment-posture.md)** and **[RPC transport × authentication](../security/rpc-transport-auth-matrix.md)**.
 
 ## Quick lookup (common keys)
 
@@ -16,13 +16,13 @@ Reference for BLVM node configuration options. Configuration can be provided via
 |------|----------------|
 | P2P listen address | `listen_addr` (top level) |
 | RPC bind | CLI `--rpc-addr` / `BLVM_RPC_ADDR` (not a `NodeConfig` port key). Defaults: mainnet `127.0.0.1:8332`, testnet `127.0.0.1:18332`, regtest `127.0.0.1:18443` |
-| RPC auth | `[rpc_auth]` — `required`, `tokens`, `admin_tokens`, `username`, `password` |
+| RPC auth | `[rpc_auth]`: `required`, `tokens`, `admin_tokens`, `username`, `password` |
 | Data directory | `[storage].data_dir` |
 | Database backend | `[storage].database_backend` (`auto`, `heed3`, `rocksdb`, …) |
 | Network variant | `protocol_version` (`BitcoinV1`, `Testnet3`, `Regtest`) |
 | Transport stack | `transport_preference` (`tcponly`, `hybrid`, …) |
 | Module directory | `[modules].modules_dir`, inline pins under `[modules]` |
-| IBD tuning | `[ibd]` and `BLVM_IBD_*` env vars — [Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync) |
+| IBD tuning | `[ibd]` and `BLVM_IBD_*` env vars: [Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync) |
 | Pruning | `[storage.pruning]` |
 | Logging | `[logging].level` |
 
@@ -37,7 +37,7 @@ Configuration files support both TOML (`.toml`) and JSON (`.json`) formats. TOML
 ```toml
 # blvm.toml
 listen_addr = "127.0.0.1:8333"
-transport_preference = "tcponly"  # TOML: tcponly | irohonly | quinnonly | hybrid | all
+transport_preference = "tcponly" # TOML: tcponly | irohonly | quinnonly | hybrid | all
 max_peers = 100
 protocol_version = "BitcoinV1"
 
@@ -84,11 +84,11 @@ This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` co
 - **TOML / JSON file**: serde uses **concatenated lowercase** variant names, e.g. **`tcponly`**, **`irohonly`**, **`quinnonly`**, **`hybrid`**, **`all`** (see `TransportPreferenceConfig` in `blvm-node`).
 - **`blvm` CLI / `BLVM_NODE_TRANSPORT`**: human-readable forms such as **`tcp_only`**, **`iroh_only`**, **`hybrid`**.
 - **Options** (semantic):
-  - TCP-only — Bitcoin P2P compatible (default)
-  - Quinn-only — requires `quinn` feature
-  - Iroh-only — requires `iroh` feature
-  - Hybrid — TCP + Iroh; requires `iroh` feature
-  - All — requires both `quinn` and `iroh` features
+ - TCP-only: Bitcoin P2P compatible (default)
+ - Quinn-only: requires `quinn` feature
+ - Iroh-only: requires `iroh` feature
+ - Hybrid: TCP + Iroh; requires `iroh` feature
+ - All: requires both `quinn` and `iroh` features
 - **Description**: Transport protocol selection. See [Transport Abstraction](../node/transport-abstraction.md) for details.
 
 #### `max_peers`
@@ -119,7 +119,7 @@ Assume-valid settings map to Bitcoin Core **`-assumevalid`** / **`-assumevalidha
 
 ### `block_validation.assume_valid_height`
 - **Type**: `integer` (block height)
-- **Default**: Network-dependent when unset — mainnet **912 683**, testnet **4 550 000**, regtest **0** (see `default_assume_valid_height_for_network` in `blvm-node`)
+- **Default**: Network-dependent when unset: mainnet **912 683**, testnet **4 550 000**, regtest **0** (see `default_assume_valid_height_for_network` in `blvm-node`)
 - **Description**: Skip script/signature verification for blocks below this height during connect. Block structure, Merkle roots, and proof-of-work are still validated.
 - **Example**: `assume_valid_height = 0` (validate all scripts)
 
@@ -132,12 +132,12 @@ Assume-valid settings map to Bitcoin Core **`-assumevalid`** / **`-assumevalidha
 
 ## IBD Configuration
 
-Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default **`mode = "parallel"`**. LAN peers are auto-preferred; WAN-only **`parallel`** sync uses multi-peer work-stealing unless **`BLVM_IBD_WAN_SINGLE_PEER=1`**. Bandwidth limits when **serving** IBD to peers: **`[ibd_protection]`** — [IBD Bandwidth Protection](../node/ibd-protection.md). Optional UTXO engine: **`BLVM_IBD_ENGINE=1`** — [IBD UTXO engine](../node/ibd-engine.md).
+Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default **`mode = "parallel"`**. LAN peers are auto-preferred; WAN-only **`parallel`** sync uses multi-peer work-stealing unless **`BLVM_IBD_WAN_SINGLE_PEER=1`**. Bandwidth limits when **serving** IBD to peers: **`[ibd_protection]`**: [IBD Bandwidth Protection](../node/ibd-protection.md). Optional UTXO engine: **`BLVM_IBD_ENGINE=1`**: [IBD UTXO engine](../node/ibd-engine.md).
 
 ### `ibd.chunk_size`
 - **Type**: `integer`
 - **Default**: `128`
-- **Description**: Blocks requested per download chunk. ENV **`BLVM_IBD_CHUNK_SIZE`** (allowed range 16–2000).
+- **Description**: Blocks requested per download chunk. ENV **`BLVM_IBD_CHUNK_SIZE`** (allowed range 16-2000).
 
 ### `ibd.download_timeout_secs`
 - **Type**: `integer` (seconds)
@@ -243,12 +243,12 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 - **Type**: `string` (enum)
 - **Default**: `"auto"`
 - **Options**:
-  - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default**, Linux x86_64 releases, and portable **Windows** / **Linux aarch64** cross-releases), else RocksDB, else TidesDB, else Redb, else Sled. **Not OS-specific** — only the compile-time feature set matters. Portable cross-builds omit rocksdb/nix but include heed3 (bundled LMDB via `lmdb-master3-sys`).
-  - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
-  - `"tidesdb"` - Use TidesDB (if available)
-  - `"heed3"` - Use heed3 / LMDB (requires `heed3` feature; UTXO values use rkyv encoding)
-  - `"redb"` - Use redb (pure Rust; common when building **without** RocksDB)
-  - `"sled"` - Use sled database (beta, fallback option)
+ - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default**, Linux x86_64 releases, and portable **Windows** / **Linux aarch64** cross-releases), else RocksDB, else TidesDB, else Redb, else Sled. **Not OS-specific**: only the compile-time feature set matters. Portable cross-builds omit rocksdb/nix but include heed3 (bundled LMDB via `lmdb-master3-sys`).
+ - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
+ - `"tidesdb"` - Use TidesDB (if available)
+ - `"heed3"` - Use heed3 / LMDB (requires `heed3` feature; UTXO values use rkyv encoding)
+ - `"redb"` - Use redb (pure Rust; common when building **without** RocksDB)
+ - `"sled"` - Use sled database (beta, fallback option)
 - **Description**: Database backend selection. System automatically falls back if preferred backend fails.
 
 #### `storage.heed3.map_size_mb`
@@ -374,14 +374,14 @@ mode = { type = "aggressive", keep_from_height = 0, keep_commitments = true, kee
 ```toml
 [storage.pruning]
 mode = { 
-    type = "custom",
-    keep_headers = true,              # Always required for PoW verification
-    keep_bodies_from_height = 0,
-    keep_commitments = false,
-    keep_filters = false,
-    keep_filtered_blocks = false,
-    keep_witnesses = false,
-    keep_tx_index = false
+ type = "custom",
+ keep_headers = true, # Always required for PoW verification
+ keep_bodies_from_height = 0,
+ keep_commitments = false,
+ keep_filters = false,
+ keep_filtered_blocks = false,
+ keep_witnesses = false,
+ keep_tx_index = false
 }
 ```
 Fine-grained control over what data to keep:
@@ -395,7 +395,7 @@ Fine-grained control over what data to keep:
 
 ### Storage compression (`[storage.compression]`)
 
-**Requires:** **`compression`** compile-time feature (in **`blvm` default features**; omitted from portable Windows/aarch64 release CI). **Off at runtime** until this table is present in `blvm.toml`. Block/witness zstd applies on all backends; **UTXO zstd is incompatible with heed3/rkyv** — use block/witness/index compression only on default heed3 builds, or set `database_backend = "rocksdb"` if you need UTXO compression.
+**Requires:** **`compression`** compile-time feature (in **`blvm` default features**; omitted from portable Windows/aarch64 release CI). **Off at runtime** until this table is present in `blvm.toml`. Block/witness zstd applies on all backends; **UTXO zstd is incompatible with heed3/rkyv**: use block/witness/index compression only on default heed3 builds, or set `database_backend = "rocksdb"` if you need UTXO compression.
 
 | Key | Default (when table present) | Description |
 |-----|------------------------------|-------------|
@@ -416,7 +416,7 @@ Optional address and value-range indexes (off by default). See [Transaction Inde
 | `enable_value_index` | `false` | Index outputs by logarithmic value bucket |
 | `strategy` | `"eager"` | `"eager"` = index at block connect; `"lazy"` = defer until query or background worker |
 | `max_indexed_addresses` | `0` | Cap distinct address keys (`0` = unlimited) |
-| `enable_compression` | `false` | zstd-compress index blobs (requires **`compression`** in binary — **`blvm` default features**; omitted from portable Windows/aarch64 release builds) |
+| `enable_compression` | `false` | zstd-compress index blobs (requires **`compression`** in binary: **`blvm` default features**; omitted from portable Windows/aarch64 release builds) |
 | `background_indexing` | `false` | With **`lazy`**, advanced indexing on `txindex-bg` thread after connect |
 
 ### UTXO Commitments Pruning (Experimental)
@@ -428,7 +428,7 @@ Optional address and value-range indexes (off by default). See [Transaction Inde
 keep_commitments = true
 keep_filtered_blocks = false
 generate_before_prune = true
-max_commitment_age_days = 0  # 0 = keep forever
+max_commitment_age_days = 0 # 0 = keep forever
 ```
 
 ### BIP158 Filter Pruning
@@ -438,8 +438,8 @@ max_commitment_age_days = 0  # 0 = keep forever
 ```toml
 [storage.pruning.bip158_filters]
 keep_filters = true
-keep_filter_headers = true  # Always required for verification
-max_filter_age_days = 0  # 0 = keep forever
+keep_filter_headers = true # Always required for verification
+max_filter_age_days = 0 # 0 = keep forever
 ```
 
 ## Module System Configuration
@@ -467,13 +467,13 @@ max_filter_age_days = 0  # 0 = keep forever
 ### `modules.registry_url`
 - **Type**: `string` (URL)
 - **Default**: `https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json`
-- **Description**: Discovery index (`modules.json`) for bootstrap-download of pinned modules missing on disk. Requires the `governance` feature on the `blvm` build (on by default). If unset, the node may fall back to **`[modules.blvm-marketplace] registry_url`** when that table exists — prefer setting this key on **`[modules]`** directly. See [Marketplace module](../modules/marketplace-module.md).
+- **Description**: Discovery index (`modules.json`) for bootstrap-download of pinned modules missing on disk. Requires the `governance` feature on the `blvm` build (on by default). If unset, the node may fall back to **`[modules.blvm-marketplace] registry_url`** when that table exists: prefer setting this key on **`[modules]`** directly. See [Marketplace module](../modules/marketplace-module.md).
 
 ### `modules.enabled_modules` (version pins)
 - **Type**: map of module name → semver constraint (inline `[modules]` keys, `[modules.enabled_modules]` table, or legacy array)
-- **Default**: `{}` (empty — no bootstrap; discover and auto-load only modules already under `modules_dir`)
+- **Default**: `{}` (empty: no bootstrap; discover and auto-load only modules already under `modules_dir`)
 - **Description**: Allowlist of modules to auto-load. Each entry may include a **version constraint**. When `registry_url` is set, missing modules (or on-disk versions that do not match the constraint) are **bootstrap-downloaded** from each module’s GitHub Releases (highest release matching the constraint).
-- **Constraints**: `0.1.*` (same major/minor), `0.*` (same major), exact `0.1.2`, or `*` / legacy array entry (unpinned — manifest from `main`, floating version).
+- **Constraints**: `0.1.*` (same major/minor), `0.*` (same major), exact `0.1.2`, or `*` / legacy array entry (unpinned: manifest from `main`, floating version).
 - **Example (inline pins)**:
 ```toml
 [modules]
@@ -481,7 +481,7 @@ registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/
 blvm-miniscript = "0.1.*"
 blvm-zmq = "0.1.*"
 ```
-- **Example (spawn overrides + pin — use `version` in the module table; inline `name = "…"` conflicts with `[modules.name]` in TOML)** — see [ZMQ module](../modules/zmq.md) for topic keys:
+- **Example (spawn overrides + pin: use `version` in the module table; inline `name = "…"` conflicts with `[modules.name]` in TOML)**: see [ZMQ module](../modules/zmq.md) for topic keys:
 ```toml
 [modules.blvm-zmq]
 version = "0.1.*"
@@ -518,12 +518,12 @@ network = "mainnet"
 
 ```toml
 [module_resource_limits]
-default_max_cpu_percent = 50              # CPU limit (0-100%)
-default_max_memory_bytes = 536870912     # Memory limit (512 MB)
-default_max_file_descriptors = 256       # File descriptor limit
-default_max_child_processes = 10         # Child process limit
-module_startup_wait_millis = 100         # Startup wait time
-module_socket_timeout_seconds = 5        # Socket timeout
+default_max_cpu_percent = 50 # CPU limit (0-100%)
+default_max_memory_bytes = 536870912 # Memory limit (512 MB)
+default_max_file_descriptors = 256 # File descriptor limit
+default_max_child_processes = 10 # Child process limit
+module_startup_wait_millis = 100 # Startup wait time
+module_socket_timeout_seconds = 5 # Socket timeout
 module_socket_check_interval_millis = 100
 module_socket_max_attempts = 50
 ```
@@ -575,13 +575,13 @@ module_socket_max_attempts = 50
 
 ### `[rest_api]` (config file only)
 
-Requires **`rest-api`** compile-time feature. When **`enabled = true`**, the node starts REST at startup on **`listen_addr`** or the default loopback port (**8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000**). See [RPC API — REST](../node/rpc-api.md#rest-api).
+Requires **`rest-api`** compile-time feature. When **`enabled = true`**, the node starts REST at startup on **`listen_addr`** or the default loopback port (**8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000**). See [RPC API: REST](../node/rpc-api.md#rest-api).
 
 ```toml
 [rest_api]
 enabled = true
-listen_addr = "127.0.0.1:8080"   # optional; defaults from RPC port
-payment_endpoints_enabled = false   # requires bip70-http when true
+listen_addr = "127.0.0.1:8080" # optional; defaults from RPC port
+payment_endpoints_enabled = false # requires bip70-http when true
 ```
 
 ## Network Configuration
@@ -590,75 +590,75 @@ payment_endpoints_enabled = false   # requires bip70-http when true
 
 ```toml
 [network_timing]
-target_peer_count = 8                    # Target outbound peers (typical deployments use a similar range)
-peer_connection_delay_seconds = 2         # Wait before connecting to database peers
-addr_relay_min_interval_seconds = 8640   # Min interval between addr broadcasts (2.4 hours)
-max_addresses_per_addr_message = 1000   # Max addresses per addr message
-max_addresses_from_dns = 100             # Max addresses from DNS seeds
+target_peer_count = 8 # Target outbound peers (typical deployments use a similar range)
+peer_connection_delay_seconds = 2 # Wait before connecting to database peers
+addr_relay_min_interval_seconds = 8640 # Min interval between addr broadcasts (2.4 hours)
+max_addresses_per_addr_message = 1000 # Max addresses per addr message
+max_addresses_from_dns = 100 # Max addresses from DNS seeds
 ```
 
 ### Request Timeouts
 
 ```toml
 [request_timeouts]
-async_request_timeout_seconds = 300       # Timeout for async requests (getheaders, getdata)
+async_request_timeout_seconds = 300 # Timeout for async requests (getheaders, getdata)
 utxo_commitment_request_timeout_seconds = 30
-request_cleanup_interval_seconds = 60    # Cleanup interval for expired requests
-pending_request_max_age_seconds = 300    # Max age before cleanup
+request_cleanup_interval_seconds = 60 # Cleanup interval for expired requests
+pending_request_max_age_seconds = 300 # Max age before cleanup
 ```
 
 ### DoS Protection
 
 ```toml
 [dos_protection]
-max_connections_per_window = 10           # Max connections per IP per window
-window_seconds = 60                       # Time window for rate limiting
-max_message_queue_size = 10000           # Max message queue size
-max_active_connections = 200             # Max active connections
-auto_ban_threshold = 3                   # Violations before auto-ban
-ban_duration_seconds = 3600              # Ban duration (1 hour)
+max_connections_per_window = 10 # Max connections per IP per window
+window_seconds = 60 # Time window for rate limiting
+max_message_queue_size = 10000 # Max message queue size
+max_active_connections = 200 # Max active connections
+auto_ban_threshold = 3 # Violations before auto-ban
+ban_duration_seconds = 3600 # Ban duration (1 hour)
 ```
 
 ### Relay Configuration
 
 ```toml
 [relay]
-max_relay_age = 3600                     # Max age for relayed items (1 hour)
-max_tracked_items = 10000                # Max items to track
-enable_block_relay = true                # Enable block relay
-enable_tx_relay = true                   # Enable transaction relay
-enable_dandelion = false                 # Enable Dandelion++ privacy relay
+max_relay_age = 3600 # Max age for relayed items (1 hour)
+max_tracked_items = 10000 # Max items to track
+enable_block_relay = true # Enable block relay
+enable_tx_relay = true # Enable transaction relay
+enable_dandelion = false # Enable Dandelion++ privacy relay
 ```
 
 ### Address Database
 
 ```toml
 [address_database]
-max_addresses = 10000                    # Max addresses to store
-expiration_seconds = 86400               # Address expiration (24 hours)
+max_addresses = 10000 # Max addresses to store
+expiration_seconds = 86400 # Address expiration (24 hours)
 ```
 
 ### Peer Rate Limiting
 
 ```toml
 [peer_rate_limiting]
-default_burst = 100                      # Token bucket burst size
-default_rate = 10                        # Messages per second
+default_burst = 100 # Token bucket burst size
+default_rate = 10 # Messages per second
 ```
 
 ### Ban List Sharing
 
 ```toml
 [ban_list_sharing]
-enabled = true                           # Enable ban list sharing
-share_mode = "periodic"                  # "immediate", "periodic", or "disabled"
-periodic_interval_seconds = 300          # Sharing interval (5 minutes)
-min_ban_duration_to_share = 3600         # Min ban duration to share (1 hour)
+enabled = true # Enable ban list sharing
+share_mode = "periodic" # "immediate", "periodic", or "disabled"
+periodic_interval_seconds = 300 # Sharing interval (5 minutes)
+min_ban_duration_to_share = 3600 # Min ban duration to share (1 hour)
 ```
 
 ## Experimental Features
 
-> **Platform / build** — Items here need compile-time features that may be missing on **Windows** or **Linux aarch64** portable release builds. **Dandelion++**, **Iroh**, and **UTXO commitments** are in **`blvm` default features** (Linux x86_64 release artifacts use the same set). CTV, Stratum V2 node demux, and Quinn still require explicit `--features` on most artifacts. See [Release process — Build variants](../development/release-process.md#build-variants).
+> **Platform / build**: Items here need compile-time features that may be missing on **Windows** or **Linux aarch64** portable release builds. **Dandelion++**, **Iroh**, and **UTXO commitments** are in **`blvm` default features** (Linux x86_64 release artifacts use the same set). CTV, Stratum V2 node demux, and Quinn still require explicit `--features` on most artifacts. See [Release process: Build variants](../development/release-process.md#build-variants).
 
 ### Dandelion++ Privacy Relay
 
@@ -666,9 +666,9 @@ min_ban_duration_to_share = 3600         # Min ban duration to share (1 hour)
 
 ```toml
 [dandelion]
-stem_timeout_seconds = 10               # Stem phase timeout
-fluff_probability = 0.1                 # Probability of fluffing at each hop (10%)
-max_stem_hops = 2                       # Max stem hops before forced fluff
+stem_timeout_seconds = 10 # Stem phase timeout
+fluff_probability = 0.1 # Probability of fluffing at each hop (10%)
+max_stem_hops = 2 # Max stem hops before forced fluff
 ```
 
 ### Stratum V2 Mining
@@ -680,9 +680,9 @@ max_stem_hops = 2                       # Max stem hops before forced fluff
 enabled = false
 # Optional pool / upstream URL for merge-mining or related orchestration (not the miner-facing TCP bind)
 pool_url = "tcp://pool.example.com:3333"
-# Informational on the node config only — dedicated miner TCP is bound by the blvm-stratum-v2 module
+# Informational on the node config only: dedicated miner TCP is bound by the blvm-stratum-v2 module
 listen_addr = "127.0.0.1:3333"
-p2p_stratum_demux = true                   # false = disable P2P Stratum TLV demux (module miner TCP unchanged)
+p2p_stratum_demux = true # false = disable P2P Stratum TLV demux (module miner TCP unchanged)
 transport_preference = "tcponly"
 merge_mining_enabled = false
 secondary_chains = []
@@ -698,24 +698,24 @@ Configuration can be overridden via command-line arguments. CLI overrides ENV an
 
 **Advanced:** `--assumevalid`, `--noassumevalid`, `--assumeutxo`, `--target-peer-count`, `--async-request-timeout`, `--module-max-cpu-percent`, `--module-max-memory-bytes`
 
-**Feature flags:** `--enable-stratum-v2`, `--enable-dandelion`, `--enable-sigop` and `--disable-*` counterparts (each requires the matching **compile-time** feature in the `blvm` / `blvm-node` binary). **`--enable-bip158` / `--disable-bip158`** only record **logged** preference—BIP158 filter code is **always** included in default builds (no `bip158` Cargo feature).
+**Feature flags:** `--enable-stratum-v2`, `--enable-dandelion`, `--enable-sigop` and `--disable-*` counterparts (each requires the matching **compile-time** feature in the `blvm` / `blvm-node` binary). **`--enable-bip158` / `--disable-bip158`** only record **logged** preference, BIP158 filter code is **always** included in default builds (no `bip158` Cargo feature).
 
 | `--verbose` | `-v` | false | Verbose logging |
 | `--no-auto-migrate` | | false | Skip Core datadir auto-migration on start (`rocksdb` builds) |
-| `--migrate-destination` | | — | BLVM store path for Core migration (default `<datadir>/blvm`) |
+| `--migrate-destination` | |: | BLVM store path for Core migration (default `<datadir>/blvm`) |
 | `--migrate-core-only` | | false | Migrate from Core datadir and exit |
 
 **Commands:** `start` (default), `status`, `health`, `version`, `chain`, `peers`, `network`, `sync`, `config show|validate|path|set|convert-core`, `configpath <module>` (offline module config path), `load` / `unload` / `reload` / `module list` (RPC to running node; admin auth), `migrate core` (`rocksdb`), `rpc`, plus dynamic **`blvm <module-cli> …`** from loaded modules (e.g. `blvm sync-policy list`)
 
-**`blvm config convert-core`** — draft `blvm.toml` from Core **`bitcoin.conf`**:
+**`blvm config convert-core`**: draft `blvm.toml` from Core **`bitcoin.conf`**:
 
 ```bash
-blvm config convert-core /path/to/bitcoin.conf              # writes config.toml
-blvm config convert-core ~/.bitcoin/bitcoin.conf blvm.toml  # custom output path
+blvm config convert-core /path/to/bitcoin.conf # writes config.toml
+blvm config convert-core ~/.bitcoin/bitcoin.conf blvm.toml # custom output path
 blvm config convert-core ~/.bitcoin/bitcoin.conf --verbose
 ```
 
-Arguments: **`input`** (Core config file), optional **`output`** path (default **`config.toml`**), **`--verbose` / `-v`**. Review output: remove legacy **`[network]`** wrappers; map **`rpcuser`/`rpcpassword`** to **`[rpc_auth]`** or tokens; set **`--rpc-addr`** and **`storage.data_dir`** separately. See [Node configuration — bitcoin.conf vs BLVM](../node/configuration.md#bitcoin-core-bitcoinconf-versus-blvm).
+Arguments: **`input`** (Core config file), optional **`output`** path (default **`config.toml`**), **`--verbose` / `-v`**. Review output: remove legacy **`[network]`** wrappers; map **`rpcuser`/`rpcpassword`** to **`[rpc_auth]`** or tokens; set **`--rpc-addr`** and **`storage.data_dir`** separately. See [Node configuration: bitcoin.conf vs BLVM](../node/configuration.md#bitcoin-core-bitcoinconf-versus-blvm).
 
 ```bash
 blvm --config /path/to/config.toml

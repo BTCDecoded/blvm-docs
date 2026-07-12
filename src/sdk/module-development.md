@@ -23,10 +23,10 @@ Each module should be placed in a subdirectory within the `modules/` directory:
 ```
 modules/
 └── my-module/
-    ├── Cargo.toml
-    ├── src/
-    │   └── main.rs
-    └── module.toml          # Module manifest (required)
+ ├── Cargo.toml
+ ├── src/
+ │ └── main.rs
+ └── module.toml # Module manifest (required)
 ```
 
 ### Module Manifest (`module.toml`)
@@ -56,8 +56,8 @@ author = "Your Name <your.email@example.com>"
 # ----------------------------------------------------------------------------
 # Permissions this module requires to function
 capabilities = [
-    "read_blockchain",    # Query blockchain data
-    "subscribe_events",   # Receive node events
+ "read_blockchain", # Query blockchain data
+ "subscribe_events", # Receive node events
 ]
 
 # ----------------------------------------------------------------------------
@@ -117,10 +117,10 @@ use blvm_sdk::module::prelude::*;
 **Single impl for CLI, RPC, and events:**
 
 - **`#[module(name = "my-module")]`** on the impl block generates `cli_spec()`, `dispatch_cli()`, `rpc_method_names()`, `dispatch_rpc()`, `event_types()`, and `dispatch_event()` from one set of methods:
-  - Methods with **`ctx: &InvocationContext`** (and no `#[rpc_method]` / `#[on_event]`) become **CLI subcommands**. Use **`#[command]`** to mark them explicitly. Parameters can use **`#[arg(long)]`**, **`#[arg(short = 'n')]`**, **`#[arg(default = "value")]`** for CLI parsing.
-  - **`#[rpc_method]`** / **`#[rpc_method(name = "method_name")]`** marks **RPC endpoints**.
-  - **`#[on_event(NewBlock, NewTransaction)]`** marks **event handlers**; use with **`#[event_handlers]`** on the impl to generate `event_types()` and `dispatch_event()`.
-  - **Payload injection:** For event types listed in **`blvm-sdk-macros`** `event_payload_map` (same field names as `EventPayload` in `blvm-node`), a handler can take **payload fields by name** plus optional **`ctx: &InvocationContext`** instead of only `&EventMessage`. The match is on **`&event.payload`**, so use **reference** types (e.g. `packet_data: &[u8], peer_addr: &str`). Example: `#[on_event(MeshPacketReceived)]` with `(packet_data: &[u8], peer_addr: &str, ctx: &InvocationContext)`. The **`_ctx`** / **`_context`** names are also recognized for the legacy `(&event, ctx)` style.
+ - Methods with **`ctx: &InvocationContext`** (and no `#[rpc_method]` / `#[on_event]`) become **CLI subcommands**. Use **`#[command]`** to mark them explicitly. Parameters can use **`#[arg(long)]`**, **`#[arg(short = 'n')]`**, **`#[arg(default = "value")]`** for CLI parsing.
+ - **`#[rpc_method]`** / **`#[rpc_method(name = "method_name")]`** marks **RPC endpoints**.
+ - **`#[on_event(NewBlock, NewTransaction)]`** marks **event handlers**; use with **`#[event_handlers]`** on the impl to generate `event_types()` and `dispatch_event()`.
+ - **Payload injection:** For event types listed in **`blvm-sdk-macros`** `event_payload_map` (same field names as `EventPayload` in `blvm-node`), a handler can take **payload fields by name** plus optional **`ctx: &InvocationContext`** instead of only `&EventMessage`. The match is on **`&event.payload`**, so use **reference** types (e.g. `packet_data: &[u8], peer_addr: &str`). Example: `#[on_event(MeshPacketReceived)]` with `(packet_data: &[u8], peer_addr: &str, ctx: &InvocationContext)`. The **`_ctx`** / **`_context`** names are also recognized for the legacy `(&event, ctx)` style.
 
 **Migrations:** **`#[migration(version = N)]`** on a function; use with `db.run_migrations(&[(1, up_initial), ...])` or via `#[module(migrations = (...))]`.
 
@@ -128,7 +128,7 @@ use blvm_sdk::module::prelude::*;
 
 - **`ModuleBootstrap::from_env()`** reads `MODULE_ID`, `SOCKET_PATH`, `DATA_DIR` when the node spawns the module; for manual runs you can use **`ModuleBootstrap::init_module("my-module")`** or parse CLI.
 - **`ModuleDb::open(&bootstrap.data_dir)`** opens the module DB; then **`run_module! { bootstrap, module_name, module, module_type, db }`** runs the main loop (IPC connect, CLI/RPC/event dispatch, no manual event loop).
-- **`run_module_main!(MyModule)`** — when your struct has `#[module(config = MyConfig, migrations = (...))]` and implements `ModuleMeta`, this macro expands to a full `main` that does bootstrap, migrations, config load, and `run_module!`.
+- **`run_module_main!(MyModule)`**: when your struct has `#[module(config = MyConfig, migrations = (...))]` and implements `ModuleMeta`, this macro expands to a full `main` that does bootstrap, migrations, config load, and `run_module!`.
 
 **Example (skeleton):**
 
@@ -146,30 +146,30 @@ pub struct MyModule { config: MyConfig }
 
 #[module(name = "my-module")]
 impl MyModule {
-    #[command]
-    fn status(&self, _ctx: &InvocationContext) -> Result<String, ModuleError> {
-        Ok("ok".into())
-    }
-    #[rpc_method(name = "my_method")]
-    fn my_method(&self, params: &serde_json::Value, _db: &std::sync::Arc<dyn blvm_node::storage::database::Database>) -> Result<serde_json::Value, ModuleError> {
-        Ok(serde_json::json!({}))
-    }
+ #[command]
+ fn status(&self, _ctx: &InvocationContext) -> Result<String, ModuleError> {
+ Ok("ok".into())
+ }
+ #[rpc_method(name = "my_method")]
+ fn my_method(&self, params: &serde_json::Value, _db: &std::sync::Arc<dyn blvm_node::storage::database::Database>) -> Result<serde_json::Value, ModuleError> {
+ Ok(serde_json::json!({}))
+ }
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let bootstrap = ModuleBootstrap::from_env().unwrap_or_else(|_| ModuleBootstrap::init_module("my-module"));
-    let db = ModuleDb::open(&bootstrap.data_dir)?;
-    let config = MyConfig::load(bootstrap.data_dir.join("config.toml")).unwrap_or_default();
-    let module = MyModule { config };
-    blvm_sdk::run_module! {
-        bootstrap: &bootstrap,
-        module_name: "my-module",
-        module: module,
-        module_type: MyModule,
-        db: db.as_db(),
-    }?;
-    Ok(())
+ let bootstrap = ModuleBootstrap::from_env().unwrap_or_else(|_| ModuleBootstrap::init_module("my-module"));
+ let db = ModuleDb::open(&bootstrap.data_dir)?;
+ let config = MyConfig::load(bootstrap.data_dir.join("config.toml")).unwrap_or_default();
+ let module = MyModule { config };
+ blvm_sdk::run_module! {
+ bootstrap: &bootstrap,
+ module_name: "my-module",
+ module: module,
+ module_type: MyModule,
+ db: db.as_db(),
+ }?;
+ Ok(())
 }
 ```
 
@@ -191,50 +191,50 @@ use blvm_node::module::EventType;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Parse command-line arguments
-    let args = Args::parse();
-    
-    // Connect to node using ModuleIntegration
-    // Note: socket_path must be PathBuf (convert from String if needed)
-    let socket_path = std::path::PathBuf::from(&args.socket_path);
-    let mut integration = ModuleIntegration::connect(
-        socket_path,
-        args.module_id.unwrap_or_else(|| "my-module".to_string()),
-        "my-module".to_string(),
-        env!("CARGO_PKG_VERSION").to_string(),
-    ).await?;
-    
-    // Subscribe to events
-    let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
-    integration.subscribe_events(event_types).await?;
-    
-    // Get NodeAPI
-    let node_api = integration.node_api();
-    
-    // Get event receiver (broadcast::Receiver returns Result, not Option)
-    let mut event_receiver = integration.event_receiver();
-    
-    // Main module loop
-    loop {
-        match event_receiver.recv().await {
-            Ok(ModuleMessage::Event(event_msg)) => {
-                // Process event
-                match event_msg.payload {
-                    // Handle specific event types
-                    _ => {}
-                }
-            }
-            Ok(_) => {} // Other message types
-            Err(tokio::sync::broadcast::error::RecvError::Lagged(skipped)) => {
-                warn!("Event receiver lagged, skipped {} messages", skipped);
-            }
-            Err(tokio::sync::broadcast::error::RecvError::Closed) => {
-                break; // Channel closed, exit loop
-            }
-        }
-    }
-    
-    Ok(())
+ // Parse command-line arguments
+ let args = Args::parse();
+ 
+ // Connect to node using ModuleIntegration
+ // Note: socket_path must be PathBuf (convert from String if needed)
+ let socket_path = std::path::PathBuf::from(&args.socket_path);
+ let mut integration = ModuleIntegration::connect(
+ socket_path,
+ args.module_id.unwrap_or_else(|| "my-module".to_string()),
+ "my-module".to_string(),
+ env!("CARGO_PKG_VERSION").to_string(),
+ ).await?;
+ 
+ // Subscribe to events
+ let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
+ integration.subscribe_events(event_types).await?;
+ 
+ // Get NodeAPI
+ let node_api = integration.node_api();
+ 
+ // Get event receiver (broadcast::Receiver returns Result, not Option)
+ let mut event_receiver = integration.event_receiver();
+ 
+ // Main module loop
+ loop {
+ match event_receiver.recv().await {
+ Ok(ModuleMessage::Event(event_msg)) => {
+ // Process event
+ match event_msg.payload {
+ // Handle specific event types
+ _ => {}
+ }
+ }
+ Ok(_) => {} // Other message types
+ Err(tokio::sync::broadcast::error::RecvError::Lagged(skipped)) => {
+ warn!("Event receiver lagged, skipped {} messages", skipped);
+ }
+ Err(tokio::sync::broadcast::error::RecvError::Closed) => {
+ break; // Channel closed, exit loop
+ }
+ }
+ }
+ 
+ Ok(())
 }
 ```
 
@@ -249,46 +249,46 @@ use std::path::PathBuf;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Parse command-line arguments
-    let args = Args::parse();
-    
-    // Connect to node IPC socket (PathBuf required)
-    let socket_path = PathBuf::from(&args.socket_path);
-    let mut ipc_client = ModuleIpcClient::connect(&socket_path).await?;
-    
-    // Perform handshake
-    let correlation_id = ipc_client.next_correlation_id();
-    let handshake_request = RequestMessage {
-        correlation_id,
-        request_type: MessageType::Handshake,
-        payload: RequestPayload::Handshake {
-            module_id: "my-module".to_string(),
-            module_name: "my-module".to_string(),
-            version: env!("CARGO_PKG_VERSION").to_string(),
-        },
-    };
-    let response = ipc_client.request(handshake_request).await?;
-    // Verify handshake response...
-    
-    // Create NodeAPI wrapper (requires Arc<Mutex<ModuleIpcClient>> and module_id)
-    let ipc_client_arc = Arc::new(tokio::sync::Mutex::new(ipc_client));
-    let node_api = Arc::new(NodeApiIpc::new(ipc_client_arc.clone(), "my-module".to_string()));
-    
-    // Subscribe to events using NodeAPI
-    let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
-    let mut event_receiver = node_api.subscribe_events(event_types).await?;
-    
-    // Main module loop (mpsc::Receiver returns Option)
-    while let Some(event) = event_receiver.recv().await {
-        match event {
-            ModuleMessage::Event(event_msg) => {
-                // Process event
-            }
-            _ => {}
-        }
-    }
-    
-    Ok(())
+ // Parse command-line arguments
+ let args = Args::parse();
+ 
+ // Connect to node IPC socket (PathBuf required)
+ let socket_path = PathBuf::from(&args.socket_path);
+ let mut ipc_client = ModuleIpcClient::connect(&socket_path).await?;
+ 
+ // Perform handshake
+ let correlation_id = ipc_client.next_correlation_id();
+ let handshake_request = RequestMessage {
+ correlation_id,
+ request_type: MessageType::Handshake,
+ payload: RequestPayload::Handshake {
+ module_id: "my-module".to_string(),
+ module_name: "my-module".to_string(),
+ version: env!("CARGO_PKG_VERSION").to_string(),
+ },
+ };
+ let response = ipc_client.request(handshake_request).await?;
+ // Verify handshake response...
+ 
+ // Create NodeAPI wrapper (requires Arc<Mutex<ModuleIpcClient>> and module_id)
+ let ipc_client_arc = Arc::new(tokio::sync::Mutex::new(ipc_client));
+ let node_api = Arc::new(NodeApiIpc::new(ipc_client_arc.clone(), "my-module".to_string()));
+ 
+ // Subscribe to events using NodeAPI
+ let event_types = vec![EventType::NewBlock, EventType::NewTransaction];
+ let mut event_receiver = node_api.subscribe_events(event_types).await?;
+ 
+ // Main module loop (mpsc::Receiver returns Option)
+ while let Some(event) = event_receiver.recv().await {
+ match event {
+ ModuleMessage::Event(event_msg) => {
+ // Process event
+ }
+ _ => {}
+ }
+ }
+ 
+ Ok(())
 }
 ```
 
@@ -330,9 +330,9 @@ let chain_info = node_api.get_chain_info().await?;
 ```rust
 // Note: This requires request_type field in RequestMessage
 let request = RequestMessage {
-    correlation_id: client.next_correlation_id(),
-    request_type: MessageType::GetChainTip,
-    payload: RequestPayload::GetChainTip,
+ correlation_id: client.next_correlation_id(),
+ request_type: MessageType::GetChainTip,
+ payload: RequestPayload::GetChainTip,
 };
 let response = client.send_request(request).await?;
 ```
@@ -367,24 +367,24 @@ let response = client.send_request(request).await?;
 
 These calls affect **what the node serves on the Bitcoin P2P wire** (`getdata` responses) and **sync introspection**. They do **not** change consensus validation; withheld blocks/transactions are still validated if present locally. Use with care: broad denylists or bans affect relay and peer relationships.
 
-- **Block `getdata` denylist** — additive merge, bounded snapshot, clear, or replace full-hash sets. Peers requesting a denied block hash get `notfound` instead of a full `block` message.
-  - `merge_block_serve_denylist(hashes)`
-  - `get_block_serve_denylist_snapshot()`
-  - `clear_block_serve_denylist()`
-  - `replace_block_serve_denylist(hashes)`
-- **Transaction `getdata` denylist** — same pattern for full `tx` serves on `getdata`.
-  - `merge_tx_serve_denylist(hashes)`
-  - `get_tx_serve_denylist_snapshot()`
-  - `clear_tx_serve_denylist()`
-  - `replace_tx_serve_denylist(hashes)`
-- **Sync status** — finer-grained view than `get_chain_info()` alone (coordinator phase / progress); see `SyncStatus` in the trait.
-  - `get_sync_status()`
-- **Operational maintenance** — when enabled, the node refuses **all** full-block answers on `getdata` (coarse knob for degraded operation).
-  - `set_block_serve_maintenance_mode(enabled)`
-- **Peer ban** — request a ban by peer address string; optional duration (`None` = permanent). High-impact; subject to node policy and review.
-  - `ban_peer(peer_addr, ban_duration_seconds)`
+- **Block `getdata` denylist**: additive merge, bounded snapshot, clear, or replace full-hash sets. Peers requesting a denied block hash get `notfound` instead of a full `block` message.
+ - `merge_block_serve_denylist(hashes)`
+ - `get_block_serve_denylist_snapshot()`
+ - `clear_block_serve_denylist()`
+ - `replace_block_serve_denylist(hashes)`
+- **Transaction `getdata` denylist**: same pattern for full `tx` serves on `getdata`.
+ - `merge_tx_serve_denylist(hashes)`
+ - `get_tx_serve_denylist_snapshot()`
+ - `clear_tx_serve_denylist()`
+ - `replace_tx_serve_denylist(hashes)`
+- **Sync status**: finer-grained view than `get_chain_info()` alone (coordinator phase / progress); see `SyncStatus` in the trait.
+ - `get_sync_status()`
+- **Operational maintenance**: when enabled, the node refuses **all** full-block answers on `getdata` (coarse knob for degraded operation).
+ - `set_block_serve_maintenance_mode(enabled)`
+- **Peer ban**: request a ban by peer address string; optional duration (`None` = permanent). High-impact; subject to node policy and review.
+ - `ban_peer(peer_addr, ban_duration_seconds)`
 
-Corresponding IPC `MessageType` / `RequestPayload` names match the `NodeAPI` methods (see [Module IPC Protocol](../architecture/module-ipc-protocol.md)). Implementation: [`traits.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs), [`getdata_serve.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/getdata_serve.rs).
+Corresponding IPC `MessageType` / `RequestPayload` names match the `NodeAPI` methods (see [Module IPC Protocol](../architecture/module-ipc-protocol.md)). Implementation: [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs), [getdata_serve.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/getdata_serve.rs).
 
 **Storage API:**
 - `storage_open_tree(name)` - Open a storage tree (isolated per module)
@@ -432,8 +432,8 @@ Corresponding IPC `MessageType` / `RequestPayload` names match the `NodeAPI` met
 - `get_payment_state(payment_id)` - Get payment state by payment ID
 
 **Network Integration API:**
-- `send_mesh_packet_to_peer(peer_addr, packet_data)` — send mesh bytes to a P2P peer (requires **`network_access`**)
-- `send_mesh_packet_to_module(module_id, packet_data, peer_addr)` — delegate to a mesh module via **`call_module`**
+- `send_mesh_packet_to_peer(peer_addr, packet_data)`: send mesh bytes to a P2P peer (requires **`network_access`**)
+- `send_mesh_packet_to_module(module_id, packet_data, peer_addr)`: delegate to a mesh module via **`call_module`**
 
 Spawned modules should declare **`network_access`**, **`register_module_api`**, **`publish_events`**, and **`read_payment`** in **`module.toml`** when they register a ModuleAPI, publish routing events, or verify payments (see [Commons Mesh Module](../modules/mesh.md)).
 
@@ -443,7 +443,7 @@ For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/bl
 
 Use **`run_module_with_setup_and_api`** and declare **`register_module_api`** in **`module.toml`**. See [Module IPC Protocol](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Commons Mesh Module](../modules/mesh.md#node-integration).
 
-**IBD hook:** modules such as **blvm-selective-sync** may implement **`filter_block_before_store`** on ModuleAPI — the node calls it before persisting witness data during parallel IBD when the module enables `ibd_filter_enabled`.
+**IBD hook:** modules such as **blvm-selective-sync** may implement **`filter_block_before_store`** on ModuleAPI: the node calls it before persisting witness data during parallel IBD when the module enables `ibd_filter_enabled`.
 
 ### Subscribing to events
 
@@ -463,12 +463,12 @@ let mut event_receiver = integration.event_receiver();
 
 // Receive events in main loop
 while let Some(event) = event_receiver.recv().await {
-    match event {
-        ModuleMessage::Event(event_msg) => {
-            // Handle event
-        }
-        _ => {}
-    }
+ match event {
+ ModuleMessage::Event(event_msg) => {
+ // Handle event
+ }
+ _ => {}
+ }
 }
 ```
 
@@ -484,16 +484,16 @@ let mut event_receiver = client.event_receiver();
 
 // Receive events in main loop
 while let Some(event) = event_receiver.recv().await {
-    match event {
-        ModuleMessage::Event(event_msg) => {
-            // Handle event
-        }
-        _ => {}
-    }
+ match event {
+ ModuleMessage::Event(event_msg) => {
+ // Handle event
+ }
+ _ => {}
+ }
 }
 ```
 
-**Available Event Types:** Catalog of shared **`EventType`** variants on the node bus — **individual modules subscribe/publish subsets only** (see [module pages](../modules/overview.md)).
+**Available Event Types:** Catalog of shared **`EventType`** variants on the node bus: **individual modules subscribe/publish subsets only** (see [module pages](../modules/overview.md)).
 
 **Core Blockchain Events:**
 - `NewBlock` - New block connected to chain

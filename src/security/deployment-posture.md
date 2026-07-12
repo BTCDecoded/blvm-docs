@@ -10,25 +10,25 @@ Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.
 |------|---------|
 | **Required** | Omitting this on the stated network / bind pattern materially increases risk of unauthorized RPC abuse, fund theft adjacent systems, or confidentiality loss. |
 | **Recommended** | Strongly advised operational hygiene; omissions reduce resilience or auditability. |
-| **Unsupported** | Not a supported safety combination in current code — do not rely on it as a security boundary. |
+| **Unsupported** | Not a supported safety combination in current code: do not rely on it as a security boundary. |
 
 ## Supported contexts
 
 ```mermaid
 flowchart TD
-  B[Where is RPC bound?] --> LOOP{127.0.0.1 or ::1 only?}
-  LOOP -->|Yes| NET{Network}
-  LOOP -->|LAN / WAN / 0.0.0.0| AUTH["rpc_auth.required = true"]
-  NET -->|Regtest dev| OK[Loopback + optional auth OK]
-  NET -->|Testnet| REC[Recommended: auth + firewall]
-  NET -->|Mainnet| AUTH
-  AUTH --> BASIC[HTTP Basic only on loopback — cleartext on wire]
-  AUTH --> BEAR[Bearer tokens for admin RPC]
+ B[Where is RPC bound?] --> LOOP{127.0.0.1 or ::1 only?}
+ LOOP -->|Yes| NET{Network}
+ LOOP -->|LAN / WAN / 0.0.0.0| AUTH["rpc_auth.required = true"]
+ NET -->|Regtest dev| OK[Loopback + optional auth OK]
+ NET -->|Testnet| REC[Recommended: auth + firewall]
+ NET -->|Mainnet| AUTH
+ AUTH --> BASIC[HTTP Basic only on loopback: cleartext on wire]
+ AUTH --> BEAR[Bearer tokens for admin RPC]
 ```
 
-- **Regtest / local development** — **Supported** for day-to-day work when P2P and RPC are unreachable from untrusted networks (typical loopback defaults). **`rpc_auth.required = false`** is acceptable **only** while RPC stays on **`127.0.0.1`**, **`::1`**, or equivalent loopback.
-- **Testnet** — Treat as **internet-adjacent**: peer set is untrusted; apply **Recommended** items below before exposing RPC beyond loopback. (Signet is not yet a supported network in BLVM.)
-- **Mainnet** — **High assurance**: assume global attackers on P2P and opportunistic scanning on RPC-shaped ports. Meet **Required** items for any non-loopback control plane.
+- **Regtest / local development**: **Supported** for day-to-day work when P2P and RPC are unreachable from untrusted networks (typical loopback defaults). **`rpc_auth.required = false`** is acceptable **only** while RPC stays on **`127.0.0.1`**, **`::1`**, or equivalent loopback.
+- **Testnet**: Treat as **internet-adjacent**: peer set is untrusted; apply **Recommended** items below before exposing RPC beyond loopback. (Signet is not yet a supported network in BLVM.)
+- **Mainnet**: **High assurance**: assume global attackers on P2P and opportunistic scanning on RPC-shaped ports. Meet **Required** items for any non-loopback control plane.
 
 ## Critical deployment concerns
 
@@ -36,7 +36,7 @@ flowchart TD
 
 - **Required (non-loopback):** **`[rpc_auth]`** with **`required = true`**. Use **Bearer tokens** (`tokens`, `admin_tokens`, `token_file`, **`RPC_AUTH_TOKENS`**) and/or **HTTP Basic** (`username`, `password` for ckpool / Core-style clients). TLS client certificates remain supported when configured. See **[Configuration reference](../reference/configuration-reference.md)** and **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
 - **REST note:** `/api/v1/*` requires compile-time **`rest-api`** and **`[rest_api].enabled = true`** (separate bind; off by default). Uses the same **`RpcAuthManager`** as JSON-RPC when auth is configured.
-- **Recommended:** Bind RPC to **loopback** when using HTTP Basic — credentials are cleartext on the wire. Use a reverse proxy or firewall allowlists when exposing RPC beyond localhost; server-side rate limits do not replace edge policy.
+- **Recommended:** Bind RPC to **loopback** when using HTTP Basic: credentials are cleartext on the wire. Use a reverse proxy or firewall allowlists when exposing RPC beyond localhost; server-side rate limits do not replace edge policy.
 - **Recommended:** Grant **admin** access only to operators and mining tooling (`getblocktemplate`, `submitblock`, `generatetoaddress`, destructive control methods). Bearer tokens in `tokens` alone are read-only unless also listed in `admin_tokens`; `[rpc_auth].password` is registered as admin automatically when set.
 - **Note (QUIC):** JSON-RPC over QUIC uses **HTTP/3** (ALPN **`h3`**) and shares the same **`RpcAuthManager`** as TCP HTTP (Bearer and Basic). Treat the **UDP listener** as its own exposure surface. See **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
 
@@ -48,18 +48,18 @@ flowchart TD
 ### Data directory, backups, integrity
 
 - **Required:** Protect the configured **`data_dir`** with host filesystem permissions (only the node OS user).
-- **Recommended:** Encrypted backups of wallet-adjacent artifacts **elsewhere** — the node is **not** a wallet, but keys or module secrets on the same host still warrant backup hygiene.
+- **Recommended:** Encrypted backups of wallet-adjacent artifacts **elsewhere**: the node is **not** a wallet, but keys or module secrets on the same host still warrant backup hygiene.
 - **Recommended:** Snapshot **`data_dir`** only when the node is stopped or via backend-specific backup guidance (**[Storage backends](../node/storage-backends.md)**) to avoid torn pages.
 
 ### Modules, WASM, IPC
 
 - **Required:** Treat third-party modules as **supply-chain code**: verify signatures / maintainer policy before production enablement.
-- **Recommended:** For **`wasm-modules`**, set embedder budget keys documented in **`blvm-node`** [`docs/CONFIGURATION_GUIDE.md`](https://github.com/BTCDecoded/blvm-node/blob/main/docs/CONFIGURATION_GUIDE.md); prefer process-isolated modules when in-process WASM is unnecessary.
+- **Recommended:** For **`wasm-modules`**, set embedder budget keys documented in **`blvm-node`** [node configuration guide](https://github.com/BTCDecoded/blvm-node/blob/main/docs/CONFIGURATION_GUIDE.md); prefer process-isolated modules when in-process WASM is unnecessary.
 
 ### Supply chain and patching
 
 - **Recommended:** Run **`cargo audit`** (or distributor SBOM process) on lockfiles you ship; reconcile **`blvm-node`** **`AUDIT_SUPPRESSIONS`** when upgrading **`iroh`**, **`quinn`**, **`hickory`**, or **`time`**.
-- **Recommended:** Prefer **`--locked`** builds where your repo policy commits a lockfile (**`blvm`** umbrella does; library-style crates may not — see workspace **`Cargo.lock`** policy).
+- **Recommended:** Prefer **`--locked`** builds where your repo policy commits a lockfile (**`blvm`** umbrella does; library-style crates may not: see workspace **`Cargo.lock`** policy).
 
 ### Secrets and logging
 
@@ -68,19 +68,19 @@ flowchart TD
 
 ### Software maturity
 
-- **Required acknowledgment:** BLVM remains **pre-production for mainnet high assurance** unless your organization has independently validated releases — see **[Threat models](threat-models.md)** and **[SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)**.
+- **Required acknowledgment:** BLVM remains **pre-production for mainnet high assurance** unless your organization has independently validated releases: see **[Threat models](threat-models.md)** and **[security policy](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)**.
 
 ## Before mainnet (first sync checklist)
 
 Complete before running a mainnet node or exposing RPC beyond loopback:
 
-1. **Release verification** — Download from [btcdecoded.org/install](https://btcdecoded.org/install) or [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
-2. **Sync path** — [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
-3. **Data directory** — Dedicated path (e.g. `~/.local/share/blvm-mainnet`); restrict filesystem permissions to the node OS user.
-4. **IBD tuning** — Review bundled `blvm-mainnet-ibd.toml.example`; optional `BLVM_IBD_ENGINE` per [IBD UTXO engine](../node/ibd-engine.md).
-5. **Modules** — Keep third-party modules disabled during first sync; verify maintainer policy before production enablement.
-6. **Backups** — Plan snapshot/backup policy; snapshot `data_dir` when stopped or per [Storage backends](../node/storage-backends.md).
-7. **RPC exposure** — Before binding RPC off loopback, complete the [Minimum checklist (non-loopback RPC)](#minimum-checklist-non-loopback-rpc) below.
+1. **Release verification**: Download from [btcdecoded.org/install](https://btcdecoded.org/install) or [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
+2. **Sync path**: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
+3. **Data directory**: Dedicated path (e.g. `~/.local/share/blvm-mainnet`); restrict filesystem permissions to the node OS user.
+4. **IBD tuning**: Review bundled `blvm-mainnet-ibd.toml.example`; optional `BLVM_IBD_ENGINE` per [IBD UTXO engine](../node/ibd-engine.md).
+5. **Modules**: Keep third-party modules disabled during first sync; verify maintainer policy before production enablement.
+6. **Backups**: Plan snapshot/backup policy; snapshot `data_dir` when stopped or per [Storage backends](../node/storage-backends.md).
+7. **RPC exposure**: Before binding RPC off loopback, complete the [Minimum checklist (non-loopback RPC)](#minimum-checklist-non-loopback-rpc) below.
 
 Then meet **Required** items under **Supported contexts → Mainnet** above.
 
@@ -88,9 +88,9 @@ Then meet **Required** items under **Supported contexts → Mainnet** above.
 
 1. Set **`rpc_auth.required = true`** (or equivalent env) **unless** RPC listens only on **`127.0.0.1`** / **`::1`** (loopback).
 2. Provide **Bearer tokens** (`tokens`, `admin_tokens`, `token_file`, **`RPC_AUTH_TOKENS`**) and/or **HTTP Basic** (`username` / `password`) or TLS client certificates as documented in **[Configuration reference](../reference/configuration-reference.md)**.
-3. Prefer **`transport_preference = "tcponly"`** until QUIC RPC + strong auth is explicitly required — see **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
+3. Prefer **`transport_preference = "tcponly"`** until QUIC RPC + strong auth is explicitly required: see **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
 
 ## Relationship to other docs
 
-- **[Threat models](threat-models.md)** — Attack surfaces and boundaries (developer + operator framing).
-- **[First node](../getting-started/first-node.md)** — Config-based setup; links here for production-facing posture.
+- **[Threat models](threat-models.md)**: Attack surfaces and boundaries (developer + operator framing).
+- **[First node](../getting-started/first-node.md)**: Config-based setup; links here for production-facing posture.

@@ -9,22 +9,22 @@ Config-file walkthrough: create `~/.config/blvm/blvm.toml`, validate it, start t
 | Network | `protocol_version` | Default P2P | Default RPC | Next step |
 |---------|---------------------|-------------|-------------|-----------|
 | **Mainnet** | `BitcoinV1` | `0.0.0.0:8333` | `127.0.0.1:8332` | [Mainnet initial sync](#mainnet-initial-sync) below |
-| **Testnet** | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` | Steps 1–4 below |
+| **Testnet** | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` | Steps 1-4 below |
 | **Regtest** | `Regtest` | `0.0.0.0:18444` | `127.0.0.1:18443` | [Quick Start](quick-start.md) |
 
 Use a **separate `[storage].data_dir` per network** so chain state never mixes.
 
 ```mermaid
 flowchart TD
-  N[Choose network] --> M{Which network?}
-  M -->|Mainnet — first sync| IBD[Use IBD example config<br/>not bare --network mainnet]
-  M -->|Testnet| STEPS[Steps 1–4 below]
-  M -->|Regtest — quick try| QS[Quick Start]
-  IBD --> SYNC[Mainnet initial sync section]
-  STEPS --> RPC[Validate config → start → curl RPC]
-  IBD --> DIR[Unique data_dir per network]
-  STEPS --> DIR
-  QS --> DIR
+ N[Choose network] --> M{Which network?}
+ M -->|Mainnet: first sync| IBD[Use IBD example config<br/>not bare --network mainnet]
+ M -->|Testnet| STEPS[Steps 1-4 below]
+ M -->|Regtest: quick try| QS[Quick Start]
+ IBD --> SYNC[Mainnet initial sync section]
+ STEPS --> RPC[Validate config → start → curl RPC]
+ IBD --> DIR[Unique data_dir per network]
+ STEPS --> DIR
+ QS --> DIR
 ```
 
 ---
@@ -52,10 +52,10 @@ database_backend = "auto"
 level = "info"
 ```
 
-For **mainnet first sync**, skip this minimal template — use the [IBD example config](#mainnet-initial-sync) (`blvm-mainnet-ibd.toml.example`) with pruning and parallel IBD instead.
+For **mainnet first sync**, skip this minimal template: use the [IBD example config](#mainnet-initial-sync) (`blvm-mainnet-ibd.toml.example`) with pruning and parallel IBD instead.
 
 - **`transport_preference`** is required in TOML (no serde default when loading a file).
-- **RPC bind** uses `--rpc-addr` / `BLVM_RPC_ADDR`; the optional **`[rpc]`** table is limits only — see [Node Configuration](../node/configuration.md).
+- **RPC bind** uses `--rpc-addr` / `BLVM_RPC_ADDR`; the optional **`[rpc]`** table is limits only: see [Node Configuration](../node/configuration.md).
 - **Production:** configure `[rpc_auth]` before exposing RPC beyond loopback. See [Deployment posture](../security/deployment-posture.md).
 
 ### Step 2b: Validate the file
@@ -70,7 +70,7 @@ Expected: **`Configuration file is valid:`** (with the path).
 
 ```bash
 env -u BLVM_ASSUME_VALID_HEIGHT \
-  blvm --config ~/.config/blvm/blvm-testnet.toml --verbose
+ blvm --config ~/.config/blvm/blvm-testnet.toml --verbose
 ```
 
 Confirm in the first log lines: config loaded, **`Network: …`**, and `Data directory:` matches `[storage].data_dir`.
@@ -81,8 +81,8 @@ Testnet **18332**; regtest **18443**; mainnet **8332**:
 
 ```bash
 curl -s -X POST http://127.0.0.1:18332 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"getblockchaininfo","params":[],"id":1}'
+ -H "Content-Type: application/json" \
+ -d '{"jsonrpc":"2.0","method":"getblockchaininfo","params":[],"id":1}'
 ```
 
 See [RPC API Reference](../node/rpc-api.md) for authentication and the full method list.
@@ -91,7 +91,7 @@ See [RPC API Reference](../node/rpc-api.md) for authentication and the full meth
 
 ## Mainnet initial sync {#mainnet-initial-sync}
 
-After [Installation](installation.md). **Do not** start first mainnet sync with bare `blvm --network mainnet` — use the release **IBD example config** (pruning, `[ibd].mode = "parallel"`, `[modules].enabled = false` during sync). Source: [blvm-mainnet-ibd.toml.example](https://github.com/BTCDecoded/blvm/blob/main/blvm-mainnet-ibd.toml.example).
+After [Installation](installation.md). **Do not** start first mainnet sync with bare `blvm --network mainnet`: use the release **IBD example config** (pruning, `[ibd].mode = "parallel"`, `[modules].enabled = false` during sync). Source: [blvm-mainnet-ibd.toml.example](https://github.com/BTCDecoded/blvm/blob/main/blvm-mainnet-ibd.toml.example).
 
 **From a release directory** (contains `blvm`, `scripts/`, and the example TOML):
 
@@ -106,25 +106,25 @@ Seed `~/.config/blvm/blvm.toml` from the example: `./scripts/start-ibd-mainnet.s
 
 ```bash
 blvm --config /path/to/blvm-mainnet-ibd.toml.example \
-  --network mainnet \
-  --data-dir ~/.local/share/blvm-mainnet \
-  --verbose
+ --network mainnet \
+ --data-dir ~/.local/share/blvm-mainnet \
+ --verbose
 ```
 
-**What you should see:** config loads → `Network: Mainnet` → quiet 15–60s (peer discovery) → `IBD: <height> / <tip>` in logs. Plan for **~15 GB+** pruned disk, **hours** on WAN-only (faster with LAN Core). Validation slows near **~900k+** when assume-valid ends — expected.
+**What you should see:** config loads → `Network: Mainnet` → quiet 15-60s (peer discovery) → `IBD: <height> / <tip>` in logs. Plan for **~15 GB+** pruned disk, **hours** on WAN-only (faster with LAN Core). Validation slows near **~900k+** when assume-valid ends: expected.
 
 **Monitor** (match start flags):
 
 ```bash
 blvm --network mainnet \
-  --config ~/.config/blvm/blvm.toml \
-  --data-dir ~/.local/share/blvm-mainnet \
-  sync
+ --config ~/.config/blvm/blvm.toml \
+ --data-dir ~/.local/share/blvm-mainnet \
+ sync
 ```
 
 **Resume:** reuse the same `--data-dir`; never delete the active backend dir (`heed3/`, `rocksdb/`, …) mid-IBD.
 
-**Tune when needed:** `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`, `BLVM_IBD_WAN_SINGLE_PEER=1`, `BLVM_IBD_ENGINE=1` — see [Node configuration — IBD](../node/configuration.md#ibd-configuration), [IBD UTXO engine](../node/ibd-engine.md), [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd).
+**Tune when needed:** `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`, `BLVM_IBD_WAN_SINGLE_PEER=1`, `BLVM_IBD_ENGINE=1`: see [Node configuration: IBD](../node/configuration.md#ibd-configuration), [IBD UTXO engine](../node/ibd-engine.md), [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd).
 
 ---
 
@@ -134,7 +134,7 @@ blvm --network mainnet \
 
 ```toml
 transport_preference = "tcponly"
-listen_addr = "127.0.0.1:18445"   # default P2P is 18444
+listen_addr = "127.0.0.1:18445" # default P2P is 18444
 protocol_version = "Regtest"
 
 [storage]
@@ -145,7 +145,7 @@ database_backend = "auto"
 admin_tokens = ["dev"]
 ```
 
-No public seeds — see [Quick Start](quick-start.md) for `generatetoaddress`.
+No public seeds: see [Quick Start](quick-start.md) for `generatetoaddress`.
 
 ---
 
@@ -161,5 +161,5 @@ Blocks, UTXO set, chain state, and indexes live under `[storage].data_dir`. See 
 ## See also
 
 - [Node Configuration](../node/configuration.md) · [Configuration Reference](../reference/configuration-reference.md)
-- [Node Operations](../node/operations.md) — backup, Core datadir import
-- [Deployment posture](../security/deployment-posture.md) — before exposing mainnet RPC
+- [Node Operations](../node/operations.md): backup, Core datadir import
+- [Deployment posture](../security/deployment-posture.md): before exposing mainnet RPC

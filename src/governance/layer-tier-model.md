@@ -4,7 +4,7 @@
 
 Bitcoin Commons implements dual-dimensional governance combining **Layers** (repository architecture) and **Tiers** (action classification). When both apply, the system uses the **most restrictive wins** rule, taking the highest signature requirement and longest review period.
 
-PR **action tiers** (1–5) are defined in governance [`action-tiers.yml`](https://github.com/BTCDecoded/governance/blob/main/config/action-tiers.yml) with narrative in [`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md). **Emergency classes** use [`emergency-tiers.yml`](https://github.com/BTCDecoded/governance/blob/main/config/emergency-tiers.yml) only.
+PR **action tiers** (1-5) are defined in governance [action-tiers.yml](https://github.com/BTCDecoded/governance/blob/main/config/action-tiers.yml) with narrative in [action tiers](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md). **Emergency classes** use [emergency-tiers.yml](https://github.com/BTCDecoded/governance/blob/main/config/emergency-tiers.yml) only.
 
 ## Layer System
 
@@ -18,7 +18,7 @@ The layer system maps repository architecture to governance requirements:
 | 4 | blvm-node / blvm | Application | [[gov:layer_4_signatures]] | [[gov:layer_4_review_days]] days |
 | 5 | blvm-sdk | Extension | [[gov:layer_5_signatures]] | [[gov:layer_5_review_days]] days |
 
-**Note:** For consensus rule changes, Layer 1–2 require [[gov:layer_1_consensus_review_days]] days review period.
+**Note:** For consensus rule changes, Layer 1-2 require [[gov:layer_1_consensus_review_days]] days review period.
 
 ## Tier System
 
@@ -32,7 +32,7 @@ The tier system classifies changes by action type:
 | 4 | Emergency Actions | [[gov:tier_4_signatures]] | [[gov:tier_4_review_days]] days |
 | 5 | Governance Changes | [[gov:tier_5_signatures]] | [[gov:tier_5_review_days]] days |
 
-Tier 5 **special process** (wider maintainer pool and emergency keyholders) is documented in [governance `GOVERNANCE.md`](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md), not in `action-tiers.yml`.
+Tier 5 **special process** (wider maintainer pool and emergency keyholders) is documented in [governance policy](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md), not in `action-tiers.yml`.
 
 ## Combination Rules
 
@@ -70,7 +70,7 @@ Published tables above are derived from the same max-rule at book build time (`m
 ## Configuration
 
 - `config/repository-layers.yml` - Layer definitions
-- `config/action-tiers.yml` - Tier definitions ([`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md))
+- `config/action-tiers.yml` - Tier definitions ([action tiers](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md))
 - `config/emergency-tiers.yml` - Emergency classes (separate from action tiers)
 - `config/tier-classification-rules.yml` - PR classification
 

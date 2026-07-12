@@ -33,9 +33,9 @@ The network layer supports multiple transport protocols through one abstraction 
 
 ```
 NetworkManager
-    └── Transport Trait (abstraction)
-        ├── TcpTransport (Bitcoin P2P compatible)
-        └── IrohTransport (QUIC-based, optional)
+ └── Transport Trait (abstraction)
+ ├── TcpTransport (Bitcoin P2P compatible)
+ └── IrohTransport (QUIC-based, optional)
 ```
 
 ### Transport Options
@@ -46,10 +46,10 @@ NetworkManager
 
 ### Transport Selection
 
-Configure transport via **`blvm.toml`** (top-level `NodeConfig` keys — there is **no** `[network]` table). See [Node configuration](../node/configuration.md).
+Configure transport via **`blvm.toml`** (top-level `NodeConfig` keys: there is **no** `[network]` table). See [Node configuration](../node/configuration.md).
 
 ```toml
-transport_preference = "tcponly"  # file: tcponly | irohonly | quinnonly | hybrid | all
+transport_preference = "tcponly" # file: tcponly | irohonly | quinnonly | hybrid | all
 ```
 
 **CLI / ENV** (e.g. `BLVM_NODE_TRANSPORT`) still accept human-readable forms like `tcp_only`, `iroh_only`, `hybrid`.
@@ -58,7 +58,7 @@ The **protocol adapter** serializes between blvm-consensus `NetworkMessage` type
 
 ## Bitcoin wire and framing (blvm-protocol)
 
-**blvm-protocol** owns Bitcoin **P2P message** framing (message type, length, payload, checksum) and related helpers. For TCP, entry points such as **[`node_tcp`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/node_tcp.rs)** tie that logic to the node’s socket path. Exact layering may evolve—treat **`blvm-protocol` `src/`** as the source of truth rather than this summary.
+**blvm-protocol** owns Bitcoin **P2P message** framing (message type, length, payload, checksum) and related helpers. For TCP, entry points such as **[node_tcp](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/node_tcp.rs)** tie that logic to the node’s socket path. Exact layering may evolve, treat **`blvm-protocol` `src/`** as the source of truth rather than this summary.
 
 ### Wire envelope
 
@@ -70,7 +70,7 @@ The **protocol adapter** serializes between blvm-consensus `NetworkMessage` type
 | Checksum | 4 bytes | Integrity check on payload |
 | Payload | variable | Serialized per command |
 
-Implementation: [`blvm-protocol` wire layer](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs).
+Implementation: [blvm-protocol wire layer](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/wire/mod.rs).
 
 ### Protocol magic and ports
 
@@ -80,7 +80,7 @@ Implementation: [`blvm-protocol` wire layer](https://github.com/BTCDecoded/blvm-
 | Testnet | `0b110907` | 18333 | 18332 |
 | Regtest | `fabfb5da` | 18444 | 18443 |
 
-Each variant also defines genesis hash, difficulty rules, halving interval, and feature activation heights. See [Protocol overview — Network parameters](overview.md#network-parameters).
+Each variant also defines genesis hash, difficulty rules, halving interval, and feature activation heights. See [Protocol overview: Network parameters](overview.md#network-parameters).
 
 ### Common message types
 
@@ -92,7 +92,7 @@ Each variant also defines genesis hash, difficulty rules, halving interval, and 
 | Relay | `tx`, `block`, `mempool`, `feefilter` | Transaction and block propagation |
 | Keepalive | `ping`, `pong` | Connection health |
 
-Extensions (compact blocks, UTXO commitments, governance) add commands documented in [Protocol overview — Network messages](overview.md#network-messages).
+Extensions (compact blocks, UTXO commitments, governance) add commands documented in [Protocol overview: Network messages](overview.md#network-messages).
 
 For detailed protocol specifications, see the [blvm-protocol README](https://github.com/BTCDecoded/blvm-protocol/blob/main/README.md).
 

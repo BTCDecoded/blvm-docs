@@ -35,13 +35,13 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ### Verification and cryptography {#verification-and-cryptography}
 
-**BLVM Specification Lock** — Z3-backed regression tests tying `#[spec_locked]` Rust functions to Orange Paper contracts. See [Formal Verification](../consensus/formal-verification.md).
+**BLVM Specification Lock**: Z3-backed regression tests tying `#[spec_locked]` Rust functions to Orange Paper contracts. See [Formal Verification](../consensus/formal-verification.md).
 
-**Orange Paper (primary spec)** — Normative mathematical specification; audit surface for mathematicians independent of any implementation language. Not generated from code.
+**Orange Paper (primary spec)**: Normative mathematical specification; audit surface for mathematicians independent of any implementation language. Not generated from code.
 
-**Differential testing** — Empirical cross-check of BLVM vs Bitcoin Core (and `libbitcoinkernel` in Phase 2). Complements spec-lock; full-chain runs are operator-driven. See [Differential Testing](../development/differential-testing.md).
+**Differential testing**: Empirical cross-check of BLVM vs Bitcoin Core (and `libbitcoinkernel` in Phase 2). Complements spec-lock; full-chain runs are operator-driven. See [Differential Testing](../development/differential-testing.md).
 
-**Constant-time (secret-path crypto)** — Side-channel discipline in **`blvm-secp256k1`** for signing and secret scalars; consensus verify paths use public data only. [TIMING.md](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md). Distinct from spec-lock.
+**Constant-time (secret-path crypto)**: Side-channel discipline in **`blvm-secp256k1`** for signing and secret scalars; consensus verify paths use public data only. [timing policy](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md). Distinct from spec-lock.
 
 **Proofs Locked to Code** - Spec-lock proofs live with the functions they verify; code changes require proof updates. See [Formal Verification](../consensus/formal-verification.md).
 
@@ -69,11 +69,11 @@ The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consen
 
 **admin_tokens** - RPC Bearer tokens with permission to call admin methods (`getblocktemplate`, `submitblock`, destructive control). Tokens in `tokens` alone are read-only unless also listed here. **`[rpc_auth].password`** (HTTP Basic) is registered as admin when set.
 
-**HTTP Basic RPC** - `Authorization: Basic` using **`[rpc_auth].username`** / **`password`**. Used by ckpool and Bitcoin Core–style tools; bind RPC to loopback when using Basic auth.
+**HTTP Basic RPC** - `Authorization: Basic` using **`[rpc_auth].username`** / **`password`**. Used by ckpool and Bitcoin Core-style tools; bind RPC to loopback when using Basic auth.
 
 **ckpool** - Solo mining pool software that talks to the node over JSON-RPC (HTTP Basic). See [Mining Integration](../node/mining.md#ckpool-solo-bitaxe-stratum-v1).
 
-**Core drop-in** - Import a synced Bitcoin Core datadir into BLVM’s native store at `<datadir>/blvm/` (requires `rocksdb` build). Stop Core before migrate. See [Storage Backends — Bitcoin Core drop-in](../node/storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
+**Core drop-in** - Import a synced Bitcoin Core datadir into BLVM’s native store at `<datadir>/blvm/` (requires `rocksdb` build). Stop Core before migrate. See [Storage Backends: Bitcoin Core drop-in](../node/storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
 
 **Consensus Rules** - Mathematical rules that all Bitcoin nodes must follow to maintain network consensus. Defined in the [Orange Paper](orange-paper.md) and implemented in [blvm-consensus](../consensus/overview.md).
 

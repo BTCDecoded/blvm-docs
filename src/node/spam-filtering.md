@@ -1,6 +1,6 @@
 # Spam Filtering
 
-> **Layer** — Bandwidth and mempool filtering in **blvm-protocol** (optional `utxo-commitments` integration). Does not change consensus accept/reject for valid blocks.
+> **Layer**: Bandwidth and mempool filtering in **blvm-protocol** (optional `utxo-commitments` integration). Does not change consensus accept/reject for valid blocks.
 
 ## Overview
 
@@ -80,7 +80,7 @@ When processing a spam transaction:
 
 This ensures UTXO set consistency even when spam transactions spend non-spam inputs.
 
-**Implementation**: [blvm-protocol `utxo_commitments/initial_sync.rs`](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs) (output-only filtering when processing blocks for UTXO commitments).
+**Implementation**: [blvm-protocol utxo_commitments/initial_sync.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/initial_sync.rs) (output-only filtering when processing blocks for UTXO commitments).
 
 ## Configuration
 
@@ -97,19 +97,19 @@ let filter = SpamFilter::new();
 
 ```rust
 let config = SpamFilterConfig {
-    filter_ordinals: true,
-    filter_dust: true,
-    filter_brc20: true,
-    filter_large_witness: true,        // Detect large witness stacks
-    filter_low_fee_rate: false,         // Disabled by default (too aggressive)
-    filter_high_size_value_ratio: true, // Detect high size/value ratio
-    filter_many_small_outputs: true,    // Detect many small outputs
-    dust_threshold: 546,                // satoshis
-    min_output_value: 546,              // satoshis
-    min_fee_rate: 1,                    // satoshis per vbyte
-    max_witness_size: 1000,             // bytes
-    max_size_value_ratio: 1000.0,       // bytes per satoshi
-    max_small_outputs: 10,              // count
+ filter_ordinals: true,
+ filter_dust: true,
+ filter_brc20: true,
+ filter_large_witness: true, // Detect large witness stacks
+ filter_low_fee_rate: false, // Disabled by default (too aggressive)
+ filter_high_size_value_ratio: true, // Detect high size/value ratio
+ filter_many_small_outputs: true, // Detect many small outputs
+ dust_threshold: 546, // satoshis
+ min_output_value: 546, // satoshis
+ min_fee_rate: 1, // satoshis per vbyte
+ max_witness_size: 1000, // bytes
+ max_size_value_ratio: 1000.0, // bytes per satoshi
+ max_small_outputs: 10, // count
 };
 
 let filter = SpamFilter::with_config(config);
@@ -143,10 +143,10 @@ let filter = SpamFilter::new();
 let result = filter.is_spam(&transaction);
 
 if result.is_spam {
-    println!("Transaction is spam: {:?}", result.spam_type);
-    for spam_type in &result.detected_types {
-        println!("  - {:?}", spam_type);
-    }
+ println!("Transaction is spam: {:?}", result.spam_type);
+ for spam_type in &result.detected_types {
+ println!(" - {:?}", spam_type);
+ }
 }
 ```
 
@@ -169,8 +169,8 @@ let spam_filter = SpamFilter::new();
 let witnesses: Vec<Vec<Witness>> = /* witness data for each transaction */;
 
 let (filtered_txs, spam_summary) = spam_filter.filter_block_with_witness(
-    &block.transactions,
-    Some(&witnesses)
+ &block.transactions,
+ Some(&witnesses)
 );
 ```
 
@@ -191,13 +191,13 @@ config.reject_spam_in_mempool = true; // Enable spam rejection at mempool entry
 // Optional: Customize spam filter configuration
 #[cfg(feature = "utxo-commitments")]
 {
-    use blvm_protocol::spam_filter::SpamFilterConfigSerializable;
-    config.spam_filter_config = Some(SpamFilterConfigSerializable {
-        filter_ordinals: true,
-        filter_dust: true,
-        filter_brc20: true,
-        // ... other spam filter settings
-    });
+ use blvm_protocol::spam_filter::SpamFilterConfigSerializable;
+ config.spam_filter_config = Some(SpamFilterConfigSerializable {
+ filter_ordinals: true,
+ filter_dust: true,
+ filter_brc20: true,
+ // ... other spam filter settings
+ });
 }
 ```
 
@@ -258,8 +258,8 @@ tx_rate_limit_burst = 10
 tx_rate_limit_per_sec = 1
 
 # Per-peer byte rate limiting
-tx_byte_rate_limit = 100000   # 100 KB/s
-tx_byte_rate_burst = 1000000  # 1 MB burst
+tx_byte_rate_limit = 100000 # 100 KB/s
+tx_byte_rate_burst = 1000000 # 1 MB burst
 
 # Spam-aware eviction
 eviction_strategy = "spamfirst"
@@ -267,7 +267,7 @@ eviction_strategy = "spamfirst"
 [spam_ban]
 # Spam-specific peer banning
 spam_ban_threshold = 10
-spam_ban_duration_seconds = 3600  # 1 hour
+spam_ban_duration_seconds = 3600 # 1 hour
 ```
 
 ## Integration Points
@@ -338,7 +338,7 @@ Prevents large transaction flooding by limiting bytes per second per peer:
 
 ```toml
 [mempool_policy]
-tx_byte_rate_limit = 100000  # 100 KB/s
+tx_byte_rate_limit = 100000 # 100 KB/s
 tx_byte_rate_burst = 1000000 # 1 MB burst
 ```
 
@@ -348,7 +348,7 @@ Large transactions must pay higher fees to discourage spam:
 
 ```toml
 [mempool]
-min_fee_rate_large_tx = 2      # 2 sat/vB (higher than standard 1 sat/vB)
+min_fee_rate_large_tx = 2 # 2 sat/vB (higher than standard 1 sat/vB)
 large_tx_threshold_bytes = 1000 # Transactions >1 KB require higher fees
 ```
 
@@ -358,7 +358,7 @@ When mempool is full, spam transactions are evicted first:
 
 ```toml
 [mempool_policy]
-eviction_strategy = "spamfirst"  # Evict spam transactions first
+eviction_strategy = "spamfirst" # Evict spam transactions first
 ```
 
 **Note**: Requires `utxo-commitments` feature. Falls back to `lowest_fee_rate` if feature is disabled.
@@ -369,8 +369,8 @@ Tracks spam violations per peer and auto-bans repeat offenders:
 
 ```toml
 [spam_ban]
-spam_ban_threshold = 10           # Ban after 10 spam transactions
-spam_ban_duration_seconds = 3600  # Ban for 1 hour
+spam_ban_threshold = 10 # Ban after 10 spam transactions
+spam_ban_duration_seconds = 3600 # Ban for 1 hour
 ```
 
 Peers that repeatedly send spam transactions are automatically banned for the configured duration.

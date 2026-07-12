@@ -4,7 +4,7 @@
 
 BLVM uses GitHub Actions for continuous integration and deployment. All workflows run on **self-hosted Linux x64 runners** to ensure security and deterministic builds.
 
-**Release channels:** stable artifacts from `main` (versioned GitHub Releases + GHCR tags); rolling **nightly** from `develop` (`nightly` tag, `ghcr.io/btcdecoded/blvm:nightly`). See [Release process — Release channels](release-process.md#release-channels).
+**Release channels:** stable artifacts from `main` (versioned GitHub Releases + GHCR tags); rolling **nightly** from `develop` (`nightly` tag, `ghcr.io/btcdecoded/blvm:nightly`). See [Release process: Release channels](release-process.md#release-channels).
 
 ## What Happens When You Push Code
 
@@ -18,7 +18,7 @@ When you push code to any branch, the following workflows may trigger:
 
 ### On push to `main`
 
-When the release job runs (not every push — respect `[skip_release]` and workflow filters), **`blvm/.github/workflows/ci.yml`** may:
+When the release job runs (not every push: respect `[skip_release]` and workflow filters), **`blvm/.github/workflows/ci.yml`** may:
 
 1. Bump **`Cargo.toml`** patch version and tag **`vX.Y.Z`**
 2. Build **Linux x86_64**, **Linux aarch64**, and **Windows** release binaries
@@ -136,19 +136,19 @@ The `blvm-commons` repository provides reusable workflows that other repositorie
 Builds follow **Cargo’s dependency graph** (simplified view):
 
 ```
-1. blvm-primitives — foundation types/crypto shared by consensus & protocol
-   ↓
-2. blvm-consensus — depends on primitives
-   ↓
-3. blvm-protocol — depends on consensus + primitives
-   ↓
-4. blvm-node — depends on protocol + consensus
-   ↓
-5. blvm (CLI) — depends on blvm-node
+1. blvm-primitives: foundation types/crypto shared by consensus & protocol
+ ↓
+2. blvm-consensus: depends on primitives
+ ↓
+3. blvm-protocol: depends on consensus + primitives
+ ↓
+4. blvm-node: depends on protocol + consensus
+ ↓
+5. blvm (CLI): depends on blvm-node
 
-blvm-sdk — depends on blvm-protocol + blvm-consensus (and optionally blvm-node); not a separate “no-deps” lane
-   ↓
-blvm-commons — depends on blvm-sdk + blvm-protocol
+blvm-sdk: depends on blvm-protocol + blvm-consensus (and optionally blvm-node); not a separate “no-deps” lane
+ ↓
+blvm-commons: depends on blvm-sdk + blvm-protocol
 ```
 
 **Security Gates**: Consensus verification (tests + optional BLVM Specification Lock) must pass before downstream builds proceed.
@@ -171,7 +171,7 @@ All workflows run on **self-hosted Linux x64 runners**:
 
 All builds use deterministic build practices:
 
-- **Locked builds**: When a **lockfile** is part of the workflow, `cargo build --locked` (or equivalent) resolves dependencies exactly as locked. **Root `Cargo.lock` policy differs by repository**—see each crate’s `CONTRIBUTING.md`.
+- **Locked builds**: When a **lockfile** is part of the workflow, `cargo build --locked` (or equivalent) resolves dependencies exactly as locked. **Root `Cargo.lock` policy differs by repository**, see each crate’s [Contributing](../development/contributing.md).
 - **Toolchain Pinning**: Per-repo `rust-toolchain.toml` defines exact Rust version
 - **Artifact Hashing**: All outputs hashed to `SHA256SUMS`
 - **Verification**: Optional deterministic verification (rebuild and compare hashes)
@@ -269,7 +269,7 @@ CI runs in a clean environment:
 
 **Issue**: Build works locally but fails in CI
 - **Cause**: Dependency version mismatch, different lockfile, or different feature set
-- **Solution**: Follow **that repository’s** `CONTRIBUTING.md` and `.github/workflows/`. Many BLVM crates **do not commit** a root `Cargo.lock` (see `.gitignore`); CI may still run `cargo … --locked` when it generates or checks in a lockfile for that job. When a lockfile is present for your workflow, keep local resolution aligned (e.g. regenerate with `cargo generate-lockfile` where the project documents it).
+- **Solution**: Follow **that repository’s** [Contributing](../development/contributing.md) and `.github/workflows/`. Many BLVM crates **do not commit** a root `Cargo.lock` (see `.gitignore`); CI may still run `cargo … --locked` when it generates or checks in a lockfile for that job. When a lockfile is present for your workflow, keep local resolution aligned (e.g. regenerate with `cargo generate-lockfile` where the project documents it).
 
 **Issue**: Coverage calculation fails
 - **Cause**: Coverage tool issues
@@ -366,7 +366,7 @@ For long-running runners, implement cache cleanup:
 - **Keep recent caches**: Maintain last N cache entries
 - **Emergency cleanup**: Check disk space and clean if >80% full
 
-**BLVM repositories:** scheduled workflows such as **`cleanup-runner-disk.yml`** (e.g. **`blvm`**, **`blvm-node`**, **`blvm-sdk`**) prune stale trees under **`/tmp/runner-cache/…`** (namespaced per repo where configured). Node CI documents **`BLVM_RUNNER_BUILD_ROOT`** / sibling purge behavior in **`blvm-node/.github/workflows/ci.yml`** — keep per-job build roots off shared parent directories unrelated to that workflow.
+**BLVM repositories:** scheduled workflows such as **`cleanup-runner-disk.yml`** (e.g. **`blvm`**, **`blvm-node`**, **`blvm-sdk`**) prune stale trees under **`/tmp/runner-cache/…`** (namespaced per repo where configured). Node CI documents **`BLVM_RUNNER_BUILD_ROOT`** / sibling purge behavior in **`blvm-node/.github/workflows/ci.yml`**: keep per-job build roots off shared parent directories unrelated to that workflow.
 
 ### Performance Improvements
 

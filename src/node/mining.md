@@ -59,15 +59,15 @@ The coinbase transaction includes:
 
 ```rust
 pub struct Block {
-    header: BlockHeader {
-        version: 1,
-        prev_block_hash: [u8; 32],
-        merkle_root: [u8; 32],
-        timestamp: u32,
-        bits: u32,
-        nonce: 0,  // To be filled by miner
-    },
-    transactions: Vec<Transaction>,  // Coinbase first
+ header: BlockHeader {
+ version: 1,
+ prev_block_hash: [u8; 32],
+ merkle_root: [u8; 32],
+ timestamp: u32,
+ bits: u32,
+ nonce: 0, // To be filled by miner
+ },
+ transactions: Vec<Transaction>, // Coinbase first
 }
 ```
 
@@ -141,7 +141,7 @@ password = "change-me-to-a-strong-secret"
 blvm --network mainnet --rpc-addr 127.0.0.1:8332
 ```
 
-HTTP Basic password is auto-granted **admin** (required for `getblocktemplate` / `submitblock`). Point ckpool `btcd.url` at the RPC port with matching `auth` / `pass`. Regtest lab: seed chain height with `generatetoaddress` (**admin** Bearer or Basic — see [Quick Start](../getting-started/quick-start.md)) before GBT. Smoke test: `blvm-node/examples/ckpool-solo/smoke-rpc.sh`. See the [blvm-node Integration Guide — ckpool](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#ckpool-solo-mining--bitaxe--stratum-v1).
+HTTP Basic password is auto-granted **admin** (required for `getblocktemplate` / `submitblock`). Point ckpool `btcd.url` at the RPC port with matching `auth` / `pass`. Regtest lab: seed chain height with `generatetoaddress` (**admin** Bearer or Basic: see [Quick Start](../getting-started/quick-start.md)) before GBT. Smoke test: `blvm-node/examples/ckpool-solo/smoke-rpc.sh`. See the [blvm-node Integration Guide: ckpool](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#ckpool-solo-mining--bitaxe--stratum-v1).
 
 ### Stratum V2 (node + module)
 
@@ -152,7 +152,7 @@ See [Stratum V2 + Merge Mining](mining-stratum-v2.md) for split **node** vs **mo
 
 - [mining.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/mining.rs)
 - [miner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/miner.rs)
-- [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) (module — dedicated miner TCP); node: P2P demux in [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), `NodeAPI::send_peer_transport_payload`
+- [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) (module: dedicated miner TCP); node: P2P demux in [network_manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs), `NodeAPI::send_peer_transport_payload`
 - [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs), [StratumV2Config](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/rpc.rs)
 ## See Also
 

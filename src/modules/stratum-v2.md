@@ -24,29 +24,29 @@ cargo install blvm-stratum-v2
 ### Manual Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/BTCDecoded/blvm-stratum-v2.git
-   cd blvm-stratum-v2
-   ```
+ ```bash
+ git clone https://github.com/BTCDecoded/blvm-stratum-v2.git
+ cd blvm-stratum-v2
+ ```
 
 2. Build the module:
-   ```bash
-   cargo build --release
-   ```
+ ```bash
+ cargo build --release
+ ```
 
 3. Install to node modules directory:
-   ```bash
-   mkdir -p /path/to/node/modules/blvm-stratum-v2/target/release
-   cp target/release/blvm-stratum-v2 /path/to/node/modules/blvm-stratum-v2/target/release/
-   cp module.toml /path/to/node/modules/blvm-stratum-v2/
-   ```
+ ```bash
+ mkdir -p /path/to/node/modules/blvm-stratum-v2/target/release
+ cp target/release/blvm-stratum-v2 /path/to/node/modules/blvm-stratum-v2/target/release/
+ cp module.toml /path/to/node/modules/blvm-stratum-v2/
+ ```
 
 ## Requirements
 
 - `blvm-node` with the module system enabled.
 - Miners connect to this module’s **`listen_addr`** (module-owned TCP), not the node P2P port.
 - Admin RPC auth for `getblocktemplate` / `submitblock` when miners submit blocks via the node.
-- Optional: node `stratum-v2` feature for P2P Stratum TLV demux — see [Stratum V2 mining](../node/mining-stratum-v2.md).
+- Optional: node `stratum-v2` feature for P2P Stratum TLV demux: see [Stratum V2 mining](../node/mining-stratum-v2.md).
 
 ## Loading
 
@@ -70,7 +70,7 @@ See [Installing modules](overview.md#installing-modules).
 
 ## Configuration
 
-Module `config.toml` at `<modules.data_dir>/blvm-stratum-v2/config.toml` (flat keys — same fields as `[modules.blvm-stratum-v2]` overrides):
+Module `config.toml` at `<modules.data_dir>/blvm-stratum-v2/config.toml` (flat keys: same fields as `[modules.blvm-stratum-v2]` overrides):
 
 ```toml
 listen_addr = "0.0.0.0:3333"
@@ -85,10 +85,10 @@ max_connections = 100
 | `listen_addr` | `0.0.0.0:3333` | Miner TCP bind (module-owned; not the node P2P port) |
 | `difficulty_target` | `1` | Default channel difficulty when the miner sends 0 |
 | `max_connections` | `100` | Max concurrent miner connections |
-| `pool_name` | — | Optional display name |
-| `extra_extranonce` | — | Optional extra extranonce bytes (hex) |
+| `pool_name` |: | Optional display name |
+| `extra_extranonce` |: | Optional extra extranonce bytes (hex) |
 
-> **Scope:** This TOML lives under **`[modules].data_dir`** for **`blvm-stratum-v2`**, **not** in the node’s top-level **`blvm.toml`**. Node-side Stratum P2P demux and merge-mining keys are under **`[stratum_v2]`** in `blvm.toml` — see [Mining with Stratum V2](../node/mining-stratum-v2.md). There is **no** module `enabled` or `pool_url` key; enable loading via a **`[modules]`** version pin (e.g. `blvm-stratum-v2 = "0.1.*"`).
+> **Scope:** This TOML lives under **`[modules].data_dir`** for **`blvm-stratum-v2`**, **not** in the node’s top-level **`blvm.toml`**. Node-side Stratum P2P demux and merge-mining keys are under **`[stratum_v2]`** in `blvm.toml`: see [Mining with Stratum V2](../node/mining-stratum-v2.md). There is **no** module `enabled` or `pool_url` key; enable loading via a **`[modules]`** version pin (e.g. `blvm-stratum-v2 = "0.1.*"`).
 
 ## Module Manifest
 
@@ -101,12 +101,12 @@ author = "Bitcoin Commons Team"
 entry_point = "blvm-stratum-v2"
 
 capabilities = [
-    "read_blockchain",
-    "subscribe_events",
+ "read_blockchain",
+ "subscribe_events",
 ]
 ```
 
-Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`** — do not hardcode it in the book.
+Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`**: do not hardcode it in the book.
 
 ## Events
 
@@ -137,8 +137,8 @@ The Stratum V2 **specification** defines binary TLV framing, optional encryption
 
 Stratum V2 features commonly discussed in spec materials:
 
-- **Binary / TLV framing** — compact binary messages vs Stratum V1 text
-- **Template and share flow** — template distribution, share submission, channels (see upstream [Stratum V2](https://stratumprotocol.org/) docs)
+- **Binary / TLV framing**: compact binary messages vs Stratum V1 text
+- **Template and share flow**: template distribution, share submission, channels (see upstream [Stratum V2](https://stratumprotocol.org/) docs)
 
 ### Protocol Components
 
@@ -154,7 +154,7 @@ For detailed information about the Stratum V2 protocol, see [Stratum V2 Mining P
 **Merge mining is NOT part of the Stratum V2 module.** It is available as a separate paid plugin module (`blvm-merge-mining`) that integrates with the Stratum V2 module.
 
 For merge mining functionality, see:
-- [blvm-merge-mining README](https://github.com/BTCDecoded/blvm-merge-mining/blob/main/README.md) — merge mining module documentation (repository; optional checkout beside `blvm-docs`)
+- [blvm-merge-mining README](https://github.com/BTCDecoded/blvm-merge-mining/blob/main/README.md): merge mining module documentation (repository; optional checkout beside `blvm-docs`)
 - [Stratum V2 + Merge Mining](../node/mining-stratum-v2.md) - How merge mining integrates with Stratum V2
 
 ## Usage
@@ -198,7 +198,7 @@ The module also **subscribes** to `MiningJobCreated` and `ShareSubmitted` from o
 
 ## Repository
 
-- **GitHub**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2) — releases and current `module.toml` **`version`**
+- **GitHub**: [blvm-stratum-v2](https://github.com/BTCDecoded/blvm-stratum-v2): releases and current `module.toml` **`version`**
 
 ## External Resources
 

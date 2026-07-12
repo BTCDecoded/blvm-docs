@@ -101,7 +101,7 @@
 
 # Reference
 
-- [Orange Paper](reference/orange-paper.md) — canonical spec on [Bitcoin Commons](https://thebitcoincommons.org/orange-paper.html) ([Consensus Spec](https://thebitcoincommons.org/spec.html))
+- [Orange Paper](reference/orange-paper.md): canonical spec on [Bitcoin Commons](https://thebitcoincommons.org/orange-paper.html) ([Consensus Spec](https://thebitcoincommons.org/spec.html))
 - [Protocol Specifications](reference/protocol-specifications.md)
 - [Configuration Reference](reference/configuration-reference.md)
 - [JSON-RPC error reference](reference/rpc-errors.md)

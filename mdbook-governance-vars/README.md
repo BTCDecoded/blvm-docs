@@ -13,9 +13,9 @@ Unknown keys or any leftover `[[gov:…]]` after expansion fails the build.
 
 | File | Used for |
 |------|----------|
-| `action-tiers.yml` | PR tiers 1–5 review days and maintainer signatures |
+| `action-tiers.yml` | PR tiers 1-5 review days and maintainer signatures |
 | `emergency-tiers.yml` | Emergency class thresholds (not the duplicate block in `action-tiers.yml`) |
-| `repository-layers.yml` | Layer signatures/review days, consensus review (layers 1–2), combination matrix |
+| `repository-layers.yml` | Layer signatures/review days, consensus review (layers 1-2), combination matrix |
 
 ## Allowlist keys
 
@@ -33,13 +33,13 @@ Emergency suffixes: `_review_days`, `_signature`, `_activation`, `_max_days`.
 
 **Not templated:** Tier 5 special process (see governance `GOVERNANCE.md` / `docs/ACTION_TIERS.md`).
 
-### Layer–tier model (`layer-tier-model.md`, `multisig-configuration.md`)
+### Layer-tier model (`layer-tier-model.md`, `multisig-configuration.md`)
 
 | Key pattern | Meaning |
 |-------------|---------|
 | `layer_N_signatures`, `layer_N_review_days` | `repository-layers.yml` |
 | `layer_N_sig_required`, `layer_N_sig_total` | Parsed from `layer_N_signatures` |
-| `layer_1_consensus_review_days`, `layer_2_consensus_review_days` | 365-day consensus path (layers 1–2) |
+| `layer_1_consensus_review_days`, `layer_2_consensus_review_days` | 365-day consensus path (layers 1-2) |
 | `combination_matrix_table` | Full 5×5 markdown table (max-rule, matches `threshold.rs`) |
 | `matrix_L_T_signatures`, `matrix_L_T_review_days`, `matrix_L_T_source` | Single matrix cell (L,T = 1..5) |
 

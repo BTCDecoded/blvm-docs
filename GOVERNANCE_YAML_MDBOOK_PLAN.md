@@ -2,7 +2,7 @@
 
 **Purpose:** Make [governance](https://github.com/BTCDecoded/governance) `config/*.yml` the **authoritative policy numbers** for **published** governance tables in [blvm-docs](https://github.com/BTCDecoded/blvm-docs), resolved at **`mdbook build`** so prose cannot drift from YAML.
 
-**Non-goals (this epic):** Orange Paper templating; auto-editing `GOVERNANCE.md` / `README.md` bodies; replacing hardcoded logic in [blvm-commons](https://github.com/BTCDecoded/blvm-commons) (see §5—that is a **follow-up** unless explicitly scoped).
+**Non-goals (this epic):** Orange Paper templating; auto-editing `GOVERNANCE.md` / `README.md` bodies; replacing hardcoded logic in [blvm-commons](https://github.com/BTCDecoded/blvm-commons) (see §5, that is a **follow-up** unless explicitly scoped).
 
 ---
 
@@ -14,7 +14,7 @@ Change these only with a deliberate ADR; otherwise implementation proceeds as be
 |----------|---------|
 | **Render mechanism** | **mdBook preprocessor (Rust)** in `blvm-docs`, crate path **`mdbook-governance-vars/`** (or `tools/mdbook-governance-vars/`). No pre-build generated `src/*.md` in MVP. |
 | **mdBook ordering** | `[preprocessor.governance-vars]` with **`after = ["links"]`** so `{{#include}}` runs first (verify against pinned mdBook version). |
-| **Placeholder syntax** | **`[[gov:KEY]]`** only: `KEY` is a **flat allowlist** entry (e.g. `tier_1_review_days`), not arbitrary dotted YAML paths in prose—mapping from key to YAML lives **only** in preprocessor code or a single `allowed_keys.toml` next to the crate. |
+| **Placeholder syntax** | **`[[gov:KEY]]`** only: `KEY` is a **flat allowlist** entry (e.g. `tier_1_review_days`), not arbitrary dotted YAML paths in prose, mapping from key to YAML lives **only** in preprocessor code or a single `allowed_keys.toml` next to the crate. |
 | **YAML read roots** | **`modules/governance/config/`** at build time. Files in MVP: **`action-tiers.yml`**, **`repository-layers.yml`**, **`emergency-tiers.yml`** (paths already verified in `deploy.yml`). |
 | **Emergency policy source** | **Canonical for templating:** `config/emergency-tiers.yml`. **Do not** read the duplicate **`emergency_tiers`** block inside `config/action-tiers.yml` for the book until governance removes or syncs it (Phase 0 governance PR). |
 | **CI mdBook** | Pin **`mdbook-version`** in `.github/workflows/deploy.yml` when the preprocessor merges (replace `latest`). |
@@ -36,7 +36,7 @@ Change these only with a deliberate ADR; otherwise implementation proceeds as be
 
 - **Governance:** `config/action-tiers.yml` (PR tiers plus embedded `emergency_tiers` duplicate), `config/repository-layers.yml`, `config/emergency-tiers.yml`, plus classification and per-repo YAML.
 - **blvm-docs:** Most content in `src/`; three `{{#include}}` sites; deploy ensures governance clone and YAML files exist.
-- **blvm-commons:** `src/validation/threshold.rs` implements `get_tier_threshold`, `get_threshold_for_layer`, `get_combined_requirements` with **hardcoded** integers that match YAML today—it does **not** load `action-tiers.yml` for those functions. Tests reference YAML on disk as fixtures. **Therefore:** templating the book from YAML improves **docs accuracy** but does **not** automatically fix Rust or YAML drift; track separately (§5).
+- **blvm-commons:** `src/validation/threshold.rs` implements `get_tier_threshold`, `get_threshold_for_layer`, `get_combined_requirements` with **hardcoded** integers that match YAML today; it does **not** load `action-tiers.yml` for those functions. Tests reference YAML on disk as fixtures. **Therefore:** templating the book from YAML improves **docs accuracy** but does **not** automatically fix Rust or YAML drift; track separately (§5).
 
 ---
 
@@ -46,8 +46,8 @@ Change these only with a deliberate ADR; otherwise implementation proceeds as be
 
 ```text
 governance/docs/
-  README.md                 # editors: what to change in YAML vs here
-  templates/                # optional after MVP
+ README.md # editors: what to change in YAML vs here
+ templates/ # optional after MVP
 ```
 
 **MVP path A (minimal):** placeholders live in **`blvm-docs/src/development/pr-process.md`** only; preprocessor loads YAML from `modules/governance/config/`; **no** `governance/docs/templates/` until a second PR.
@@ -56,7 +56,7 @@ governance/docs/
 
 ---
 
-## 5. Third source of truth (code)—backlog
+## 5. Third source of truth (code), backlog
 
 | Source | Role today |
 |--------|------------|
@@ -77,7 +77,7 @@ governance/docs/
 3. **Registry:** table `KEY` to YAML path lives in **`mdbook-governance-vars`** (`keys.rs` or `allowed_keys.toml`); optional duplicate list in `governance/docs/README.md` for non-Rust editors (Phase 2).
 4. **Forbidden:** placeholders inside included Orange Paper (optional CI grep).
 5. **Whitespace:** replace only the exact token; preserve surrounding Markdown newlines.
-6. **Composite formatting:** allowlist values may be **derived** in code (for example format `tiers.tier_1_routine.signatures.{required,total}` as `3-of-5`)—still one `KEY` per insertion site.
+6. **Composite formatting:** allowlist values may be **derived** in code (for example format `tiers.tier_1_routine.signatures.{required,total}` as `3-of-5`), still one `KEY` per insertion site.
 
 ---
 
@@ -136,17 +136,17 @@ These were checked against **`blvm-docs/src/development/pr-process.md`** and **`
 
 | Topic | Finding | Plan |
 |-------|---------|------|
-| **Tier 5 signatures in prose** | Book says *Special process (5-of-7 maintainers + 2-of-3 emergency keyholders)*. **`action-tiers.yml`** `tier_5_governance` has **`signatures: 5/5`** and **180 days** only—no 7-pool or 2-of-3 fields. | Phase 0 or governance follow-up: **extend YAML** (or a small `tier_5_special_process.md` include) **or** keep that **one sentence** hand-authored until policy is encoded. Do **not** invent `[[gov:…]]` keys for prose that has no YAML field. |
+| **Tier 5 signatures in prose** | Book says *Special process (5-of-7 maintainers + 2-of-3 emergency keyholders)*. **`action-tiers.yml`** `tier_5_governance` has **`signatures: 5/5`** and **180 days** only, no 7-pool or 2-of-3 fields. | Phase 0 or governance follow-up: **extend YAML** (or a small `tier_5_special_process.md` include) **or** keep that **one sentence** hand-authored until policy is encoded. Do **not** invent `[[gov:…]]` keys for prose that has no YAML field. |
 | **`action-tiers.yml` embedded `emergency_tiers`** | Uses keys `critical` / `urgent` / `elevated` with **numeric** `activation_threshold` / `activation_total` and **no** `4-of-7` maintainer string. **`emergency-tiers.yml`** uses `tiers.tier_1_critical` etc. with **`signature_threshold: 4-of-7`** strings under `requirements`. | Preprocessor reads **`emergency-tiers.yml` only** for emergency-class maintainer bullets; Phase 0 governance work dedupes or documents why both exist. |
-| **Security-specific tiers** | `action-tiers.yml` includes `security_critical`, `cryptographic`, `security_enhancement` with their own thresholds—**not** summarized in `pr-process.md` today. | **Out of MVP** unless a doc page lists those numbers; add keys later if documented. |
-| **Layer–tier combination matrix** | `layer-tier-model.md` matrix is **`max(layer, tier)`** logic—same as **`blvm-commons`** `get_combined_requirements`. Not a single flat YAML row per cell. | **Phase 3:** implement the same max rule **inside the preprocessor** (small pure-Rust module) **with unit tests** whose expected cells match `threshold.rs` today; optional Phase 4 CI compares output to `blvm-commons` test vectors. |
-| **Consensus 365-day note** | Book: Layer 1–2 consensus changes → **365 days**. **`repository-layers.yml`** exposes `consensus_review_period_days: 365` on layers 1–2. | Add allowlist keys or one derived sentence key when that line is templated (Phase 3). |
+| **Security-specific tiers** | `action-tiers.yml` includes `security_critical`, `cryptographic`, `security_enhancement` with their own thresholds, **not** summarized in `pr-process.md` today. | **Out of MVP** unless a doc page lists those numbers; add keys later if documented. |
+| **Layer-tier combination matrix** | `layer-tier-model.md` matrix is **`max(layer, tier)`** logic, same as **`blvm-commons`** `get_combined_requirements`. Not a single flat YAML row per cell. | **Phase 3:** implement the same max rule **inside the preprocessor** (small pure-Rust module) **with unit tests** whose expected cells match `threshold.rs` today; optional Phase 4 CI compares output to `blvm-commons` test vectors. |
+| **Consensus 365-day note** | Book: Layer 1-2 consensus changes → **365 days**. **`repository-layers.yml`** exposes `consensus_review_period_days: 365` on layers 1-2. | Add allowlist keys or one derived sentence key when that line is templated (Phase 3). |
 
 ---
 
 ## 12. Initial allowlist sketch (Phase 0 → Phase 2)
 
-**Convention:** `tier_N_*` from `action-tiers.yml` `tiers.tier_N_*` (PR tiers **1–5** only for MVP). `layer_N_*` from `repository-layers.yml` `layers.layer_N_*`. `emergency_*` from `emergency-tiers.yml` `tiers.tier_*`.
+**Convention:** `tier_N_*` from `action-tiers.yml` `tiers.tier_N_*` (PR tiers **1-5** only for MVP). `layer_N_*` from `repository-layers.yml` `layers.layer_N_*`. `emergency_*` from `emergency-tiers.yml` `tiers.tier_*`.
 
 | `KEY` (example) | Source path (logical) | Typical rendered output |
 |-----------------|----------------------|---------------------------|
@@ -179,7 +179,7 @@ These were checked against **`blvm-docs/src/development/pr-process.md`** and **`
 | **Entry** | Implement mdBook’s **`Preprocessor`** trait; `run()` loads the three YAML files from **`context.root` / `modules/governance/config/`** (path join; fail if missing). |
 | **Algorithm** | Walk every `BookItem::Chapter`; replace `[[gov:KEY]]` in `chapter.content` via allowlist map; second pass or assert **no** unreplaced `[[gov:`** substring remains** (catch typos). |
 | **Errors** | `eprintln!` with chapter **path**, **`KEY`**, and reason; **`std::process::exit(1)`** on any failure (mdBook surfaces non-zero). |
-| **Tests** | **`tests/fixtures/`** copy minimal YAML + sample `chapter.md`; assert expanded strings; golden tests for **tier 1–5** and **three emergency** rows. |
+| **Tests** | **`tests/fixtures/`** copy minimal YAML + sample `chapter.md`; assert expanded strings; golden tests for **tier 1-5** and **three emergency** rows. |
 | **Repo layout** | Either **workspace member** under `blvm-docs` (if you convert to workspace `Cargo.toml`) or **standalone crate** in `mdbook-governance-vars/` with its own `Cargo.lock` committed for **`cargo install --locked`**. |
 
 ---
@@ -190,7 +190,7 @@ These were checked against **`blvm-docs/src/development/pr-process.md`** and **`
 - [ ] Pin **`mdbook-version`** in **`peaceiris/actions-mdbook`** to the same major.minor used locally.
 - [ ] After **Install mdBook**, add **Rust toolchain** + **`cargo install --path mdbook-governance-vars`** (or `--locked`).
 - [ ] Ensure **`PATH`** includes `$HOME/.cargo/bin` before **`mdbook build`**.
-- [ ] New **`.github/workflows/docs.yml`** (or extend **`deploy.yml`**) with **`on: pull_request`** for `paths: ['src/**', 'book.toml', 'mdbook-governance-vars/**', '.github/workflows/**']`—same fetch, verify, build, **no** Pages / deploy.
+- [ ] New **`.github/workflows/docs.yml`** (or extend **`deploy.yml`**) with **`on: pull_request`** for `paths: ['src/**', 'book.toml', 'mdbook-governance-vars/**', '.github/workflows/**']`, same fetch, verify, build, **no** Pages / deploy.
 - [ ] Extend **Verify book inputs** when new committed paths are required.
 
 ---
@@ -199,21 +199,21 @@ These were checked against **`blvm-docs/src/development/pr-process.md`** and **`
 
 ```yaml
 jobs:
-  build-book:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: { submodules: recursive, fetch-depth: 0 }
-      - uses: peaceiris/actions-mdbook@v1
-        with: { mdbook-version: '0.4.x' }  # pin explicitly
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Fetch include sources + verify inputs
-        run: |  # paste or reuse same script block as deploy.yml
-          …
-      - name: Install governance-vars preprocessor
-        run: cargo install --locked --path mdbook-governance-vars
-      - name: mdbook build
-        run: mdbook build
+ build-book:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ with: { submodules: recursive, fetch-depth: 0 }
+ - uses: peaceiris/actions-mdbook@v1
+ with: { mdbook-version: '0.4.x' } # pin explicitly
+ - uses: dtolnay/rust-toolchain@stable
+ - name: Fetch include sources + verify inputs
+ run: | # paste or reuse same script block as deploy.yml
+ …
+ - name: Install governance-vars preprocessor
+ run: cargo install --locked --path mdbook-governance-vars
+ - name: mdbook build
+ run: mdbook build
 ```
 
 Adjust versions and path to match the chosen crate layout.
@@ -241,10 +241,10 @@ All must be true:
 
 ## 18. References
 
-- [blvm-docs](https://github.com/BTCDecoded/blvm-docs) — `book.toml`, `.github/workflows/deploy.yml`
-- [governance](https://github.com/BTCDecoded/governance) — `config/`
+- [blvm-docs](https://github.com/BTCDecoded/blvm-docs): `book.toml`, `.github/workflows/deploy.yml`
+- [governance](https://github.com/BTCDecoded/governance): `config/`
 - [mdBook preprocessors](https://rust-lang.github.io/mdBook/for_developers/preprocessors.html)
-- [blvm-commons threshold.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/threshold.rs) — hardcoded merge rules (§5)
+- [blvm-commons threshold.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/validation/threshold.rs): hardcoded merge rules (§5)
 
 ---
 
@@ -254,28 +254,28 @@ Work **top to bottom**. Later rows assume earlier ones are done (or explicitly w
 
 | Order | Item | Repo | Blocks |
 |-------|------|------|--------|
-| **1** | **Tier 5 prose decision** (extend `action-tiers.yml`, keep one hand sentence, or defer with owner+date) — §11 | governance (policy) + note in plan/ADR | **Waived:** special process in `GOVERNANCE.md` + `docs/ACTION_TIERS.md`; YAML row for review days only |
-| **2** | **Emergency single-source:** comment + doc pointer, or remove/sync **`emergency_tiers`** inside `action-tiers.yml` vs **`emergency-tiers.yml`** — §11, Phase 0 | governance | **Done** (2026-05-18): duplicate block removed from `action-tiers.yml` |
-| **3** | **Freeze MVP allowlist** (exact `KEY` names for `pr-process.md` only) — §12 | governance PR or `mdbook-governance-vars` README | **Done** in `mdbook-governance-vars/README.md` |
-| **4** | **Pick mdBook version** + record in `deploy.yml` / ADR — §1, §17 | blvm-docs | Reproducible preprocessor |
-| **5** | **Pick crate layout** (standalone `mdbook-governance-vars/` + committed `Cargo.lock` **recommended** for `cargo install --locked`) — §13, §17 | blvm-docs | CI install |
-| **6** | **Scaffold preprocessor:** `Preprocessor` impl, load three YAMLs from `modules/governance/config/`, allowlist map, replace `[[gov:KEY]]`, fail on unknown or leftover `[[gov:` — §13 | blvm-docs | Everything below |
-| **7** | **Unit tests** with fixture YAML + golden expanded markdown — §13 | blvm-docs | Safe refactors |
-| **8** | **`book.toml`:** `[preprocessor.governance-vars]` + `after = ["links"]` — §14 | blvm-docs | Local + CI build |
-| **9** | **One placeholder** in `src/development/pr-process.md` (smoke) — Phase 1 | blvm-docs | Proves end-to-end |
-| **10** | **`deploy.yml`:** Rust toolchain + `cargo install --locked --path mdbook-governance-vars` + pin `mdbook-version` — §7, §14 | blvm-docs | Pages deploy |
-| **11** | **`pull_request` workflow** (same fetch/verify/build, `paths` filter) — §15 | blvm-docs | Merge safety |
-| **12** | **Phase 2:** replace remaining in-scope literals in **`pr-process.md`** with `[[gov:…]]` — §8 | blvm-docs | **Done** (incl. Pass 2: layer bullets, matrix example table) |
-| **13** | **Contributor docs:** README + appendices — do not edit migrated numbers in blvm-docs — §10 | blvm-docs | **Done** (2026-05-18): README, CONTRIBUTING, contributing-docs |
-| **14** | **Phase 3:** `layer-tier-model.md` (combine matrix: port max-rule + tests vs `threshold.rs`) — §8, §11 | blvm-docs | **Done** (2026-05-18): `combine.rs`, matrix table + layer/tier keys |
-| **15** | **Phase 3:** `multisig-configuration.md`, `configuration-system.md` — §8 | blvm-docs | **Done** (2026-05-18): placeholders + ACTION_TIERS pointer |
-| **16** | **Phase 4 optional:** `governance/docs/templates/`, YAML lint, drift CI vs `threshold.rs` — §4, §5 | governance / blvm-docs | **Partial:** `threshold_ref` + `drift_check` tests in CI; `scripts/verify-book-inputs.sh`; ADR `docs/GOVERNANCE_MDBOOK.md` |
-| **17** | **Pass 3 / book-wide:** SDK, security, fork, `*_sig_*`, `security_critical_*` keys; `scripts/check-governance-literals.sh` in CI — §8 | blvm-docs | **Done** (2026-05-18): wired chapters templated; only Tier 5 special line exempt |
+| **1** | **Tier 5 prose decision** (extend `action-tiers.yml`, keep one hand sentence, or defer with owner+date): §11 | governance (policy) + note in plan/ADR | **Waived:** special process in `GOVERNANCE.md` + `docs/ACTION_TIERS.md`; YAML row for review days only |
+| **2** | **Emergency single-source:** comment + doc pointer, or remove/sync **`emergency_tiers`** inside `action-tiers.yml` vs **`emergency-tiers.yml`**: §11, Phase 0 | governance | **Done** (2026-05-18): duplicate block removed from `action-tiers.yml` |
+| **3** | **Freeze MVP allowlist** (exact `KEY` names for `pr-process.md` only): §12 | governance PR or `mdbook-governance-vars` README | **Done** in `mdbook-governance-vars/README.md` |
+| **4** | **Pick mdBook version** + record in `deploy.yml` / ADR: §1, §17 | blvm-docs | Reproducible preprocessor |
+| **5** | **Pick crate layout** (standalone `mdbook-governance-vars/` + committed `Cargo.lock` **recommended** for `cargo install --locked`): §13, §17 | blvm-docs | CI install |
+| **6** | **Scaffold preprocessor:** `Preprocessor` impl, load three YAMLs from `modules/governance/config/`, allowlist map, replace `[[gov:KEY]]`, fail on unknown or leftover `[[gov:`: §13 | blvm-docs | Everything below |
+| **7** | **Unit tests** with fixture YAML + golden expanded markdown: §13 | blvm-docs | Safe refactors |
+| **8** | **`book.toml`:** `[preprocessor.governance-vars]` + `after = ["links"]`: §14 | blvm-docs | Local + CI build |
+| **9** | **One placeholder** in `src/development/pr-process.md` (smoke): Phase 1 | blvm-docs | Proves end-to-end |
+| **10** | **`deploy.yml`:** Rust toolchain + `cargo install --locked --path mdbook-governance-vars` + pin `mdbook-version`: §7, §14 | blvm-docs | Pages deploy |
+| **11** | **`pull_request` workflow** (same fetch/verify/build, `paths` filter): §15 | blvm-docs | Merge safety |
+| **12** | **Phase 2:** replace remaining in-scope literals in **`pr-process.md`** with `[[gov:…]]`: §8 | blvm-docs | **Done** (incl. Pass 2: layer bullets, matrix example table) |
+| **13** | **Contributor docs:** README + appendices: do not edit migrated numbers in blvm-docs: §10 | blvm-docs | **Done** (2026-05-18): README, CONTRIBUTING, contributing-docs |
+| **14** | **Phase 3:** `layer-tier-model.md` (combine matrix: port max-rule + tests vs `threshold.rs`): §8, §11 | blvm-docs | **Done** (2026-05-18): `combine.rs`, matrix table + layer/tier keys |
+| **15** | **Phase 3:** `multisig-configuration.md`, `configuration-system.md`: §8 | blvm-docs | **Done** (2026-05-18): placeholders + ACTION_TIERS pointer |
+| **16** | **Phase 4 optional:** `governance/docs/templates/`, YAML lint, drift CI vs `threshold.rs`: §4, §5 | governance / blvm-docs | **Partial:** `threshold_ref` + `drift_check` tests in CI; `scripts/verify-book-inputs.sh`; ADR `docs/GOVERNANCE_MDBOOK.md` |
+| **17** | **Pass 3 / book-wide:** SDK, security, fork, `*_sig_*`, `security_critical_*` keys; `scripts/check-governance-literals.sh` in CI: §8 | blvm-docs | **Done** (2026-05-18): wired chapters templated; only Tier 5 special line exempt |
 
-**Parallelism:** **1–3** (governance) can run in parallel with **4–7** (blvm-docs crate) once **Tier 5** and **emergency** decisions do not block allowlist naming—if they do, finish **1–2** before **3**.
+**Parallelism:** **1-3** (governance) can run in parallel with **4-7** (blvm-docs crate) once **Tier 5** and **emergency** decisions do not block allowlist naming, if they do, finish **1-2** before **3**.
 
-**Fast path (minimum to “it works”):** **4 → 6 → 7 → 8 → 9 → 10** with **Tier 5** line left static and **emergency** reading only `emergency-tiers.yml`; defer **1–2** only with written waiver (§17).
+**Fast path (minimum to “it works”):** **4 → 6 → 7 → 8 → 9 → 10** with **Tier 5** line left static and **emergency** reading only `emergency-tiers.yml`; defer **1-2** only with written waiver (§17).
 
 ---
 
-*Copy §1, §5, §10–§17, §12, and §19 into a remote ADR (`governance` or `blvm-docs`) when execution starts.*
+*Copy §1, §5, §10-§17, §12, and §19 into a remote ADR (`governance` or `blvm-docs`) when execution starts.*

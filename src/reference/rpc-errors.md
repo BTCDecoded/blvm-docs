@@ -2,7 +2,7 @@
 
 Complete error catalog for the BLVM node JSON-RPC surface. Method parameters and examples: [RPC API Reference](../node/rpc-api.md).
 
-**Source of truth:** [`blvm-node/src/rpc/errors.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs) (`RpcError`, `RpcErrorCode`).
+**Source of truth:** [blvm-node/src/rpc/errors.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/rpc/errors.rs) (`RpcError`, `RpcErrorCode`).
 
 ## Two response shapes
 
@@ -10,9 +10,9 @@ Complete error catalog for the BLVM node JSON-RPC surface. Method parameters and
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "result": { ... },
-  "id": 1
+ "jsonrpc": "2.0",
+ "result": { ... },
+ "id": 1
 }
 ```
 
@@ -22,13 +22,13 @@ Returned when the request is valid JSON-RPC but the method handler fails (or JSO
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "error": {
-    "code": -32602,
-    "message": "Invalid params",
-    "data": { "parameter": "blockhash", "suggestions": ["..."] }
-  },
-  "id": 1
+ "jsonrpc": "2.0",
+ "error": {
+ "code": -32602,
+ "message": "Invalid params",
+ "data": { "parameter": "blockhash", "suggestions": ["..."] }
+ },
+ "id": 1
 }
 ```
 
@@ -36,14 +36,14 @@ Returned when the request is valid JSON-RPC but the method handler fails (or JSO
 
 ### HTTP transport errors (auth, rate limits, size)
 
-When authentication, RBAC, or rate limiting fails **before** JSON-RPC dispatch, the server returns an HTTP status with a **non–JSON-RPC** body:
+When authentication, RBAC, or rate limiting fails **before** JSON-RPC dispatch, the server returns an HTTP status with a **non-JSON-RPC** body:
 
 ```json
 {
-  "error": {
-    "code": 401,
-    "message": "Invalid authentication token"
-  }
+ "error": {
+ "code": 401,
+ "message": "Invalid authentication token"
+ }
 }
 ```
 
@@ -70,7 +70,7 @@ When authentication, RBAC, or rate limiting fails **before** JSON-RPC dispatch, 
 
 | Helper | Typical message pattern | `data` hints |
 |--------|-------------------------|--------------|
-| `invalid_params` | Free-form message | — |
+| `invalid_params` | Free-form message |: |
 | `missing_parameter` | `Missing required parameter: {name}` | `parameter`, `expected_type`, `suggestions` |
 | `invalid_hash_format` | `Invalid hash format: …` | `hash`, `expected_length`, `suggestions` |
 | `invalid_address_format` | `Invalid address format: …` | `address`, `expected_format`, `suggestions` |
@@ -133,7 +133,7 @@ Authenticated callers without **admin** credentials receive **HTTP 403** (not JS
 
 `stop`, `loadmodule`, `unloadmodule`, `reloadmodule`, `runmodulecli`, `logging`, `invalidateblock`, `reconsiderblock`, `pruneblockchain`, `addnode`, `disconnectnode`, `setban`, `clearbanned`, `setnetworkactive`, `getblocktemplate`, `submitblock`, `generatetoaddress`, `sendrawtransaction`, `createrawtransaction`, `savemempool`, `prioritisetransaction`.
 
-REST **`/api/v1/*`** privileged routes use the same admin set via path→method mapping (`rest/rbac.rs`). See [RPC API — REST authentication](../node/rpc-api.md#authentication).
+REST **`/api/v1/*`** privileged routes use the same admin set via path→method mapping (`rest/rbac.rs`). See [RPC API: REST authentication](../node/rpc-api.md#authentication).
 
 Admin tokens: `[rpc_auth].admin_tokens`, tokens also listed in `admin_tokens`, or HTTP Basic password registered as admin. See [RPC transport × authentication](../security/rpc-transport-auth-matrix.md).
 
@@ -166,7 +166,7 @@ Dynamic module methods (mesh, miniscript overrides, …) return **-32601** *Meth
 
 ## See Also
 
-- [RPC API Reference](../node/rpc-api.md) — methods, auth, examples
-- [RPC transport × authentication](../security/rpc-transport-auth-matrix.md) — Bearer, Basic, admin tokens
-- [Deployment posture](../security/deployment-posture.md) — production RPC exposure
-- [Troubleshooting](../appendices/troubleshooting.md) — operator fixes
+- [RPC API Reference](../node/rpc-api.md): methods, auth, examples
+- [RPC transport × authentication](../security/rpc-transport-auth-matrix.md): Bearer, Basic, admin tokens
+- [Deployment posture](../security/deployment-posture.md): production RPC exposure
+- [Troubleshooting](../appendices/troubleshooting.md): operator fixes

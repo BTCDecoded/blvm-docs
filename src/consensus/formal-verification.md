@@ -1,21 +1,53 @@
 # Formal Verification
 
-**blvm-consensus** combines the Orange Paper (normative math spec), **BLVM Specification Lock** (Z3-backed proofs on spec-locked consensus code), and a large automated test suite. Proof scope and limits: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Bitcoin consensus is too important to trust on tests alone, and too precise to leave as folklore in a C++ codebase. **Formal verification in BLVM** makes the rules **readable**, the implementation **checkable against those rules**, and the check **continuous** on every merge.
+
+The [Orange Paper](../reference/orange-paper.md) states consensus in mathematical notation, an implementation-agnostic IR auditors can review without Rust or C++. **blvm-consensus** implements those rules. **BLVM Specification Lock** binds annotated Rust functions to Orange Paper contracts and discharges the obligations with Z3. Empirical layers (unit tests, property tests, fuzzing, and [differential testing](../development/differential-testing.md)) stress the same surface from different angles. Together they are the verification posture: **Rust + Tests + Math Specs = Source of Truth**.
+
+Inventory and verification policy: [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [spec-lock coverage inventory](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+
+## What formal verification delivers
+
+```mermaid
+flowchart LR
+ OP[Orange Paper<br/>readable math IR]
+ ANN["#[spec_locked]<br/>contracts on code"]
+ Z3[Z3 discharge]
+ DRIFT[Spec drift check]
+ CI[CI merge gate]
+ OP --> ANN
+ ANN --> Z3
+ OP --> DRIFT
+ Z3 --> CI
+ DRIFT --> CI
+```
+
+**A human-auditable source of meaning.** Consensus rules live in the Orange Paper first. Reviewers, including mathematicians who never read the node, can argue about subsidy, PoW, and script semantics in the same language the proofs use.
+
+**Proofs locked to the functions they protect.** Annotation with `#[spec_locked]` attaches Orange Paper contracts to concrete Rust. Change the code, and the obligations travel with it: proofs are not a detached appendix that drifts from the implementation.
+
+**Machine-checked alignment on merge.** Z3 verifies those contracts on every change. CI runs **`check-drift`** then **`verify`** on self-hosted runners, so a PR that softens a rule or breaks a proven invariant fails the gate instead of shipping as “still green on unit tests.”
+
+**Growing, measurable coverage.** Spec-lock covers **251** `#[spec_locked]` functions across the stack (**240** in **blvm-consensus**, **5** in **blvm-node**, **6** in **blvm-protocol**) and **~433** parseable obligations (reconfirm with `cargo spec-lock coverage`).
+
+**Confidence to evolve.** Proven bounds feed [optimization passes](overview.md#optimization-passes). Refactors and performance work land against the same contracts. Future implementations can share the Orange Paper as common IR; each codebase earns trust by locking to that IR, not by copying another node’s source.
+
+**A full assurance stack.** Specification Lock answers: *does this function still mean what the Orange Paper says?* Property tests, fuzzing, MIRI, and differential testing against Bitcoin Core answer complementary questions about edge cases, undefined behavior, and historical mainnet agreement. Each layer strengthens the others; none is ornamental.
+
+Consensus verification operates on **public** block data. Secret-path constant-time cryptography (signing, ECDH, MuSig secrets) lives in [blvm-secp256k1](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md), a deliberate split so conformance proofs and timing discipline each have the right home.
 
 ## Verification Stack
 
-Verification approach follows: **"Rust + Tests + Math Specs = Source of Truth"**
-
 ```mermaid
 flowchart TB
-  SPEC[Orange Paper / CONSENSUS_SPEC]
-  CODE[blvm-consensus implementation]
-  SPEC -->|contracts| LOCK[BLVM Specification Lock — Z3]
-  CODE --> LOCK
-  CODE --> TEST[Unit + property + integration tests]
-  LOCK --> GATE[CI merge gate]
-  TEST --> GATE
-  SPEC -->|drift check| GATE
+ SPEC[Orange Paper / CONSENSUS_SPEC]
+ CODE[blvm-consensus implementation]
+ SPEC -->|contracts| LOCK[BLVM Specification Lock: Z3]
+ CODE --> LOCK
+ CODE --> TEST[Unit + property + integration tests]
+ LOCK --> GATE[CI merge gate]
+ TEST --> GATE
+ SPEC -->|drift check| GATE
 ```
 
 ### Layer 1: Empirical Testing
@@ -24,40 +56,35 @@ flowchart TB
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification
-- **BLVM Specification Lock**: Z3-backed proofs on spec-locked functions; tiered execution (strong/medium/slow)
-- **Mathematical specifications**: Orange Paper and inline consensus specs
+- **BLVM Specification Lock**: Z3-backed proofs on spec-locked functions
+- **Mathematical specifications**: [in-book digest](mathematical-specifications.md) and Orange Paper contracts
 - **State space exploration**: Paths relevant to spec-lock contracts
 
 ### Layer 3: CI Enforcement
 - **Automated testing**: Required for merge
-- **BLVM Specification Lock**: Tiered runs; policy in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- **BLVM Specification Lock**: Required on merge; see [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
 - **OpenTimestamps audit logging**: Optional timestamps of verification artifacts
-
-## Scope and limits
-
-**Primary artifact:** The [Orange Paper](../reference/orange-paper.md) (`PROTOCOL.md` + `ARCHITECTURE.md` in [blvm-spec](https://github.com/BTCDecoded/blvm-spec))—implementation-agnostic mathematical rules auditors can read without Rust, C++, or proof-assistant syntax.
-
-**What spec-lock does:** Regression-tests **spec-derived contracts** on functions annotated with `#[spec_locked]`—not a single atomic proof of the whole node binary. Current inventory (reconfirm with `cargo spec-lock coverage`): **168** consensus functions, ~**433** parseable obligations. Gaps and policy: [SPEC_LOCK_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
-
-**What spec-lock does not do:**
-
-- **Proof instead of testing** — differential testing, fuzz, and proptest run alongside Z3; see [Differential Testing](../development/differential-testing.md).
-- **Constant-time / side-channels** — consensus verification operates on **public** signatures and keys; variable-time verify paths are intentional. Secret-path timing is **`blvm-secp256k1`** ([TIMING.md](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md)): signing, pubkey-from-secret, ECDH, MuSig secrets. Governance signing in **blvm-sdk** delegates to that stack. Dudect-style timing tests exist but are **manual** (`#[ignore]` in `ct_timing.rs`), not CI-gated.
-- **Proof-to-code extraction** — consensus is implemented in Rust and checked against the Orange Paper via spec-lock and empirical layers; BLVM does not generate executable code from proofs.
-
-**Gödel / Halting objections:** Bitcoin consensus validation is a **bounded decision procedure** (Script limits, finite UTXO structures, fixed-width signatures)—not a self-referential formal system or unbounded program. Those theorems do not block spec-lock on finite specs or human audit of the Orange Paper.
-
-**Production readiness:** Published crates, CI, and verification tooling **exist**; governance enforcement and operator-grade mainnet posture are **Phase 1** — see [FAQ — production ready](../appendices/faq.md#is-the-system-production-ready) and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md). Prefer “artifacts exist” over an unqualified “ships today.”
 
 ### Verify JSON semantics (`blvm-spec-lock`)
 
-`cargo spec-lock verify` emits structured status per function. **Failed** means the proof obligation did not pass — CI gates on these when strict mode is enabled. **Partial** marks obligations demoted or skipped (timeout, translation gap, advisory tier) — read the log and [VERIFY_JSON.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/VERIFY_JSON.md) for jq filters; do not treat Partial as a green release gate without explicit policy.
+`cargo spec-lock verify` emits structured status per function. **Failed** means the proof obligation did not pass: CI gates on these when strict mode is enabled. **Partial** marks obligations demoted or skipped (timeout, translation gap, advisory tier): read the log and [verify JSON format](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/VERIFY_JSON.md) for jq filters; treat **Passed** under explicit policy as the release signal.
 
 ## Verification Statistics
 
 ### Formal Proofs
 
-**BLVM Specification Lock** checks spec-locked functions in tiers (strong/medium/slow). Current inventory and policy: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+**BLVM Specification Lock** runs a single **`verify`** pass over all spec-locked functions and merged `F_*` formula registry rows.
+
+**Coverage snapshot** (count `#[spec_locked]` in source; re-run `cargo spec-lock coverage` for contract totals):
+
+| Crate | Spec-locked functions |
+|-------|----------------------:|
+| **blvm-consensus** | 240 |
+| **blvm-node** | 5 |
+| **blvm-protocol** | 6 |
+| **Total** | **251** |
+
+**Parseable obligations:** **~433** (reconfirm with `cargo spec-lock coverage --spec-path …`).
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
@@ -65,35 +92,39 @@ flowchart TB
 # Install CLI (matches library floor; picks latest published 0.1.x)
 cargo install blvm-spec-lock --version '>=0.1, <1' --locked --features z3
 
-export SPEC_LOCK_STRICT=1   # same strictness as blvm-consensus CI when --strict is not passed
+export SPEC_LOCK_STRICT=1
+export SPEC_LOCK_Z3_TIMEOUT_SECS=120   # overrides --timeout when set
+
 cargo spec-lock check-drift \
+  --crate-path . \
   --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md \
-  --crate-path .
+  --scoped-unparseables
+
 cargo spec-lock verify \
+  --crate-path . \
   --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md \
-  --crate-path . --timeout 120
+  --timeout 120 \
+  --format human \
+  --json-out spec_lock_verify.json
 ```
 
-CI runs **`check-drift`** before **`verify`** and uploads artifacts for attestation. Release metadata may count **`Status: PASSED`** lines in the **`verify` log**; that tally is **not** a stable proxy for “number of functions” or “number of contracts” if output formatting or per-function contract counts change—see **`SPEC_LOCK_DEPENDENCY.md`** (“Attestation and `verify` log shape”).
+**Common filters** (same `verify` subcommand):
 
-For tiered execution:
 ```bash
-# Run all Z3 proofs (uses tiered execution)
-cargo spec-lock verify
-
-# Run specific tier
-cargo spec-lock verify --tier strong
+cargo spec-lock verify --name get_block_subsidy --crate-path . --spec-path ../blvm-spec/PROTOCOL.md
+cargo spec-lock verify --section 6.1 --crate-path . --spec-path ../blvm-spec/PROTOCOL.md
+cargo spec-lock verify --subsystem economic --crate-path . --spec-path ../blvm-spec/PROTOCOL.md
 ```
 
-**Tier System**:
-- **Strong Tier**: Critical consensus proofs (AWS spot instance integration)
-- **Medium Tier**: Important proofs (parallel execution)
-- **Slow Tier**: Full coverage proofs
+There is no `--tier` flag. CI runs one full **`verify`** pass on self-hosted runners (`[self-hosted, Linux, X64, builds]`): **`check-drift`** (with **`--scoped-unparseables`**, and **`--scoped-formulas`** when the installed CLI supports it), then **`verify`** with **`--json-out`**. See the [consensus CI workflow](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml) and [spec-lock dependency guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md).
 
-**Infrastructure**:
-- AWS spot instance integration for expensive proof execution
-- Parallel proof execution with tiered scheduling
-- Automated proof verification in CI/CD
+**Proof rigor** (policy classification, not separate runner pools): [verification-tiers.toml](https://github.com/BTCDecoded/blvm-consensus/blob/main/verification-tiers.toml) groups functions by expected proof depth:
+
+- **Tier 1**: Full Z3 body proof required (subsidy, PoW, reorg primitives)
+- **Tier 2**: Invariant + proptest coverage for complex bodies
+- **Tier 3**: Differential equivalence harnesses (crypto backends, FFI boundaries)
+
+Local development uses the same **`verify`** command as CI.
 
 ### Property-Based Tests
 
@@ -127,7 +158,6 @@ cargo +nightly fuzz run <target_name>
 
 **Status**: Integrated in CI
 
-
 **Checks**:
 - Property tests under MIRI
 - Critical unit tests under MIRI
@@ -138,151 +168,19 @@ cargo +nightly fuzz run <target_name>
 cargo +nightly miri test --test consensus_property_tests
 ```
 
-### Mathematical Specifications
+### Related specifications
 
-Multiple functions have formal documentation aligned with the Orange Paper and consensus crate sources (there is no separate shipped `MATHEMATICAL_SPECIFICATIONS_COMPLETE.md` in this book).
-
-**Documented Functions**:
-- Economic: `get_block_subsidy`, `total_supply`, `calculate_fee`
-- Proof of Work: `expand_target`, `compress_target`, `check_proof_of_work`
-- Transaction: `check_transaction`, `is_coinbase`
-- Block: `connect_block`, `apply_transaction`
-- Script: `eval_script`, `verify_script`
-- Reorganization: `calculate_chain_work`, `should_reorganize`
-- Cryptographic: `SHA256`
-
-## Mathematical Specifications
-
-The formulas and **invariants** below state intended consensus behavior from the Orange Paper. **Key functions** tie this spec to the implementation through tests and **BLVM Specification Lock** where those functions are spec-locked. Coverage: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
-
-### Chain Selection (`src/reorganization.rs`)
-
-**Mathematical Specification:**
-```
-∀ chains C₁, C₂: work(C₁) > work(C₂) ⇒ select(C₁)
-```
-
-**Invariants:**
-- Selected chain has maximum cumulative work
-- Work calculation is deterministic
-- Empty chains are rejected
-- Chain work is always non-negative
-
-**Key functions:**
-- `should_reorganize` — longest-work chain selection
-- `calculate_chain_work` — cumulative work
-- `expand_target` — difficulty target edge cases
-
-### Block Subsidy (`src/economic.rs`)
-
-**Mathematical Specification:**
-```
-∀ h ∈ ℕ: subsidy(h) = 50 * 10^8 * 2^(-⌊h/210000⌋) if ⌊h/210000⌋ < 64 else 0
-```
-
-**Invariants:**
-- Subsidy halves every 210,000 blocks
-- After 64 halvings, subsidy becomes 0
-- Subsidy is always non-negative
-- Total supply approaches 21M BTC asymptotically
-
-**Key functions:**
-- `get_block_subsidy` — halving schedule
-- `total_supply` — supply monotonicity
-- `validate_supply_limit` — supply cap
-
-### Proof of Work (`src/pow.rs`)
-
-**Mathematical Specification:**
-```
-∀ header H: CheckProofOfWork(H) = SHA256(SHA256(H)) < ExpandTarget(H.bits)
-```
-
-**Target Compression/Expansion:**
-```
-∀ bits ∈ [0x03000000, 0x1d00ffff]:
-  Let expanded = expand_target(bits)
-  Let compressed = compress_target(expanded)
-  Let re_expanded = expand_target(compressed)
-  
-  Then:
-  - re_expanded ≤ expanded (compression truncates, never increases)
-  - re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3]
-    (significant bits preserved exactly)
-  - Precision loss in words 0, 1 is acceptable (compact format limitation)
-```
-
-**Invariants:**
-- Hash must be less than target for valid proof of work
-- Target expansion handles edge cases correctly
-- Target compression preserves significant bits (words 2, 3) exactly
-- Target compression may lose precision in lower bits (words 0, 1)
-- Difficulty adjustment respects bounds [0.25, 4.0]
-- Work calculation is deterministic
-
-**Key functions:**
-- `check_proof_of_work` — hash vs target
-- `expand_target` / `compress_target` — compact difficulty encoding
-- `target_expand_compress_round_trip` — compact round-trip properties
-- `get_next_work_required` — difficulty adjustment bounds
-
-### Transaction Validation (`src/transaction.rs`)
-
-**Mathematical Specification:**
-```
-∀ tx ∈ 𝒯𝒳: CheckTransaction(tx) = valid ⟺ 
-  (|tx.inputs| > 0 ∧ |tx.outputs| > 0 ∧ 
-   ∀o ∈ tx.outputs: 0 ≤ o.value ≤ M_max ∧
-   |tx.inputs| ≤ M_max_inputs ∧ |tx.outputs| ≤ M_max_outputs ∧
-   |tx| ≤ M_max_tx_size)
-```
-
-**Invariants:**
-- Valid transactions have non-empty inputs and outputs
-- Output values are bounded [0, MAX_MONEY]
-- Input/output counts respect limits
-- Transaction size respects limits
-- Coinbase transactions have special validation rules
-
-**Key functions:**
-- `check_transaction` — structural validity
-- `check_tx_inputs` — input checks including coinbase
-- `is_coinbase` — coinbase detection
-
-### Block Connection (`src/block/mod.rs`)
-
-**Mathematical Specification:**
-```
-∀ block B, UTXO set US, height h: ConnectBlock(B, US, h) = (valid, US') ⟺
-  (ValidateHeader(B.header) ∧ 
-   ∀ tx ∈ B.transactions: CheckTransaction(tx) ∧ CheckTxInputs(tx, US, h) ∧
-   VerifyScripts(tx, US) ∧
-   CoinbaseOutput ≤ TotalFees + GetBlockSubsidy(h) ∧
-   US' = ApplyTransactions(B.transactions, US))
-```
-
-**Invariants:**
-- Valid blocks have valid headers and transactions
-- UTXO set consistency is preserved
-- Coinbase output respects economic rules
-- Transaction application is atomic
-
-**Key functions:**
-- `connect_block` — full block validation
-- `apply_transaction` — UTXO updates
-- `calculate_tx_id` — transaction id
+Formal properties, notation, and invariants for consensus functions are documented on [Mathematical Specifications](mathematical-specifications.md). Spec-lock discharges obligations derived from those Orange Paper contracts on annotated Rust entry points.
 
 ## Verification Tools
 
 ### BLVM Specification Lock
 
-**Purpose**: Z3-backed **BLVM Specification Lock** proofs for spec-locked Rust functions against Orange Paper contracts.
+**Purpose**: Z3-backed proofs for `#[spec_locked]` Rust functions against Orange Paper contracts.
 
 **Usage**: `cargo spec-lock verify`
 
-**Coverage**: Spec-locked functions (`#[spec_locked]` and related tooling).
-
-**Details**: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
+**Coverage**: Spec-locked functions (`#[spec_locked]` and related tooling). See [spec-lock coverage inventory](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md).
 
 ### Proptest Property Testing
 
@@ -297,11 +195,11 @@ The formulas and **invariants** below state intended consensus behavior from the
 **Example:**
 ```rust
 proptest! {
-    #[test]
-    fn prop_function_invariant(input in strategy) {
-        let result = function_under_test(input);
-        prop_assert!(result.property_holds());
-    }
+ #[test]
+ fn prop_function_invariant(input in strategy) {
+ let result = function_under_test(input);
+ prop_assert!(result.property_holds());
+ }
 }
 ```
 
@@ -309,15 +207,15 @@ proptest! {
 
 ### Verification Workflow
 
-The **Verify** / **verify** jobs in **`blvm-consensus/.github/workflows/ci.yml`**, **`blvm-node/.github/workflows/ci.yml`**, and **`blvm-protocol/.github/workflows/ci.yml`** are the authoritative **`cargo-spec-lock`** gates. Umbrella **`.github/workflows/verify.yml`** / **`verify-network.yml`** (multi-repo workspace root) are optional **`workflow_dispatch`** mirrors when checking out multiple crates together.
+The **Verify** / **verify** jobs in [blvm-consensus](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml), [blvm-node](https://github.com/BTCDecoded/blvm-node/blob/main/.github/workflows/ci.yml), and [blvm-protocol](https://github.com/BTCDecoded/blvm-protocol/blob/main/.github/workflows/ci.yml) CI are the authoritative **`cargo-spec-lock`** gates. Optional umbrella **`workflow_dispatch`** mirrors exist for multi-repo workspace checkouts.
 
-1. **Unit & Property Tests** (required — see each crate **`ci.yml`**)
-   - `cargo test --all-features`
+1. **Unit & Property Tests** (required in each crate CI)
+ - `cargo test --all-features`
 
-2. **BLVM Specification Lock Verification** (**required**, **consensus / node / protocol CI** where **`#[spec_locked]`** is enabled)
-   - `cargo spec-lock verify …` per **[SPEC_LOCK_DEPENDENCY.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)**
+2. **BLVM Specification Lock Verification** (**required** where **`#[spec_locked]`** is enabled)
+ - `cargo spec-lock verify` per the [spec-lock dependency guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)
 
-3. **OpenTimestamps Audit** (non-blocking — consensus umbrella CI parity / monorepo only where enabled)
+3. **OpenTimestamps Audit** (non-blocking: consensus umbrella CI parity / monorepo only where enabled)
 
 ### Local Development
 
@@ -326,35 +224,40 @@ The **Verify** / **verify** jobs in **`blvm-consensus/.github/workflows/ci.yml`*
 cargo test --all-features
 ```
 
-**Run BLVM Specification Lock verification:**
+**Run BLVM Specification Lock verification** (mirror CI):
 ```bash
-cargo spec-lock verify
+export SPEC_LOCK_STRICT=1
+export SPEC_LOCK_Z3_TIMEOUT_SECS=120
+cargo spec-lock check-drift --crate-path . --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md --scoped-unparseables
+cargo spec-lock verify --crate-path . --spec-path ../blvm-spec/PROTOCOL.md ../blvm-spec/ARCHITECTURE.md --timeout 120 --json-out spec_lock_verify.json
 ```
 
-**Run specific verification:**
+**Run a single function or section:**
 ```bash
-cargo test --test property_tests
-cargo spec-lock verify --proof <function_name>
+cargo spec-lock verify --name get_block_subsidy --crate-path . --spec-path ../blvm-spec/PROTOCOL.md
+cargo test --test consensus_property_tests
 ```
+
+**Other subcommands:** `coverage`, `summary`, `list`, `check-formulas`, `verify-formulas`. Full CLI reference: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/README.md).
 
 ## Verification Coverage
 
-Consensus combines **BLVM Specification Lock**, property tests, fuzzing, and integration tests across economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization. [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md) documents what formal proofs do and do not cover.
+Consensus combines **BLVM Specification Lock**, property tests, fuzzing, and integration tests across economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization.
 
 ## Network Protocol Verification
 
-**blvm-protocol** can use the same **BLVM Specification Lock** machinery for wire messages: headers, checksums, size limits, and round-trip properties for the message types in scope.
+**blvm-protocol** uses the same **BLVM Specification Lock** machinery for wire messages: headers, checksums, size limits, and round-trip properties for the message types in scope.
 
 **Proof targets**: Header layout (magic, command, length, checksum), checksum validation, size limits, `parse(serialize(msg)) == msg` for covered messages.
 
-**Wire message groups (verification scope):** **Group A** — Version, VerAck, Ping, Pong. **Group B** — Transaction, Block, Headers, Inv, GetData, GetHeaders. (This grouping is for protocol verification only, not [governance tiers](../governance/layer-tier-model.md).)
+**Wire message groups (verification scope):** **Group A**: Version, VerAck, Ping, Pong. **Group B**: Transaction, Block, Headers, Inv, GetData, GetHeaders. (This grouping is for protocol verification only, not [governance tiers](../governance/layer-tier-model.md).)
 
-Use the `verify` feature for full protocol verification builds; see **blvm-protocol** crate docs.
+Use the `verify` feature for full protocol verification builds; see [protocol overview](../protocol/overview.md).
 
 ## Consensus Coverage Comparison
 
 ![Consensus Coverage Comparison](https://thebitcoincommons.org/assets/images/Consensus-Coverage-Comparison.png)
-*Figure: Baseline: broad tests and review. Bitcoin Commons adds **BLVM Specification Lock** and Orange Paper–driven methodology on top.*
+*Figure: Baseline: broad tests and review. Bitcoin Commons adds **BLVM Specification Lock** and Orange Paper-driven methodology on top.*
 
 ## Proof Maintenance Cost
 
@@ -378,16 +281,17 @@ Functions and paths commonly covered by tests and spec-lock proofs:
 - **Transaction validation**: `check_transaction` structure rules
 - **Block connection**: `connect_block`, UTXO consistency
 
-Proof bounds and policy: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md), [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+Policy and inventory: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Source
 
-- [blvm-consensus/.github/workflows/ci.yml](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml) ((Verify job; non-blocking when MIRI nightly unavailable))
+- [Consensus CI workflow](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml) (Verify job; MIRI when nightly is available)
+
 ## See Also
 
-- [Consensus Overview](overview.md) - Consensus layer introduction
-- [Consensus Overview](overview.md) - Consensus layer design
-- [Mathematical Specifications](mathematical-specifications.md) - Mathematical spec details
-- [Property-Based Testing](../development/property-based-testing.md) - Property-based testing
-- [Fuzzing](../development/testing.md#fuzzing) - Fuzzing infrastructure
-- [Testing Infrastructure](../development/testing.md) - Complete testing overview
+- [Consensus Overview](overview.md): Consensus layer design
+- [Mathematical Specifications](mathematical-specifications.md): Mathematical spec details
+- [Property-Based Testing](../development/property-based-testing.md): Property-based testing
+- [Differential Testing](../development/differential-testing.md): BLVM vs Bitcoin Core
+- [Fuzzing](../development/testing.md#fuzzing): Fuzzing infrastructure
+- [Testing Infrastructure](../development/testing.md): Complete testing overview

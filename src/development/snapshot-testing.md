@@ -260,10 +260,10 @@ Tests for GitHub integration:
 ## Source
 
 - [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs) (`insta` snapshots; inline `mod validation_snapshot_tests`)
-- [TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
+- [testing setup](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 - [snapshot_tests.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/tests/snapshot_tests.rs)
 - [.insta.yml](https://github.com/BTCDecoded/blvm-commons/blob/main/.insta.yml)
-- [blvm-commons/tests/snapshot/](https://github.com/BTCDecoded/blvm-commons/tree/main/tests/snapshot/), [blvm-commons/docs/testing/TESTING_SETUP.md](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md) (blvm-commons/docs/testing/TESTING_SETUP.md`)
+- [blvm-commons/tests/snapshot/](https://github.com/BTCDecoded/blvm-commons/tree/main/tests/snapshot/), [blvm-commons testing setup](https://github.com/BTCDecoded/blvm-commons/blob/main/docs/testing/TESTING_SETUP.md)
 ## See Also
 
 - [Testing Infrastructure](testing.md) - Overview of all testing techniques

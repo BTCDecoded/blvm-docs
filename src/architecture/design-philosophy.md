@@ -1,6 +1,6 @@
 # Design Philosophy
 
-BLVM is built for teams who need Bitcoin consensus correctness to be **checkable**, protocol evolution to be **bounded**, and node features to be **extensible without touching consensus**. The principles below are the reasoning behind that shape—not slogans.
+BLVM is built for teams who need Bitcoin consensus correctness to be **checkable**, protocol evolution to be **bounded**, and node features to be **extensible without touching consensus**. The principles below are the reasoning behind that shape, not slogans.
 
 ## Core Principles
 
@@ -10,7 +10,7 @@ BLVM is built for teams who need Bitcoin consensus correctness to be **checkable
 
 **Alternative:** Interpret Bitcoin Core’s C++ informally and patch when differential tests fail.
 
-**Choice:** The [Orange Paper](../reference/orange-paper.md) is the normative spec—written so consensus can be reviewed in mathematical notation without reading implementation code. **blvm-consensus** implements it; **BLVM Specification Lock**, differential testing, fuzzing, and review keep the code aligned with that document. Pure functions where the design allows so behavior is reproducible in tests and proofs.
+**Choice:** The [Orange Paper](../reference/orange-paper.md) is the normative spec, written so consensus can be reviewed in mathematical notation without reading implementation code. **blvm-consensus** implements it; **BLVM Specification Lock**, differential testing, fuzzing, and review keep the code aligned with that document. Pure functions where the design allows so behavior is reproducible in tests and proofs.
 
 ### 2. Layered architecture
 
@@ -34,7 +34,7 @@ BLVM is built for teams who need Bitcoin consensus correctness to be **checkable
 
 **Alternative:** Fully automated on-chain governance (inappropriate for a node implementation project).
 
-**Choice:** Apply Bitcoin-style multisig and audit trails to **repository and release policy** ([governance](../governance/overview.md)). Power is visible; changing security-critical code requires documented tiers and signatures—not a single maintainer click.
+**Choice:** Apply Bitcoin-style multisig and audit trails to **repository and release policy** ([governance](../governance/overview.md)). Power is visible; changing security-critical code requires documented tiers and signatures, not a single maintainer click.
 
 ### 5. User sovereignty
 
@@ -48,11 +48,11 @@ BLVM is built for teams who need Bitcoin consensus correctness to be **checkable
 
 ### Why pure functions in consensus?
 
-Deterministic, side-effect-free validation makes **differential testing against Core**, property tests, and spec-lock proofs tractable. The cost is explicit data passing (UTXO views, flags) instead of hidden global state—which is appropriate for consensus.
+Deterministic, side-effect-free validation makes **differential testing against Core**, property tests, and spec-lock proofs tractable. The cost is explicit data passing (UTXO views, flags) instead of hidden global state, which is appropriate for consensus.
 
 ### Why formal verification alongside tests?
 
-Tests cannot exhaust script and block combinatorics. **BLVM Specification Lock** (Z3) regression-tests spec-derived contracts on annotated functions; differential testing compares BLVM against Bitcoin Core on mainnet history; fuzzing and proptest explore generated inputs. Neither layer replaces the others—all are in the merge gate where applicable. Spec-lock is **consensus conformance**, not side-channel resistance (that lives in **blvm-secp256k1** for secret-path crypto). The Orange Paper remains the human-auditable spec. See [Formal Verification — scope](../consensus/formal-verification.md#scope-and-limits).
+Tests cannot exhaust script and block combinatorics. **BLVM Specification Lock** (Z3) locks annotated functions to Orange Paper contracts; differential testing compares BLVM against Bitcoin Core on mainnet history; fuzzing and proptest explore generated inputs. Together they form a continuous assurance stack: readable math, machine-checked alignment, and empirical stress. Secret-path timing lives in **blvm-secp256k1**; the Orange Paper remains the human-auditable IR. See [Formal Verification](../consensus/formal-verification.md#what-formal-verification-delivers).
 
 ### Why process-isolated modules?
 
@@ -60,7 +60,7 @@ In-process plugins are faster but share address space with the node. **Choice:**
 
 ### Why cryptographic governance instead of policy docs only?
 
-Policy PDFs do not enforce themselves on GitHub. Wiring security-control classification into PR tiers makes “who must sign this change?” a machine-checkable question for contributors. Operators still rely on [Deployment posture](../security/deployment-posture.md) for runtime exposure—not this system.
+Policy PDFs do not enforce themselves on GitHub. Wiring security-control classification into PR tiers makes “who must sign this change?” a machine-checkable question for contributors. Operators still rely on [Deployment posture](../security/deployment-posture.md) for runtime exposure, not this system.
 
 ## Trade-offs
 
@@ -81,8 +81,8 @@ BLVM targets long-horizon Bitcoin infrastructure:
 
 ## See Also
 
-- [Stack overview](system-overview.md) — Six-layer stack summary
-- [Crate dependencies](component-relationships.md) — Dependency graph
-- [Consensus Overview](../consensus/overview.md) — How correctness is structured in code
-- [Governance Overview](../governance/overview.md) — Cryptographic governance
-- [Orange Paper](../reference/orange-paper.md) — Mathematical foundation
+- [Stack overview](system-overview.md): Six-layer stack summary
+- [Crate dependencies](component-relationships.md): Dependency graph
+- [Consensus Overview](../consensus/overview.md): How correctness is structured in code
+- [Governance Overview](../governance/overview.md): Cryptographic governance
+- [Orange Paper](../reference/orange-paper.md): Mathematical foundation

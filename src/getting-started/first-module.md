@@ -8,7 +8,7 @@ Tutorial: load a minimal read-only module on a regtest node and confirm it recei
 
 ## What you will build
 
-`hello-module` — a process-isolated module that:
+`hello-module`: a process-isolated module that:
 
 - Declares `read_blockchain` and `subscribe_events` in `module.toml`
 - Subscribes to `NewBlock` and logs the block hash
@@ -28,7 +28,7 @@ cd modules/hello-module
 ```toml
 [package]
 name = "hello-module"
-version = "0.1.0"   # your crate semver (not tied to BLVM releases)
+version = "0.1.0" # your crate semver (not tied to BLVM releases)
 edition = "2024"
 
 [dependencies]
@@ -42,17 +42,17 @@ tracing-subscriber = "0.3"
 
 ```toml
 name = "hello-module"
-version = "0.1.0"   # manifest semver for your module
+version = "0.1.0" # manifest semver for your module
 description = "Tutorial hello module"
 entry_point = "hello-module"
 
 capabilities = [
-    "read_blockchain",
-    "subscribe_events",
+ "read_blockchain",
+ "subscribe_events",
 ]
 ```
 
-Implement `main.rs` using the `blvm-sdk` module runner — subscribe to `NewBlock`, log `block_hash` from the event payload. Copy the event-loop skeleton from [Building modules — Module lifecycle](../sdk/module-development.md#module-lifecycle) and replace the handler body with a `tracing::info!` on `NewBlock`.
+Implement `main.rs` using the `blvm-sdk` module runner: subscribe to `NewBlock`, log `block_hash` from the event payload. Copy the event-loop skeleton from [Building modules: Module lifecycle](../sdk/module-development.md#module-lifecycle) and replace the handler body with a `tracing::info!` on `NewBlock`.
 
 ## 2. Build the binary
 
@@ -73,7 +73,7 @@ cp target/release/hello-module "$NODE_MODULES/hello-module/target/release/"
 cp module.toml "$NODE_MODULES/hello-module/"
 ```
 
-Or pin a published crate via the registry (production path) — see [Installing modules](../modules/overview.md#installing-modules).
+Or pin a published crate via the registry (production path): see [Installing modules](../modules/overview.md#installing-modules).
 
 ## 4. Enable in `blvm.toml`
 
@@ -82,7 +82,7 @@ On the regtest node from [Quick Start](quick-start.md), add:
 ```toml
 [modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-hello-module = "0.1.*"   # local build: place binary under modules_dir first
+hello-module = "0.1.*" # local build: place binary under modules_dir first
 modules_dir = "~/.local/share/blvm-quickstart/modules"
 ```
 
@@ -106,10 +106,10 @@ Mine a block ([Quick Start](quick-start.md) step 4) or use [First Node Setup](fi
 | Module not loaded | Binary path matches `module.toml` `entry_point`; `modules_dir` correct |
 | Manifest error | `module.toml` beside binary; capabilities match what the code requests |
 | No events | Node actually connected a block; module subscribed to `NewBlock` |
-| Build fails on `blvm-sdk` | MSRV and crate version — see [Contributing](../development/contributing.md) |
+| Build fails on `blvm-sdk` | MSRV and crate version: see [Contributing](../development/contributing.md) |
 
 ## Next steps
 
-- [Building modules](../sdk/module-development.md) — IPC, NodeAPI, publishing events, inter-module calls
-- [Module catalog](../modules/overview.md) — production modules (mesh, zmq, stratum-v2, …)
+- [Building modules](../sdk/module-development.md): IPC, NodeAPI, publishing events, inter-module calls
+- [Module catalog](../modules/overview.md): production modules (mesh, zmq, stratum-v2, …)
 - [SDK overview](../sdk/overview.md)

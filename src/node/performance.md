@@ -37,7 +37,7 @@ Headers are downloaded in parallel using hardcoded checkpoints at well-known blo
 Blocks are downloaded with deep pipelining per peer, allowing multiple outstanding block requests to hide network latency.
 
 **Configuration** (see [IBD Configuration](../reference/configuration-reference.md#ibd-configuration) and [Node Configuration](configuration.md#ibd-configuration)):
-- `chunk_size`: blocks per chunk (default: **128**; ENV **`BLVM_IBD_CHUNK_SIZE`** 16–2000)
+- `chunk_size`: blocks per chunk (default: **128**; ENV **`BLVM_IBD_CHUNK_SIZE`** 16-2000)
 - `max_blocks_in_transit_per_peer`: in-flight blocks per peer (default: **128**; keep ≥ `chunk_size`)
 - `download_timeout_secs`: timeout per block in seconds (default: 30)
 - `max_concurrent_per_peer`: fixed at 64 in code (not in `[ibd]` config; see `ParallelIBDConfig`)
@@ -73,9 +73,9 @@ UTXO set updates use batch writes for efficient bulk operations (single transact
 ```rust
 let mut batch = tree.batch();
 for (key, value) in utxo_updates {
-    batch.put(key, value);
+ batch.put(key, value);
 }
-batch.commit()?;  // Single atomic commit
+batch.commit()?; // Single atomic commit
 ```
 
 ### Peer Scoring and Filtering
@@ -129,20 +129,20 @@ Parallel validation is only used when:
 
 ```rust
 pub fn validate_blocks_parallel(
-    &self,
-    contexts: &[BlockValidationContext],
-    depth_from_tip: usize,
-    network: Network,
+ &self,
+ contexts: &[BlockValidationContext],
+ depth_from_tip: usize,
+ network: Network,
 ) -> Result<Vec<(ValidationResult, UtxoSet)>> {
-    if depth_from_tip <= self.max_parallel_depth {
-        return self.validate_blocks_sequential(contexts, network);
-    }
-    
-    // Parallel validation using Rayon
-    use rayon::prelude::*;
-    contexts.par_iter().map(|context| {
-        connect_block(&context.block, ...)
-    }).collect()
+ if depth_from_tip <= self.max_parallel_depth {
+ return self.validate_blocks_sequential(contexts, network);
+ }
+ 
+ // Parallel validation using Rayon
+ use rayon::prelude::*;
+ contexts.par_iter().map(|context| {
+ connect_block(&context.block, ...)
+ }).collect()
 }
 ```
 
@@ -164,30 +164,30 @@ Transaction fees are calculated in batches by pre-fetching all UTXOs before vali
 ```rust
 // Pre-collect all prevouts for batch UTXO lookup
 let all_prevouts: Vec<&OutPoint> = block
-    .transactions
-    .iter()
-    .filter(|tx| !is_coinbase(tx))
-    .flat_map(|tx| tx.inputs.iter().map(|input| &input.prevout))
-    .collect();
+ .transactions
+ .iter()
+ .filter(|tx| !is_coinbase(tx))
+ .flat_map(|tx| tx.inputs.iter().map(|input| &input.prevout))
+ .collect();
 
 // Batch UTXO lookup (single pass)
 let mut utxo_cache: HashMap<&OutPoint, &UTXO> =
-    HashMap::with_capacity(all_prevouts.len());
+ HashMap::with_capacity(all_prevouts.len());
 for prevout in &all_prevouts {
-    if let Some(utxo) = utxo_set.get(prevout) {
-        utxo_cache.insert(prevout, utxo);
-    }
+ if let Some(utxo) = utxo_set.get(prevout) {
+ utxo_cache.insert(prevout, utxo);
+ }
 }
 ```
 
 
 ### Tuning (environment variables)
 
-Batch UTXO lookups and parallel validation batch size are **not** `blvm.toml` keys — `NodeConfig` has no `[performance]` table (unknown tables are ignored). Tune via consensus env vars loaded at node startup:
+Batch UTXO lookups and parallel validation batch size are **not** `blvm.toml` keys: `NodeConfig` has no `[performance]` table (unknown tables are ignored). Tune via consensus env vars loaded at node startup:
 
 ```bash
-export BLVM_BATCH_UTXO_LOOKUPS=1      # default true
-export BLVM_PARALLEL_BATCH_SIZE=8     # transactions per parallel batch
+export BLVM_BATCH_UTXO_LOOKUPS=1 # default true
+export BLVM_PARALLEL_BATCH_SIZE=8 # transactions per parallel batch
 ```
 
 See [Performance configuration](#performance-configuration) for the full env list.
@@ -210,8 +210,8 @@ This optimization is safe because:
 
 ```toml
 [block_validation]
-assume_valid_height = 912683   # mainnet library default when unset; use 0 for full script checks
-# assume_valid_hash = "…"      # optional: hash at assume_valid_height (-assumevalid)
+assume_valid_height = 912683 # mainnet library default when unset; use 0 for full script checks
+# assume_valid_hash = "…" # optional: hash at assume_valid_height (-assumevalid)
 ```
 
 **Environment variable** (overrides file):
@@ -239,17 +239,17 @@ Within a block, transaction validation is parallelized where safe:
 ```rust
 #[cfg(feature = "rayon")]
 {
-    use rayon::prelude::*;
-    // Parallel validation (read-only)
-    let validation_results: Vec<Result<...>> = block
-        .transactions
-        .par_iter()
-        .map(|tx| { check_transaction(tx)?; check_tx_inputs(tx, &utxo_cache, height)?; ... })
-        .collect();
-    // Sequential application (write operations)
-    for (tx, validation) in transactions.zip(validation_results) {
-        apply_transaction(tx, &mut utxo_set)?;
-    }
+ use rayon::prelude::*;
+ // Parallel validation (read-only)
+ let validation_results: Vec<Result<...>> = block
+ .transactions
+ .par_iter()
+ .map(|tx| { check_transaction(tx)?; check_tx_inputs(tx, &utxo_cache, height)?; ... })
+ .collect();
+ // Sequential application (write operations)
+ for (tx, validation) in transactions.zip(validation_results) {
+ apply_transaction(tx, &mut utxo_set)?;
+ }
 }
 ```
 
@@ -281,9 +281,9 @@ Pre-computed constants avoid runtime computation:
 
 ```rust
 pub mod precomputed_constants {
-    pub const U64_MAX: u64 = u64::MAX;
-    pub const MAX_MONEY_U64: u64 = MAX_MONEY as u64;
-    pub const BTC_PER_SATOSHI: f64 = 1.0 / (SATOSHIS_PER_BTC as f64);
+ pub const U64_MAX: u64 = u64::MAX;
+ pub const MAX_MONEY_U64: u64 = MAX_MONEY as u64;
+ pub const BTC_PER_SATOSHI: f64 = 1.0 / (SATOSHIS_PER_BTC as f64);
 }
 ```
 
@@ -294,12 +294,12 @@ Optimized bounds checking for proven-safe access patterns:
 
 ```rust
 pub fn get_proven<T>(slice: &[T], index: usize, bound_check: bool) -> Option<&T> {
-    if bound_check {
-        slice.get(index)
-    } else {
-        // Unsafe only when bounds are statically proven
-        unsafe { ... }
-    }
+ if bound_check {
+ slice.get(index)
+ } else {
+ // Unsafe only when bounds are statically proven
+ unsafe { ... }
+ }
 }
 ```
 
@@ -316,7 +316,7 @@ pub struct CacheAlignedHash([u8; 32]);
 
 ## Performance configuration
 
-Consensus performance tuning uses **environment variables** (see [`blvm-consensus` `config.rs`](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)). There is **no** `[performance]` section in `blvm.toml`.
+Consensus performance tuning uses **environment variables** (see [blvm-consensus `config.rs`](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)). There is **no** `[performance]` section in `blvm.toml`.
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
@@ -360,16 +360,16 @@ The performance optimization system includes:
 - [config.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/config.rs)
 - [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs) (`BlockValidationNodeConfig`), [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
 - [block/mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/block/mod.rs)
-- [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs), [transaction-indexing.md](transaction-indexing.md)
+- [txindex.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/txindex.rs), [Transaction Indexing](transaction-indexing.md)
 - [optimizations.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/src/optimizations.rs)
 ## See Also
 
-- [Operator guide — IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) — Map of all IBD docs
+- [Operator guide: IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd): Map of all IBD docs
 - [Node Overview](overview.md) - Node implementation details
 - [Node Configuration](configuration.md) - `[ibd]`, `[block_validation]`, and CLI flags
 - [Benchmarking](../development/benchmarking.md) - Performance benchmarking
 - [Storage Backends](storage-backends.md) - Storage performance
 - [Consensus Overview](../consensus/overview.md#optimization-passes) - Optimization passes
 - [UTXO Commitments](utxo-commitments.md) - UTXO proof verification and fast sync
-- [IBD UTXO engine](ibd-engine.md) — Optional age-tiered UTXO store during sync
+- [IBD UTXO engine](ibd-engine.md): Optional age-tiered UTXO store during sync
 - [IBD Bandwidth Protection](ibd-protection.md) - IBD bandwidth management

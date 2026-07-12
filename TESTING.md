@@ -31,23 +31,23 @@ dig docs.thebitcoincommons.org CNAME
 
 ### 5. Test Content Inclusion
 - Check that included content from source repositories renders:
-  - Orange Paper — [thebitcoincommons.org/orange-paper.html](https://thebitcoincommons.org/orange-paper.html); Consensus Spec — [spec.html](https://thebitcoincommons.org/spec.html) (pointer: `reference/orange-paper.md`)
-  - Consensus overview (consensus/overview.md)
-  - Governance model (governance/governance-model.md)
-  - Stack overview (architecture/system-overview.md)
+ - Orange Paper: [thebitcoincommons.org/orange-paper.html](https://thebitcoincommons.org/orange-paper.html); Consensus Spec: [spec.html](https://thebitcoincommons.org/spec.html) (pointer: `reference/orange-paper.md`)
+ - Consensus overview (consensus/overview.md)
+ - Governance model (governance/governance-model.md)
+ - Stack overview (architecture/system-overview.md)
 
 ### 6. Test Navigation
 - Click through all major sections:
-  - Introduction
-  - Getting Started
-  - Architecture
-  - Consensus Layer
-  - Protocol Layer
-  - Node Implementation
-  - Developer SDK
-  - Governance
-  - Reference
-  - Appendices
+ - Introduction
+ - Getting Started
+ - Architecture
+ - Consensus Layer
+ - Protocol Layer
+ - Node Implementation
+ - Developer SDK
+ - Governance
+ - Reference
+ - Appendices
 
 ### 7. Test Search Functionality
 - Use the search box in mdBook

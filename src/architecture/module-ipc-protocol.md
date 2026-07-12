@@ -8,21 +8,21 @@ The Module IPC (Inter-Process Communication) protocol enables secure communicati
 
 ```
 ┌─────────────────────────────────────┐
-│         blvm-node Process          │
-│  ┌───────────────────────────────┐ │
-│  │    Module IPC Server          │ │
-│  │    (Unix Domain Socket)       │ │
-│  └───────────────────────────────┘ │
+│ blvm-node Process │
+│ ┌───────────────────────────────┐ │
+│ │ Module IPC Server │ │
+│ │ (Unix Domain Socket) │ │
+│ └───────────────────────────────┘ │
 └─────────────────────────────────────┘
-              │ IPC Protocol
-              │ (Unix Domain Socket)
-              │
+ │ IPC Protocol
+ │ (Unix Domain Socket)
+ │
 ┌─────────────┴─────────────────────┐
-│      Module Process (Isolated)     │
-│  ┌───────────────────────────────┐ │
-│  │    Module IPC Client          │ │
-│  │    (Unix Domain Socket)       │ │
-│  └───────────────────────────────┘ │
+│ Module Process (Isolated) │
+│ ┌───────────────────────────────┐ │
+│ │ Module IPC Client │ │
+│ │ (Unix Domain Socket) │ │
+│ └───────────────────────────────┘ │
 └─────────────────────────────────────┘
 ```
 
@@ -44,12 +44,12 @@ Messages use length-delimited binary encoding:
 
 The protocol uses length-delimited **`ModuleMessage`** variants:
 
-1. **Request** — module → node (NodeAPI calls, handshake, `RegisterModuleApi`, …)
-2. **Response** — node → module
-3. **Event** — node → module (subscribed notifications)
-4. **Log** — module → node (forwarded to node logging)
-5. **Invocation** — node → module (CLI, RPC, or **`ModuleApi`** dispatch)
-6. **InvocationResult** — module → node (correlated reply)
+1. **Request**: module → node (NodeAPI calls, handshake, `RegisterModuleApi`, …)
+2. **Response**: node → module
+3. **Event**: node → module (subscribed notifications)
+4. **Log**: module → node (forwarded to node logging)
+5. **Invocation**: node → module (CLI, RPC, or **`ModuleApi`** dispatch)
+6. **InvocationResult**: module → node (correlated reply)
 
 
 ## Message Structure
@@ -58,9 +58,9 @@ The protocol uses length-delimited **`ModuleMessage`** variants:
 
 ```rust
 pub struct RequestMessage {
-    pub correlation_id: CorrelationId,
-    pub request_type: MessageType,
-    pub payload: RequestPayload,
+ pub correlation_id: CorrelationId,
+ pub request_type: MessageType,
+ pub payload: RequestPayload,
 }
 ```
 
@@ -82,15 +82,15 @@ Reads and subscriptions include `GetBlock`, `GetBlockHeader`, `GetTransaction`, 
 | `BanPeer` | Ban peer by address; optional duration. |
 | `SetBlockServeMaintenanceMode` | Refuse all full-block `getdata` answers when enabled. |
 
-These affect **relay/serving only**, not consensus validation. See [`NodeAPI`](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the Rust surface.
+These affect **relay/serving only**, not consensus validation. See [NodeAPI](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the Rust surface.
 
 
 ### Response Message
 
 ```rust
 pub struct ResponseMessage {
-    pub correlation_id: CorrelationId,
-    pub payload: ResponsePayload,
+ pub correlation_id: CorrelationId,
+ pub payload: ResponsePayload,
 }
 ```
 
@@ -101,21 +101,21 @@ pub struct ResponseMessage {
 
 ```rust
 pub struct EventMessage {
-    pub event_type: EventType,
-    pub payload: EventPayload,
+ pub event_type: EventType,
+ pub payload: EventPayload,
 }
 ```
 
-**Event types:** The node defines many **`EventType`** values (chain, mempool, network, payments, mining, mesh, sync, modules, governance, maintenance, …). Modules subscribe to a subset via **`SubscribeEvents`**. See the **`EventType`** enum in [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the authoritative list — do not assume a fixed count in docs.
+**Event types:** The node defines many **`EventType`** values (chain, mempool, network, payments, mining, mesh, sync, modules, governance, maintenance, …). Modules subscribe to a subset via **`SubscribeEvents`**. See the **`EventType`** enum in [traits.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) for the authoritative list: do not assume a fixed count in docs.
 
 
 ### Log Message
 
 ```rust
 pub struct LogMessage {
-    pub level: LogLevel,
-    pub message: String,
-    pub module_id: String,
+ pub level: LogLevel,
+ pub message: String,
+ pub module_id: String,
 }
 ```
 
@@ -174,9 +174,9 @@ On connection, the module sends a **handshake** as the first **`Request`**:
 
 ```rust
 RequestPayload::Handshake {
-    module_id,
-    module_name,
-    version,
+ module_id,
+ module_name,
+ version,
 }
 ```
 
@@ -227,11 +227,11 @@ Modules run in sandboxed environments with:
 
 ```rust
 pub enum ModuleError {
-    ConnectionError(String),
-    ProtocolError(String),
-    PermissionDenied(String),
-    ResourceExhausted(String),
-    Timeout(String),
+ ConnectionError(String),
+ ProtocolError(String),
+ PermissionDenied(String),
+ ResourceExhausted(String),
+ Timeout(String),
 }
 ```
 

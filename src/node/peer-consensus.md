@@ -1,6 +1,6 @@
 # Peer Consensus Protocol
 
-> **Layer** — N-of-M peer verification for [UTXO commitments](utxo-commitments.md) (**blvm-protocol** / **blvm-node**). Distinct from Bitcoin *consensus* (block/script rules in **blvm-consensus**).
+> **Layer**: N-of-M peer verification for [UTXO commitments](utxo-commitments.md) (**blvm-protocol** / **blvm-node**). Distinct from Bitcoin *consensus* (block/script rules in **blvm-consensus**).
 
 ## Overview
 
@@ -24,11 +24,11 @@ Peer information tracks diversity:
 
 ```rust
 pub struct PeerInfo {
-    pub address: IpAddr,
-    pub asn: Option<u32>,               // Autonomous System Number
-    pub country: Option<String>,        // Country code (ISO 3166-1 alpha-2)
-    pub implementation: Option<String>, // Bitcoin implementation
-    pub subnet: u32,                    // /16 subnet for diversity checks
+ pub address: IpAddr,
+ pub asn: Option<u32>, // Autonomous System Number
+ pub country: Option<String>, // Country code (ISO 3166-1 alpha-2)
+ pub implementation: Option<String>, // Bitcoin implementation
+ pub subnet: u32, // /16 subnet for diversity checks
 }
 ```
 
@@ -95,9 +95,9 @@ Checkpoint height determined from peer chain tips:
 - **Median Calculation**: Uses median of peer tips
 - **Safety Margin**: Subtracts safety margin to prevent deep reorgs
 - **Mathematical Invariants**:
-  - Median is always between min(tips) and max(tips)
-  - Checkpoint height is always >= 0
-  - Checkpoint height <= median_tip
+ - Median is always between min(tips) and max(tips)
+ - Checkpoint height is always >= 0
+ - Checkpoint height <= median_tip
 
 
 ## Ban List Sharing
@@ -162,11 +162,11 @@ Network-wide protection against malicious peers:
 
 ```rust
 pub struct ConsensusConfig {
-    pub min_peers: usize,              // Minimum peers required
-    pub target_peers: usize,           // Target number of diverse peers
-    pub consensus_threshold: f64,       // Consensus threshold (0.0-1.0)
-    pub max_peers_per_asn: usize,     // Max peers per ASN
-    pub safety_margin_blocks: Natural, // Safety margin for checkpoint
+ pub min_peers: usize, // Minimum peers required
+ pub target_peers: usize, // Target number of diverse peers
+ pub consensus_threshold: f64, // Consensus threshold (0.0-1.0)
+ pub max_peers_per_asn: usize, // Max peers per ASN
+ pub safety_margin_blocks: Natural, // Safety margin for checkpoint
 }
 ```
 
@@ -197,7 +197,7 @@ The peer consensus protocol includes:
 - [mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs)
 - [ban_list_merging.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ban_list_merging.rs)
 - [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs)
-- [SECURITY.md](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
+- [security policy](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
 - [blvm-protocol/src/utxo_commitments/peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs), [blvm-node/src/network/ban_list_merging.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ban_list_merging.rs), [blvm-node/src/network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (blvm-node/src/network/ban_list_merging.rsblvm-node/src/network/mod.rs`)
 ## See Also
 

@@ -6,43 +6,43 @@ BLVM (Bitcoin Low-Level Virtual Machine) implements Bitcoin consensus from the [
 
 ```mermaid
 flowchart TD
-  Q{Your goal?}
-  Q -->|Run a Bitcoin node| OP[Getting Started]
-  Q -->|Build or ship a module| DEV[SDK + Modules]
-  Q -->|Study or change consensus| SPEC[Orange Paper + verification]
+ Q{Your goal?}
+ Q -->|Run a Bitcoin node| OP[Getting Started]
+ Q -->|Build or ship a module| DEV[SDK + Modules]
+ Q -->|Study or change consensus| SPEC[Orange Paper + verification]
 ```
 
-**Running a Bitcoin node?** [Operator guide](getting-started/operator-guide.md) — [Installation](getting-started/installation.md), [Quick Start](getting-started/quick-start.md), [First Node Setup](getting-started/first-node.md) ([mainnet IBD hub](getting-started/operator-guide.md#initial-block-download-ibd)). Read [Deployment posture](security/deployment-posture.md) before exposing RPC on mainnet.
+**Running a Bitcoin node?** [Operator guide](getting-started/operator-guide.md): [Installation](getting-started/installation.md), [Quick Start](getting-started/quick-start.md), [First Node Setup](getting-started/first-node.md) ([mainnet IBD hub](getting-started/operator-guide.md#initial-block-download-ibd)). Read [Deployment posture](security/deployment-posture.md) before exposing RPC on mainnet.
 
-**Building a module or integrating with the SDK?** [Developer guide](getting-started/developer-guide.md) — [Building your first module](getting-started/first-module.md), then [Building modules](sdk/module-development.md).
+**Building a module or integrating with the SDK?** [Developer guide](getting-started/developer-guide.md): [Building your first module](getting-started/first-module.md), then [Building modules](sdk/module-development.md).
 
 **Studying the spec or contributing to consensus?** The [Orange Paper](reference/orange-paper.md) is the normative spec. [Formal Verification](consensus/formal-verification.md) explains verification. Contributors: [Repository layout](development/repository-architecture.md), [Contributing](development/contributing.md).
 
 ## What is BLVM?
 
-BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR)—readable by mathematicians without implementation code. **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) (Z3), differential testing, fuzzing, and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture) and [Formal Verification — scope](consensus/formal-verification.md#scope-and-limits).
+BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR), readable by mathematicians without implementation code. **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) (Z3), differential testing, fuzzing, and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture) and [Formal Verification](consensus/formal-verification.md#what-formal-verification-delivers).
 
 **Stack:**
 
-- **[Orange Paper](reference/orange-paper.md)** – Mathematical specification (IR)
-- **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)** – Links code to spec; validates implementation against the IR
-- **[blvm-consensus](consensus/overview.md)** – Consensus implementation with [formal verification](consensus/formal-verification.md)
-- **[blvm-protocol](protocol/overview.md)** – Protocol abstraction (mainnet, testnet, regtest)
-- **[blvm-node](node/overview.md)** – Full node (storage, networking, RPC, [modules](architecture/module-system.md))
-- **[blvm-sdk](sdk/overview.md)** – Developer toolkit and module composition
-- **[Governance](governance/overview.md)** – Cryptographic governance enforcement
+- **[Orange Paper](reference/orange-paper.md)**: Mathematical specification (IR)
+- **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)**: Links code to spec; validates implementation against the IR
+- **[blvm-consensus](consensus/overview.md)**: Consensus implementation with [formal verification](consensus/formal-verification.md)
+- **[blvm-protocol](protocol/overview.md)**: Protocol abstraction (mainnet, testnet, regtest)
+- **[blvm-node](node/overview.md)**: Full node (storage, networking, RPC, [modules](architecture/module-system.md))
+- **[blvm-sdk](sdk/overview.md)**: Developer toolkit and module composition
+- **[Governance](governance/overview.md)**: Cryptographic governance enforcement
 
-**Why "LVM"?** Like LLVM’s shared compiler infrastructure, BLVM provides shared infrastructure for Bitcoin implementations—the Orange Paper is the reference spec; node and consensus code is validated against it.
+**Why "LVM"?** Like LLVM’s shared compiler infrastructure, BLVM provides shared infrastructure for Bitcoin implementations; the Orange Paper is the reference spec; node and consensus code is validated against it.
 
 ## Documentation Structure
 
-- **Operators:** [Operator guide](getting-started/operator-guide.md) — install, sync, RPC, security
-- **Developers:** [Developer guide](getting-started/developer-guide.md) — modules, SDK, contributing
-- **Architecture** – System design, module system, events
-- **Layers** – Consensus, protocol, node (each with overview and detailed pages)
-- **Developer SDK** – Module development, API reference, examples
-- **Governance** – [Overview hub](governance/overview.md), model, configuration, procedures
-- **Reference** – Specifications, [API Index](reference/api-index.md), glossary
+- **Operators:** [Operator guide](getting-started/operator-guide.md): install, sync, RPC, security
+- **Developers:** [Developer guide](getting-started/developer-guide.md): modules, SDK, contributing
+- **Architecture**: System design, module system, events
+- **Layers**: Consensus, protocol, node (each with overview and detailed pages)
+- **Developer SDK**: Module development, API reference, examples
+- **Governance**: [Overview hub](governance/overview.md), model, configuration, procedures
+- **Reference**: Specifications, [API Index](reference/api-index.md), glossary
 
 Documentation is maintained in source repositories alongside code and is aggregated at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org).
 

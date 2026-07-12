@@ -2,7 +2,7 @@
 
 Developer workflow from environment setup through merge.
 
-New to the project? Read [Repository layout](repository-architecture.md) first — why Bitcoin Commons uses separate repositories, how the crates fit together, and how local development and CI differ.
+New to the project? Read [Repository layout](repository-architecture.md) first: why Bitcoin Commons uses separate repositories, how the crates fit together, and how local development and CI differ.
 
 ## Code of Conduct
 
@@ -12,7 +12,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- **Rust toolchain**: Each repository sets a minimum in **`Cargo.toml`** (`rust-version`, **edition 2024** on current workspace crates). Use **`rustc --version`** and satisfy the **`rust-version`** of the **crate you are building**. For a workspace that pulls multiple crates, the effective floor is the **maximum** `rust-version` among packages you compile — see **[MSRV note](msrv-note.md)** (currently **1.85**; CI pins **1.88**).
+- **Rust toolchain**: Each repository sets a minimum in **`Cargo.toml`** (`rust-version`, **edition 2024** on current workspace crates). Use **`rustc --version`** and satisfy the **`rust-version`** of the **crate you are building**. For a workspace that pulls multiple crates, the effective floor is the **maximum** `rust-version` among packages you compile: see **[MSRV note](msrv-note.md)** (currently **1.85**; CI pins **1.88**).
 - **Git** - For version control
 - **Cargo** - Included with Rust
 - **Text editor or IDE** - Your choice
@@ -21,22 +21,22 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 1. **Fork the repository** you want to contribute to (e.g., [blvm-consensus](https://github.com/BTCDecoded/blvm-consensus), [blvm-protocol](https://github.com/BTCDecoded/blvm-protocol), [blvm-node](https://github.com/BTCDecoded/blvm-node))
 2. **Clone your fork**:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/blvm-consensus.git
-   cd blvm-consensus
-   ```
+ ```bash
+ git clone https://github.com/YOUR_USERNAME/blvm-consensus.git
+ cd blvm-consensus
+ ```
 3. **Add upstream remote**:
-   ```bash
-   git remote add upstream https://github.com/BTCDecoded/blvm-consensus.git
-   ```
+ ```bash
+ git remote add upstream https://github.com/BTCDecoded/blvm-consensus.git
+ ```
 4. **Build the project**:
-   ```bash
-   cargo build
-   ```
+ ```bash
+ cargo build
+ ```
 5. **Run tests**:
-   ```bash
-   cargo test
-   ```
+ ```bash
+ cargo test
+ ```
 
 ## Contribution Workflow
 
@@ -72,7 +72,7 @@ Follow these guidelines when making changes:
 - **Write tests for all new functionality** - See [Testing Infrastructure](testing.md) for details
 - **Ensure existing tests continue to pass** - Run `cargo test` before committing
 - **Add integration tests** for complex features
-- **Aim for high test coverage** — consensus code is exercised by unit tests, integration tests, fuzzing, and (where applicable) BLVM Specification Lock; **CI does not enforce a single numeric coverage floor on every PR** (optional coverage workflows exist per repository). Add tests that cover new behavior and edge cases; follow each crate’s CI and `CONTRIBUTING` for what must pass before merge.
+- **Aim for high test coverage**: consensus code is exercised by unit tests, integration tests, fuzzing, and (where applicable) BLVM Specification Lock; **CI does not enforce a single numeric coverage floor on every PR** (optional coverage workflows exist per repository). Add tests that cover new behavior and edge cases; follow each crate’s CI and `CONTRIBUTING` for what must pass before merge.
 
 #### Documentation
 
@@ -129,13 +129,13 @@ Then open a Pull Request on GitHub. See the [PR Process](pr-process.md) for deta
 
 **Critical**: This code implements Bitcoin consensus rules. Any changes must:
 
-- **Match mainnet consensus rules** — no undocumented deviations in consensus code
+- **Match mainnet consensus rules**: no undocumented deviations in consensus code
 - **Not deviate from the [Orange Paper](../reference/orange-paper.md) specifications** - Mathematical correctness required
 - **Handle all edge cases correctly** - Consensus code must be bulletproof
 - **Maintain mathematical precision** - No approximations
 
 **Additional requirements**:
-- **Dependencies**: Follow the canonical [`blvm-consensus` `Cargo.toml`](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml). Other **BLVM** crates are typically pulled with **pre-1.0 semver ranges** on crates.io; many **third-party** crates use **`=`** pins where listed. This is **not** “every dependency exact-pinned.”
+- **Dependencies**: Follow the canonical [blvm-consensus `Cargo.toml`](https://github.com/BTCDecoded/blvm-consensus/blob/main/Cargo.toml). Other **BLVM** crates are typically pulled with **pre-1.0 semver ranges** on crates.io; many **third-party** crates use **`=`** pins where listed. This is **not** “every dependency exact-pinned.”
 - **Pure Functions**: All functions must remain side-effect-free
 - **Testing**: All mathematical functions must be thoroughly tested (see [Testing Infrastructure](testing.md))
 - **Formal Verification**: Consensus-critical changes may require Z3 proofs (via BLVM Specification Lock)
@@ -151,11 +151,11 @@ Then open a Pull Request on GitHub. See the [PR Process](pr-process.md) for deta
 - **Consensus Integrity**: Never modify consensus rules (use blvm-consensus for that)
 - **Production Readiness**: Consider production deployment implications
 - **Performance**: Maintain reasonable performance characteristics
-- **CI vs optional features**: Default **CI** usually matches **`cargo test`** with **default features**, not **`--all-features`**. Full feature matrices and large integration suites can be **much heavier** (compile time, RAM). See **[`blvm-node` CONTRIBUTING](https://github.com/BTCDecoded/blvm-node/blob/main/CONTRIBUTING.md)** (section on CI parity and optional features).
+- **CI vs optional features**: Default **CI** usually matches **`cargo test`** with **default features**, not **`--all-features`**. Full feature matrices and large integration suites can be **much heavier** (compile time, RAM). See **[blvm-node CONTRIBUTING](https://github.com/BTCDecoded/blvm-node/blob/main/CONTRIBUTING.md)** (section on CI parity and optional features).
 
 ### Resource-intensive builds (any repository)
 
-`cargo test --all-features`, broad integration tests, or large workspace builds can exceed the resource profile of default CI. Read the **target repository’s** **`CONTRIBUTING.md`** before assuming your laptop or CI tier is sufficient.
+`cargo test --all-features`, broad integration tests, or large workspace builds can exceed the resource profile of default CI. Read the **target repository’s** **[Contributing](../development/contributing.md)** before assuming your laptop or CI tier is sufficient.
 
 ## Pull Request Checklist
 
@@ -176,10 +176,10 @@ Before submitting your PR, ensure:
 ### What Happens After You Submit a PR
 
 1. **Automated CI runs** - Tests, linting, and checks run automatically
-2. **Governance classification** — Your PR is assigned a **governance tier** and evaluated on a **repository layer**; effective rules combine both (see [Layer-Tier Model](../governance/layer-tier-model.md))
+2. **Governance classification**: Your PR is assigned a **governance tier** and evaluated on a **repository layer**; effective rules combine both (see [Layer-Tier Model](../governance/layer-tier-model.md))
 3. **Maintainers review** - Code review by project maintainers
 4. **Signatures required** - Maintainers must cryptographically sign approval (see [PR Process](pr-process.md))
-5. **Review period** — The effective **layer + tier** review period must elapse (see [PR Process](pr-process.md))
+5. **Review period**: The effective **layer + tier** review period must elapse (see [PR Process](pr-process.md))
 6. **Merge** - Once all requirements are met, your PR is merged
 
 ### Review Criteria
@@ -187,7 +187,7 @@ Before submitting your PR, ensure:
 Reviewers will check:
 
 - **Correctness** - Does the code work as intended?
-- **Consensus compliance** — Does it match the Orange Paper and observed mainnet behavior? (for consensus code)
+- **Consensus compliance**: Does it match the Orange Paper and observed mainnet behavior? (for consensus code)
 - **Test coverage** - Are all cases covered?
 - **Performance** - No regressions?
 - **Documentation** - Is it clear and complete?
@@ -195,7 +195,7 @@ Reviewers will check:
 
 ### Getting Your PR Reviewed
 
-- **Be patient** — effective wait times follow **layer + tier** (see [Layer-Tier Model](../governance/layer-tier-model.md)); they are not always the tier-only numbers ([[gov:tier_1_review_days]]–[[gov:tier_5_review_days]] days).
+- **Be patient**: effective wait times follow **layer + tier** (see [Layer-Tier Model](../governance/layer-tier-model.md)); they are not always the tier-only numbers ([[gov:tier_1_review_days]]-[[gov:tier_5_review_days]] days).
 - **Respond to feedback** - Address review comments promptly
 - **Keep PRs small** - Smaller PRs are reviewed faster
 - **Update PR description** - Keep it current as you make changes
@@ -204,13 +204,13 @@ Reviewers will check:
 
 Your PR gets a **governance tier** (what kind of change) and applies on a **repository layer** (which repo). **Signature requirements and review clocks use the more restrictive of layer vs tier** (“most restrictive wins”). See [Layer-Tier Model](../governance/layer-tier-model.md) and [PR Process](pr-process.md).
 
-The list below is **tier-only** review-period floors **when the repository layer does not impose something stricter** (the matrix in the Layer-Tier Model shows combined results—for example, **Tier 1** in **Layer 3** can still be **[[gov:matrix_3_1_review_days]] days**).
+The list below is **tier-only** review-period floors **when the repository layer does not impose something stricter** (the matrix in the Layer-Tier Model shows combined results, for example, **Tier 1** in **Layer 3** can still be **[[gov:matrix_3_1_review_days]] days**).
 
-- **Tier 1: Routine maintenance** — bug fixes, documentation, performance optimizations in non-consensus areas; **[[gov:tier_1_review_days]] days** tier floor
-- **Tier 2: Feature changes** — new RPC, P2P, wallet, SDK features; **[[gov:tier_2_review_days]] days** tier floor
-- **Tier 3: Consensus-adjacent** — changes affecting consensus validation paths; **[[gov:tier_3_review_days]] days** tier floor
-- **Tier 4: Emergency actions** — critical security / network-threatening PR path; **[[gov:tier_4_review_days]] days** once requirements met
-- **Tier 5: Governance changes** — rules that change governance itself; **[[gov:tier_5_review_days]] days** tier floor
+- **Tier 1: Routine maintenance**: bug fixes, documentation, performance optimizations in non-consensus areas; **[[gov:tier_1_review_days]] days** tier floor
+- **Tier 2: Feature changes**: new RPC, P2P, wallet, SDK features; **[[gov:tier_2_review_days]] days** tier floor
+- **Tier 3: Consensus-adjacent**: changes affecting consensus validation paths; **[[gov:tier_3_review_days]] days** tier floor
+- **Tier 4: Emergency actions**: critical security / network-threatening PR path; **[[gov:tier_4_review_days]] days** once requirements met
+- **Tier 5: Governance changes**: rules that change governance itself; **[[gov:tier_5_review_days]] days** tier floor
 
 **Emergency response classes** (critical / urgent / elevated incidents, **[[gov:emergency_critical_activation]] keyholder activation**) are separate from these PR tiers; see [PR Process → Emergency Procedures](pr-process.md#emergency-procedures).
 
@@ -222,7 +222,7 @@ See [Testing Infrastructure](testing.md) for testing documentation. Key points:
 - **Integration tests** - Test cross-module functionality
 - **[Property-based testing](property-based-testing.md)** - Test with generated inputs
 - **[Fuzzing](testing.md#fuzzing)** - Find edge cases automatically
-- **[Differential testing](differential-testing.md)** — Cross-check vs Bitcoin Core (blvm-bench; full-chain program)
+- **[Differential testing](differential-testing.md)**: Cross-check vs Bitcoin Core (blvm-bench; full-chain program)
 
 ## CI/CD Workflows
 
@@ -239,13 +239,13 @@ See [CI/CD Workflows](ci-cd-workflows.md) for detailed information about what ru
 
 - **Discussions** - Use GitHub Discussions for questions
 - **Issues** - Use GitHub Issues for bugs and feature requests
-- **Security** — report to **security@thebitcoincommons.org** and follow **SECURITY.md** in the relevant repository for disclosure details
+- **Security**: report to **security@thebitcoincommons.org** and follow the relevant [security policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/SECURITY.md) in the relevant repository for disclosure details
 
 ## Recognition
 
 Contributors will be recognized in:
 
-- Repository CONTRIBUTORS.md files
+- Repository [contributor lists](https://github.com/BTCDecoded/blvm-consensus/blob/main/CONTRIBUTORS.md) files
 - Release notes for significant contributions
 - Organization acknowledgments
 

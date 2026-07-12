@@ -20,7 +20,7 @@ Cryptographic keypair for signing governance messages.
 
 ```rust
 pub struct GovernanceKeypair {
-    // Private fields
+ // Private fields
 }
 ```
 
@@ -45,7 +45,7 @@ Public key for governance operations (Bitcoin-compatible secp256k1).
 
 ```rust
 pub struct PublicKey {
-    // Private fields
+ // Private fields
 }
 ```
 
@@ -61,7 +61,7 @@ Cryptographic signature for governance messages.
 
 ```rust
 pub struct Signature {
-    // Private fields
+ // Private fields
 }
 ```
 
@@ -76,18 +76,18 @@ Message types that can be signed for governance decisions.
 
 ```rust
 pub enum GovernanceMessage {
-    Release {
-        version: String,
-        commit_hash: String,
-    },
-    ModuleApproval {
-        module_name: String,
-        version: String,
-    },
-    BudgetDecision {
-        amount: u64,
-        purpose: String,
-    },
+ Release {
+ version: String,
+ commit_hash: String,
+ },
+ ModuleApproval {
+ module_name: String,
+ version: String,
+ },
+ BudgetDecision {
+ amount: u64,
+ purpose: String,
+ },
 }
 ```
 
@@ -101,7 +101,7 @@ Multisig configuration for threshold signatures.
 
 ```rust
 pub struct Multisig {
-    // Private fields
+ // Private fields
 }
 ```
 
@@ -144,9 +144,9 @@ Verify a signature against a message and public key.
 
 ```rust
 pub fn verify_signature(
-    signature: &Signature,
-    message: &[u8],
-    public_key: &PublicKey,
+ signature: &Signature,
+ message: &[u8],
+ public_key: &PublicKey,
 ) -> GovernanceResult<bool>
 ```
 
@@ -165,15 +165,15 @@ Errors that can occur during governance operations.
 
 ```rust
 pub enum GovernanceError {
-    InvalidKey(String),
-    SignatureVerification(String),
-    InvalidMultisig(String),
-    MessageFormat(String),
-    Cryptographic(String),
-    Serialization(String),
-    InvalidThreshold { threshold: usize, total: usize },
-    InsufficientSignatures { got: usize, need: usize },
-    InvalidSignatureFormat(String),
+ InvalidKey(String),
+ SignatureVerification(String),
+ InvalidMultisig(String),
+ MessageFormat(String),
+ Cryptographic(String),
+ Serialization(String),
+ InvalidThreshold { threshold: usize, total: usize },
+ InsufficientSignatures { got: usize, need: usize },
+ InvalidSignatureFormat(String),
 }
 ```
 
@@ -195,7 +195,7 @@ Manages module discovery, installation, and dependency resolution.
 
 ```rust
 pub struct ModuleRegistry {
-    // Private fields
+ // Private fields
 }
 ```
 
@@ -224,16 +224,16 @@ Information about a discovered module.
 
 ```rust
 pub struct ModuleInfo {
-    pub name: String,
-    pub version: String,
-    pub description: String,
-    pub author: String,
-    pub capabilities: Vec<String>,
-    pub dependencies: HashMap<String, String>,
-    pub entry_point: String,
-    pub source: ModuleSource,
-    pub status: ModuleStatus,
-    pub health: ModuleHealth,
+ pub name: String,
+ pub version: String,
+ pub description: String,
+ pub author: String,
+ pub capabilities: Vec<String>,
+ pub dependencies: HashMap<String, String>,
+ pub entry_point: String,
+ pub source: ModuleSource,
+ pub status: ModuleStatus,
+ pub health: ModuleHealth,
 }
 ```
 
@@ -245,7 +245,7 @@ Composes nodes from module specifications.
 
 ```rust
 pub struct NodeComposer {
-    // Private fields
+ // Private fields
 }
 ```
 
@@ -262,9 +262,9 @@ Specification for a composed node.
 
 ```rust
 pub struct NodeSpec {
-    pub network_type: NetworkType,
-    pub modules: Vec<ModuleSpec>,
-    pub metadata: NodeMetadata,
+ pub network_type: NetworkType,
+ pub modules: Vec<ModuleSpec>,
+ pub metadata: NodeMetadata,
 }
 ```
 
@@ -274,10 +274,10 @@ Specification for a module in a composed node.
 
 ```rust
 pub struct ModuleSpec {
-    pub name: String,
-    pub version: Option<String>,
-    pub config: HashMap<String, String>,
-    pub enabled: bool,
+ pub name: String,
+ pub version: Option<String>,
+ pub config: HashMap<String, String>,
+ pub enabled: bool,
 }
 ```
 
@@ -289,7 +289,7 @@ Manages module lifecycle (start, stop, restart, health checks).
 
 ```rust
 pub struct ModuleLifecycle {
-    // Private fields
+ // Private fields
 }
 ```
 
@@ -309,11 +309,11 @@ Module runtime status.
 
 ```rust
 pub enum ModuleStatus {
-    Stopped,
-    Starting,
-    Running,
-    Stopping,
-    Error(String),
+ Stopped,
+ Starting,
+ Running,
+ Stopping,
+ Error(String),
 }
 ```
 
@@ -323,10 +323,10 @@ Module health information.
 
 ```rust
 pub struct ModuleHealth {
-    pub is_healthy: bool,
-    pub last_heartbeat: Option<SystemTime>,
-    pub error_count: u64,
-    pub last_error: Option<String>,
+ pub is_healthy: bool,
+ pub last_heartbeat: Option<SystemTime>,
+ pub error_count: u64,
+ pub last_error: Option<String>,
 }
 ```
 
@@ -340,10 +340,10 @@ Generate governance keypairs.
 blvm-keygen [OPTIONS]
 
 Options:
-    -o, --output <OUTPUT>    Output file [default: governance.key]
-    -f, --format <FORMAT>    Output format (text, json) [default: text]
-    --seed <SEED>            Generate deterministic keypair from seed
-    --show-private          Show private key in output
+ -o, --output <OUTPUT> Output file [default: governance.key]
+ -f, --format <FORMAT> Output format (text, json) [default: text]
+ --seed <SEED> Generate deterministic keypair from seed
+ --show-private Show private key in output
 ```
 
 ### `blvm-sign`
@@ -354,14 +354,14 @@ Sign governance messages.
 blvm-sign [OPTIONS] <COMMAND>
 
 Options:
-    -o, --output <OUTPUT>    Output file [default: signature.txt]
-    -f, --format <FORMAT>    Output format (text, json) [default: text]
-    -k, --key <KEY>          Private key file
+ -o, --output <OUTPUT> Output file [default: signature.txt]
+ -f, --format <FORMAT> Output format (text, json) [default: text]
+ -k, --key <KEY> Private key file
 
 Commands:
-    release                 Sign a release message
-    module                  Sign a module approval message
-    budget                  Sign a budget decision message
+ release Sign a release message
+ module Sign a module approval message
+ budget Sign a budget decision message
 ```
 
 ### `blvm-verify`
@@ -372,15 +372,15 @@ Verify governance signatures and multisig thresholds.
 blvm-verify [OPTIONS] <COMMAND>
 
 Options:
-    -f, --format <FORMAT>    Output format (text, json) [default: text]
-    -s, --signatures <SIGS>  Signature files (comma-separated)
-    --threshold <THRESHOLD>  Threshold (e.g., "[[gov:tier_1_signatures]]")
-    --pubkeys <PUBKEYS>      Public key files (comma-separated)
+ -f, --format <FORMAT> Output format (text, json) [default: text]
+ -s, --signatures <SIGS> Signature files (comma-separated)
+ --threshold <THRESHOLD> Threshold (e.g., "[[gov:tier_1_signatures]]")
+ --pubkeys <PUBKEYS> Public key files (comma-separated)
 
 Commands:
-    release                 Verify a release message
-    module                  Verify a module approval message
-    budget                  Verify a budget decision message
+ release Verify a release message
+ module Verify a module approval message
+ budget Verify a budget decision message
 ```
 
 ## Usage Examples
@@ -395,8 +395,8 @@ let keypair = GovernanceKeypair::generate()?;
 
 // Create message
 let message = GovernanceMessage::Release {
-    version: "v1.0.0".to_string(),
-    commit_hash: "abc123".to_string(),
+ version: "v1.0.0".to_string(),
+ commit_hash: "abc123".to_string(),
 };
 
 // Sign message
@@ -415,27 +415,27 @@ use blvm_sdk::{GovernanceKeypair, GovernanceMessage, Multisig, sign_message};
 
 // Generate keypairs for tier-1 multisig ([[gov:tier_1_signatures]])
 let keypairs: Vec<_> = (0..5)
-    .map(|_| GovernanceKeypair::generate().unwrap())
-    .collect();
+ .map(|_| GovernanceKeypair::generate().unwrap())
+ .collect();
 let public_keys: Vec<_> = keypairs.iter()
-    .map(|kp| kp.public_key())
-    .collect();
+ .map(|kp| kp.public_key())
+ .collect();
 
 // Create multisig
 let multisig = Multisig::new([[gov:tier_1_sig_required]], [[gov:tier_1_sig_total]], public_keys)?;
 
 // Create message
 let message = GovernanceMessage::Release {
-    version: "v1.0.0".to_string(),
-    commit_hash: "abc123".to_string(),
+ version: "v1.0.0".to_string(),
+ commit_hash: "abc123".to_string(),
 };
 let message_bytes = message.to_signing_bytes();
 
 // Sign with 3 keys
 let signatures: Vec<_> = keypairs[0..3]
-    .iter()
-    .map(|kp| sign_message(&kp.secret_key_bytes(), &message_bytes).unwrap())
-    .collect();
+ .iter()
+ .map(|kp| sign_message(&kp.secret_key_bytes(), &message_bytes).unwrap())
+ .collect();
 
 // Verify multisig threshold
 let verified = multisig.verify(&message_bytes, &signatures)?;
@@ -474,7 +474,7 @@ When building modules against **`blvm-sdk`** with the **`node`** feature, the SD
 | `open_module_db` | Open module-local embedded DB under the module data dir |
 | `Permission`, `PermissionSet` | Capability checks |
 
-Subprocess modules that register **`ModuleAPI`** over IPC should use **`run_module_with_setup_and_api`** (not plain **`run_module!`**) — see [Module IPC Protocol — Subprocess ModuleAPI registration](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Building modules](module-development.md#spawned-modules-and-moduleapi).
+Subprocess modules that register **`ModuleAPI`** over IPC should use **`run_module_with_setup_and_api`** (not plain **`run_module!`**): see [Module IPC Protocol: Subprocess ModuleAPI registration](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Building modules](module-development.md#spawned-modules-and-moduleapi).
 
 Governance **`NestedMultisig`** lives in **`blvm_sdk::governance::nested_multisig`** (not re-exported at crate root).
 

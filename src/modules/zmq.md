@@ -1,6 +1,6 @@
 # ZMQ module (`blvm-zmq`)
 
-Bitcoin-compatible **ZeroMQ PUB** notifications for blocks and mempool events. Replaces the former in-process **`[zmq]`** section on `blvm-node` — configure endpoints on this module instead.
+Bitcoin-compatible **ZeroMQ PUB** notifications for blocks and mempool events. Replaces the former in-process **`[zmq]`** section on `blvm-node`: configure endpoints on this module instead.
 
 ## Overview
 
@@ -22,7 +22,7 @@ If the module cannot fetch a full block or transaction from the node API, it sti
 
 - `blvm-node` with the module system enabled.
 - Module pinned in **`registry/modules.json`** or installed on the module search path.
-- Each topic is optional — omit endpoints you do not need. With **no** endpoints set, the module loads but does not bind sockets.
+- Each topic is optional: omit endpoints you do not need. With **no** endpoints set, the module loads but does not bind sockets.
 
 ## Loading
 
@@ -45,7 +45,7 @@ rawtx = "tcp://127.0.0.1:28335"
 sequence = "tcp://127.0.0.1:28336"
 ```
 
-Or place a release binary + `module.toml` under the modules directory. See [Module catalog — Installing modules](overview.md#installing-modules).
+Or place a release binary + `module.toml` under the modules directory. See [Module catalog: Installing modules](overview.md#installing-modules).
 
 Module data-dir config: `<modules.data_dir>/blvm-zmq/config.toml` (same keys as `[modules.blvm-zmq]`).
 
@@ -59,14 +59,14 @@ Module data-dir config: `<modules.data_dir>/blvm-zmq/config.toml` (same keys as 
 | `rawtx` | Raw transaction | `tcp://127.0.0.1:28335` |
 | `sequence` | Mempool sequence | `tcp://127.0.0.1:28336` |
 
-**Endpoint format:** `transport://address` — `tcp://`, `ipc://`, or `inproc://` (same as Bitcoin Core ZMQ).
+**Endpoint format:** `transport://address`: `tcp://`, `ipc://`, or `inproc://` (same as Bitcoin Core ZMQ).
 
 **Capabilities (`module.toml`):** `read_blockchain`, `subscribe_events`
 
 ## Wire format
 
 - **Topics:** UTF-8 strings (`hashblock`, `hashtx`, `rawblock`, `rawtx`, `sequence`) sent as the first frame with `SNDMORE`, payload as the second frame (Bitcoin ZMQ style).
-- **`rawblock` / `rawtx` payloads:** Bitcoin **P2P wire serialization** from `blvm-protocol` (`serialize_block_witnesses` / `serialize_tx`) — the same encoding as P2P `block` / `tx` message bodies, **not** bincode. Subscribers must decode wire format.
+- **`rawblock` / `rawtx` payloads:** Bitcoin **P2P wire serialization** from `blvm-protocol` (`serialize_block_witnesses` / `serialize_tx`): the same encoding as P2P `block` / `tx` message bodies, **not** bincode. Subscribers must decode wire format.
 
 ## Behaviour
 
@@ -82,7 +82,7 @@ Module data-dir config: `<modules.data_dir>/blvm-zmq/config.toml` (same keys as 
 
 ### `MempoolTransactionRemoved`
 
-- `sequence` only (removal=`0x02`) — no `hashtx` / `rawtx` on removal.
+- `sequence` only (removal=`0x02`): no `hashtx` / `rawtx` on removal.
 
 ## Subscribing (example)
 
@@ -95,19 +95,19 @@ sub.connect("tcp://127.0.0.1:28332")
 sub.setsockopt(zmq.SUBSCRIBE, b"hashblock")
 
 while True:
-    topic = sub.recv_string()
-    block_hash = sub.recv()
-    print(topic, block_hash.hex())
+ topic = sub.recv_string()
+ block_hash = sub.recv()
+ print(topic, block_hash.hex())
 ```
 
-More examples and topic details: [`blvm-node/docs/ZMQ_NOTIFICATIONS.md`](https://github.com/BTCDecoded/blvm-node/blob/main/docs/ZMQ_NOTIFICATIONS.md) (operator reference; configuration lives in **`blvm-zmq`**, not `[zmq]` on the node).
+More examples and topic details: [ZMQ notifications](https://github.com/BTCDecoded/blvm-node/blob/main/docs/ZMQ_NOTIFICATIONS.md) (operator reference; configuration lives in **`blvm-zmq`**, not `[zmq]` on the node).
 
 ## Troubleshooting
 
 | Symptom | Check |
 |---------|--------|
 | No ZMQ traffic | Endpoints configured? Module loaded? Check module logs for bind errors |
-| `hashblock` only, no `rawblock` | `get_block` returned none — block not available to module yet |
+| `hashblock` only, no `rawblock` | `get_block` returned none: block not available to module yet |
 | Subscriber cannot decode `rawtx` | Use P2P wire decoder, not bincode |
 | Port already in use | Another process or duplicate bind on same `tcp://` endpoint |
 | Firewall | ZMQ binds on configured host; expose only on loopback unless intended |
@@ -115,5 +115,5 @@ More examples and topic details: [`blvm-node/docs/ZMQ_NOTIFICATIONS.md`](https:/
 ## See also
 
 - [Module catalog](overview.md)
-- [Node configuration — module pins](../node/configuration.md)
+- [Node configuration: module pins](../node/configuration.md)
 - [Module IPC Protocol](../architecture/module-ipc-protocol.md)

@@ -21,7 +21,7 @@ The benchmarking infrastructure is maintained in a separate repository (`blvm-be
 
 ### Storage backend benchmarks
 
-`blvm-bench` includes heed3 zero-copy / LMDB storage comparisons against other backends. Run locally or inspect results on [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org); see the [`blvm-bench` README](https://github.com/BTCDecoded/blvm-bench).
+`blvm-bench` includes heed3 zero-copy / LMDB storage comparisons against other backends. Run locally or inspect results on [benchmarks.thebitcoincommons.org](https://benchmarks.thebitcoincommons.org); see the [blvm-bench README](https://github.com/BTCDecoded/blvm-bench).
 
 ### Automated Benchmark Generation
 

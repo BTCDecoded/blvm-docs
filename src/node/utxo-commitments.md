@@ -1,8 +1,8 @@
 # UTXO Commitments
 
-> **Layer** — Optional **node fast-sync** feature (**blvm-protocol** / **blvm-node**). Not part of Orange Paper consensus rules; see [Consensus overview](../consensus/overview.md).
+> **Layer**: Optional **node fast-sync** feature (**blvm-protocol** / **blvm-node**). Not part of Orange Paper consensus rules; see [Consensus overview](../consensus/overview.md).
 
-> **Build** — `utxo-commitments` is in **`blvm` default features** (Linux x86_64 release artifacts; also in portable Windows/aarch64 CI subset). Enable at runtime via config when your deployment uses it.
+> **Build**: `utxo-commitments` is in **`blvm` default features** (Linux x86_64 release artifacts; also in portable Windows/aarch64 CI subset). Enable at runtime via config when your deployment uses it.
 
 ## Overview
 
@@ -68,11 +68,11 @@ Peers are selected for diversity across:
 
 ```rust
 pub struct ConsensusConfig {
-    pub min_peers: usize,              // Minimum: 5
-    pub target_peers: usize,           // Target: 10
-    pub consensus_threshold: f64,      // 0.8 (80% agreement)
-    pub max_peers_per_asn: usize,      // 2
-    pub safety_margin: Natural,        // 2016 blocks (~2 weeks)
+ pub min_peers: usize, // Minimum: 5
+ pub target_peers: usize, // Target: 10
+ pub consensus_threshold: f64, // 0.8 (80% agreement)
+ pub max_peers_per_asn: usize, // 2
+ pub safety_margin: Natural, // 2016 blocks (~2 weeks)
 }
 ```
 
@@ -102,7 +102,7 @@ pub struct ConsensusConfig {
 
 ### Bandwidth savings
 
-Fast sync downloads far less data than replaying every full block for all heights—headers plus filtered or incremental payloads instead of full blocks at each height. Actual volume and ratios depend on tip height, peer behavior, and configuration; measure on your deployment.
+Fast sync downloads far less data than replaying every full block for all heights, headers plus filtered or incremental payloads instead of full blocks at each height. Actual volume and ratios depend on tip height, peer behavior, and configuration; measure on your deployment.
 
 Conceptually:
 - **Headers only** vs **full blocks** per height reduces volume dramatically
@@ -133,8 +133,8 @@ When processing blocks for UTXO commitments, spam filtering is applied:
 BIP158 compact block filters support light clients and integrate with UTXO commitments for efficient filtered block serving.
 
 ### Location
-- **Protocol (algorithm)**: `blvm-protocol/src/bip158.rs`, `blvm-protocol/src/bip157.rs` — GCS filter construction and filter header chain
-- **Node (handlers)**: `blvm-node/src/network/bip157_handler.rs`, `blvm-node/src/network/filter_service.rs` — serving and network integration
+- **Protocol (algorithm)**: `blvm-protocol/src/bip158.rs`, `blvm-protocol/src/bip157.rs`: GCS filter construction and filter header chain
+- **Node (handlers)**: `blvm-node/src/network/bip157_handler.rs`, `blvm-node/src/network/filter_service.rs`: serving and network integration
 
 ### Capabilities
 
@@ -142,8 +142,8 @@ BIP158 compact block filters support light clients and integrate with UTXO commi
 - **Golomb-Rice Coded Sets (GCS)** for efficient encoding
 - **False Positive Rate**: ~1 in 524,288 (P=19)
 - **Filter Contents**:
-  1. All spendable output scriptPubKeys in the block
-  2. All scriptPubKeys from outputs spent by block's inputs
+ 1. All spendable output scriptPubKeys in the block
+ 2. All scriptPubKeys from outputs spent by block's inputs
 
 #### Filter Header Chain
 - Maintains filter header chain for efficient verification
@@ -208,10 +208,10 @@ UTXO Commitments work with both TCP and Iroh transports via the transport abstra
 
 ### Configuration Example
 
-```toml
+``toml
 [utxo_commitments]
-sync_mode = "PeerConsensus"  # or "Genesis" or "Hybrid"
-verification_level = "Standard"  # or "Minimal" or "Paranoid"
+sync_mode = "PeerConsensus" # or "Genesis" or "Hybrid"
+verification_level = "Standard" # or "Minimal" or "Paranoid"
 
 [utxo_commitments.consensus]
 min_peers = 5
@@ -221,9 +221,9 @@ max_peers_per_asn = 2
 safety_margin = 2016
 
 [utxo_commitments.spam_filter]
-min_value = 546  # dust threshold
-min_fee_rate = 1  # sat/vB
-```
+min_value = 546 # dust threshold
+min_fee_rate = 1 # sat/vB
+``
 
 
 ## Formal Verification
@@ -246,31 +246,31 @@ Storage correctness for UTXO set operations is covered by tests and blvm-spec-lo
 use blvm_protocol::utxo_commitments::InitialSync;
 
 let sync = InitialSync::new(
-    peer_consensus,
-    network_client,
-    config,
+ peer_consensus,
+ network_client,
+ config,
 );
 
 // Sync from checkpoint
 let commitment = sync.sync_from_checkpoint(
-    header_chain,
-    diverse_peers,
+ header_chain,
+ diverse_peers,
 ).await?;
 
 // Complete sync forward with full validation
 // Note: checkpoint_utxo_set should be obtained from the verified commitment
 // For now, passing None starts with empty set (commitment verified at checkpoint)
 sync.complete_sync_from_checkpoint(
-    &mut utxo_tree,
-    checkpoint_height,
-    current_tip,
-    network_client,
-    get_block_hash_fn,
-    peer_id,
-    Network::Mainnet,
-    network_time,
-    Some(&header_chain),
-    None, // checkpoint_utxo_set - can be obtained separately if needed
+ &mut utxo_tree,
+ checkpoint_height,
+ current_tip,
+ network_client,
+ get_block_hash_fn,
+ peer_id,
+ Network::Mainnet,
+ network_time,
+ Some(&header_chain),
+ None, // checkpoint_utxo_set - can be obtained separately if needed
 ).await?;
 ```
 
@@ -280,9 +280,9 @@ sync.complete_sync_from_checkpoint(
 use blvm_protocol::utxo_commitments::update_commitments_after_block;
 
 update_commitments_after_block(
-    &mut utxo_tree,
-    block,
-    height,
+ &mut utxo_tree,
+ block,
+ height,
 )?;
 ```
 
@@ -330,4 +330,4 @@ The UTXO Commitments system includes:
 - [Node Configuration](configuration.md)
 - [Storage Backends](storage-backends.md)
 - [Performance Optimizations](performance.md)
-- [Formal Verification](../consensus/formal-verification.md) — Spec-lock proofs on commitment code paths
+- [Formal Verification](../consensus/formal-verification.md): Spec-lock proofs on commitment code paths

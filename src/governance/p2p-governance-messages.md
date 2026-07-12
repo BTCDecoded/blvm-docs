@@ -30,5 +30,5 @@ Optional `[governance]` settings in the node (e.g. `commons_url`, relay toggles)
 
 ## See also
 
-- [Node overview](../node/overview.md) — networking and configuration entry points
-- [Module system](../architecture/module-system.md#event-system) — `EventType` / governance-related **events** (proposal lifecycle, webhooks, fork detection)
+- [Node overview](../node/overview.md): networking and configuration entry points
+- [Module system](../architecture/module-system.md#event-system): `EventType` / governance-related **events** (proposal lifecycle, webhooks, fork detection)

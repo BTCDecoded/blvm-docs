@@ -2,12 +2,12 @@
 
 ## Sync tuning guide
 
-First mainnet sync always starts from [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (release IBD example config). For other IBD topics, use the [operator IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) or:
+First mainnet sync always starts from [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (release IBD example config). For other IBD topics, use the [operator IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) or:
 
 | Topic | Page |
 |-------|------|
 | Parallel download, pipelining, assume-valid | [Performance optimizations](performance.md) |
-| `[ibd]` keys and `BLVM_IBD_*` | [Configuration reference — IBD](../reference/configuration-reference.md#ibd-configuration) |
+| `[ibd]` keys and `BLVM_IBD_*` | [Configuration reference: IBD](../reference/configuration-reference.md#ibd-configuration) |
 | Serving-side bandwidth limits | [IBD bandwidth protection](ibd-protection.md) |
 | LAN Core / same-subnet peers | [LAN peering](lan-peering.md) |
 
@@ -39,10 +39,10 @@ Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-
 
 ## Architecture
 
-1. **Index and table** — Age-tiered structures track live UTXOs and support fast spend lookups during validation.
-2. **Spend session** — Batches spend/create operations per block and feeds the engine from the validation loop.
-3. **Checkpoint export** — Periodic snapshots of engine state allow resume after interruption without re-downloading from genesis.
-4. **Import / seed** — On restart, the node seeds validation from the last exported checkpoint height when present.
+1. **Index and table**: Age-tiered structures track live UTXOs and support fast spend lookups during validation.
+2. **Spend session**: Batches spend/create operations per block and feeds the engine from the validation loop.
+3. **Checkpoint export**: Periodic snapshots of engine state allow resume after interruption without re-downloading from genesis.
+4. **Import / seed**: On restart, the node seeds validation from the last exported checkpoint height when present.
 
 
 ## Operator notes
@@ -51,7 +51,7 @@ Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-
 - On **SIGTERM** / **SIGINT** during parallel IBD, the node drains in-flight validation and flushes the UTXO watermark before exit when possible.
 - **`io_uring`** accelerates engine table I/O on **Linux**; other platforms use a `pread` fallback (engine still runs on Windows).
 - **[Assume-valid](../reference/configuration-reference.md#block_validationassume_valid_height)** skips signature verification below a configured height; block structure, Merkle roots, and proof-of-work are still checked.
-- First mainnet sync: [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
+- First mainnet sync: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
 
 ## Configuration
 
@@ -64,8 +64,8 @@ See **[IBD Configuration](../reference/configuration-reference.md#ibd-configurat
 
 ## See Also
 
-- [Operator guide — IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) — Map of all IBD docs
-- [Performance Optimizations](performance.md) — Parallel download, pipelining, reorder buffer
-- [IBD Bandwidth Protection](ibd-protection.md) — Serving-side bandwidth limits
-- [LAN Peering System](lan-peering.md) — LAN peer preference during download
-- [Storage Backends](storage-backends.md) — `database_backend` and `data_dir`
+- [Operator guide: IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd): Map of all IBD docs
+- [Performance Optimizations](performance.md): Parallel download, pipelining, reorder buffer
+- [IBD Bandwidth Protection](ibd-protection.md): Serving-side bandwidth limits
+- [LAN Peering System](lan-peering.md): LAN peer preference during download
+- [Storage Backends](storage-backends.md): `database_backend` and `data_dir`

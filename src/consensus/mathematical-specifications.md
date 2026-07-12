@@ -1,10 +1,10 @@
 # Mathematical Specifications
 
-**Canonical spec:** The [Orange Paper](../reference/orange-paper.md) on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) ([Consensus Spec](https://thebitcoincommons.org/spec.html)). **This page** is an in-book digest of formal properties and notation used when reasoning about **blvm-consensus**—checked by tests and **BLVM Specification Lock**, not a substitute for the full commons spec.
+**Canonical spec:** The [Orange Paper](../reference/orange-paper.md) on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) ([Consensus Spec](https://thebitcoincommons.org/spec.html)). **This page** is an in-book digest of formal properties and notation used when reasoning about **blvm-consensus**, checked by tests and **BLVM Specification Lock**, not a substitute for the full commons spec.
 
 ## Overview
 
-Bitcoin Commons documents **Orange Paper–aligned** mathematical specifications for consensus behavior. The Rust code implements this spec, checked by tests and **BLVM Specification Lock** on spec-locked functions. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Bitcoin Commons documents **Orange Paper-aligned** mathematical specifications for consensus behavior. The Rust code implements this spec, checked by tests and **BLVM Specification Lock** on spec-locked functions. Proof scope: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Specification Format
 
@@ -97,8 +97,8 @@ consensus_met ⟺ agreement_count >= required_agreement_count
 **Mathematical Specification**:
 ```
 median(tips) = {
-    tips[n/2] if n is odd,
-    (tips[n/2-1] + tips[n/2]) / 2 if n is even
+ tips[n/2] if n is odd,
+ (tips[n/2-1] + tips[n/2]) / 2 if n is even
 }
 ```
 
@@ -106,6 +106,86 @@ median(tips) = {
 - `min(tips) <= median <= max(tips)`
 - Median is deterministic
 - Checkpoint = max(0, median - safety_margin)
+
+
+### Proof of Work
+
+**Mathematical Specification**:
+```
+∀ header H: CheckProofOfWork(H) = SHA256(SHA256(H)) < ExpandTarget(H.bits)
+```
+
+**Target compression/expansion**:
+```
+∀ bits ∈ [0x03000000, 0x1d00ffff]:
+ Let expanded = expand_target(bits)
+ Let compressed = compress_target(expanded)
+ Let re_expanded = expand_target(compressed)
+
+ Then:
+ - re_expanded ≤ expanded (compression truncates, never increases)
+ - re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3]
+ - Precision loss in words 0, 1 is acceptable (compact format limitation)
+```
+
+**Invariants**:
+- Hash must be less than target for valid proof of work
+- Target expansion handles edge cases correctly
+- Target compression preserves significant bits (words 2, 3) exactly
+- Difficulty adjustment respects bounds [0.25, 4.0]
+- Work calculation is deterministic
+
+**Key functions:**
+- `check_proof_of_work`: hash vs target
+- `expand_target` / `compress_target`: compact difficulty encoding
+- `get_next_work_required`: difficulty adjustment bounds
+
+
+### Transaction Validation
+
+**Mathematical Specification**:
+```
+∀ tx ∈ 𝒯𝒳: CheckTransaction(tx) = valid ⟺
+ (|tx.inputs| > 0 ∧ |tx.outputs| > 0 ∧
+ ∀o ∈ tx.outputs: 0 ≤ o.value ≤ M_max ∧
+ |tx.inputs| ≤ M_max_inputs ∧ |tx.outputs| ≤ M_max_outputs ∧
+ |tx| ≤ M_max_tx_size)
+```
+
+**Invariants**:
+- Valid transactions have non-empty inputs and outputs
+- Output values are bounded [0, MAX_MONEY]
+- Input/output counts and transaction size respect limits
+- Coinbase transactions have special validation rules
+
+**Key functions:**
+- `check_transaction`: structural validity
+- `check_tx_inputs`: input checks including coinbase
+- `is_coinbase`: coinbase detection
+
+
+### Block Connection
+
+**Mathematical Specification**:
+```
+∀ block B, UTXO set US, height h: ConnectBlock(B, US, h) = (valid, US') ⟺
+ (ValidateHeader(B.header) ∧
+ ∀ tx ∈ B.transactions: CheckTransaction(tx) ∧ CheckTxInputs(tx, US, h) ∧
+ VerifyScripts(tx, US) ∧
+ CoinbaseOutput ≤ TotalFees + GetBlockSubsidy(h) ∧
+ US' = ApplyTransactions(B.transactions, US))
+```
+
+**Invariants**:
+- Valid blocks have valid headers and transactions
+- UTXO set consistency is preserved
+- Coinbase output respects economic rules
+- Transaction application is atomic
+
+**Key functions:**
+- `connect_block`: full block validation
+- `apply_transaction`: UTXO updates
+- `calculate_tx_id`: transaction id
 
 
 ## Specification Coverage
@@ -135,7 +215,7 @@ Floating-point arithmetic replaced with integer-based calculations:
 // Integer-based threshold calculation
 let required_agreement_count = ((total_peers as f64) * threshold).ceil() as usize;
 if agreement_count >= required_agreement_count {
-    // Consensus met
+ // Consensus met
 }
 ```
 
@@ -157,42 +237,28 @@ Checked arithmetic prevents overflow/underflow:
 ```rust
 // Median calculation with overflow protection
 let median_tip = if sorted_tips.len() % 2 == 0 {
-    let mid = sorted_tips.len() / 2;
-    let lower = sorted_tips[mid - 1];
-    let upper = sorted_tips[mid];
-    (lower + upper) / 2  // Safe: Natural type prevents overflow
+ let mid = sorted_tips.len() / 2;
+ let lower = sorted_tips[mid - 1];
+ let upper = sorted_tips[mid];
+ (lower + upper) / 2 // Safe: Natural type prevents overflow
 } else {
-    sorted_tips[sorted_tips.len() / 2]
+ sorted_tips[sorted_tips.len() / 2]
 };
 ```
 
 
-## Formal Verification
+## How verification applies
 
-### Z3 Proofs
+**BLVM Specification Lock** uses Z3 to prove spec-locked functions against Orange Paper contracts. The symbolic specs on this page are not each a separate Z3 theorem; methodology, CI, and tooling live on [Formal Verification](formal-verification.md). Proof bounds: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
-**BLVM Specification Lock** uses Z3 to prove spec-locked functions against Orange Paper contracts. The symbolic specs above are not each a separate Z3 theorem; see [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
-
-
-### Property-Based Tests
-
-Property-based tests verify invariants:
-
-- Generate random inputs
-- Verify properties hold
-- Discover edge cases
-- Test mathematical correctness
-
+Property-based tests and runtime assertions (below) complement spec-lock on the same invariants.
 
 ## Documentation
 
-### Specification Documents
+Consensus repository references (see [consensus docs index](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)):
 
-Mathematical specifications and verification are documented in the consensus repository (see [docs/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)):
-
-- **[VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)** — how to run verification and what is in scope
-- **[PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)** — proof bounds, coverage, and protections beyond formal verification
-
+- **[verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)**: how to run verification and what is in scope
+- **[proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)**: proof bounds, coverage, and protections beyond formal verification
 
 ## Components
 
@@ -208,13 +274,13 @@ The mathematical specifications system includes:
 
 ## Source
 
-- [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
-- [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
-- [README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)
+- [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
+- [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
+- [repository docs](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)
 
 ## See Also
 
-- [Consensus Overview](overview.md) — Consensus layer introduction
-- [Formal Verification](formal-verification.md) — BLVM Specification Lock methodology
-- [Orange Paper](../reference/orange-paper.md) — Normative specification on Bitcoin Commons
-- [Property-Based Testing](../development/property-based-testing.md) — Property-based testing
+- [Consensus Overview](overview.md): Consensus layer introduction
+- [Formal Verification](formal-verification.md): BLVM Specification Lock methodology
+- [Orange Paper](../reference/orange-paper.md): Normative specification on Bitcoin Commons
+- [Property-Based Testing](../development/property-based-testing.md): Property-based testing

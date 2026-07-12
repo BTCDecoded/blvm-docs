@@ -23,7 +23,7 @@ Without the module loaded, core stubs return JSON-RPC **-32001** with a message 
 
 ## Loading
 
-Pin in `blvm.toml` (merge into your full file — include `transport_preference` and network keys):
+Pin in `blvm.toml` (merge into your full file: include `transport_preference` and network keys):
 
 ```toml
 [modules]
@@ -31,13 +31,13 @@ registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/
 blvm-miniscript = "0.1.*"
 ```
 
-Runtime load (admin RPC; use the port from `--rpc-addr` — mainnet **8332**, testnet **18332**, regtest **18443**):
+Runtime load (admin RPC; use the port from `--rpc-addr`: mainnet **8332**, testnet **18332**, regtest **18443**):
 
 ```bash
 curl -s -X POST http://127.0.0.1:18443 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <admin-token>" \
-  -d '{"jsonrpc":"2.0","method":"loadmodule","params":["blvm-miniscript"],"id":1}'
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer <admin-token>" \
+ -d '{"jsonrpc":"2.0","method":"loadmodule","params":["blvm-miniscript"],"id":1}'
 ```
 
 Or use **`blvm load blvm-miniscript`** / **`blvm module load blvm-miniscript`** when the node is running (admin RPC auth required).
@@ -47,13 +47,13 @@ Or use **`blvm load blvm-miniscript`** / **`blvm module load blvm-miniscript`** 
 Optional module config: `<modules.data_dir>/blvm-miniscript/config.toml`
 
 ```toml
-log_level = "info"   # trace | debug | info | warn | error
+log_level = "info" # trace | debug | info | warn | error
 ```
 
 Node spawn overrides: `[modules.blvm-miniscript]` in `blvm.toml` (same keys; table name must match manifest **`name`**).
 
 ## See also
 
-- [RPC API — Available Methods](../node/rpc-api.md#raw-transaction-methods) (`getdescriptorinfo`, `analyzepsbt`)
+- [RPC API: Available Methods](../node/rpc-api.md#raw-transaction-methods) (`getdescriptorinfo`, `analyzepsbt`)
 - [Module catalog](overview.md)
 - [Installing modules](overview.md#installing-modules)

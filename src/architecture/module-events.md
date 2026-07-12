@@ -16,8 +16,8 @@ Event types follow fixed timing so modules subscribe before receiving `ModuleLoa
 2. Module connects via IPC and sends Handshake
 3. Module sends `SubscribeEvents`
 4. At subscription time:
-   - Module receives `ModuleLoaded` for all already-loaded modules
-   - `ModuleLoaded` is published for the newly subscribing module (if loaded)
+ - Module receives `ModuleLoaded` for all already-loaded modules
+ - `ModuleLoaded` is published for the newly subscribing module (if loaded)
 5. Module is operational
 
 **Why:** subscription completes before `ModuleLoaded`, so hotloaded modules receive existing modules and ordering is always subscription → `ModuleLoaded`.
@@ -46,13 +46,13 @@ DataMaintenance { operation: "cleanup", urgency: "low", reason: "periodic", targ
 // Old: separate StorageFlush / DataCleanup handlers
 // New: one DataMaintenance handler keyed on operation + urgency
 match event_type {
-    EventType::DataMaintenance => {
-        if let EventPayload::DataMaintenance { operation, .. } = payload {
-            if operation == "flush" || operation == "both" { flush_data().await?; }
-            if operation == "cleanup" || operation == "both" { cleanup_data().await?; }
-        }
-    }
-    _ => {}
+ EventType::DataMaintenance => {
+ if let EventPayload::DataMaintenance { operation, .. } = payload {
+ if operation == "flush" || operation == "both" { flush_data().await?; }
+ if operation == "cleanup" || operation == "both" { cleanup_data().await?; }
+ }
+ }
+ _ => {}
 }
 ```
 
@@ -61,7 +61,7 @@ match event_type {
 ### Reliability model
 
 - **At-most-once** per subscriber; full channel drops the event (no retry)
-- **Best-effort** — slow or dead modules may miss events; statistics track success/failure
+- **Best-effort**: slow or dead modules may miss events; statistics track success/failure
 - **Per-module ordering** on a single channel; no cross-module ordering guarantee
 
 ### Channel behavior
@@ -126,6 +126,6 @@ event_manager.reset_delivery_stats("module_id").await; // testing
 
 ## See Also
 
-- [Module system (design)](module-system.md) — IPC, lifecycle, event catalog
-- [Janitorial events](janitorial-events.md) — maintenance event payloads
-- [Module IPC Protocol](module-ipc-protocol.md) — wire protocol
+- [Module system (design)](module-system.md): IPC, lifecycle, event catalog
+- [Janitorial events](janitorial-events.md): maintenance event payloads
+- [Module IPC Protocol](module-ipc-protocol.md): wire protocol

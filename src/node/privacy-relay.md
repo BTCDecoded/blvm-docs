@@ -1,12 +1,12 @@
 # Transaction relay
 
-> **Platform / build** — **Dandelion++** (`dandelion`) is in **`blvm` default features**; portable Windows/aarch64 release CI builds omit it. **FIBRE** is a loadable module (`blvm-fibre`), not an in-node config table. See [Release process — Build variants](../development/release-process.md#build-variants).
+> **Platform / build**: **Dandelion++** (`dandelion`) is in **`blvm` default features**; portable Windows/aarch64 release CI builds omit it. **FIBRE** is a loadable module (`blvm-fibre`), not an in-node config table. See [Release process: Build variants](../development/release-process.md#build-variants).
 
 ## Overview
 
-The node supports **Dandelion++** for privacy-preserving **transaction** relay (optional `dandelion` compile-time feature). **FIBRE** is **block** relay over UDP/FEC — provided by the loadable **`blvm-fibre`** module, not an in-node `[network.fibre]` table. See [FIBRE module](../modules/fibre.md). **Package relay (BIP331)** is documented in [Package Relay (BIP331)](package-relay.md).
+The node supports **Dandelion++** for privacy-preserving **transaction** relay (optional `dandelion` compile-time feature). **FIBRE** is **block** relay over UDP/FEC: provided by the loadable **`blvm-fibre`** module, not an in-node `[network.fibre]` table. See [FIBRE module](../modules/fibre.md). **Package relay (BIP331)** is documented in [Package Relay (BIP331)](package-relay.md).
 
-**`blvm` default features** include Dandelion++ (Linux x86_64 release artifacts use the same default set). Portable Windows/aarch64 releases use a smaller CI subset. CTV, Stratum V2 node demux, and other flags may still require explicit `--features` — see [Release process — Build variants](../development/release-process.md#build-variants).
+**`blvm` default features** include Dandelion++ (Linux x86_64 release artifacts use the same default set). Portable Windows/aarch64 releases use a smaller CI subset. CTV, Stratum V2 node demux, and other flags may still require explicit `--features`: see [Release process: Build variants](../development/release-process.md#build-variants).
 
 ## Dandelion++ *(experimental build)*
 
@@ -27,9 +27,9 @@ Each peer maintains a stem path to a randomly selected peer:
 
 ```rust
 pub struct StemPath {
-    pub next_peer: String,
-    pub expiry: Instant,
-    pub hop_count: u8,
+ pub next_peer: String,
+ pub expiry: Instant,
+ pub hop_count: u8,
 }
 ```
 
@@ -48,9 +48,9 @@ pub struct StemPath {
 - Transaction broadcast to all peers
 - Standard Bitcoin transaction diffusion
 - Triggered by:
-  - Random probability at each hop
-  - Stem timeout expiration
-  - Maximum hop count reached
+ - Random probability at each hop
+ - Stem timeout expiration
+ - Maximum hop count reached
 
 
 ### Configuration
@@ -63,7 +63,7 @@ enable_dandelion = true
 
 [dandelion]
 stem_timeout_seconds = 10
-fluff_probability = 0.1   # 10%
+fluff_probability = 0.1 # 10%
 max_stem_hops = 2
 ```
 
@@ -77,9 +77,9 @@ max_stem_hops = 2
 
 ## FIBRE block relay (module)
 
-FIBRE (Fast Internet Bitcoin Relay Engine) is **block** transport over UDP with FEC — not transaction propagation.
+FIBRE (Fast Internet Bitcoin Relay Engine) is **block** transport over UDP with FEC: not transaction propagation.
 
-- **Operator path:** load **`blvm-fibre`** ([FIBRE module](../modules/fibre.md)) — outbound on `NewBlock` / `BlockMined`, inbound via `queue_received_block_bytes`.
+- **Operator path:** load **`blvm-fibre`** ([FIBRE module](../modules/fibre.md)): outbound on `NewBlock` / `BlockMined`, inbound via `queue_received_block_bytes`.
 - **Node support:** advertises **`NODE_FIBRE`** on P2P and publishes **`CompanionUdpPeerRegistered`** / **`CompanionUdpPeerUnregistered`** when peers advertise FIBRE (companion UDP = peer TCP port + 1) so the module can register dynamic peers.
 
 

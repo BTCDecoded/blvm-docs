@@ -1,6 +1,6 @@
 # Transport abstraction
 
-> **Platform / build** — **Iroh** is in **`blvm` default features** (Linux x86_64 release artifacts use the same default set; portable Windows/aarch64 CI omits several defaults). **Quinn** requires the `quinn` feature (source build). All release binaries default to TCP-capable builds; set `transport_preference` in config. See [Release process — Build variants](../development/release-process.md#build-variants).
+> **Platform / build**: **Iroh** is in **`blvm` default features** (Linux x86_64 release artifacts use the same default set; portable Windows/aarch64 CI omits several defaults). **Quinn** requires the `quinn` feature (source build). All release binaries default to TCP-capable builds; set `transport_preference` in config. See [Release process: Build variants](../development/release-process.md#build-variants).
 
 ## Overview
 
@@ -10,10 +10,10 @@ Multiple network transport protocols (TCP for Bitcoin P2P compatibility and QUIC
 
 ```
 NetworkManager
-    └── Transport Trait (abstraction)
-        ├── TcpTransport (Bitcoin P2P compatible)
-        ├── QuinnTransport (direct QUIC)
-        └── IrohTransport (QUIC with NAT traversal)
+ └── Transport Trait (abstraction)
+ ├── TcpTransport (Bitcoin P2P compatible)
+ ├── QuinnTransport (direct QUIC)
+ └── IrohTransport (QUIC with NAT traversal)
 ```
 
 ## Transport Types
@@ -97,9 +97,9 @@ The `Transport` trait is the shared interface:
 
 ```rust
 pub trait Transport: Send + Sync {
-    fn connect(&self, addr: TransportAddr) -> Result<Box<dyn TransportConnection>>;
-    fn listen(&self, addr: TransportAddr) -> Result<Box<dyn TransportListener>>;
-    fn transport_type(&self) -> TransportType;
+ fn connect(&self, addr: TransportAddr) -> Result<Box<dyn TransportConnection>>;
+ fn listen(&self, addr: TransportAddr) -> Result<Box<dyn TransportListener>>;
+ fn transport_type(&self) -> TransportType;
 }
 ```
 
@@ -110,9 +110,9 @@ Unified address type supporting all transports:
 
 ```rust
 pub enum TransportAddr {
-    Tcp(SocketAddr),
-    Quinn(SocketAddr),
-    Iroh(Vec<u8>), // Public key bytes
+ Tcp(SocketAddr),
+ Quinn(SocketAddr),
+ Iroh(Vec<u8>), // Public key bytes
 }
 ```
 
@@ -123,9 +123,9 @@ Runtime transport selection:
 
 ```rust
 pub enum TransportType {
-    Tcp,
-    Quinn,
-    Iroh,
+ Tcp,
+ Quinn,
+ Iroh,
 }
 ```
 
@@ -186,18 +186,18 @@ The `NetworkManager` supports multiple transports:
 
 ### Configuration
 
-`NodeConfig` uses **top-level** keys (see [`config/mod.rs`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs), [`TransportPreferenceConfig`](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs)). Example:
+`NodeConfig` uses **top-level** keys (see [config/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs), [TransportPreferenceConfig](https://github.com/BTCDecoded/blvm-node/blob/main/src/config/mod.rs)). Example:
 
 ```toml
 listen_addr = "0.0.0.0:8333"
-transport_preference = "hybrid"   # TOML serde: tcponly | irohonly | quinnonly | hybrid | all
+transport_preference = "hybrid" # TOML serde: tcponly | irohonly | quinnonly | hybrid | all
 ```
 
 P2P listen address is **`listen_addr`**, not a nested `[network.tcp]` table. **`quinn`** / **`iroh`** must be enabled in the binary for non-TCP preferences to work.
 
 ### Code Example
 
-[`TransportAddr`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs) wraps TCP / optional Quinn / optional Iroh addresses. Wire-up is via [`NetworkManager`](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) and the running node — see crate examples and integration tests rather than copying a minimal `new`/`connect` snippet here.
+[TransportAddr](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/transport.rs) wraps TCP / optional Quinn / optional Iroh addresses. Wire-up is via [NetworkManager](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/network_manager.rs) and the running node: see crate examples and integration tests rather than copying a minimal `new`/`connect` snippet here.
 
 ## Components
 

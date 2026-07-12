@@ -27,22 +27,22 @@ The module uses a hybrid approach combining:
 
 ```
 ┌─────────────────────┐
-│  MiningOS           │
-│  Orchestrator       │
-│  (Hyperswarm P2P)   │
+│ MiningOS │
+│ Orchestrator │
+│ (Hyperswarm P2P) │
 └──────────┬──────────┘
-           │
-           │ Hyperswarm
-           │
-┌──────────▼──────────┐      Unix Socket      ┌──────────────┐
-│  Node.js Bridge     │ ◄───────────────────► │ Rust Module  │
-│  (worker.js)        │      JSON-RPC          │              │
-└─────────────────────┘                        └──────┬───────┘
-                                                       │ IPC
-                                                       │
-                                                ┌──────▼───────┐
-                                                │  BLVM Node   │
-                                                └──────────────┘
+ │
+ │ Hyperswarm
+ │
+┌──────────▼──────────┐ Unix Socket ┌──────────────┐
+│ Node.js Bridge │ ◄───────────────────► │ Rust Module │
+│ (worker.js) │ JSON-RPC │ │
+└─────────────────────┘ └──────┬───────┘
+ │ IPC
+ │
+ ┌──────▼───────┐
+ │ BLVM Node │
+ └──────────────┘
 ```
 
 ## Installation
@@ -56,33 +56,33 @@ cargo install blvm-miningos
 ### Manual Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/BTCDecoded/blvm-miningos.git
-   cd blvm-miningos
-   ```
+ ```bash
+ git clone https://github.com/BTCDecoded/blvm-miningos.git
+ cd blvm-miningos
+ ```
 
 2. Build the Rust module:
-   ```bash
-   cargo build --release
-   ```
+ ```bash
+ cargo build --release
+ ```
 
 3. Install Node.js bridge dependencies:
-   ```bash
-   cd bridge
-   npm install
-   ```
+ ```bash
+ cd bridge
+ npm install
+ ```
 
 4. Install to node modules directory:
-   ```bash
-   mkdir -p /path/to/node/modules/blvm-miningos/target/release
-   cp target/release/blvm-miningos /path/to/node/modules/blvm-miningos/target/release/
-   cp -r bridge /path/to/node/modules/blvm-miningos/
-   ```
+ ```bash
+ mkdir -p /path/to/node/modules/blvm-miningos/target/release
+ cp target/release/blvm-miningos /path/to/node/modules/blvm-miningos/target/release/
+ cp -r bridge /path/to/node/modules/blvm-miningos/
+ ```
 
 ## Requirements
 
 - `blvm-node` with the module system enabled.
-- **Node.js** (for the Hyperswarm P2P bridge) — install bridge deps under `bridge/`.
+- **Node.js** (for the Hyperswarm P2P bridge): install bridge deps under `bridge/`.
 - MiningOS app-node URL and **OAuth2** credentials (`oauth_client_id`, `oauth_client_secret`).
 - Optional: `blvm-stratum-v2` for pool config actions from MiningOS.
 
@@ -132,7 +132,7 @@ oauth_client_id = "your-client-id"
 oauth_client_secret = "your-client-secret"
 oauth_callback_url = "http://localhost:3000/oauth/google/callback"
 token_cache_file = "miningos-token.json"
-# oauth_token_url = "https://..."  # optional; derived from provider when unset
+# oauth_token_url = "https://..." # optional; derived from provider when unset
 
 [stats]
 enabled = true
@@ -185,18 +185,18 @@ author = "Bitcoin Commons Team"
 entry_point = "blvm-miningos"
 
 capabilities = [
-    "read_blockchain",
-    "subscribe_events",
-    "publish_events",
-    "call_module",
-    "get_block_template",
-    "submit_block",
+ "read_blockchain",
+ "subscribe_events",
+ "publish_events",
+ "call_module",
+ "get_block_template",
+ "submit_block",
 ]
 ```
 
-Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`** — do not hardcode it in the book.
+Shipped **`version`** is in each release’s `module.toml` and **`registry/modules.json`**: do not hardcode it in the book.
 
-The node maps manifest **`capabilities`** to module permissions at load time — include **`get_block_template`** and **`submit_block`** when this module fetches templates or submits blocks.
+The node maps manifest **`capabilities`** to module permissions at load time: include **`get_block_template`** and **`submit_block`** when this module fetches templates or submits blocks.
 
 ## Events
 
@@ -212,7 +212,7 @@ At startup the module subscribes to:
 
 When actions complete via the module API, the module may publish:
 
-- `ActionExecuted` — MiningOS action handled (payload includes action name and result)
+- `ActionExecuted`: MiningOS action handled (payload includes action name and result)
 
 Statistics and template updates are pushed to MiningOS over HTTP/P2P; they are **not** separate custom `EventType` values.
 
@@ -250,9 +250,9 @@ For manual testing:
 
 ```bash
 ./target/release/blvm-miningos \
-    --module-id blvm-miningos \
-    --socket-path ./data/modules/modules.sock \
-    --data-dir ./data
+ --module-id blvm-miningos \
+ --socket-path ./data/modules/modules.sock \
+ --data-dir ./data
 ```
 
 ## Troubleshooting
@@ -266,8 +266,8 @@ For manual testing:
 
 ## Repository
 
-- **GitHub**: [blvm-miningos](https://github.com/BTCDecoded/blvm-miningos) — releases and current `module.toml` **`version`**
-- **Documentation**: [QUICKSTART.md](https://github.com/BTCDecoded/blvm-miningos/blob/main/QUICKSTART.md), [Integration Guide](https://github.com/BTCDecoded/blvm-miningos/blob/main/docs/INTEGRATION.md)
+- **GitHub**: [blvm-miningos](https://github.com/BTCDecoded/blvm-miningos): releases and current `module.toml` **`version`**
+- **Documentation**: [MiningOS quickstart](https://github.com/BTCDecoded/blvm-miningos/blob/main/QUICKSTART.md), [Integration Guide](https://github.com/BTCDecoded/blvm-miningos/blob/main/docs/INTEGRATION.md)
 
 ## External Resources
 

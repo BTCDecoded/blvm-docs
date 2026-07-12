@@ -4,20 +4,20 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**, optional **blvm-marketplace**) bootstrap from **`[modules].registry_url`** (`registry/modules.json`) when pinned under **`[modules]`** — see [Module catalog](../modules/overview.md).
+Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**, optional **blvm-marketplace**) bootstrap from **`[modules].registry_url`** (`registry/modules.json`) when pinned under **`[modules]`**: see [Module catalog](../modules/overview.md).
 
 ## Available modules
 
-- **[Lightning Network Module](../modules/lightning.md)** — Lightning payment processing
-- **[Commons Mesh Module](../modules/mesh.md)** — Payment-gated mesh overlay; four JSON-RPC methods when `blvm-mesh` is loaded
-- **[Stratum V2 Module](../modules/stratum-v2.md)** — Stratum V2 mining protocol
-- **[Datum Module](../modules/datum.md)** — DATUM Gateway mining protocol
-- **[Mining OS Module](../modules/miningos.md)** — MiningOS integration
-- **blvm-zmq** — [ZMQ module](../modules/zmq.md)
-- **blvm-miniscript** — [Miniscript module](../modules/miniscript.md)
-- **blvm-governance** — [Governance module](../modules/governance-module.md)
-- **blvm-fibre** — [FIBRE module](../modules/fibre.md)
-- **blvm-marketplace** — [Marketplace module](../modules/marketplace-module.md) (optional; registry bootstrap usually does not need it)
+- **[Lightning Network Module](../modules/lightning.md)**: Lightning payment processing
+- **[Commons Mesh Module](../modules/mesh.md)**: Payment-gated mesh overlay; four JSON-RPC methods when `blvm-mesh` is loaded
+- **[Stratum V2 Module](../modules/stratum-v2.md)**: Stratum V2 mining protocol
+- **[Datum Module](../modules/datum.md)**: DATUM Gateway mining protocol
+- **[Mining OS Module](../modules/miningos.md)**: MiningOS integration
+- **blvm-zmq**: [ZMQ module](../modules/zmq.md)
+- **blvm-miniscript**: [Miniscript module](../modules/miniscript.md)
+- **blvm-governance**: [Governance module](../modules/governance-module.md)
+- **blvm-fibre**: [FIBRE module](../modules/fibre.md)
+- **blvm-marketplace**: [Marketplace module](../modules/marketplace-module.md) (optional; registry bootstrap usually does not need it)
 
 For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
 
@@ -31,43 +31,43 @@ Each module runs in a separate process with isolated memory. The base node conse
 
 ```mermaid
 graph TB
-    subgraph "blvm-node Process"
-        CS[Consensus State<br/>Protected, Read-Only]
-        MM[Module Manager<br/>Orchestration]
-        NM[Network Manager]
-        SM[Storage Manager]
-        RM[RPC Manager]
-    end
-    
-    subgraph "Module Process 1<br/>blvm-lightning"
-        LS[Lightning State<br/>Isolated Memory]
-        SB1[Sandbox<br/>Resource Limits]
-    end
-    
-    subgraph "Module Process 2<br/>blvm-mesh"
-        MS[Mesh State<br/>Isolated Memory]
-        SB2[Sandbox<br/>Resource Limits]
-    end
-    
-    subgraph "Module Process 3<br/>blvm-stratum-v2"
-        SS[Stratum V2 State<br/>Isolated Memory]
-        SB3[Sandbox<br/>Resource Limits]
-    end
-    
-    MM -->|IPC Unix Sockets| LS
-    MM -->|IPC Unix Sockets| MS
-    MM -->|IPC Unix Sockets| SS
-    
-    CS -.->|Read-Only Access| MM
-    NM --> MM
-    SM --> MM
-    RM --> MM
-    
-    style CS fill:#fbb,stroke:#333,stroke-width:3px
-    style MM fill:#bbf,stroke:#333,stroke-width:2px
-    style LS fill:#bfb,stroke:#333,stroke-width:2px
-    style MS fill:#bfb,stroke:#333,stroke-width:2px
-    style SS fill:#bfb,stroke:#333,stroke-width:2px
+ subgraph "blvm-node Process"
+ CS[Consensus State<br/>Protected, Read-Only]
+ MM[Module Manager<br/>Orchestration]
+ NM[Network Manager]
+ SM[Storage Manager]
+ RM[RPC Manager]
+ end
+ 
+ subgraph "Module Process 1<br/>blvm-lightning"
+ LS[Lightning State<br/>Isolated Memory]
+ SB1[Sandbox<br/>Resource Limits]
+ end
+ 
+ subgraph "Module Process 2<br/>blvm-mesh"
+ MS[Mesh State<br/>Isolated Memory]
+ SB2[Sandbox<br/>Resource Limits]
+ end
+ 
+ subgraph "Module Process 3<br/>blvm-stratum-v2"
+ SS[Stratum V2 State<br/>Isolated Memory]
+ SB3[Sandbox<br/>Resource Limits]
+ end
+ 
+ MM -->|IPC Unix Sockets| LS
+ MM -->|IPC Unix Sockets| MS
+ MM -->|IPC Unix Sockets| SS
+ 
+ CS -.->|Read-Only Access| MM
+ NM --> MM
+ SM --> MM
+ RM --> MM
+ 
+ style CS fill:#fbb,stroke:#333,stroke-width:3px
+ style MM fill:#bbf,stroke:#333,stroke-width:2px
+ style LS fill:#bfb,stroke:#333,stroke-width:2px
+ style MS fill:#bfb,stroke:#333,stroke-width:2px
+ style SS fill:#bfb,stroke:#333,stroke-width:2px
 ```
 
 
@@ -101,10 +101,10 @@ Modules run in separate processes via `ModuleProcessSpawner`:
 Modules communicate with the base node via Unix domain sockets (Unix) or named pipes (Windows):
 
 - Request/response protocol
-- Event subscription system (`SubscribeEvents` / `EventType` — node → module notifications)
+- Event subscription system (`SubscribeEvents` / `EventType`: node → module notifications)
 - Correlation IDs for async operations
 - Type-safe message serialization
-- **Targeted node control** (module → node): `NodeAPI` / IPC also exposes bounded **writes** that are not consensus changes — e.g. P2P **serve denylists** (block/tx `getdata` policy), **`get_sync_status`**, **`ban_peer`**, and **block-serve maintenance mode**. Details: [Module IPC Protocol](module-ipc-protocol.md), [Module development](../sdk/module-development.md#querying-node-data).
+- **Targeted node control** (module → node): `NodeAPI` / IPC also exposes bounded **writes** that are not consensus changes: e.g. P2P **serve denylists** (block/tx `getdata` policy), **`get_sync_status`**, **`ban_peer`**, and **block-serve maintenance mode**. Details: [Module IPC Protocol](module-ipc-protocol.md), [Module development](../sdk/module-development.md#querying-node-data).
 
 
 ### Security Sandbox
@@ -166,20 +166,20 @@ Modules request capabilities that are validated before API access. Capabilities 
 
 ```
 Discovery → Verification → Loading → Execution → Monitoring
-    │            │            │           │            │
-    │            │            │           │            │
-    ▼            ▼            ▼           ▼            ▼
-Registry    Signer      Loader      Process      Monitor
+ │ │ │ │ │
+ │ │ │ │ │
+ ▼ ▼ ▼ ▼ ▼
+Registry Signer Loader Process Monitor
 ```
 
 ### Discovery
 
 Modules are discovered through:
 
-1. **Local filesystem** — scan **`[modules].modules_dir`** for `module.toml` + binaries
-2. **Registry bootstrap** — when **`[modules].registry_url`** is set and a module is pinned (inline `blvm-zmq = "0.1.*"` etc.), missing versions are downloaded from GitHub Releases (see [Installing modules](../modules/overview.md#installing-modules))
-3. **Runtime load** — **`loadmodule`** / **`blvm load`** after the node is running (admin RPC)
-4. **Optional marketplace** — **`blvm-marketplace`** module for paid installs and legacy registry URL fallback; **`loadmodule`** remote auto-fetch is **opt-in and off by default**
+1. **Local filesystem**: scan **`[modules].modules_dir`** for `module.toml` + binaries
+2. **Registry bootstrap**: when **`[modules].registry_url`** is set and a module is pinned (inline `blvm-zmq = "0.1.*"` etc.), missing versions are downloaded from GitHub Releases (see [Installing modules](../modules/overview.md#installing-modules))
+3. **Runtime load**: **`loadmodule`** / **`blvm load`** after the node is running (admin RPC)
+4. **Optional marketplace**: **`blvm-marketplace`** module for paid installs and legacy registry URL fallback; **`loadmodule`** remote auto-fetch is **opt-in and off by default**
 
 
 ### Verification
@@ -238,14 +238,14 @@ Module crashes are isolated and do not affect the base node. The `ModuleProcessM
 
 ```
 Module Binary
-    │
-    ├─→ Hash Verification ──→ Integrity Check
-    │
-    ├─→ Signature Verification ──→ Multisig Check ──→ Maintainer Verification
-    │
-    ├─→ Permission Check ──→ Capability Validation
-    │
-    └─→ Sandbox Creation ──→ Resource Limits ──→ Isolation
+ │
+ ├─→ Hash Verification ──→ Integrity Check
+ │
+ ├─→ Signature Verification ──→ Multisig Check ──→ Maintainer Verification
+ │
+ ├─→ Permission Check ──→ Capability Validation
+ │
+ └─→ Sandbox Creation ──→ Resource Limits ──→ Isolation
 ```
 
 ## Module Manifest
@@ -269,8 +269,8 @@ review_period_days = [[gov:layer_5_review_days]]
 # Signatures
 [signatures]
 maintainers = [
-    { name = "alice", key = "02abc...", signature = "..." },
-    { name = "bob", key = "03def...", signature = "..." }
+ { name = "alice", key = "02abc...", signature = "..." },
+ { name = "bob", key = "03def...", signature = "..." }
 ]
 threshold = "[[gov:layer_5_signatures]]"
 
@@ -294,8 +294,8 @@ tested_with = ["1.0.0", "1.1.0"]
 
 # Capabilities
 capabilities = [
-    "read_blockchain",
-    "subscribe_events"
+ "read_blockchain",
+ "subscribe_events"
 ]
 ```
 
@@ -319,17 +319,17 @@ Modules subscribe to events they need during initialization:
 
 ```rust
 let event_types = vec![
-    EventType::NewBlock,
-    EventType::NewTransaction,
-    EventType::ModuleLoaded,
-    EventType::ConfigLoaded,
+ EventType::NewBlock,
+ EventType::NewTransaction,
+ EventType::ModuleLoaded,
+ EventType::ConfigLoaded,
 ];
 client.subscribe_events(event_types).await?;
 ```
 
 ### Event Categories
 
-Catalog of shared **`EventType`** variants on the node bus. **Individual modules subscribe/publish subsets only** — see each [module page](../modules/overview.md) (e.g. `blvm-lightning` does not emit `ChannelOpened`; `blvm-stratum-v2` does not emit `MiningPoolConnected`).
+Catalog of shared **`EventType`** variants on the node bus. **Individual modules subscribe/publish subsets only**: see each [module page](../modules/overview.md) (e.g. `blvm-lightning` does not emit `ChannelOpened`; `blvm-stratum-v2` does not emit `MiningPoolConnected`).
 - `NewBlock` - Block connected to chain
 - `NewTransaction` - Transaction in mempool
 - `BlockDisconnected` - Block disconnected (reorg)
@@ -479,8 +479,8 @@ For a complete list of all event types, see [EventType enum](https://github.com/
 2. Module connects via IPC and sends Handshake
 3. Module sends `SubscribeEvents` request
 4. **At subscription time**:
-   - Module receives `ModuleLoaded` events for all already-loaded modules (hotloaded modules get existing modules)
-   - `ModuleLoaded` is published for the newly subscribing module (if it's loaded)
+ - Module receives `ModuleLoaded` events for all already-loaded modules (hotloaded modules get existing modules)
+ - `ModuleLoaded` is published for the newly subscribing module (if it's loaded)
 5. Module is now fully operational
 
 ### Event Delivery Reliability
@@ -527,18 +527,18 @@ Verification at install time includes release checksums (`sha256sums.txt` on mod
 use blvm_node::module::{ModuleManager, ModuleMetadata};
 
 let mut manager = ModuleManager::new(
-    modules_dir,
-    data_dir,
-    socket_dir,
+ modules_dir,
+ data_dir,
+ socket_dir,
 );
 
 manager.start(socket_path, node_api).await?;
 
 manager.load_module(
-    "blvm-lightning",
-    binary_path,
-    metadata,
-    config,
+ "blvm-lightning",
+ binary_path,
+ metadata,
+ config,
 ).await?;
 ```
 
@@ -602,10 +602,10 @@ use blvm_node::module::integration::ModuleIntegration;
 // Connect to node (socket_path must be PathBuf)
 let socket_path = std::path::PathBuf::from(socket_path);
 let mut integration = ModuleIntegration::connect(
-    socket_path,
-    module_id,
-    module_name,
-    version,
+ socket_path,
+ module_id,
+ module_name,
+ version,
 ).await?;
 
 // Subscribe to events

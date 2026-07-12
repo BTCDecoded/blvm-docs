@@ -8,11 +8,11 @@ Operational guide for running and maintaining a BLVM node.
 |------|---------|
 | Start regtest / testnet / mainnet | [Starting the Node](#starting-the-node) |
 | Import Bitcoin Core datadir | [Starting from a Bitcoin Core datadir](#starting-from-a-bitcoin-core-datadir) |
-| Graceful shutdown | [Maintenance — Updates](#updates) (stop before upgrade; RPC `stop` or SIGTERM) |
-| Backup datadir | [Maintenance — Backup](#backup) |
-| Mainnet first sync | [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) |
+| Graceful shutdown | [Maintenance: Updates](#updates) (stop before upgrade; RPC `stop` or SIGTERM) |
+| Backup datadir | [Maintenance: Backup](#backup) |
+| Mainnet first sync | [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) |
 | RPC hardening before exposure | [Deployment posture](../security/deployment-posture.md) |
-| IBD stuck / slow | [Troubleshooting — Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
+| IBD stuck / slow | [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
 
 ## Starting the Node
 
@@ -25,7 +25,7 @@ blvm
 # Testnet mode
 blvm --network testnet
 
-# Mainnet — first sync: see First Node Setup (IBD example config), not bare mainnet
+# Mainnet: first sync: see First Node Setup (IBD example config), not bare mainnet
 # blvm --network mainnet
 ```
 
@@ -49,13 +49,13 @@ Stop **`bitcoind`** before migrate or start against a Core datadir. Running both
 
 ```mermaid
 flowchart TD
-  STOP[Stop bitcoind] --> CHOICE{How to migrate?}
-  CHOICE -->|Recommended| AUTO["blvm start --data-dir ~/.bitcoin<br/>auto-migrate on first start"]
-  CHOICE -->|Explicit| MAN["blvm migrate core --verify<br/>then start --data-dir .../blvm"]
-  AUTO --> OUT["UTXO + indexes → datadir/blvm/"]
-  MAN --> OUT
-  OUT --> BLOCKS["blocks/ stays in Core path<br/>BLVM reads block files in place"]
-  BLOCKS --> KEEP[Do not delete blocks/ while node runs]
+ STOP[Stop bitcoind] --> CHOICE{How to migrate?}
+ CHOICE -->|Recommended| AUTO["blvm start --data-dir ~/.bitcoin<br/>auto-migrate on first start"]
+ CHOICE -->|Explicit| MAN["blvm migrate core --verify<br/>then start --data-dir .../blvm"]
+ AUTO --> OUT["UTXO + indexes → datadir/blvm/"]
+ MAN --> OUT
+ OUT --> BLOCKS["blocks/ stays in Core path<br/>BLVM reads block files in place"]
+ BLOCKS --> KEEP[Do not delete blocks/ while node runs]
 ```
 
 ```bash
@@ -63,12 +63,12 @@ flowchart TD
 blvm start --network mainnet --data-dir ~/.bitcoin
 ```
 
-On first start BLVM detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. **Block files are not copied by default** — BLVM keeps reading bodies from Core **`blocks/`** (~700 GB stays in one place). Only the UTXO set and indexes are converted into BLVM format (~15–30 GB under **`blvm/`**).
+On first start BLVM detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. **Block files are not copied by default**: BLVM keeps reading bodies from Core **`blocks/`** (~700 GB stays in one place). Only the UTXO set and indexes are converted into BLVM format (~15-30 GB under **`blvm/`**).
 
 ```bash
 # Optional: explicit migrate with verify, then start the BLVM store
 blvm migrate core --source ~/.bitcoin --destination ~/.bitcoin/blvm \
-  --network mainnet --verify
+ --network mainnet --verify
 blvm start --network mainnet --data-dir ~/.bitcoin/blvm
 ```
 
@@ -114,15 +114,15 @@ The node follows a lifecycle with multiple states and transitions.
 
 ```mermaid
 stateDiagram-v2
-  [*] --> Initial
-  Initial --> Headers: sync begins
-  Headers --> Blocks: headers complete
-  Blocks --> Synced: blocks complete
-  Initial --> Error: failure
-  Headers --> Error: failure
-  Blocks --> Error: failure
-  Synced --> Error: failure
-  Error --> Initial: recovery / restart
+ [*] --> Initial
+ Initial --> Headers: sync begins
+ Headers --> Blocks: headers complete
+ Blocks --> Synced: blocks complete
+ Initial --> Error: failure
+ Headers --> Error: failure
+ Blocks --> Error: failure
+ Synced --> Error: failure
+ Error --> Initial: recovery / restart
 ```
 
 **State descriptions**:
@@ -191,31 +191,31 @@ blvm health
 # Mainnet node:
 blvm --network mainnet --rpc-addr 127.0.0.1:8332 health
 
-# HTTP health on the RPC port (GET — same port as JSON-RPC)
-curl -s http://127.0.0.1:8332/health            # mainnet — quick status
-curl -s http://127.0.0.1:18332/health           # testnet
-curl -s http://127.0.0.1:18443/health           # regtest
-curl -s http://127.0.0.1:18443/health/live      # liveness (same body as /health)
-curl -s http://127.0.0.1:18443/health/ready     # readiness (healthy only)
-curl -s http://127.0.0.1:18443/health/detailed  # full gethealth JSON
+# HTTP health on the RPC port (GET: same port as JSON-RPC)
+curl -s http://127.0.0.1:8332/health # mainnet: quick status
+curl -s http://127.0.0.1:18332/health # testnet
+curl -s http://127.0.0.1:18443/health # regtest
+curl -s http://127.0.0.1:18443/health/live # liveness (same body as /health)
+curl -s http://127.0.0.1:18443/health/ready # readiness (healthy only)
+curl -s http://127.0.0.1:18443/health/detailed # full gethealth JSON
 
-# Prometheus metrics (GET /metrics — requires auth when [rpc_auth] is enabled)
+# Prometheus metrics (GET /metrics: requires auth when [rpc_auth] is enabled)
 curl -s http://127.0.0.1:8332/metrics
 
-# JSON-RPC node health extension (blvm-node; not Bitcoin Core) — use your RPC port
+# JSON-RPC node health extension (blvm-node; not Bitcoin Core): use your RPC port
 curl -X POST http://127.0.0.1:18443 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "gethealth", "params": [], "id": 1}'
+ -H "Content-Type: application/json" \
+ -d '{"jsonrpc": "2.0", "method": "gethealth", "params": [], "id": 1}'
 
 # JSON-RPC metrics extension (blvm-node; not Bitcoin Core)
 curl -X POST http://127.0.0.1:18443 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getmetrics", "params": [], "id": 1}'
+ -H "Content-Type: application/json" \
+ -d '{"jsonrpc": "2.0", "method": "getmetrics", "params": [], "id": 1}'
 
 # JSON-RPC blockchain info
 curl -X POST http://127.0.0.1:8332 \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
+ -H "Content-Type: application/json" \
+ -d '{"jsonrpc": "2.0", "method": "getblockchaininfo", "params": [], "id": 1}'
 ```
 
 ### Logging

@@ -17,7 +17,7 @@ The configuration system has three core components:
 YAML configuration files in the `governance/config/` directory serve as the authoritative source for all configuration defaults. These files are version-controlled and human-readable.
 
 **Key Files:**
-- `action-tiers.yml` - PR action tier definitions (see [`docs/ACTION_TIERS.md`](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md))
+- `action-tiers.yml` - PR action tier definitions (see [action tiers](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md))
 - `repository-layers.yml` - Layer definitions and requirements
 - `emergency-tiers.yml` - Emergency response classes (**separate** from action tiers)
 - `governance-fork.yml` - Governance fork configuration
@@ -53,11 +53,11 @@ The system uses a four-tier fallback chain for configuration values:
 
 ```
 1. Cache (in-memory, 5-minute TTL)
-   ↓ (if not found)
+ ↓ (if not found)
 2. Config Registry (database, governance-controlled)
-   ↓ (if not found)
+ ↓ (if not found)
 3. YAML Config (file-based, source of truth)
-   ↓ (if not found)
+ ↓ (if not found)
 4. Hardcoded Defaults (safety fallback)
 ```
 
@@ -138,8 +138,8 @@ The system manages 87+ governance-controlled configuration variables, organized 
 | `tier_5_review_period_days` | 180 | Tier 5: Review period (days) |
 
 
-| `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Fork signaling — mining / hashpower share (%) |
-| `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Fork signaling — participation-weight share (%) |
+| `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Fork signaling: mining / hashpower share (%) |
+| `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Fork signaling: participation-weight share (%) |
 
 
 ### Commons Contributor Thresholds (8 variables)
@@ -214,8 +214,8 @@ use std::sync::Arc;
 let registry = Arc::new(ConfigRegistry::new(pool));
 let yaml_loader = YamlConfigLoader::new(config_path);
 let config = Arc::new(ConfigReader::with_yaml_loader(
-    registry.clone(),
-    Some(yaml_loader),
+ registry.clone(),
+ Some(yaml_loader),
 ));
 
 // Read a value (with fallback)
@@ -245,8 +245,8 @@ let (req, total) = validator.get_tier_threshold(3).await?;
 
 - **Cache TTL**: 5 minutes (configurable via `cache_ttl`)
 - **Cache Invalidation**: 
-  - Automatic after config changes are activated
-  - Manual via `clear_cache()` or `invalidate_key()`
+ - Automatic after config changes are activated
+ - Manual via `clear_cache()` or `invalidate_key()`
 - **Cache Storage**: In-memory `HashMap<String, serde_json::Value>`
 
 
@@ -256,16 +256,16 @@ YAML files use a structured format. Example from `action-tiers.yml`:
 
 ```yaml
 tiers:
-  - tier: 1
-    name: "Routine Maintenance"
-    signatures_required: 3
-    signatures_total: 5
-    review_period_days: 7
-  - tier: 3
-    name: "Consensus-Adjacent"
-    signatures_required: 5
-    signatures_total: 5
-    review_period_days: 90
+ - tier: 1
+ name: "Routine Maintenance"
+ signatures_required: 3
+ signatures_total: 5
+ review_period_days: 7
+ - tier: 3
+ name: "Consensus-Adjacent"
+ signatures_required: 5
+ signatures_total: 5
+ review_period_days: 90
 ```
 
 The `YamlConfigLoader` extracts values from these files into a flat key-value structure for the registry.
