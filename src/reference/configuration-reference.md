@@ -100,7 +100,7 @@ This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` co
 - **Type**: `string`
 - **Default**: `"BitcoinV1"`
 - **Options**: `"BitcoinV1"` (mainnet), `"Testnet3"` (testnet), `"Regtest"` (regtest)
-- **Description**: Bitcoin protocol variant. See [Network Variants](../protocol/network-protocol.md#network-variants).
+- **Description**: Bitcoin protocol variant. See [Protocol variants](../protocol/overview.md#protocol-variants).
 
 #### `persistent_peers`
 - **Type**: `array` of `SocketAddr`
@@ -770,5 +770,5 @@ Common validation errors:
 
 - [Node Configuration](../node/configuration.md) - Quick start guide
 - [Storage Backends](../node/storage-backends.md) - Backend selection and Core drop-in
-- [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer) - Transport options
+- [Transport Abstraction](../node/transport-abstraction.md) - Transport options
 - [Building modules](../sdk/module-development.md) - Module system details

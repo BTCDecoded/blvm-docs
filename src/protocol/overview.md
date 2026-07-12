@@ -21,21 +21,15 @@ Full stack: [Stack overview](../architecture/system-overview.md).
 
 The protocol layer supports multiple Bitcoin network variants:
 
-| Variant | Network Name | Default P2P | Default RPC (`blvm`) | Purpose |
-|---------|--------------|-------------|----------------------|---------|
-| **BitcoinV1** | mainnet | 8333 | 8332 | Production Bitcoin network |
-| **Testnet3** | testnet | 18333 | 18332 | Bitcoin test network |
-| **Regtest** | regtest | 18444 | 18443 | Regression testing network |
+| Variant | Network Name | Magic (hex) | Default P2P | Default RPC (`blvm`) | Purpose |
+|---------|--------------|-------------|-------------|----------------------|---------|
+| **BitcoinV1** | mainnet | `f9beb4d9` | 8333 | 8332 | Production Bitcoin network |
+| **Testnet3** | testnet | `0b110907` | 18333 | 18332 | Bitcoin test network |
+| **Regtest** | regtest | `fabfb5da` | 18444 | 18443 | Regression testing network |
 
 ### Network Parameters
 
-Each variant has specific network parameters:
-
-- **Magic Bytes**: P2P protocol identification (mainnet: `0xf9beb4d9`, testnet: `0x0b110907`, regtest: `0xfabfb5da`)
-- **Genesis Blocks**: Network-specific genesis block hashes
-- **Difficulty Targets**: Proof-of-work difficulty adjustment
-- **Halving Intervals**: Block subsidy halving schedule (210,000 blocks)
-- **Feature Activation**: [SegWit](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki), [Taproot](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki) activation heights
+Each variant also defines genesis block hash, difficulty targets, halving interval (210,000 blocks), and feature activation heights ([SegWit](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki), [Taproot](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki)).
 
 
 ## Core Components

@@ -20,17 +20,7 @@ flowchart TD
 
 ## What is BLVM?
 
-BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR), readable by mathematicians without implementation code. **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) (Z3), differential testing, fuzzing, and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture) and [Formal Verification](consensus/formal-verification.md#what-formal-verification-delivers).
-
-**Stack:**
-
-- **[Orange Paper](reference/orange-paper.md)**: Mathematical specification (IR)
-- **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)**: Links code to spec; validates implementation against the IR
-- **[blvm-consensus](consensus/overview.md)**: Consensus implementation with [formal verification](consensus/formal-verification.md)
-- **[blvm-protocol](protocol/overview.md)**: Protocol abstraction (mainnet, testnet, regtest)
-- **[blvm-node](node/overview.md)**: Full node (storage, networking, RPC, [modules](architecture/module-system.md))
-- **[blvm-sdk](sdk/overview.md)**: Developer toolkit and module composition
-- **[Governance](governance/overview.md)**: Cryptographic governance enforcement
+BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR), readable by mathematicians without implementation code. **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) (Z3), differential testing, fuzzing, and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture), [Formal Verification](consensus/formal-verification.md#what-formal-verification-delivers), and the [six-layer stack](architecture/system-overview.md).
 
 **Why "LVM"?** Like LLVM’s shared compiler infrastructure, BLVM provides shared infrastructure for Bitcoin implementations; the Orange Paper is the reference spec; node and consensus code is validated against it.
 

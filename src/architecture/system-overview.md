@@ -44,18 +44,9 @@ graph TB
 - BIP implementations (BIP152, BIP157, BIP158, BIP173/350/351)
 
 ### Stack layer 4: [blvm-node](../node/overview.md) (Node Implementation)
-- Reference full node (non-consensus infrastructure: storage, P2P, RPC, modules); operational hardening required for real deployments
-- [Storage layer](../node/storage-backends.md) (database abstraction with multiple backends)
-- Network manager ([multi-transport](../node/transport-abstraction.md): TCP, QUIC, Iroh)
-- [RPC server](../node/rpc-api.md) (JSON-RPC 2.0, conventional Bitcoin RPC surface)
-- [Module system](../architecture/module-system.md) (process-isolated runtime modules)
-- Payment processing with CTV (CheckTemplateVerify) support
-- RBF and mempool policies (4 configurable modes)
-- Advanced indexing (address and value range indexing)
-- [Mining coordination](../node/mining-stratum-v2.md) (Stratum V2, merge mining)
-- P2P governance message relay
-- Governance integration (webhooks, user signaling)
-- ZeroMQ notifications (optional module **`blvm-zmq`**)
+- Reference full node: non-consensus storage, P2P, RPC, and [module system](../architecture/module-system.md)
+- [Multi-transport networking](../node/transport-abstraction.md) and operational hardening for real deployments
+- Component detail, lifecycle, and features: [Node overview](../node/overview.md)
 
 ### Stack layer 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
 - Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
@@ -72,12 +63,7 @@ graph TB
 
 ## Data Flow
 
-1. **Orange Paper** provides mathematical consensus specifications
-2. **blvm-consensus** directly implements mathematical functions
-3. **blvm-protocol** layers protocol parameters and network behavior on **blvm-consensus** types and validation
-4. **blvm-node** uses blvm-protocol and blvm-consensus for validation
-5. **blvm-sdk** provides governance primitives
-6. **blvm-commons** uses **blvm-sdk** and **blvm-protocol** for governance enforcement and shared types
+Runtime data flow and crate dependencies: [Component Relationships](component-relationships.md#data-flow).
 
 ## Cross-Layer Validation
 
@@ -98,12 +84,8 @@ Dependency rules, crate-graph boundaries, and version coordination: [Component R
 - Protocol evolution support
 
 ### Node and operational features
-- Full Bitcoin node-style functionality (when configured and secured appropriately)
-- [Performance optimizations](../node/performance.md) (PGO, parallel validation)
-- [Multiple storage backends](../node/storage-backends.md) with automatic fallback
-- [Multi-transport networking](../node/transport-abstraction.md) (TCP, QUIC, Iroh)
-- Payment processing infrastructure
-- Optional REST `/api/v1/*` when built with `rest-api` and **`[rest_api].enabled = true`** (separate bind; off by default)
+- Full Bitcoin node-style functionality when configured and secured appropriately
+- Details: [Node overview](../node/overview.md), [performance](../node/performance.md), [storage backends](../node/storage-backends.md), [transport abstraction](../node/transport-abstraction.md)
 
 ### Governance Infrastructure
 - [Cryptographic governance primitives](../governance/overview.md)

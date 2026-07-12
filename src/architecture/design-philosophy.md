@@ -52,7 +52,7 @@ Deterministic, side-effect-free validation makes **differential testing against 
 
 ### Why formal verification alongside tests?
 
-Tests cannot exhaust script and block combinatorics. **BLVM Specification Lock** (Z3) locks annotated functions to Orange Paper contracts; differential testing compares BLVM against Bitcoin Core on mainnet history; fuzzing and proptest explore generated inputs. Together they form a continuous assurance stack: readable math, machine-checked alignment, and empirical stress. Secret-path timing lives in **blvm-secp256k1**; the Orange Paper remains the human-auditable IR. See [Formal Verification](../consensus/formal-verification.md#what-formal-verification-delivers).
+Tests cannot exhaust script and block combinatorics. **BLVM Specification Lock**, differential testing, fuzzing, and proptest form a continuous assurance stack on top of the Orange Paper. See [Formal Verification](../consensus/formal-verification.md#what-formal-verification-delivers).
 
 ### Why process-isolated modules?
 

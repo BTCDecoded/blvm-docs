@@ -372,7 +372,7 @@ See [Module System](../architecture/module-system.md) for module configuration d
 - [Node Overview](overview.md) - Node features and architecture
 - [Node Operations](operations.md) - Running and managing your node
 - [Storage Backends](storage-backends.md) - Detailed storage backend information
-- [Transport Abstraction](../protocol/network-protocol.md#transport-abstraction-layer) - Transport options
+- [Transport Abstraction](../node/transport-abstraction.md) - Transport options
 - [Network Protocol](../protocol/network-protocol.md) - Protocol variants and network configuration
 - [Configuration Reference](../reference/configuration-reference.md) - Complete configuration reference
 - [Getting Started](../getting-started/installation.md) - Installation guide
