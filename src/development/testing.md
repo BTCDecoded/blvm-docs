@@ -120,7 +120,7 @@ MIRI detects undefined behavior:
 
 Economic rules, PoW, transactions, blocks, scripts, reorg, crypto, mempool, SegWit, and serialization are covered by unit, property, integration, and fuzz tests, with **BLVM Specification Lock** on critical spec-locked paths. Details: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
-## Running Tests
+## Running Tests {#running-tests}
 
 ### Run All Tests
 
@@ -151,14 +151,9 @@ cd fuzz && cargo +nightly fuzz run <target_name>
 cargo +nightly miri test
 ```
 
-### Run blvm-spec-lock Proofs
-
-```bash
-cargo spec-lock verify
-```
-
-
 ### Run Spec-Lock Verification
+
+Mirror CI per [Formal Verification](../consensus/formal-verification.md):
 
 ```bash
 export SPEC_LOCK_STRICT=1
@@ -221,7 +216,7 @@ All tests run in CI:
 - **Integration Tests**: Required for merge
 - **Fuzz Tests**: Run on schedule
 - **Differential Tests**: **blvm-bench** integration suite (self-hosted workflow currently paused; see [Differential Testing](differential-testing.md))
-- **blvm-spec-lock Proofs**: Run separately, not blocking
+- **BLVM Specification Lock**: **Required** merge gate where `#[spec_locked]` is enabled (`check-drift` then `verify` on self-hosted runners; see [Formal Verification](../consensus/formal-verification.md))
 - **MIRI**: Run on property tests and critical unit tests
 
 

@@ -6,7 +6,7 @@ Pre-built **`blvm`** binaries, Linux packages, Windows builds, and Docker images
 
 Always verify `checksums.sha256` (or the release checksum file) before running a downloaded artifact.
 
-## Platform matrix
+## Platform matrix {#platform-matrix}
 
 | Artifact | Platform | Feature set | Typical use |
 |----------|----------|-------------|-------------|

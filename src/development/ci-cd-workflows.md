@@ -43,7 +43,7 @@ The same **`ci.yml`** runs **nightly-release** on `develop`: rolling **`nightly`
 - Unit tests
 - Integration tests
 - Property-based tests
-- BLVM Specification Lock formal verification (optional, can be enabled)
+- **BLVM Specification Lock** (`check-drift` then `verify` on self-hosted runners; required where `#[spec_locked]` is enabled)
 - Code formatting check (`cargo fmt --check`)
 - Linting check (`cargo clippy`)
 
@@ -57,6 +57,7 @@ The same **`ci.yml`** runs **nightly-release** on `develop`: rolling **`nightly`
 - Unit tests
 - Integration tests
 - Protocol compatibility tests
+- **BLVM Specification Lock** (where `#[spec_locked]` is enabled)
 - Build verification
 
 ### blvm-node
@@ -70,6 +71,7 @@ The same **`ci.yml`** runs **nightly-release** on `develop`: rolling **`nightly`
 - Integration tests
 - Node functionality tests
 - Network protocol tests
+- **BLVM Specification Lock** (where `#[spec_locked]` is enabled)
 - Build verification
 
 ### blvm (Main Repository)
@@ -87,17 +89,17 @@ The `blvm-commons` repository provides reusable workflows that other repositorie
 
 ### verify_consensus.yml
 
-**Purpose**: Runs tests and optional BLVM Specification Lock verification for consensus code
+**Purpose**: Reusable workflow for multi-repo checkouts: runs tests and **BLVM Specification Lock** when the `blvm-spec-lock` input is true (mirrors per-crate **Verify** jobs).
 
 **Inputs**:
 - `repo` - Repository name
 - `ref` - Git reference (branch/tag)
-- `blvm-spec-lock` - Boolean to enable BLVM Specification Lock verification
+- `blvm-spec-lock` - Boolean to run spec-lock (`check-drift` + `verify`)
 
 **What It Does**:
 - Checks out the repository
 - Runs test suite
-- Optionally runs BLVM Specification Lock formal verification
+- Runs BLVM Specification Lock when enabled (same commands as [Formal Verification](../consensus/formal-verification.md))
 - Reports results
 
 ### build_lib.yml
@@ -151,7 +153,7 @@ blvm-sdk: depends on blvm-protocol + blvm-consensus (and optionally blvm-node); 
 blvm-commons: depends on blvm-sdk + blvm-protocol
 ```
 
-**Security Gates**: Consensus verification (tests + optional BLVM Specification Lock) must pass before downstream builds proceed.
+**Security Gates**: Consensus verification (tests + **BLVM Specification Lock** where `#[spec_locked]` is enabled) must pass before downstream builds proceed. Details: [Formal Verification](../consensus/formal-verification.md).
 
 ## Self-Hosted Runners
 
@@ -163,7 +165,7 @@ All workflows run on **self-hosted Linux x64 runners**:
 - **Labels**: Optional labels (`rust`, `docker`, `blvm-spec-lock`) optimize job assignment (note: label uses lowercase for technical compatibility)
 
 **Runner Policy**:
-- All jobs run on `[self-hosted, linux, x64]` runners
+- All jobs run on `[self-hosted, Linux, X64, builds]` runners (workflows may also accept related label variants)
 - Workflows handle installation as fallback if labeled runners unavailable
 - Repos should restrict Actions to self-hosted in settings
 

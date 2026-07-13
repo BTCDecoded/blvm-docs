@@ -306,7 +306,7 @@ The property-based testing system includes:
 ## Source
 
 - [blvm-consensus/tests/consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
-- [blvm-consensus/tests/unit/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/unit/): comprehensive, script opcode, segwit/taproot property tests
+- [blvm-consensus/tests/unit/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/unit/): script opcode, segwit/taproot property tests
 - [blvm-consensus/tests/cross_bip_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/cross_bip_property_tests.rs)
 ## See Also
 

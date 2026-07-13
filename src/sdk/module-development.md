@@ -29,7 +29,7 @@ modules/
  └── module.toml # Module manifest (required)
 ```
 
-### Module Manifest (`module.toml`)
+### Module Manifest (`module.toml`) {#module-manifest}
 
 Every module must include a `module.toml` manifest file:
 

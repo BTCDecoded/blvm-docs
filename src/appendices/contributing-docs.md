@@ -146,7 +146,7 @@ When refreshing docs for a release or large refactor, explicitly verify (not onl
 | **SDK / modules** | Are `blvm-sdk` **module** APIs documented? (`#[module]`, `run_module!`, prelude, `blvm-sdk-macros`) |
 | **User CLI** | Do modules that register CLI document **`blvm <group> …`** and that the module must be loaded? |
 | **New crates** | Is every user-facing crate listed in stack overview, glossary, and **api-index**? |
-| **First-class modules** | Does each shipped module have a book page (not only a GitHub link)? |
+| **First-class modules** | Does each shipped module have a book page (not only a GitHub link)? Modules may be **omitted from `SUMMARY.md`** deliberately (source kept under `src/modules/` but not built into the public book). |
 | **Composition** | Is **`blvm-compose`** still accurately described if the composition API changed? |
 | **Node config** | Do defaults (IBD, storage, pruning) match code and **configuration-reference**? |
 | **Optional features** | If a feature is user-visible (e.g. WASM modules, extra transports), is it mentioned in the right node/sdk section? |

@@ -144,7 +144,7 @@ Stable release archives include:
 
 ### Archive Formats
 
-Each release tag produces platform archives (Linux `.tar.gz`, Windows `.zip`, plus checksum files). Download matrix: **[btcdecoded.org/install](https://btcdecoded.org/install)**. Platform/feature notes: [Installation](../getting-started/installation.md#platform-feature-notes).
+Each release tag produces platform archives (Linux `.tar.gz`, Windows `.zip`, plus checksum files). Download matrix: **[btcdecoded.org/install](https://btcdecoded.org/install)**. Platform/feature notes: [Installation: Platform matrix](../getting-started/installation.md#platform-matrix).
 
 ### Release Notes
 

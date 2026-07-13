@@ -68,7 +68,7 @@ Verification methodology, coverage, and CI: [Formal Verification](formal-verific
 - Block template generation
 
 ### Chain management
-- Reorganization primitives in **blvm-consensus** (`reorganization.rs`); **blvm-node** wires them for the live `process_block` path (block index, chainwork tip selection, undo persistence, events: see **blvm-node** [fork choice and reorg](https://github.com/BTCDecoded/blvm-node/blob/main/docs/FORK_CHOICE_AND_REORG.md))
+- Reorganization primitives in **blvm-consensus** (`src/reorganization.rs`); **blvm-node** wires them for the live `process_block` path (block index, chainwork tip selection, undo persistence, events: see **blvm-node** [fork choice and reorg](https://github.com/BTCDecoded/blvm-node/blob/main/docs/FORK_CHOICE_AND_REORG.md))
 - P2P network message processing
 
 ### Advanced features
