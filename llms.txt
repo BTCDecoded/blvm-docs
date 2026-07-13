@@ -30,7 +30,7 @@ This site is an **mdBook** built from [blvm-docs](https://github.com/BTCDecoded/
 - [Crate dependencies](https://docs.thebitcoincommons.org/architecture/component-relationships.html): Dependency graph and governance layers by crate
 - [Consensus overview](https://docs.thebitcoincommons.org/consensus/overview.html): What blvm-consensus implements
 - [Mathematical specifications](https://docs.thebitcoincommons.org/consensus/mathematical-specifications.html): In-book digest of formal properties
-- [Formal verification](https://docs.thebitcoincommons.org/consensus/formal-verification.html): BLVM Specification Lock, Z3, CI, coverage (251 functions, ~433 obligations)
+- [Formal verification](https://docs.thebitcoincommons.org/consensus/formal-verification.html): BLVM Specification Lock, Z3, CI gates, coverage inventory
 - [Protocol overview](https://docs.thebitcoincommons.org/protocol/overview.html): Mainnet, testnet, regtest variants and messages
 - [Wire format](https://docs.thebitcoincommons.org/protocol/network-protocol.html): P2P message framing
 

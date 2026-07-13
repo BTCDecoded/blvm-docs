@@ -8,5 +8,4 @@ cp custom.css src/custom.css
 mdbook build
 cp custom.css book/custom.css
 cp llms.txt book/llms.txt
-cp llm.txt book/llm.txt
 python3 "$ROOT/scripts/postprocess-mermaid.py" "$ROOT/book"

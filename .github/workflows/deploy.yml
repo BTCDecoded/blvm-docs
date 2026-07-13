@@ -98,9 +98,7 @@ jobs:
         run: touch book/.nojekyll
 
       - name: Copy llms.txt for AI discovery
-        run: |
-          cp llms.txt book/llms.txt
-          cp llm.txt book/llm.txt
+        run: cp llms.txt book/llms.txt
       
       - name: Copy CNAME file to deployment root
         run: |
