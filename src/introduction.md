@@ -26,13 +26,13 @@ BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Pa
 
 ## Documentation Structure
 
-- **Operators:** [Operator guide](getting-started/operator-guide.md): install, sync, RPC, security
-- **Developers:** [Developer guide](getting-started/developer-guide.md): modules, SDK, contributing
-- **Architecture**: System design, module system, events
-- **Layers**: Consensus, protocol, node (each with overview and detailed pages)
-- **Developer SDK**: Module development, API reference, examples
-- **Governance**: [Overview hub](governance/overview.md), model, configuration, procedures
-- **Reference**: Specifications, [API Index](reference/api-index.md), glossary
+The sidebar follows three paths from [Who is this for](#who-is-this-for):
+
+- **Operators:** Getting Started → Node → Security
+- **Developers:** Getting Started → SDK and modules → Module runtime (under Architecture)
+- **Spec and consensus:** Architecture → Consensus → Protocol → Reference (Orange Paper)
+
+Cross-cutting: Governance, Development, Appendices.
 
 Documentation is maintained in source repositories alongside code and is aggregated at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org).
 
