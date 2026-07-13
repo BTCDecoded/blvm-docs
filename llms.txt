@@ -20,6 +20,7 @@ This site is an **mdBook** built from [blvm-docs](https://github.com/BTCDecoded/
 - [Operator guide](https://docs.thebitcoincommons.org/getting-started/operator-guide.html): Run a node, IBD, RPC, security checklist
 - [Developer guide](https://docs.thebitcoincommons.org/getting-started/developer-guide.html): Modules, SDK, contributing entry points
 - [Installation](https://docs.thebitcoincommons.org/getting-started/installation.html): Downloads via btcdecoded.org/install, platform matrix
+- [BTCDecoded llms.txt](https://btcdecoded.org/llms.txt): Install and marketing site machine-readable index
 - [Quick Start](https://docs.thebitcoincommons.org/getting-started/quick-start.html): Regtest tutorial
 - [First Node Setup](https://docs.thebitcoincommons.org/getting-started/first-node.html): Mainnet and testnet configuration walkthrough
 
