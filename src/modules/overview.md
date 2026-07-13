@@ -10,7 +10,6 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 - **[Commons Mesh Module](mesh.md)**: Payment-gated mesh overlay; four JSON-RPC methods when loaded
 - **[Stratum V2 Module](stratum-v2.md)**: Stratum V2 mining protocol
 - **[Datum Module](datum.md)**: DATUM Gateway (with Stratum V2)
-- **[Mining OS Module](miningos.md)**: MiningOS integration
 - **[Selective Sync Module](selective-sync.md)**: IBD sync policy and witness filtering
 
 **Registry modules** (bootstrap from `registry/modules.json`):

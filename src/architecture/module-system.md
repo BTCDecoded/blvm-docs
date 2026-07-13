@@ -12,7 +12,6 @@ Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**,
 - **[Commons Mesh Module](../modules/mesh.md)**: Payment-gated mesh overlay; four JSON-RPC methods when `blvm-mesh` is loaded
 - **[Stratum V2 Module](../modules/stratum-v2.md)**: Stratum V2 mining protocol
 - **[Datum Module](../modules/datum.md)**: DATUM Gateway mining protocol
-- **[Mining OS Module](../modules/miningos.md)**: MiningOS integration
 - **blvm-zmq**: [ZMQ module](../modules/zmq.md)
 - **blvm-miniscript**: [Miniscript module](../modules/miniscript.md)
 - **blvm-governance**: [Governance module](../modules/governance-module.md)
@@ -634,5 +633,4 @@ For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protoc
 - [Commons Mesh Module](../modules/mesh.md) - Payment-gated mesh networking
 - [Stratum V2 Module](../modules/stratum-v2.md) - Stratum V2 mining protocol
 - [Datum Module](../modules/datum.md) - DATUM Gateway mining protocol
-- [Mining OS Module](../modules/miningos.md) - MiningOS integration
 - [Building modules](../sdk/module-development.md) - Guide for developing custom modules

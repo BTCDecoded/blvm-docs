@@ -98,7 +98,6 @@
 - [Commons Mesh](modules/mesh.md)
 - [Stratum V2](modules/stratum-v2.md)
 - [Datum](modules/datum.md)
-- [Mining OS](modules/miningos.md)
 - [Selective Sync](modules/selective-sync.md)
 - [FIBRE](modules/fibre.md)
 - [ZMQ](modules/zmq.md)
