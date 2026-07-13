@@ -1,0 +1,75 @@
+# Bitcoin Commons Documentation (BLVM)
+
+> Published operator, developer, and consensus documentation for the BLVM stack at docs.thebitcoincommons.org.
+
+This site is an **mdBook** built from [blvm-docs](https://github.com/BTCDecoded/blvm-docs). It complements the normative specs on [thebitcoincommons.org](https://thebitcoincommons.org) (Orange Paper, Consensus Spec register). Prefer the Orange Paper for consensus **meaning**; use this book for **how to run, configure, extend, and verify** BLVM.
+
+**Audience paths:** Operators (install, sync, RPC, security) start at Getting Started and Node. Developers (modules, SDK) start at SDK and modules. Researchers (spec, proofs) start at Architecture, Consensus, and Reference.
+
+**Do not treat as canonical:** pages omitted from the book navigation (for example unpublished module drafts kept only in the git repo). Hidden or stale source files are not deployed to this site.
+
+## Normative specification (off-site)
+
+- [Orange Paper](https://thebitcoincommons.org/orange-paper.html): Primary mathematical consensus IR (not generated from code)
+- [Consensus Spec register](https://thebitcoincommons.org/spec.html): Rule register and spec visualizations
+- [Orange Paper (in-book digest)](https://docs.thebitcoincommons.org/reference/orange-paper.html): Links and orientation only
+
+## Getting started
+
+- [Introduction](https://docs.thebitcoincommons.org/introduction.html): Who this book is for and documentation map
+- [Operator guide](https://docs.thebitcoincommons.org/getting-started/operator-guide.html): Run a node, IBD, RPC, security checklist
+- [Developer guide](https://docs.thebitcoincommons.org/getting-started/developer-guide.html): Modules, SDK, contributing entry points
+- [Installation](https://docs.thebitcoincommons.org/getting-started/installation.html): Downloads via btcdecoded.org/install, platform matrix
+- [Quick Start](https://docs.thebitcoincommons.org/getting-started/quick-start.html): Regtest tutorial
+- [First Node Setup](https://docs.thebitcoincommons.org/getting-started/first-node.html): Mainnet and testnet configuration walkthrough
+
+## Architecture and consensus
+
+- [Stack overview](https://docs.thebitcoincommons.org/architecture/system-overview.html): Six-layer BLVM stack
+- [Design philosophy](https://docs.thebitcoincommons.org/architecture/design-philosophy.html): Why layered architecture and verification
+- [Crate dependencies](https://docs.thebitcoincommons.org/architecture/component-relationships.html): Dependency graph and governance layers by crate
+- [Consensus overview](https://docs.thebitcoincommons.org/consensus/overview.html): What blvm-consensus implements
+- [Mathematical specifications](https://docs.thebitcoincommons.org/consensus/mathematical-specifications.html): In-book digest of formal properties
+- [Formal verification](https://docs.thebitcoincommons.org/consensus/formal-verification.html): BLVM Specification Lock, Z3, CI, coverage (251 functions, ~433 obligations)
+- [Protocol overview](https://docs.thebitcoincommons.org/protocol/overview.html): Mainnet, testnet, regtest variants and messages
+- [Wire format](https://docs.thebitcoincommons.org/protocol/network-protocol.html): P2P message framing
+
+## Node operators
+
+- [Node overview](https://docs.thebitcoincommons.org/node/overview.html): Reference node components
+- [Node configuration](https://docs.thebitcoincommons.org/node/configuration.html): blvm.toml, network defaults, transport
+- [RPC API](https://docs.thebitcoincommons.org/node/rpc-api.html): JSON-RPC 2.0 surface
+- [Deployment posture](https://docs.thebitcoincommons.org/security/deployment-posture.html): Required security before non-loopback RPC
+- [RPC transport and authentication](https://docs.thebitcoincommons.org/security/rpc-transport-auth-matrix.html): QUIC, HTTP, Bearer, Basic auth matrix
+- [Troubleshooting](https://docs.thebitcoincommons.org/appendices/troubleshooting.html): Common operator failures
+
+## Developers and modules
+
+- [Building modules](https://docs.thebitcoincommons.org/sdk/module-development.html): module.toml, IPC, SDK declarative style
+- [Module catalog](https://docs.thebitcoincommons.org/modules/overview.html): Optional process-isolated features
+- [API reference (SDK)](https://docs.thebitcoincommons.org/sdk/api-reference.html): Governance and module APIs
+- [Contributing](https://docs.thebitcoincommons.org/development/contributing.html): PR expectations and testing
+- [Testing infrastructure](https://docs.thebitcoincommons.org/development/testing.html): Unit, property, fuzz, MIRI, spec-lock commands
+- [Differential testing](https://docs.thebitcoincommons.org/development/differential-testing.html): BLVM vs Bitcoin Core (blvm-bench)
+
+## Reference
+
+- [Configuration reference](https://docs.thebitcoincommons.org/reference/configuration-reference.html): blvm.toml keys and environment variables
+- [API index](https://docs.thebitcoincommons.org/reference/api-index.html): Orange Paper names to Rust APIs
+- [Protocol specifications (BIPs)](https://docs.thebitcoincommons.org/reference/protocol-specifications.html): BIP coverage in BLVM
+- [Glossary](https://docs.thebitcoincommons.org/reference/glossary.html): Terms and stack vocabulary
+- [FAQ](https://docs.thebitcoincommons.org/appendices/faq.html): Short answers with links to canonical pages
+
+## Governance
+
+- [Governance overview](https://docs.thebitcoincommons.org/governance/overview.html): Cryptographic governance hub
+- [Layers and tiers](https://docs.thebitcoincommons.org/governance/layer-tier-model.html): Repository layers vs PR tiers
+- [PR process](https://docs.thebitcoincommons.org/development/pr-process.html): Review clocks and signatures
+
+## Optional
+
+- [Benchmarking](https://docs.thebitcoincommons.org/development/benchmarking.html): Performance measurement
+- [Snapshot testing](https://docs.thebitcoincommons.org/development/snapshot-testing.html): Output consistency checks
+- [Contributing to documentation](https://docs.thebitcoincommons.org/appendices/contributing-docs.html): Style rules for this book
+- [Bitcoin Commons homepage](https://thebitcoincommons.org/llms.txt): Parent site machine-readable index
+- [GitHub: blvm-docs source](https://github.com/BTCDecoded/blvm-docs): Edit proposals and issues

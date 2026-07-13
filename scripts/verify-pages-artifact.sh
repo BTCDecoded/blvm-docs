@@ -4,7 +4,7 @@ set -euo pipefail
 
 BOOK_DIR="${1:-book}"
 
-for f in index.html CNAME .nojekyll; do
+for f in index.html CNAME .nojekyll llms.txt llm.txt; do
   if [ ! -f "${BOOK_DIR}/${f}" ]; then
     echo "::error::Missing ${BOOK_DIR}/${f} — artifact is not a complete mdbook deploy"
     exit 1

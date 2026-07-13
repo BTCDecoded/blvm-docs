@@ -34,7 +34,7 @@ The sidebar follows three paths from [Who is this for](#who-is-this-for):
 
 Cross-cutting: Governance, Development, Appendices.
 
-Documentation is maintained in source repositories alongside code and is aggregated at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org).
+Documentation is maintained in source repositories alongside code and is aggregated at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org). Machine-readable index: [docs llms.txt](https://docs.thebitcoincommons.org/llms.txt).
 
 ## Getting Help
 
