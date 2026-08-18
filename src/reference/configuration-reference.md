@@ -253,8 +253,9 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 
 #### `storage.heed3.map_size_mb`
 - **Type**: `integer` (megabytes), optional
-- **Default**: `max(65536, dbcache_mb * 128)` when unset
-- **Description**: LMDB virtual memory map size. Must be large enough for the full UTXO set; cannot shrink after creation without reopening.
+- **Default**: auto-tuned — 70% of free disk on the data-dir filesystem (clamped 48 GiB–4 TiB), then raised to `data.mdb + 128 GiB` when resuming an existing store
+- **Override**: set this field or `BLVM_HEED3_MAP_SIZE_MB` to skip auto-tune and pin a ceiling
+- **Description**: LMDB virtual memory map size. Sparse reservation — only written pages consume disk. Cannot shrink after creation without reopening.
 
 #### `storage.heed3.max_readers`
 - **Type**: `integer`, optional

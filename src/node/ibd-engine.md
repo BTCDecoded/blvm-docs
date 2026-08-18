@@ -13,27 +13,27 @@ First mainnet sync always starts from [First Node Setup — Mainnet IBD](../gett
 
 ## Overview
 
-During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. By default, UTXO updates use the legacy in-process store. When enabled, an **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `storage/ibd_engine/`, with mid-sync checkpoints for crash-safe resume.
+During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. By default, the **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `<data_dir>/ibd_engine/`, with mid-sync checkpoints for crash-safe resume. The legacy in-process LMDB store remains available as an opt-out.
 
-Enable the engine only when you understand checkpoint storage and disk use. The release mainnet IBD example config does **not** turn it on.
+## Enable (default)
 
+The engine is **on by default** (no env var required). Stable table path: `<data_dir>/ibd_engine/utxo_table.bin` (override with `BLVM_IBD_ENGINE_PATH`).
 
-## Enable
-
-Set before starting sync:
+**Legacy opt-out** (deprecated):
 
 ```bash
-export BLVM_IBD_ENGINE=1
+export BLVM_IBD_ENGINE=0
+# or in TOML: [ibd] utxo_engine = false
 ```
 
 Optional environment variables:
 
 | Variable | Purpose |
 |----------|---------|
-| `BLVM_IBD_ENGINE_PATH` | Directory for engine table files (default: temp dir per process) |
+| `BLVM_IBD_ENGINE_PATH` | Path to engine flat table (default: `<data_dir>/ibd_engine/utxo_table.bin`) |
 | `BLVM_IBD_CHECKPOINT_INTERVAL` | Fixed block interval for mid-IBD checkpoint export (engine mode) |
 | `BLVM_IBD_DEFER_CHECKPOINT_INTERVAL` | RAM-tier default override for deferred checkpoint spacing |
-| `BLVM_IBD_EXPORT_HEIGHT_OVERRIDE` | Force resume/export from a specific height (recovery / tests) |
+| `BLVM_IBD_EXPORT_HEIGHT_OVERRIDE` | Force resume/export height **only when ≥ stored export_h** (recovery if metadata was rolled below ckpt content). Overrides **below** stored export are ignored — the active ckpt is a snapshot *at* stored height. Prefer `start-ibd-mainnet.sh` which strips inherited overrides unless `BLVM_ALLOW_EXPORT_HEIGHT_OVERRIDE=1`. |
 
 Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-block-download-ibd)** (`[ibd].mode = "parallel"`). The engine replaces how validated blocks apply UTXO changes during that pipeline.
 
