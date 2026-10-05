@@ -214,7 +214,8 @@ The mempool also enforces stricter standard transaction checks:
 #### Envelope Protocol Rejection
 
 - **Envelope protocol detection**: Rejects scripts starting with `OP_FALSE OP_IF` (used by Ordinals)
-- **Configuration**: `MempoolConfig::reject_envelope_protocol` (default: true)
+- **Configuration**: `MempoolConfig::reject_unexec_if` (default: true)
+- **Legacy key**: the old name `reject_envelope_protocol` is still accepted as a serde alias for `reject_unexec_if`
 
 #### Script Size Limits
 
@@ -246,7 +247,7 @@ reject_multiple_op_return = true
 
 # Standard script checks
 max_standard_script_size = 200
-reject_envelope_protocol = true
+reject_unexec_if = true
 
 # Fee rate requirements for large transactions
 min_fee_rate_large_tx = 2
