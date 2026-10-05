@@ -17,7 +17,7 @@ Detects data embedded in Bitcoin transactions:
 
 - **Witness Scripts**: Detects data embedded in witness scripts (SegWit v0 or Taproot) - **PRIMARY METHOD**
 - **OP_RETURN Outputs**: Detects OP_RETURN outputs with large data pushes
-- **Envelope Protocol**: Detects envelope protocol patterns (OP_FALSE OP_IF ... OP_ENDIF)
+- **UnexecIf**: Detects UnexecIf patterns (`OP_FALSE OP_IF` … `OP_ENDIF`)
 - **Pattern Detection**: Large scripts (>100 bytes) or OP_RETURN with >80 bytes
 - **Witness Detection**: Large witness stacks (>1000 bytes) or suspicious data patterns
 
@@ -211,9 +211,9 @@ The mempool also enforces stricter standard transaction checks:
 - **Multiple OP_RETURN rejection**: By default, transactions with more than 1 OP_RETURN output are rejected
 - **Configuration**: `MempoolConfig::max_op_return_size`, `max_op_return_outputs`, `reject_multiple_op_return`
 
-#### Envelope Protocol Rejection
+#### UnexecIf rejection
 
-- **Envelope protocol detection**: Rejects scripts starting with `OP_FALSE OP_IF` (used by Ordinals)
+- **UnexecIf detection**: Rejects scripts matching UnexecIf (`OP_FALSE OP_IF` … `OP_ENDIF`) patterns (used by Ordinals)
 - **Configuration**: `MempoolConfig::reject_unexec_if` (default: true)
 - **Legacy key**: the old name `reject_envelope_protocol` is still accepted as a serde alias for `reject_unexec_if`
 
@@ -221,6 +221,13 @@ The mempool also enforces stricter standard transaction checks:
 
 - **Maximum standard script size**: 200 bytes (configurable)
 - **Configuration**: `MempoolConfig::max_standard_script_size`
+
+#### Sigop-adjusted vsize and structural templates
+
+Mempool standardness also applies sigop-aware sizing and structural spam scans (policy only — same as the rest of this page, these do not change consensus accept/reject for valid blocks):
+
+- **Sigop-adjusted vsize**: Matches Bitcoin Core `GetVirtualTransactionSize` (`bytes_per_sigop = 20`; reject above 16,000 sigop cost)
+- **Structural templates**: UnexecIf / NullData / data-like multisig scans live in consensus `script::templates` (policy/spam path)
 
 ### Per-Peer Transaction Rate Limiting
 
