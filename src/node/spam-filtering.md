@@ -70,6 +70,45 @@ Detects transactions with many small outputs:
 - **Indication**: Common in token distributions and Ordinal transfers
 - **Configuration**: `SpamFilterConfig::max_small_outputs`
 
+### 8. UnexecIf (`SpamType::UnexecIf`)
+
+Detects tapscripts that wrap data in an unexecuted `OP_IF` and finish with a Taproot CHECKSIG leaf:
+
+- **Pattern**: Exactly one `OP_0` / `OP_IF` … `OP_ENDIF` whose interior is **data pushes only** (no nested `OP_IF` / `OP_NOTIF` / `OP_ELSE`), plus a 34-byte remainder `PUSH32 <32-byte key> OP_CHECKSIG` immediately before or after that envelope
+- **Skips**: Scripts that contain an `OP_SUCCESS` opcode
+- **Indication**: Common inscription / envelope-style witness scripts
+- **Configuration**: `SpamFilterConfig::filter_unexec_if` (default: **true**)
+- **Implementation**: `blvm-consensus::script::templates` (`ScriptTemplate::UnexecIf`); policy wiring in `blvm-protocol` spam filter; coverage in `blvm-protocol/tests/spam_filter_templates.rs`
+
+### 9. Null-Data OP_13 (`SpamType::NullDataOp13`)
+
+Detects `OP_RETURN` scripts that use the `OP_13` null-data wrapper:
+
+- **Pattern**: `OP_RETURN` `OP_13` followed by zero or more push opcodes only (runestone-style wrapper)
+- **Indication**: Structured null-data payloads that are not plain OP_RETURN text
+- **Configuration**: `SpamFilterConfig::filter_null_data_op13` (default: **true**)
+- **Implementation**: `ScriptTemplate::NullDataOp13` in `blvm-consensus/src/script/templates.rs`
+
+### 10. Null-Data Magic Prefix (`SpamType::NullDataMagic`)
+
+Detects `OP_RETURN` payloads that start with a known magic prefix:
+
+- **Pattern**: `OP_RETURN` plus a first push whose payload begins with one of:
+  - `CNTRPRTY` (`NULLDATA_CNTRPRTY`)
+  - `omni` (`NULLDATA_OMNI`)
+  - OpenTimestamps attestation tag `05 88 96 0d 73 d7 19 01` (`NULLDATA_OTS`)
+- **Configuration**: `SpamFilterConfig::filter_null_data_magic` (default: **true**)
+- **Implementation**: `ScriptTemplate::NullDataMagic` in `blvm-consensus/src/script/templates.rs`
+
+### 11. Data-Like Multisig (`SpamType::DataLikeMs`)
+
+Detects bare multisig outputs whose “keys” are data blobs rather than compressed pubkeys:
+
+- **Pattern**: `m`-of-`n` bare multisig ending in `OP_CHECKMULTISIG` where **every** pushed key fails the compressed-pubkey check (length 33 and prefix `0x02` or `0x03`)
+- **Indication**: Data embedding disguised as multisig
+- **Configuration**: `SpamFilterConfig::filter_data_like_ms` (default: **true**)
+- **Implementation**: `ScriptTemplate::DataLikeMs` in `blvm-consensus/src/script/templates.rs`; coverage in `blvm-protocol/tests/spam_filter_templates.rs`
+
 ## Critical Design: Output-Only Filtering
 
 **Important**: Spam filtering applies to **OUTPUTS only**, not entire transactions.
@@ -98,6 +137,10 @@ let filter = SpamFilter::new();
 ```rust
 let config = SpamFilterConfig {
  filter_ordinals: true,
+ filter_unexec_if: true, // UnexecIf tapscript envelopes (default: true)
+ filter_null_data_op13: true, // OP_RETURN OP_13 wrappers (default: true)
+ filter_null_data_magic: true, // Known OP_RETURN magic prefixes (default: true)
+ filter_data_like_ms: true, // Data-like bare multisig (default: true)
  filter_dust: true,
  filter_brc20: true,
  filter_large_witness: true, // Detect large witness stacks
@@ -194,6 +237,10 @@ config.reject_spam_in_mempool = true; // Enable spam rejection at mempool entry
  use blvm_protocol::spam_filter::SpamFilterConfigSerializable;
  config.spam_filter_config = Some(SpamFilterConfigSerializable {
  filter_ordinals: true,
+ filter_unexec_if: true,
+ filter_null_data_op13: true,
+ filter_null_data_magic: true,
+ filter_data_like_ms: true,
  filter_dust: true,
  filter_brc20: true,
  // ... other spam filter settings
