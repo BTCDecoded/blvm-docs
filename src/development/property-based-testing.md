@@ -29,50 +29,40 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 
 11. `prop_script_execution_deterministic` - Verifies script execution is deterministic
 12. `prop_script_size_bounded` - Verifies script size is bounded
-13. `prop_script_execution_performance_bounded` - Verifies script execution performance
-
-### Performance
-
-14. `prop_sha256_performance_bounded` - Verifies SHA256 performance
-15. `prop_double_sha256_performance_bounded` - Verifies double SHA256 performance
-16. `prop_transaction_validation_performance_bounded` - Verifies transaction validation performance
-17. `prop_script_execution_performance_bounded` - Verifies script execution performance
-18. `prop_block_subsidy_constant_time` - Verifies block subsidy calculation is constant-time
-19. `prop_target_expansion_performance_bounded` - Verifies target expansion performance
 
 ### Deterministic Execution
 
-20. `prop_transaction_validation_deterministic` - Verifies transaction validation determinism
-21. `prop_block_subsidy_deterministic` - Verifies block subsidy determinism
-22. `prop_total_supply_deterministic` - Verifies total supply determinism
-23. `prop_target_expansion_deterministic` - Verifies target expansion determinism
-24. `prop_fee_calculation_deterministic` - Verifies fee calculation determinism
+13. `prop_transaction_validation_deterministic` - Verifies transaction validation determinism
+14. `prop_block_subsidy_deterministic` - Verifies block subsidy determinism
+15. `prop_total_supply_deterministic` - Verifies total supply determinism
+16. `prop_target_expansion_deterministic` - Verifies target expansion determinism
+17. `prop_fee_calculation_deterministic` - Verifies fee calculation determinism
 
 ### Integer Overflow Safety
 
-25. `prop_fee_calculation_overflow_safety` - Verifies fee calculation overflow safety
-26. `prop_output_value_overflow_safety` - Verifies output value overflow safety
-27. `prop_total_supply_overflow_safety` - Verifies total supply overflow safety
+18. `prop_fee_calculation_overflow_safety` - Verifies fee calculation overflow safety
+19. `prop_output_value_overflow_safety` - Verifies output value overflow safety
+20. `prop_total_supply_overflow_safety` - Verifies total supply overflow safety
 
 ### Temporal/State Transition
 
-28. `prop_supply_never_decreases_across_blocks` - Verifies supply never decreases
-29. `prop_reorganization_preserves_supply` - Verifies reorganization preserves supply
-30. `prop_supply_matches_expected_across_blocks` - Verifies supply matches expected values
+21. `prop_supply_never_decreases_across_blocks` - Verifies supply never decreases
+22. `prop_reorganization_preserves_supply` - Verifies reorganization preserves supply
+23. `prop_supply_matches_expected_across_blocks` - Verifies supply matches expected values
 
 ### Compositional Verification
 
-31. `prop_connect_block_composition` - Verifies block connection composition
-32. `prop_disconnect_connect_idempotency` - Verifies disconnect/connect idempotency
+24. `prop_connect_block_composition` - Verifies block connection composition
+25. `prop_disconnect_connect_idempotency` - Verifies disconnect/connect idempotency
 
 ### SHA256 Correctness
 
-33. `sha256_matches_reference` - Verifies SHA256 matches reference implementation
-34. `double_sha256_matches_reference` - Verifies double SHA256 matches reference
-35. `sha256_idempotent` - Verifies SHA256 idempotency
-36. `sha256_deterministic` - Verifies SHA256 determinism
-37. `sha256_output_length` - Verifies SHA256 output length
-38. `double_sha256_output_length` - Verifies double SHA256 output length
+26. `sha256_matches_reference` - Verifies SHA256 matches reference implementation
+27. `double_sha256_matches_reference` - Verifies double SHA256 matches reference
+28. `sha256_idempotent` - Verifies SHA256 idempotency
+29. `sha256_deterministic` - Verifies SHA256 determinism
+30. `sha256_output_length` - Verifies SHA256 output length
+31. `double_sha256_output_length` - Verifies double SHA256 output length
 
 
 ## Proptest Integration
