@@ -103,7 +103,7 @@ Clean run: per-height JSONL with `"match": true`; empty `*.divergences.jsonl`. B
 
 ## CI
 
-[.github/workflows/differential-tests.yml](https://github.com/BTCDecoded/blvm-bench/blob/main/.github/workflows/differential-tests.yml) on a self-hosted runner is **paused** (`workflow_dispatch` only; job `if: false`). When enabled, it runs `cargo test --test integration --features differential`. Full-chain phases are operator-driven.
+Script differentials live in `blvm-consensus` (`height_script_differential` and `synthetic_script_diff`, against `libbitcoinconsensus`). Full-chain phases stay operator-driven in `blvm-bench`.
 
 ## Limitations
 
