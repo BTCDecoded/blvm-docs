@@ -76,9 +76,9 @@ BLVM is the technical stack (spec, node, SDK). Bitcoin Commons is the governance
 
 **Layers** map repo areas (consensus, protocol, node, modules). **Tiers** set how many signatures a change needs. **Signatures** are cryptographic approvals from registered keyholders. Constitutional layers need more signatures than extension layers. Details: [Governance Model](../governance/governance-model.md), [Layer-Tier Model](../governance/layer-tier-model.md).
 
-### Why “6x harder to capture”?
+### Is the capture slogan a measurement?
 
-Bitcoin Commons applies graduated signature thresholds and review periods so capturing governance requires compromising many independent keyholders across layers, not a single maintainer group. See [Governance Model](../governance/governance-model.md).
+No. Counting signature thresholds is not a capture measurement. The published schedule is a design. Merge enforcement is off. See [Governance Model](../governance/governance-model.md).
 
 ## Modules and development
 
