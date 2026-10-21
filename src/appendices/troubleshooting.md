@@ -70,7 +70,7 @@ blvm --data-dir ~/.blvm
 | Symptom | Fix |
 |---------|-----|
 | Migration refused / lock error | Stop **`bitcoind`**; remove stale **`chainstate/LOCK`** or **`bitcoind.pid`** only when Core is not running |
-| Wrong chain after migrate | Set **`--network`** to match the Core datadir (mainnet / testnet / regtest) |
+| Wrong chain after migrate | Set **`--network`** to match the Core datadir (mainnet / testnet / testnet4 / signet / regtest) |
 | Re-import on every start | Check **`blvm_meta/migration.json`** under the BLVM store; use **`--no-auto-migrate`** after a successful migrate |
 | Pruned Core datadir | Use a full node copy; default **`reuse_core_block_files`** requires readable block files at the tip |
 | Disk filling during migrate | Default should **not** copy blocks; if copying, set **`reuse_core_block_files = false`** explicitly: otherwise check you are not re-migrating into a fresh store with reuse disabled |
@@ -129,7 +129,7 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 **Error**: `Connection refused` when calling RPC
 
 **Solutions**:
-- Verify the process is listening on **`--rpc-addr`** (mainnet default `127.0.0.1:8332`; testnet `127.0.0.1:18332`; regtest `127.0.0.1:18443` when using `blvm` without overrides)
+- Verify the process is listening on **`--rpc-addr`** (mainnet default `127.0.0.1:8332`; testnet `127.0.0.1:18332`; testnet4 `127.0.0.1:48332`; signet `127.0.0.1:38332`; regtest `127.0.0.1:18443` when using `blvm` without overrides)
 - Check bind address: use `0.0.0.0:8332` when exposing RPC in a container
 - Check firewall for the RPC port you configured
 

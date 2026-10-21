@@ -6,11 +6,15 @@ Config-file walkthrough: create `~/.config/blvm/blvm.toml`, validate it, start t
 
 ## Choose a network
 
-| Network | `protocol_version` | Default P2P | Default RPC | Next step |
-|---------|---------------------|-------------|-------------|-----------|
-| **Mainnet** | `BitcoinV1` | `0.0.0.0:8333` | `127.0.0.1:8332` | [Mainnet initial sync](#mainnet-initial-sync) below |
-| **Testnet** | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` | Steps 1-4 below |
-| **Regtest** | `Regtest` | `0.0.0.0:18444` | `127.0.0.1:18443` | [Quick Start](quick-start.md) |
+| Network | `--network` | `protocol_version` | Default P2P | Default RPC | Next step |
+|---------|-------------|---------------------|-------------|-------------|-----------|
+| **Mainnet** | `mainnet` | `BitcoinV1` | `127.0.0.1:8333` | `127.0.0.1:8332` | [Mainnet initial sync](#mainnet-initial-sync) below |
+| **Testnet3** | `testnet` | `Testnet3` | `127.0.0.1:18333` | `127.0.0.1:18332` | Steps 1-4 below |
+| **Testnet4** | `testnet4` | `Testnet4` | `127.0.0.1:48333` | `127.0.0.1:48332` | Steps 1-4 below (use the Testnet4 values) |
+| **Signet** | `signet` | `Signet` | `127.0.0.1:38333` | `127.0.0.1:38332` | Steps 1-4 below (use the Signet values) |
+| **Regtest** | `regtest` (CLI default) | `Regtest` | `127.0.0.1:18444` | `127.0.0.1:18443` | [Quick Start](quick-start.md) |
+
+The P2P default applies only when `listen_addr` is not set by CLI, env, or config file; it binds to loopback. To accept inbound peers, set `listen_addr = "0.0.0.0:<port>"` as in the examples below.
 
 Bind addresses and CLI defaults: [Node Configuration](../node/configuration.md#network-defaults-blvm-binary-no-rpc-addr-override). Wire magic bytes and ports: [Protocol variants](../protocol/overview.md#protocol-variants).
 
@@ -20,7 +24,7 @@ Use a **separate `[storage].data_dir` per network** so chain state never mixes.
 flowchart TD
  N[Choose network] --> M{Which network?}
  M -->|Mainnet: first sync| IBD[Use IBD example config<br/>not bare --network mainnet]
- M -->|Testnet| STEPS[Steps 1-4 below]
+ M -->|Testnet3 / Testnet4 / Signet| STEPS[Steps 1-4 below]
  M -->|Regtest: quick try| QS[Quick Start]
  IBD --> SYNC[Mainnet initial sync section]
  STEPS --> RPC[Validate config → start → curl RPC]
@@ -79,7 +83,7 @@ Confirm in the first log lines: config loaded, **`Network: …`**, and `Data dir
 
 ## Step 4: Verify RPC
 
-Testnet **18332**; regtest **18443**; mainnet **8332**:
+Testnet3 **18332**; testnet4 **48332**; signet **38332**; regtest **18443**; mainnet **8332**:
 
 ```bash
 curl -s -X POST http://127.0.0.1:18332 \

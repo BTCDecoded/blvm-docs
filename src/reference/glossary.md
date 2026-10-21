@@ -63,7 +63,7 @@ The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consen
 
 **Transport Abstraction** - Unified abstraction supporting multiple transport protocols: **TCP** (default, Bitcoin P2P compatible) and **Iroh/QUIC** (experimental). See [Transport Abstraction](../node/transport-abstraction.md).
 
-**Network Variants** - Bitcoin network types: **Mainnet** (BitcoinV1, production), **Testnet3** (test network), **Regtest** (regression testing, isolated).
+**Network Variants** - Bitcoin network types: **Mainnet** (BitcoinV1, production), **Testnet3** (test network), **Testnet4** (BIP94 test network), **Signet** (BIP325 test network), **Regtest** (regression testing, isolated).
 
 **IBD engine** - Optional age-tiered UTXO store during initial sync when **`BLVM_IBD_ENGINE=1`**. See [IBD UTXO engine](../node/ibd-engine.md).
 
