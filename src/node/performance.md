@@ -220,7 +220,7 @@ assume_valid_height = 912683 # mainnet library default when unset; use 0 for ful
 export BLVM_ASSUME_VALID_HEIGHT=912683
 ```
 
-Network defaults when neither file nor env is set: mainnet **912 683**, testnet **4 550 000**, regtest **0**. See [configuration-reference](../reference/configuration-reference.md#block_validationassume_valid_height).
+Network defaults when neither file nor env is set: mainnet **912 683**, testnet **4 550 000**, signet **267 665**, testnet4 **0**, regtest **0**. See [configuration-reference](../reference/configuration-reference.md#block_validationassume_valid_height).
 
 Signature verification is a major cost; skipping it for blocks below the threshold speeds IBD. Set **`assume_valid_height = 0`** for maximum script-validation assurance.
 

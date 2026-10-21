@@ -4,7 +4,7 @@ BLVM node configuration supports different use cases.
 
 ## Protocol Variants
 
-The node supports multiple Bitcoin protocol variants: **Regtest** (default, regression testing network for development), **Testnet3** (Bitcoin test network), and **BitcoinV1** (production Bitcoin mainnet). See [Protocol Variants](../protocol/overview.md#protocol-variants) for details.
+The node supports multiple Bitcoin protocol variants: **Regtest** (default, regression testing network for development), **Testnet3** (Bitcoin test network), **Testnet4** (BIP94 test network), **Signet** (BIP325 test network), and **BitcoinV1** (production Bitcoin mainnet). See [Protocol Variants](../protocol/overview.md#protocol-variants) for details.
 
 ## Configuration Precedence
 
@@ -27,13 +27,15 @@ Environment variables (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`) override confi
 
 ### Network defaults (`blvm` binary, no `--rpc-addr` override) {#network-defaults-blvm-binary-no-rpc-addr-override}
 
-| Network | `protocol_version` | P2P (`--listen-addr`) | RPC (`--rpc-addr`) |
-|---------|-------------------|------------------------|---------------------|
-| Mainnet | `BitcoinV1` | `0.0.0.0:8333` | `127.0.0.1:8332` |
-| Testnet | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` |
-| Regtest (CLI default) | `Regtest` | `0.0.0.0:18444` | `127.0.0.1:18443` |
+| Network | `--network` | `protocol_version` | P2P (`--listen-addr`) | RPC (`--rpc-addr`) |
+|---------|-------------|-------------------|------------------------|---------------------|
+| Mainnet | `mainnet` | `BitcoinV1` | `127.0.0.1:8333` | `127.0.0.1:8332` |
+| Testnet3 | `testnet` | `Testnet3` | `127.0.0.1:18333` | `127.0.0.1:18332` |
+| Testnet4 | `testnet4` | `Testnet4` | `127.0.0.1:48333` | `127.0.0.1:48332` |
+| Signet | `signet` | `Signet` | `127.0.0.1:38333` | `127.0.0.1:38332` |
+| Regtest (CLI default) | `regtest` | `Regtest` | `127.0.0.1:18444` | `127.0.0.1:18443` |
 
-Separate **`data_dir` per network**. REST bind (when enabled) derives from RPC port: **8080** (mainnet), **18080** (testnet), **28443** (regtest).
+Separate **`data_dir` per network**. The P2P default is used only when no `listen_addr` comes from CLI, env, or a loaded config file, and it binds to loopback; set `--listen-addr 0.0.0.0:<port>` (or `listen_addr` in the config) to accept inbound peers. REST bind (when enabled) derives from RPC port: **8080** (mainnet), **18080** (testnet3), otherwise RPC port **+ 10000**: **58332** (testnet4), **48332** (signet), **28443** (regtest).
 
 ## Path Expansion
 
@@ -67,7 +69,7 @@ database_backend = "auto" # auto | rocksdb | tidesdb | heed3 | redb | sled: see 
 ```
 
 **Defaults (two layers)**:
-- **`blvm` operator binary** (no config file): default network **`regtest`**. RPC when `--rpc-addr` is omitted: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, regtest **`127.0.0.1:18443`** (Core-aligned). P2P: mainnet **`0.0.0.0:8333`**, testnet **`0.0.0.0:18333`**, regtest **`0.0.0.0:18444`**. Override with `--listen-addr` / `BLVM_LISTEN_ADDR` and `--rpc-addr` / `BLVM_RPC_ADDR`.
+- **`blvm` operator binary** (no config file): default network **`regtest`**. RPC when `--rpc-addr` is omitted: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, testnet4 **`127.0.0.1:48332`**, signet **`127.0.0.1:38332`**, regtest **`127.0.0.1:18443`** (Core-aligned). P2P when no `listen_addr` is set anywhere: mainnet **`127.0.0.1:8333`**, testnet **`127.0.0.1:18333`**, testnet4 **`127.0.0.1:48333`**, signet **`127.0.0.1:38333`**, regtest **`127.0.0.1:18444`**. Override with `--listen-addr` / `BLVM_LISTEN_ADDR` and `--rpc-addr` / `BLVM_RPC_ADDR`.
 - **`NodeConfig` library default** (used when embedding `blvm-node`): `listen_addr` localhost `8333`, `protocol_version` `"BitcoinV1"`, `transport_preference` TCP-only, `max_peers` 100.
 
 Configuration is organized in logical sections (`storage`, `ibd`, `modules`, optional `[stratum_v2]`, etc.) in the node codebase. Initial block download uses parallel IBD only.

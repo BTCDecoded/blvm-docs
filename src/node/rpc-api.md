@@ -6,12 +6,12 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, regtest **`127.0.0.1:18443`** (Core-aligned).
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, testnet4 **`127.0.0.1:48332`**, signet **`127.0.0.1:38332`**, regtest **`127.0.0.1:18443`** (Core-aligned).
 - **REST API** (optional): Requires **`rest-api`** feature and **`[rest_api].enabled = true`** in `blvm.toml`. Binds a separate port (default **8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000**). See [REST API](#rest-api).
 
 ## Connection
 
-Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. Defaults: mainnet `http://127.0.0.1:8332`, testnet `http://127.0.0.1:18332`, regtest `http://127.0.0.1:18443`. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
+Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. Defaults: mainnet `http://127.0.0.1:8332`, testnet `http://127.0.0.1:18332`, testnet4 `http://127.0.0.1:48332`, signet `http://127.0.0.1:38332`, regtest `http://127.0.0.1:18443`. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
 
 ## Authentication
 

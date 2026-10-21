@@ -15,11 +15,11 @@ Reference for BLVM node configuration options. Configuration can be provided via
 | Goal | Where to look |
 |------|----------------|
 | P2P listen address | `listen_addr` (top level) |
-| RPC bind | CLI `--rpc-addr` / `BLVM_RPC_ADDR` (not a `NodeConfig` port key). Defaults: mainnet `127.0.0.1:8332`, testnet `127.0.0.1:18332`, regtest `127.0.0.1:18443` |
+| RPC bind | CLI `--rpc-addr` / `BLVM_RPC_ADDR` (not a `NodeConfig` port key). Defaults: mainnet `127.0.0.1:8332`, testnet `127.0.0.1:18332`, testnet4 `127.0.0.1:48332`, signet `127.0.0.1:38332`, regtest `127.0.0.1:18443` |
 | RPC auth | `[rpc_auth]`: `required`, `tokens`, `admin_tokens`, `username`, `password` |
 | Data directory | `[storage].data_dir` |
 | Database backend | `[storage].database_backend` (`auto`, `heed3`, `rocksdb`, …) |
-| Network variant | `protocol_version` (`BitcoinV1`, `Testnet3`, `Regtest`) |
+| Network variant | `protocol_version` (`BitcoinV1`, `Testnet3`, `Testnet4`, `Signet`, `Regtest`) |
 | Transport stack | `transport_preference` (`tcponly`, `hybrid`, …) |
 | Module directory | `[modules].modules_dir`, inline pins under `[modules]` |
 | IBD tuning | `[ibd]` and `BLVM_IBD_*` env vars: [Mainnet initial sync](../getting-started/first-node.md#mainnet-initial-sync) |
@@ -99,7 +99,7 @@ This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` co
 #### `protocol_version`
 - **Type**: `string`
 - **Default**: `"BitcoinV1"`
-- **Options**: `"BitcoinV1"` (mainnet), `"Testnet3"` (testnet), `"Regtest"` (regtest)
+- **Options**: `"BitcoinV1"` (mainnet), `"Testnet3"` (testnet), `"Testnet4"` (testnet4), `"Signet"` (signet), `"Regtest"` (regtest)
 - **Description**: Bitcoin protocol variant. See [Protocol variants](../protocol/overview.md#protocol-variants).
 
 #### `persistent_peers`
@@ -119,7 +119,7 @@ Assume-valid settings map to Bitcoin Core **`-assumevalid`** / **`-assumevalidha
 
 ### `block_validation.assume_valid_height`
 - **Type**: `integer` (block height)
-- **Default**: Network-dependent when unset: mainnet **912 683**, testnet **4 550 000**, regtest **0** (see `default_assume_valid_height_for_network` in `blvm-node`)
+- **Default**: Network-dependent when unset: mainnet **912 683**, testnet **4 550 000**, signet **267 665**, testnet4 **0**, regtest **0** (see `default_assume_valid_height_for_network` in `blvm-node`)
 - **Description**: Skip script/signature verification for blocks below this height during connect. Block structure, Merkle roots, and proof-of-work are still validated.
 - **Example**: `assume_valid_height = 0` (validate all scripts)
 
