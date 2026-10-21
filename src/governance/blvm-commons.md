@@ -2,31 +2,31 @@
 
 ## Overview
 
-blvm-commons is the governance tooling crate for Bitcoin Commons. It contains GitHub, OpenTimestamps, and Nostr clients. Merge enforcement is off.
+blvm-commons is the governance app for Bitcoin Commons. It contains the GitHub App, an OpenTimestamps client, a Nostr client, and cross-layer checks.
 
 ## Key Features
 
-- **GitHub Integration**: App client for signature checks. `set_required_status_checks` sends `enforce_admins: false`. A failed branch-protection response is logged and returned as success.
-- **OpenTimestamps**: Calendar client for governance artifacts. It is not a step in consensus CI.
+- **GitHub Integration**: GitHub App for signature checks and review periods
+- **OpenTimestamps**: Timestamp client for governance artifacts
 - **Nostr Integration**: Relay client for governance messages
-- **Cross-Layer Validation**: Security-control checks in the crate
+- **Cross-Layer Validation**: Security controls and validation across all layers
 - **CI/CD Workflows**: Reusable workflows for Bitcoin Commons repositories
 
 ## Components
 
 ### GitHub Integration
 
-The GitHub App code can post checks and call the branch-protection API. It does not block a merge by itself. Admin enforcement is off, and a rejected protection update does not fail the caller. See `blvm-commons/src/github/client.rs`.
+The GitHub App checks signatures and review periods against the published schedule.
 
 
 ### OpenTimestamps Integration
 
-`OtsClient` in `src/ots/anchor.rs` can submit a hash to the calendars this build allows (alice and bob). That call is separate from consensus CI and from merge enforcement.
+Submits governance artifacts to OpenTimestamps calendars.
 
 
 ### Nostr Integration
 
-Enables decentralized governance communication, voting, and proposal distribution through Nostr relays.
+Publishes governance messages to Nostr relays.
 
 
 ### Security Controls

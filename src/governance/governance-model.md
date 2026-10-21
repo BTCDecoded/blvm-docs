@@ -1,6 +1,6 @@
 # Governance Model
 
-Bitcoin Commons writes a 5-tier signature schedule. That schedule is not a measured capture multiplier. Merge enforcement is off.
+Bitcoin Commons publishes a constitutional governance model: graduated signature thresholds and review periods.
 
 {{#include ../../modules/governance/GOVERNANCE.md}}
 
@@ -26,7 +26,7 @@ Bitcoin Commons writes a 5-tier signature schedule. That schedule is not a measu
 - [Do I need governance to run a node?](../appendices/faq.md#do-i-need-governance-to-run-a-node)
 - [What is Bitcoin Commons vs BLVM?](../appendices/faq.md#what-is-bitcoin-commons-vs-blvm)
 - [What are layers, tiers, and signatures?](../appendices/faq.md#what-are-layers-tiers-and-signatures)
-- [Is the capture slogan a measurement?](../appendices/faq.md#is-the-capture-slogan-a-measurement)
+- [Why graduated signature thresholds?](../appendices/faq.md#why-graduated-signature-thresholds)
 - [Is the system production ready?](../appendices/faq.md#is-the-system-production-ready) (governance is not universally activated)
 
 ### Governance docs
