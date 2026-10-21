@@ -1,5 +1,7 @@
 # FIBRE module (`blvm-fibre`)
 
+> **Registry status:** Listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json) as `blvm-fibre`. Pin it under `[modules]` for [registry bootstrap](overview.md#registry-bootstrap-recommended).
+
 UDP/FEC **block** relay as a **loadable Commons module**. Distinct from Dandelion++ transaction relay in [Privacy relay](../node/privacy-relay.md).
 
 ## Overview
