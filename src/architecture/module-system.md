@@ -14,6 +14,7 @@ Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**,
 - **[Datum Module](../modules/datum.md)** — DATUM Gateway mining protocol
 - **[Mining OS Module](../modules/miningos.md)** — MiningOS integration
 - **blvm-zmq** — [ZMQ module](../modules/zmq.md)
+- **blvm-wallet-index** — [Wallet index](../modules/wallet-index.md)
 - **blvm-miniscript** — [Miniscript module](../modules/miniscript.md)
 - **blvm-governance** — [Governance module](../modules/governance-module.md)
 - **blvm-fibre** — [FIBRE module](../modules/fibre.md)

@@ -16,6 +16,7 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 **Registry modules** (bootstrap from `registry/modules.json`):
 
 - **blvm-zmq** — ZMQ PUB notifications ([ZMQ module](zmq.md))
+- **blvm-wallet-index** — script history in the module’s own database ([Wallet index](wallet-index.md))
 - **blvm-miniscript** — Descriptor / PSBT RPC overrides ([Miniscript module](miniscript.md))
 - **blvm-governance** — On-chain proposal webhook module ([Governance module](governance-module.md))
 - **blvm-marketplace** — Optional registry/payments ([Marketplace module](marketplace-module.md))

@@ -15,7 +15,7 @@ Optional **module discovery, registry, and payment** integration for **`blvm-nod
 ## Requirements
 
 - `blvm-node` with the module system enabled.
-- Payment flows require compile-time **`bip70-http`** / payment processor wiring on the node (**`blvm` default features**; omitted from portable Windows/aarch64 release builds).
+- Payment flows load the **`blvm-payment`** module. The default `blvm` binary does not include `bip70-http`.
 - Not required for standard **registry bootstrap** of pinned modules — use [Installing modules](overview.md#installing-modules) instead.
 
 ## Loading
