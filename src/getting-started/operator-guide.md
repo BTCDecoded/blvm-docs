@@ -2,7 +2,7 @@
 
 Install, run, and operate a BLVM node. For a five-minute regtest walkthrough see [Quick Start](quick-start.md). Read [Deployment posture](../security/deployment-posture.md) before exposing RPC on mainnet.
 
-The `blvm` binary speaks Bitcoin Core JSON-RPC. Script history and Electrum `blockchain.scripthash.get_history` are the separate `blvm-wallet-index` process. `createpaymentrequest`, `getpaymentstate`, `listpayments`, `verifyonchainpayment`, `createvault`, `getvaultstate`, `createpool`, and `getpoolstate` are the separate `blvm-payment` process. The default node answers those methods with method-not-found. `verifyonchainpaymentbytx` reads a transaction through the node API when `blvm-payment` is loaded. It does not open the node chain store.
+The `blvm` binary speaks Bitcoin Core JSON-RPC. Script history and Electrum `blockchain.scripthash.get_history` are the separate `blvm-wallet-index` process. Payment, vault, pool, and congestion methods are the separate `blvm-payment` process: `createpaymentrequest`, `createcovenantproof`, `getpaymentstate`, `listpayments`, `verifyonchainpayment`, `verifyonchainpaymentbytx`, `verifycovenantproof`, `createvault`, `unvault`, `withdrawfromvault`, `getvaultstate`, `createpool`, `joinpool`, `distributepool`, `getpoolstate`, `createbatch`, `addtobatch`, `getcongestion`, `getcongestionmetrics`, and `broadcastbatch`. The default node answers those names with method-not-found until that module is loaded. It is not in the default module set. Chain and mempool reads go through the node API. A `merchant_key` in the module `config.toml` signs a peer payment acknowledgement.
 
 ## Data directory
 

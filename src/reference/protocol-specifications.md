@@ -28,7 +28,7 @@ Bitcoin Improvement Proposals (BIPs) implemented in BLVM. Consensus-critical beh
 
 - **BIP21**: Bitcoin URI scheme (`blvm-node/src/bip21.rs`)
 - **BIP32/39/44**: HD wallets, mnemonic phrases, standard derivation paths (`blvm-node/src/wallet/`)
-- **BIP70**: Payment protocol (full reimplementation, `blvm-node/src/network/bip70_handler.rs`)
+- **BIP70**: Payment protocol. The node publishes the peer frame. `blvm-payment` owns the state machine and the reply.
 - **BIP174**: PSBT format for hardware wallet support (`blvm-node/src/psbt.rs`)
 - **BIP350/351**: Bech32m for Taproot (P2TR), Bech32 for SegWit (`blvm-node/src/bech32m.rs`)
 
