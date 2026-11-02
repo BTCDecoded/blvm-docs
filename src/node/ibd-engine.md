@@ -50,7 +50,7 @@ Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-
 - Use the **same** `storage.data_dir` on every run; do not delete the active database backend directory (`heed3/`, `rocksdb/`, …) mid-sync.
 - On **SIGTERM** / **SIGINT** during parallel IBD, the node drains in-flight validation and flushes the UTXO watermark before exit when possible.
 - **`io_uring`** accelerates engine table I/O on **Linux**; other platforms use a `pread` fallback (engine still runs on Windows).
-- **[Assume-valid](../reference/configuration-reference.md#block_validationassume_valid_height)** skips signature verification below a configured height; block structure, Merkle roots, and proof-of-work are still checked.
+- **[Assume-valid](../reference/configuration-reference.md#block_validationassume_valid_height)** skips signature verification below the configured height when the hash is set and chainwork meets the minimum. The mainnet seed sets that hash at height **912683**. Block structure, Merkle roots, and proof-of-work are still checked.
 - First mainnet sync: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
 
 ## Configuration

@@ -210,19 +210,21 @@ This optimization is safe because:
 
 ```toml
 [block_validation]
-assume_valid_height = 912683 # mainnet library default when unset; use 0 for full script checks
-# assume_valid_hash = "…" # optional: hash at assume_valid_height (-assumevalid)
+assume_valid_height = 912683
+assume_valid_hash = "00000000000000000000611fd22f2df7c8fbd0688745c3a6c3bb5109cc2a12cb"
 ```
 
-**Environment variable** (overrides file):
+With no `[block_validation]` table, the binary seeds that mainnet height and the checked header hash. Testnet **4550000** and signet **267665** seed a height and leave the hash unset, so script checks still run. Testnet4 and regtest seed **0**.
+
+**Environment variable** (overrides the height only):
 
 ```bash
 export BLVM_ASSUME_VALID_HEIGHT=912683
 ```
 
-Network defaults when neither file nor env is set: mainnet **912 683**, testnet **4 550 000**, regtest **0**. See [configuration-reference](../reference/configuration-reference.md#block_validationassume_valid_height).
+There is no hash environment variable. See [configuration-reference](../reference/configuration-reference.md#block_validationassume_valid_height).
 
-Signature verification is a major cost; skipping it for blocks below the threshold speeds IBD. Set **`assume_valid_height = 0`** for maximum script-validation assurance.
+Script checks skip below that height only when the hash is set and chainwork meets the minimum. Set **`assume_valid_height = 0`** for full script checks.
 
 ## Parallel Transaction Validation
 

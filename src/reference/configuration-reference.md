@@ -119,16 +119,16 @@ Assume-valid settings map to Bitcoin Core **`-assumevalid`** / **`-assumevalidha
 
 ### `block_validation.assume_valid_height`
 - **Type**: `integer` (block height)
-- **Default**: Network-dependent when unset: mainnet **912 683**, testnet **4 550 000**, regtest **0** (see `default_assume_valid_height_for_network` in `blvm-node`)
-- **Description**: Skip script/signature verification for blocks below this height during connect. Block structure, Merkle roots, and proof-of-work are still validated.
+- **Default**: With no `[block_validation]` table, the binary seeds mainnet **912683**, testnet **4550000**, and signet **267665**. Testnet4 and regtest seed **0**.
+- **Description**: Script checks skip only for a block below this height when the hash is also set and chainwork meets the minimum. Block structure, Merkle roots, and proof-of-work are still validated. A height with no hash does not skip.
 - **Example**: `assume_valid_height = 0` (validate all scripts)
 
 ### `block_validation.assume_valid_hash`
-- **Type**: `string` (32-byte block hash, hex) or omitted
-- **Default**: none
-- **Description**: When set, verify the block at **`assume_valid_height`** matches this hash before skipping ancestor script checks. Takes precedence over height-only configuration.
+- **Type**: `string` (64-character block id) or omitted
+- **Default**: The mainnet seed stores the checked header hash at height **912683**. Testnet and signet leave the hash unset. A 64-character block id is stored in internal byte order.
+- **Description**: At the assume-valid height, the connected header must match this hash. Below that height, script checks skip when the hash is set and chainwork meets the minimum. `--assumevalid` with 64 hex digits sets the hash and keeps the seeded or file height.
 
-**Environment:** **`BLVM_ASSUME_VALID_HEIGHT`** overrides **`assume_valid_height`** from file.
+**Environment:** **`BLVM_ASSUME_VALID_HEIGHT`** overrides the height only. There is no hash environment variable.
 
 ## IBD Configuration
 

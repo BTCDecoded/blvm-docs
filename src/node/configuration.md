@@ -159,7 +159,7 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 
 ### Advanced Options
 
-`--assumevalid`, `--noassumevalid`, `--assumeutxo`, `--target-peer-count`, `--async-request-timeout`, `--module-max-cpu-percent`, `--module-max-memory-bytes`.
+`--assumevalid` with 64 hex digits sets the assume-valid hash and keeps the seeded height. `--noassumevalid` and `--assumevalid 0` clear the height and the hash. With no `[block_validation]` table, mainnet seeds height **912683** and the checked header hash. Testnet and signet seed a height and leave the hash unset. Also: `--assumeutxo`, `--target-peer-count`, `--async-request-timeout`, `--module-max-cpu-percent`, `--module-max-memory-bytes`.
 
 ### Commands
 
