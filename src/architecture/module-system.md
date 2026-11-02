@@ -4,7 +4,7 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**, optional **blvm-marketplace**) bootstrap from **`[modules].registry_url`** (`registry/modules.json`) when pinned under **`[modules]`**: see [Module catalog](../modules/overview.md).
+Registry-backed modules (**blvm-zmq**, **blvm-wallet-index**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**, **blvm-payment**, optional **blvm-marketplace**) bootstrap from **`[modules].registry_url`** (`registry/modules.json`) when pinned under **`[modules]`**. **blvm-payment** is not a default pin. See [Module catalog](../modules/overview.md).
 
 ## Available modules
 
@@ -13,6 +13,7 @@ Registry-backed modules (**blvm-zmq**, **blvm-miniscript**, **blvm-governance**,
 - **[Stratum V2 Module](../modules/stratum-v2.md)**: Stratum V2 mining protocol
 - **[Datum Module](../modules/datum.md)**: DATUM Gateway mining protocol
 - **blvm-zmq**: [ZMQ module](../modules/zmq.md)
+- **blvm-wallet-index**: [Wallet index](../modules/wallet-index.md)
 - **blvm-miniscript**: [Miniscript module](../modules/miniscript.md)
 - **blvm-governance**: [Governance module](../modules/governance-module.md)
 - **blvm-fibre**: [FIBRE module](../modules/fibre.md)

@@ -96,7 +96,7 @@ Stable **GitHub Releases** ship one **base** binary set per tag (see [Release ar
 | **Linux aarch64** | Cross-build via `scripts/ci-build-aarch64.sh` | Same as Linux x86_64 (`BLVM_LINUX_RELEASE_FEATURES` in `scripts/ci-portable-cross-features.sh`) |
 | **Windows x86_64** | Cross-build, `--no-default-features` | Linux defaults minus Unix-only `nix` / `libc` (`BLVM_PORTABLE_CROSS_FEATURES`) |
 
-Core P2P, RPC, storage, modules, **iroh**, **dandelion**, **sigop**, **governance**, **REST `/api/v1/*`**, **BIP70 payment RPC**, and **storage/index zstd compression** are in the shared release feature set on all platforms. Runtime compression stays **off** until configured (`[storage.compression]` or `storage.indexing.enable_compression`). **RocksDB** remains opt-in (`--features rocksdb`). Other extras (CTV, Stratum V2, …) still require explicit `--features` or the [experimental CI bundle](#experimental-variant-source-build) when not in your binary.
+Core P2P, RPC, storage, modules, **iroh**, **dandelion**, **sigop**, **governance**, **REST `/api/v1/*`**, and **storage/index zstd compression** are in the shared release feature set on all platforms. **`bip70-http` is not.** Payment RPC lives in the `blvm-payment` module. Runtime compression stays **off** until configured (`[storage.compression]` or `storage.indexing.enable_compression`). **RocksDB** remains opt-in (`--features rocksdb`). Other extras (CTV, Stratum V2, …) still require explicit `--features` or the [experimental CI bundle](#experimental-variant-source-build) when not in your binary.
 
 #### Experimental variant (source build)
 

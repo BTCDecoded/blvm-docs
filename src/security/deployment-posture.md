@@ -77,7 +77,7 @@ Complete before running a mainnet node or exposing RPC beyond loopback:
 1. **Release verification**: Download from [btcdecoded.org/install](https://btcdecoded.org/install) or [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
 2. **Sync path**: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
 3. **Data directory**: Dedicated path (e.g. `~/.local/share/blvm-mainnet`); restrict filesystem permissions to the node OS user.
-4. **IBD tuning**: Review bundled `blvm-mainnet-ibd.toml.example`; optional `BLVM_IBD_ENGINE` per [IBD UTXO engine](../node/ibd-engine.md).
+4. **IBD tuning**: Review bundled `blvm-mainnet-ibd.toml.example`. The UTXO engine is on unless `BLVM_IBD_ENGINE=0`. See [IBD UTXO engine](../node/ibd-engine.md).
 5. **Modules**: Keep third-party modules disabled during first sync; verify maintainer policy before production enablement.
 6. **Backups**: Plan snapshot/backup policy; snapshot `data_dir` when stopped or per [Storage backends](../node/storage-backends.md).
 7. **RPC exposure**: Before binding RPC off loopback, complete the [Minimum checklist (non-loopback RPC)](#minimum-checklist-non-loopback-rpc) below.

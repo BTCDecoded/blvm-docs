@@ -65,7 +65,7 @@ The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consen
 
 **Network Variants** - Bitcoin network types: **Mainnet** (BitcoinV1, production), **Testnet3** (test network), **Regtest** (regression testing, isolated).
 
-**IBD engine** - Optional age-tiered UTXO store during initial sync when **`BLVM_IBD_ENGINE=1`**. See [IBD UTXO engine](../node/ibd-engine.md).
+**IBD engine** - Age-tiered UTXO store during initial sync. On unless **`BLVM_IBD_ENGINE=0`**. See [IBD UTXO engine](../node/ibd-engine.md).
 
 **admin_tokens** - RPC Bearer tokens with permission to call admin methods (`getblocktemplate`, `submitblock`, destructive control). Tokens in `tokens` alone are read-only unless also listed here. **`[rpc_auth].password`** (HTTP Basic) is registered as admin when set.
 

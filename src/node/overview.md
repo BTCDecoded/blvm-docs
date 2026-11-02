@@ -95,7 +95,7 @@ graph TB
 
 ### Payment Processing
 - CTV (CheckTemplateVerify) payment state machine when `ctv` compile-time feature is enabled
-- BIP70 HTTP payment RPC when `bip70-http` is in the binary (**`blvm` default features**; omitted from portable release builds: see [Installation](../getting-started/installation.md))
+- BIP70 HTTP payment RPC only when the binary is built with `bip70-http`. That feature is off the default build. `blvm-payment` owns the payment state machine. Portable release builds also omit it: see [Installation](../getting-started/installation.md)
 - Lightning Network via optional **`blvm-lightning`** module (not core node RPC)
 - Payment vaults / covenant tooling in `blvm-node` payment layer (CTV-gated at runtime)
 
@@ -122,7 +122,7 @@ graph TB
 - [UTXO commitments](utxo-commitments.md) (compile-time feature in release binaries; enable at runtime when used)
 - [Peer consensus protocol](peer-consensus.md), [spam filtering](spam-filtering.md) (bandwidth optimization during sync)
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
-- [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with optional [IBD UTXO engine](ibd-engine.md) (`BLVM_IBD_ENGINE=1`)
+- [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with the [IBD UTXO engine](ibd-engine.md) on unless `BLVM_IBD_ENGINE=0`
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → heed3 (LMDB)** in typical release builds; optional RocksDB, redb, sled, tidesdb)
@@ -151,8 +151,8 @@ graph TB
 ### Payment Features
 - Lightning Network via optional **`blvm-lightning`** module
 - CTV payment vaults and covenant proofs (requires `ctv` feature at build time)
-- BIP70 payment RPC (requires `bip70-http` in the binary)
-- Payment state machines (BIP70 / on-chain verify paths)
+- BIP70 payment RPC only with `--features bip70-http`. Off the default build.
+- Payment, vault, and pool state machines live in the `blvm-payment` module. It is not a default module pin.
 
 ### Integration Features
 - Governance webhook integration

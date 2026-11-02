@@ -50,7 +50,7 @@ Yes, with the **`rocksdb`** feature (**`blvm` default features**; portable Windo
 
 ### What experimental compile-time features exist?
 
-Stable GitHub Releases ship **platform-specific** feature sets (see [Release process: Build variants](../development/release-process.md#build-variants)). **`blvm` default features** (local `cargo build` and Linux x86_64 release artifacts) include Dandelion++, Iroh, UTXO commitments, BIP70/REST, and **`compression`**; portable **Windows** and **Linux aarch64** release CI builds omit several of those. BIP119 CTV, Stratum V2 node demux, sigop counting, and Quinn still often need explicit `--features`. See [Installation: experimental variant](../getting-started/installation.md#experimental-variant).
+Stable GitHub Releases ship **platform-specific** feature sets (see [Release process: Build variants](../development/release-process.md#build-variants)). **`blvm` default features** (local `cargo build` and Linux x86_64 release artifacts) include Dandelion++, Iroh, UTXO commitments, REST, and **`compression`**. **`bip70-http` is off that set.** Portable **Windows** and **Linux aarch64** release CI builds omit several of the default features. BIP119 CTV, Stratum V2 node demux, sigop counting, and Quinn still often need explicit `--features`. See [Installation: experimental variant](../getting-started/installation.md#experimental-variant).
 
 ### What RPC methods are available?
 

@@ -101,6 +101,7 @@
 - [Selective Sync](modules/selective-sync.md)
 - [FIBRE](modules/fibre.md)
 - [ZMQ](modules/zmq.md)
+- [Wallet index](modules/wallet-index.md)
 - [Miniscript](modules/miniscript.md)
 - [Governance module](modules/governance-module.md)
 - [Marketplace](modules/marketplace-module.md)

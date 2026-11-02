@@ -106,7 +106,7 @@ Parallel headers, pipelining, streaming validation, and batch storage all contri
 
 ## IBD UTXO engine (optional)
 
-When **`BLVM_IBD_ENGINE=1`**, validated blocks apply UTXO changes through the age-tiered engine under `storage/ibd_engine/` (checkpoints, crash-safe resume). Download still uses the parallel pipeline above.
+Validated blocks apply UTXO changes through the age-tiered engine under `<data_dir>/ibd_engine/` unless **`BLVM_IBD_ENGINE=0`**. Download still uses the parallel pipeline above.
 
 See **[IBD UTXO engine](ibd-engine.md)** for enablement, architecture, and checkpoint env vars.
 

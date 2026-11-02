@@ -132,7 +132,7 @@ Assume-valid settings map to Bitcoin Core **`-assumevalid`** / **`-assumevalidha
 
 ## IBD Configuration
 
-Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default **`mode = "parallel"`**. LAN peers are auto-preferred; WAN-only **`parallel`** sync uses multi-peer work-stealing unless **`BLVM_IBD_WAN_SINGLE_PEER=1`**. Bandwidth limits when **serving** IBD to peers: **`[ibd_protection]`**: [IBD Bandwidth Protection](../node/ibd-protection.md). Optional UTXO engine: **`BLVM_IBD_ENGINE=1`**: [IBD UTXO engine](../node/ibd-engine.md).
+Parallel download and validation tuning under **`[ibd]`** (`IbdConfig`). Default **`mode = "parallel"`**. LAN peers are auto-preferred; WAN-only **`parallel`** sync uses multi-peer work-stealing unless **`BLVM_IBD_WAN_SINGLE_PEER=1`**. Bandwidth limits when **serving** IBD to peers: **`[ibd_protection]`**: [IBD Bandwidth Protection](../node/ibd-protection.md). The UTXO engine is on unless **`BLVM_IBD_ENGINE=0`**: [IBD UTXO engine](../node/ibd-engine.md).
 
 ### `ibd.chunk_size`
 - **Type**: `integer`
@@ -253,8 +253,9 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 
 #### `storage.heed3.map_size_mb`
 - **Type**: `integer` (megabytes), optional
-- **Default**: `max(65536, dbcache_mb * 128)` when unset
-- **Description**: LMDB virtual memory map size. Must be large enough for the full UTXO set; cannot shrink after creation without reopening.
+- **Default**: auto-tuned from free disk on the data-dir filesystem (70%, clamped 48 GiB–4 TiB), then raised to `data.mdb + 128 GiB` when resuming an existing store
+- **Override**: set this field or `BLVM_HEED3_MAP_SIZE_MB` to skip auto-tune and pin a ceiling
+- **Description**: LMDB virtual memory map size. A sparse reservation: only written pages consume disk. Cannot shrink after creation without reopening.
 
 #### `storage.heed3.max_readers`
 - **Type**: `integer`, optional
@@ -735,7 +736,7 @@ export BLVM_DATA_DIR=/var/lib/blvm
 export BLVM_RPC_ADDR=127.0.0.1:8332
 export BLVM_ASSUME_VALID_HEIGHT=912683
 export BLVM_IBD_EVICTION=dynamic
-export BLVM_IBD_ENGINE=1
+export BLVM_IBD_ENGINE=0
 export BLVM_IBD_WAN_SINGLE_PEER=1
 export BLVM_NETWORK_TARGET_PEER_COUNT=125
 ```
