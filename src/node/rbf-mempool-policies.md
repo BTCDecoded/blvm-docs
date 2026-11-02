@@ -232,14 +232,17 @@ eviction_strategy = "hybrid"
 
 ### Ancestor/Descendant Limits
 
-Prevent transaction package spam and ensure mempool stability:
+Prevent transaction package spam and ensure mempool stability.
+
+Replacement size and ancestor/descendant size use sigop-adjusted virtual size: `ceil(max(weight, sigop_cost * bytes_per_sigop) / 4)`. `bytes_per_sigop` is on `[mempool]` and defaults to 20.
 
 ```toml
 [mempool]
 max_ancestor_count = 25      # Maximum ancestor count (default: 25)
-max_ancestor_size = 101000   # Maximum ancestor size in bytes (default: 101000)
+max_ancestor_size = 101000   # Maximum ancestor size in sigop-adjusted virtual size (default: 101000)
 max_descendant_count = 25   # Maximum descendant count (default: 25)
-max_descendant_size = 101000 # Maximum descendant size in bytes (default: 101000)
+max_descendant_size = 101000 # Maximum descendant size in sigop-adjusted virtual size (default: 101000)
+bytes_per_sigop = 20         # Weight units per sigop (default: 20)
 ```
 
 **Ancestors**: Transactions that a given transaction depends on (parent transactions)  
@@ -382,9 +385,9 @@ These defaults match widely used mainnet mempool parameters:
 - `max_mempool_mb`: 300 MB
 - `min_relay_fee_rate`: 1 sat/vB
 - `max_ancestor_count`: 25
-- `max_ancestor_size`: 101 kB
+- `max_ancestor_size`: 101,000 sigop-adjusted virtual size
 - `max_descendant_count`: 25
-- `max_descendant_size`: 101 kB
+- `max_descendant_size`: 101,000 sigop-adjusted virtual size
 - `eviction_strategy`: `lowest_fee_rate`
 
 ## See Also

@@ -52,18 +52,11 @@ Mining traffic uses the same transport stack as P2P; see [Transport abstraction]
 
 ## Configuration
 
-**Node `blvm.toml`** (merge-mining / pool-related fields and P2P demux — **does not** open miner TCP):
+**Node `blvm.toml`** does not open miner TCP. `[stratum_v2]` only switches P2P TLV demux:
 
 ```toml
 [stratum_v2]
-enabled = true
-pool_url = "tcp://pool.example.com:3333"  # optional upstream / orchestration
-# listen_addr here is informational on the node; miners connect to the module’s listen_addr
-listen_addr = "0.0.0.0:3333"
-p2p_stratum_demux = true   # false = disable P2P Stratum TLV demux only
-transport_preference = "tcponly"
-merge_mining_enabled = false
-secondary_chains = []
+p2p_stratum_demux = true   # false = do not treat P2P bytes as Stratum V2 TLV
 ```
 
 **Module `config.toml`** (inside `<modules.data_dir>/blvm-stratum-v2/` — **this** is where miners connect):
@@ -71,15 +64,15 @@ secondary_chains = []
 ```toml
 listen_addr = "0.0.0.0:3333"
 difficulty_target = 1
-max_connections = 100
+# max_connections = 1   # omitted = the accept loop does not count
 ```
 
-Overrides: `[modules.blvm-stratum-v2]` in node `blvm.toml` (same flat keys, passed as `MODULE_CONFIG_*`). See [Stratum V2 module](../modules/stratum-v2.md#configuration).
+`[modules.blvm-stratum-v2]` in node `blvm.toml` overrides `listen_addr`, `difficulty_target`, and `max_connections`. `[modules.stratum-v2]` does not. See [Stratum V2 module](../modules/stratum-v2.md#configuration).
 
 
 ## Usage
 
-Integrate via the **`blvm-stratum-v2`** crate as a **node module** ([`StratumV2Module`](https://github.com/BTCDecoded/blvm-stratum-v2/blob/main/src/module.rs), [lib.rs](https://github.com/BTCDecoded/blvm-stratum-v2/blob/main/src/lib.rs)). The module calls node **`getblocktemplate`** / **`submitblock`** through NodeAPI — ensure the node RPC auth config grants **admin** to the operator or pool (same rules as [Mining integration](mining.md#mining-rpc-and-admin-auth)). Older snippets that imported `blvm_node::network::stratum_v2::StratumV2Server` are obsolete; use the module’s examples and the shared `[stratum_v2]` keys above (**miner TCP is bound by the module**, not by `blvm-node`).
+Integrate via the **`blvm-stratum-v2`** crate as a **node module** ([`StratumV2Module`](https://github.com/BTCDecoded/blvm-stratum-v2/blob/main/src/module.rs), [lib.rs](https://github.com/BTCDecoded/blvm-stratum-v2/blob/main/src/lib.rs)). The module calls node **`getblocktemplate`** / **`submitblock`** through NodeAPI — ensure the node RPC auth config grants **admin** to the operator or pool (same rules as [Mining integration](mining.md#mining-rpc-and-admin-auth)). Older snippets that imported `blvm_node::network::stratum_v2::StratumV2Server` are obsolete; use the module’s examples (**miner TCP is bound by the module**, not by `blvm-node`).
 
 ## Benefits
 

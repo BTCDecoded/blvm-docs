@@ -62,15 +62,14 @@ Module `config.toml` (under `<modules.data_dir>/blvm-selective-sync/`; overridab
 | `registries` | Registry URLs |
 | `min_registry_agreement` | Quorum threshold (0.0–1.0) |
 | `registry_refresh_interval` | Periodic refresh interval (seconds) |
-| `witness_mode` | `strict` (default) or `relaxed` |
-| `ibd_filter_enabled` | Strip flagged witnesses during IBD persistence |
-| `on_chain_registry_builder` | Index flagged txs from each `NewBlock` |
+| `witness_mode` | `strict` (default) or `relaxed` — relaxed skips witness strip/deny, OP_RETURN still applies |
+| `trust_registry_stubs` | Skip witness download when merkle paths verify (default off) |
+| `on_chain_registry_builder` | Index flagged txs from each `NewBlock` (pre-strip witnesses) |
 | `audit_log` / `audit_log_path` | Optional audit trail |
 
-Example — enable IBD witness filtering:
+Example — subscribe and refresh:
 
 ```toml
-ibd_filter_enabled = true
 witness_mode = "strict"
 registries = ["https://example.com/registry.json"]
 ```
@@ -87,11 +86,21 @@ blvm sync-policy status
 
 After `refresh` or `apply`, merged tx/block hashes are pushed to the node via `merge_tx_serve_denylist` and `merge_block_serve_denylist`. Peers requesting denied hashes receive `notfound` for full block/tx relay. Requires `network_access` / `read_network` capabilities.
 
-## IBD witness filter
+## IBD strip + sidecar
 
-When `ibd_filter_enabled = true`, the module exposes **`filter_block_before_store`** via `ModuleAPI`. During parallel IBD, the node calls this hook before writing witness blobs to the blockstore. Flagged witness stacks are emptied; the module publishes `IBDBlockFiltered` events.
+When the module is loaded and registries are merged, **`filter_block_before_store`** strips flagged txs per registry entry before writing the blockstore. **Stripped payloads are never stored locally.** If reorg, merkle audit, or RPC needs complete data, the **node** asks peers via the existing GetData path and uses the result in memory only.
 
-The node integration is generic (`blvm-node` `module/pipeline.rs`) — not selective-sync-specific code in `parallel_ibd/`. On IPC failure the node **fail-opens** (stores unfiltered data).
+**Archival vs ephemeral:** default RPC/`getblock` reads the stored stripped body. Consensus paths may temporarily GetData full blocks; those bytes are not written to disk.
+
+The registry is **quorum policy**, not a self-verifying proof. v1/v2 still download and validate complete blocks first.
+
+Embedding labels from the spam filter: `UnexecIf`, `DataLikeMs`, and `LargeWitness` map to witness embeddings; `NullDataOp13` and `NullDataMagic` map to OP_RETURN. `EmbeddingType` remains `{ Witness, OpReturn }`.
+
+The node integration is generic (`blvm-node` `module/pipeline.rs`). On IPC failure the node **fail-opens** (stores or uses unfiltered/archival data).
+
+## v3 download policy
+
+With `trust_registry_stubs = true` and verified `merkle_sibling_path` entries at a height, `filter_block_download_policy` may request `MSG_BLOCK` instead of `MSG_WITNESS_BLOCK`. Fail-open = download full witness. This is operator trust + merkle inclusion, not consensus skip.
 
 ## Implementation notes
 

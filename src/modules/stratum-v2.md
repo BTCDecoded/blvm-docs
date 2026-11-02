@@ -75,20 +75,16 @@ Module `config.toml` at `<modules.data_dir>/blvm-stratum-v2/config.toml` (flat k
 ```toml
 listen_addr = "0.0.0.0:3333"
 difficulty_target = 1
-max_connections = 100
-# pool_name = "My pool"
-# extra_extranonce = "01020304"
+# max_connections = 1   # omitted = the accept loop does not count
 ```
 
 | Key | Default | Purpose |
 |-----|---------|---------|
 | `listen_addr` | `0.0.0.0:3333` | Miner TCP bind (module-owned; not the node P2P port) |
 | `difficulty_target` | `1` | Default channel difficulty when the miner sends 0 |
-| `max_connections` | `100` | Max concurrent miner connections |
-| `pool_name` | — | Optional display name |
-| `extra_extranonce` | — | Optional extra extranonce bytes (hex) |
+| `max_connections` | omitted | When set, refuse a new miner once that many are connected |
 
-> **Scope:** This TOML lives under **`[modules].data_dir`** for **`blvm-stratum-v2`**, **not** in the node’s top-level **`blvm.toml`**. Node-side Stratum P2P demux and merge-mining keys are under **`[stratum_v2]`** in `blvm.toml` — see [Mining with Stratum V2](../node/mining-stratum-v2.md). There is **no** module `enabled` or `pool_url` key; enable loading via a **`[modules]`** version pin (e.g. `blvm-stratum-v2 = "0.1.*"`).
+> **Scope:** This TOML lives under **`[modules].data_dir`** for **`blvm-stratum-v2`**, **not** in the node’s top-level **`blvm.toml`**. The node’s **`[stratum_v2]`** table only sets `p2p_stratum_demux` — see [Mining with Stratum V2](../node/mining-stratum-v2.md). There is **no** module `enabled`, `pool_url`, `pool_name`, or `extra_extranonce` key. Enable loading via a **`[modules]`** version pin (e.g. `blvm-stratum-v2 = "0.1.*"`). Node overrides use **`[modules.blvm-stratum-v2]`**.
 
 ## Module Manifest
 

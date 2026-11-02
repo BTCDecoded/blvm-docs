@@ -74,7 +74,7 @@ Which surface accepts which header: [RPC transport × authentication](../securit
 
 This flag does not use a tip-age window. Clients that wait for `initialblockdownload` to become false are waiting for headers and blocks to meet, not for a clock.
 
-Script checking stays on unless `assume_valid_hash` is set. The height field alone does not skip scripts.
+Script checking stays on unless `assume_valid_hash` is set. The height field alone does not skip scripts. The mainnet seed sets that hash at height `912683`. Testnet and signet seeds do not.
 
 ## Wallet index
 

@@ -203,23 +203,31 @@ config.reject_spam_in_mempool = true; // Enable spam rejection at mempool entry
 
 ### Standard Transaction Checks
 
-The mempool also enforces stricter standard transaction checks:
+The node mempool sizes an admitted transaction with sigop-adjusted virtual size:
+
+`ceil(max(weight, sigop_cost * bytes_per_sigop) / 4)`
+
+`bytes_per_sigop` is on the node `[mempool]` table (`MempoolPolicyConfig`), default 20 (5 vbytes per sigop). A transaction whose sigop cost is above 16,000 (`MAX_STANDARD_TX_SIGOPS_COST`) is rejected. That cap is a constant, not a config key. The same virtual size is the fee rate used at admit and the size used for RBF replacement and ancestor limits.
+
+Consensus standardness (`is_standard_tx_with_config`) is a separate helper. The node mempool does not call it, and the node `[mempool]` table does not load its fields.
 
 #### OP_RETURN Limits
 
-- **Maximum OP_RETURN size**: 80 bytes (common policy default, configurable)
+- **Maximum OP_RETURN size**: 80 bytes (consensus `MempoolConfig` default)
 - **Multiple OP_RETURN rejection**: By default, transactions with more than 1 OP_RETURN output are rejected
-- **Configuration**: `MempoolConfig::max_op_return_size`, `max_op_return_outputs`, `reject_multiple_op_return`
+- **Configuration**: `MempoolConfig::max_op_return_size`, `max_op_return_outputs`, `reject_multiple_op_return` on the consensus config, not the node `[mempool]` table
 
-#### Envelope Protocol Rejection
+#### UnexecIf (envelope) rejection
 
-- **Envelope protocol detection**: Rejects scripts starting with `OP_FALSE OP_IF` (used by Ordinals)
-- **Configuration**: `MempoolConfig::reject_envelope_protocol` (default: true)
+Scripts that start with `OP_FALSE OP_IF` (the envelope used by Ordinals) are UnexecIf.
+
+- **Node admission**: the opt-in spam filter. Set `reject_spam_in_mempool = true` on the node `[mempool]` table (default false). Envelope detection lives in the protocol spam filter.
+- **Consensus standardness**: `MempoolConfig::reject_unexec_if` (default true). The node mempool does not load this field.
 
 #### Script Size Limits
 
-- **Maximum standard script size**: 200 bytes (configurable)
-- **Configuration**: `MempoolConfig::max_standard_script_size`
+- **Maximum standard script size**: 200 bytes (consensus `MempoolConfig` default)
+- **Configuration**: `MempoolConfig::max_standard_script_size`, not a node `[mempool]` key
 
 ### Per-Peer Transaction Rate Limiting
 
@@ -236,23 +244,12 @@ Transactions exceeding the rate limit are dropped before processing.
 
 ```toml
 [mempool]
-# Enable spam filtering at mempool entry
+# Node mempool policy (MempoolPolicyConfig). Spam filtering at entry is opt-in.
 reject_spam_in_mempool = true
 
-# OP_RETURN limits
-max_op_return_size = 80
-max_op_return_outputs = 1
-reject_multiple_op_return = true
+# Weight units per sigop. Default 20. Sigop cost above 16_000 is rejected.
+bytes_per_sigop = 20
 
-# Standard script checks
-max_standard_script_size = 200
-reject_envelope_protocol = true
-
-# Fee rate requirements for large transactions
-min_fee_rate_large_tx = 2
-large_tx_threshold_bytes = 1000
-
-[mempool_policy]
 # Per-peer transaction rate limiting
 tx_rate_limit_burst = 10
 tx_rate_limit_per_sec = 1
@@ -263,12 +260,9 @@ tx_byte_rate_burst = 1000000  # 1 MB burst
 
 # Spam-aware eviction
 eviction_strategy = "spamfirst"
-
-[spam_ban]
-# Spam-specific peer banning
-spam_ban_threshold = 10
-spam_ban_duration_seconds = 3600  # 1 hour
 ```
+
+OP_RETURN limits, standard script size, `reject_unexec_if`, and the large-transaction fee floor are fields of consensus `MempoolConfig`. They are not keys of this table.
 
 ## Integration Points
 
@@ -325,7 +319,7 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 ### Already Implemented
 
 - **Input/Output Limits**: Consensus-level limits (MAX_INPUTS = 1000, MAX_OUTPUTS = 1000) prevent transactions with excessive inputs/outputs
-- **Ancestor/Descendant Limits**: Package limits prevent transaction package spam (default: 25 transactions, 101 kB)
+- **Ancestor/Descendant Limits**: Package limits prevent transaction package spam (default: 25 transactions, 101,000 sigop-adjusted virtual size)
 - **DoS Protection**: Automatic peer banning for connection rate violations
 - **Per-Peer Byte Rate Limiting**: Limits bytes per second per peer (default: 100 KB/s, 1 MB burst)
 - **Fee Rate Requirements for Large Transactions**: Requires higher fees for large transactions (default: 2 sat/vB for transactions >1000 bytes)
@@ -337,27 +331,21 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 Prevents large transaction flooding by limiting bytes per second per peer:
 
 ```toml
-[mempool_policy]
+[mempool]
 tx_byte_rate_limit = 100000  # 100 KB/s
 tx_byte_rate_burst = 1000000 # 1 MB burst
 ```
 
 ### Fee Rate Requirements for Large Transactions
 
-Large transactions must pay higher fees to discourage spam:
-
-```toml
-[mempool]
-min_fee_rate_large_tx = 2      # 2 sat/vB (higher than standard 1 sat/vB)
-large_tx_threshold_bytes = 1000 # Transactions >1 KB require higher fees
-```
+Large transactions must pay higher fees to discourage spam. These fields are consensus `MempoolConfig` (`min_fee_rate_large_tx` default 2 sat/vB, `large_tx_threshold_bytes` default 1000). They are not keys of the node `[mempool]` table.
 
 ### Spam-Aware Eviction Strategy
 
 When mempool is full, spam transactions are evicted first:
 
 ```toml
-[mempool_policy]
+[mempool]
 eviction_strategy = "spamfirst"  # Evict spam transactions first
 ```
 

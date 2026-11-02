@@ -1,71 +1,32 @@
 # IBD UTXO engine
 
-## Sync tuning guide
+Parallel initial block download (IBD) applies blocks through an in-memory UTXO ages pipeline, then a cold **DiskIndex** of spilled segments. Checkpoint exports snapshot that index so a restart does not rebuild from genesis. Serving IBD **to** other peers is [IBD Bandwidth Protection](ibd-protection.md), not this page.
 
-First mainnet sync always starts from [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (release IBD example config). For other IBD topics, use the [operator IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) or:
+## Scoring clock {#scoring-clock}
 
-| Topic | Page |
-|-------|------|
-| Parallel download, pipelining, assume-valid | [Performance optimizations](performance.md) |
-| `[ibd]` keys and `BLVM_IBD_*` | [Configuration reference — IBD](../reference/configuration-reference.md#ibd-configuration) |
-| Serving-side bandwidth limits | [IBD bandwidth protection](ibd-protection.md) |
-| LAN Core / same-subnet peers | [LAN peering](lan-peering.md) |
+Rates on this page are **timestamp BPS**: blocks between two `IBD:` progress prints divided by wall time between those lines (first–last print in the named band). Instant / window p50 is not this clock and is not comparable to a timestamp figure.
 
-## Overview
+## Download {#sync-tuning-guide}
 
-During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. By default, the **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `<data_dir>/ibd_engine/`, with mid-sync checkpoints for crash-safe resume. The legacy in-process LMDB store remains available as an opt-out.
+After the bootstrap chunk, the production binary downloads with a moving window. Heights in `[next_needed, next_needed + max_ahead]` are handed out lowest-first. There is no sticky tip owner on this path. The window runs only once bootstrap has finished and `next_needed` is at least `BLVM_IBD_WINDOW_FROM` (default 1). During the bootstrap chunk the legacy assigner still hands out that work.
 
-## Enable (default)
+`BLVM_IBD_ASSIGN=legacy` (also `0` or `off`) keeps the tip-owner assigner for the whole download. Unset, the production binary uses the window.
 
-The engine is **on by default** (no env var required). Stable table path: `<data_dir>/ibd_engine/utxo_table.bin` (override with `BLVM_IBD_ENGINE_PATH`).
+These switches are on unless turned off:
 
-**Legacy opt-out** (deprecated):
+- **Persist lane.** Body writes run on one thread that batches them. `BLVM_IBD_PERSIST_LANE=0` restores an inline write on the download worker.
+- **Deferred drop.** Releasing a connected block’s `Arc` runs off the apply thread. `BLVM_IBD_DEFERRED_DROP=0`, `false`, or `off` restores the inline drop.
+- **Prep pool.** `BLVM_IBD_PREP_THREADS` defaults to 2 (clamped to 0–8). Those threads hash transaction ids and fill the output cache ahead of the serial append thread. `0` puts that prep back on the orchestrator.
+- **Late body.** A block that arrives after its `GetData` receiver was dropped is still admitted when its hash is in the header index and its height is still inside `[next_needed, next_needed + max_ahead]`. `BLVM_IBD_LATE_BODY_ADMIT=0`, `false`, `off`, or `no` restores discard. Unknown hashes are never admitted.
 
-```bash
-export BLVM_IBD_ENGINE=0
-# or in TOML: [ibd] utxo_engine = false
-```
+`BLVM_IBD_TIP_PROBE` and `BLVM_IBD_WIRE_HASH_GATE` stay off unless set. They are not the download path. `BLVM_IBD_HASH_FETCH` has no reader.
 
-Optional environment variables:
+## Disk index and checkpoints
 
-| Variable | Purpose |
-|----------|---------|
-| `BLVM_IBD_ENGINE_PATH` | Path to engine flat table (default: `<data_dir>/ibd_engine/utxo_table.bin`) |
-| `BLVM_IBD_CHECKPOINT_INTERVAL` | Fixed block interval for mid-IBD checkpoint export (engine mode) |
-| `BLVM_IBD_DEFER_CHECKPOINT_INTERVAL` | RAM-tier default override for deferred checkpoint spacing |
-| `BLVM_IBD_EXPORT_HEIGHT_OVERRIDE` | Force resume/export height **only when ≥ stored export_h** (recovery if metadata was rolled below ckpt content). Overrides **below** stored export are ignored — the active ckpt is a snapshot *at* stored height. Prefer `start-ibd-mainnet.sh` which strips inherited overrides unless `BLVM_ALLOW_EXPORT_HEIGHT_OVERRIDE=1`. |
+Applied blocks spill from the in-memory pipeline into the DiskIndex. A checkpoint export writes a snapshot of that index. A restart loads the snapshot instead of replaying from genesis.
 
-Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-block-download-ibd)** (`[ibd].mode = "parallel"`). The engine replaces how validated blocks apply UTXO changes during that pipeline.
+Periodic export waits while the export thread’s 30-second moving average of apply rate stays at or above 200 timestamp BPS. A slower stretch can release the snapshot. While the snapshot is written, the node holds the current download peer: mute and trial stay frozen for that write. The hold is not a long stall by itself.
 
-## Architecture
+Once the UTXO set is past about 40 million entries, the interval between exports uses a ceiling of 50,000 blocks. That ceiling is a maximum. If the DiskIndex journal grows past 160 million entries, the interval shrinks, down to a floor of 10,000 blocks, so one compact stays within the cold-write budget.
 
-1. **Index and table** — Age-tiered structures track live UTXOs and support fast spend lookups during validation.
-2. **Spend session** — Batches spend/create operations per block and feeds the engine from the validation loop.
-3. **Checkpoint export** — Periodic snapshots of engine state allow resume after interruption without re-downloading from genesis.
-4. **Import / seed** — On restart, the node seeds validation from the last exported checkpoint height when present.
-
-
-## Operator notes
-
-- Use the **same** `storage.data_dir` on every run; do not delete the active database backend directory (`heed3/`, `rocksdb/`, …) mid-sync.
-- On **SIGTERM** / **SIGINT** during parallel IBD, the node drains in-flight validation and flushes the UTXO watermark before exit when possible.
-- **`io_uring`** accelerates engine table I/O on **Linux**; other platforms use a `pread` fallback (engine still runs on Windows).
-- **[Assume-valid](../reference/configuration-reference.md#block_validationassume_valid_height)** skips signature verification below a configured height; block structure, Merkle roots, and proof-of-work are still checked.
-- First mainnet sync: [First Node Setup — Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
-
-## Configuration
-
-See **[IBD Configuration](../reference/configuration-reference.md#ibd-configuration)** for `[ibd]` keys and **`BLVM_IBD_*`** environment variables shared with parallel download.
-
-## Source
-
-- [ibd_engine/](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/), [parallel_ibd/validation_loop.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/validation_loop.rs)
-- [ibd_engine/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/mod.rs), [spend_session.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/spend_session.rs), [export.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/export.rs)
-
-## See Also
-
-- [Operator guide — IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd) — Map of all IBD docs
-- [Performance Optimizations](performance.md) — Parallel download, pipelining, reorder buffer
-- [IBD Bandwidth Protection](ibd-protection.md) — Serving-side bandwidth limits
-- [LAN Peering System](lan-peering.md) — LAN peer preference during download
-- [Storage Backends](storage-backends.md) — `database_backend` and `data_dir`
+See also [IBD Bandwidth Protection](ibd-protection.md) (serving) and [Performance — Parallel IBD](performance.md#parallel-initial-block-download-ibd).

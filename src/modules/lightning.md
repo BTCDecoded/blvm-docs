@@ -96,16 +96,16 @@ When `provider` is omitted, the default is **`stub`** (safe for local dev; no re
 
 ```toml
 provider = "lnbits"
-min_payment_sats = 1000      # optional; enforced in create_invoice
-max_payment_sats = 1000000   # optional
-channel_reserve = 10000      # optional; LDK channel reserve in sats
+min_payment_sats = 1000      # optional; create_invoice rejects a smaller amount
+max_payment_sats = 1000000   # optional; create_invoice rejects a larger amount
 ```
 
 ### Configuration options
 
 - `provider`: `"lnbits"`, `"ldk"`, or `"stub"` (default **`stub`**)
-- **LNBits** (`[lnbits]`): `api_url`, `api_key`, `wallet_id` (optional)
-- **LDK** (`[ldk]`): `network` (default `testnet`), `node_private_key` (optional)
+- `min_payment_sats` / `max_payment_sats`: optional satoshi bounds. Absent means `create_invoice` has no bound. The amount argument is millisatoshis.
+- **LNBits** (`[lnbits]`): `api_url`, `api_key`, `wallet_id` (optional). File only.
+- **LDK** (`[ldk]`): `network` (default `testnet`), `node_private_key` (optional). File only.
 - **Stub**: no extra keys
 
 ### Provider Comparison

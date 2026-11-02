@@ -443,7 +443,7 @@ For complete API reference, see [NodeAPI trait](https://github.com/BTCDecoded/bl
 
 Use **`run_module_with_setup_and_api`** and declare **`register_module_api`** in **`module.toml`**. See [Module IPC Protocol](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Commons Mesh Module](../modules/mesh.md#node-integration).
 
-**IBD hook:** modules such as **blvm-selective-sync** may implement **`filter_block_before_store`** on ModuleAPI — the node calls it before persisting witness data during parallel IBD when the module enables `ibd_filter_enabled`.
+**IBD hook:** modules such as **blvm-selective-sync** implement **`filter_block_before_store`** on ModuleAPI — the node calls it before persisting blocks during parallel IBD when the module is loaded and registry policy applies.
 
 ### Subscribing to events
 

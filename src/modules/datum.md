@@ -134,11 +134,9 @@ pool_url = "https://ocean.xyz/datum"
 pool_username = "user"
 pool_password = "pass"
 pool_public_key = "hex_encoded_32_byte_public_key"  # optional
-reconnect_interval = 30   # seconds between reconnect attempts (default: 30)
-# min_difficulty = 1      # optional pool min difficulty
 ```
 
-Coinbase tags and payout outputs come from the **DATUM pool** at runtime (`fetch_coinbaser` / `get_coinbase_payout` inter-module API), not from static config keys.
+Coinbase tags and payout outputs come from the **DATUM pool** at runtime (`fetch_coinbaser` / `get_coinbase_payout` inter-module API), not from static config keys. A Commons pool uses `commons_get_coinbase_outputs` on the node getblocktemplate path instead. The two APIs are not interchangeable. See [Mining](../node/mining.md).
 
 ### Configuration Options
 
@@ -146,8 +144,6 @@ Coinbase tags and payout outputs come from the **DATUM pool** at runtime (`fetch
 - `pool_username`: Pool username
 - `pool_password`: Pool password
 - `pool_public_key` (optional): Pool public key (32-byte hex) for encryption
-- `reconnect_interval` (default: `30`): Seconds between reconnect attempts
-- `min_difficulty` (optional): Minimum difficulty hint for the pool
 
 Node overrides use **`[modules.blvm-datum]`** (manifest name) with the same keys. There is **no** `[mining]` table and **no** `enabled` key in module `config.toml` — enable via **`[modules]`** pin / `loadmodule`.
 
@@ -209,7 +205,7 @@ The module exposes a `ModuleAPI` for other modules (e.g., `blvm-stratum-v2`) to 
 
 - **`get_coinbase_payout`**: Returns the current coinbase payout structure (outputs, tags, unique ID) required by the DATUM pool
 
-This allows other modules to construct block templates with the correct coinbase structure for DATUM pool coordination.
+This is the DATUM module API. Commons coinbase outputs for getblocktemplate are `commons_get_coinbase_outputs` on the node. Keep the two calls separate. See [Mining](../node/mining.md).
 
 ## Integration with Stratum V2
 
