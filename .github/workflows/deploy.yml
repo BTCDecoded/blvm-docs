@@ -94,18 +94,6 @@ jobs:
             exit 1
           fi
 
-      - name: Add .nojekyll to deployment root
-        run: touch book/.nojekyll
-
-      - name: Copy llms.txt for AI discovery
-        run: cp llms.txt book/llms.txt
-      
-      - name: Copy CNAME file to deployment root
-        run: |
-          if [ -f CNAME ]; then
-            cp CNAME book/CNAME
-          fi
-        
       - name: Copy and inject custom.css
         run: |
           # Copy CSS file to output
@@ -140,6 +128,15 @@ jobs:
       - name: Inject Mermaid.js for diagram rendering
         run: python3 scripts/postprocess-mermaid.py book
 
+      - name: Copy book llms.txt when the repo still ships one
+        run: |
+          if [ -f llms.txt ]; then
+            cp llms.txt book/llms.txt
+          fi
+
+      - name: Assemble docs host (/ , /blvm , /intelligence)
+        run: ./scripts/assemble-docs-site.sh
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
@@ -149,12 +146,12 @@ jobs:
         run: ./scripts/assert-pages-workflow-source.sh
 
       - name: Verify mdbook artifact before upload
-        run: ./scripts/verify-pages-artifact.sh book
+        run: ./scripts/verify-pages-artifact.sh publish
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: book
+          path: publish
 
   deploy:
     environment:

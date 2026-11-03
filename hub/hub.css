@@ -1,0 +1,124 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f4f1ea;
+  --ink: #1c1915;
+  --muted: #5c564c;
+  --line: #d9d1c3;
+  --card: #fffdf8;
+  --accent: #9a3412;
+  --accent-ink: #fff7ed;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141210;
+    --ink: #f5f0e6;
+    --muted: #b7ad9e;
+    --line: #3a342c;
+    --card: #1e1b17;
+    --accent: #ea580c;
+    --accent-ink: #1c1915;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+a { color: var(--accent); }
+
+.wrap {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+header.site {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 2.5rem;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.92rem;
+}
+
+header.site a { color: inherit; text-decoration: none; }
+header.site nav { display: flex; gap: 1rem; }
+header.site nav a { color: var(--muted); }
+
+h1 {
+  font-size: 2.4rem;
+  line-height: 1.15;
+  font-weight: 500;
+  margin: 0 0 0.75rem;
+}
+
+.lede { font-size: 1.15rem; max-width: 38rem; }
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+@media (min-width: 700px) {
+  .cards { grid-template-columns: 1fr 1fr; }
+}
+
+.card {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  padding: 1.25rem 1.3rem 1.4rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card:hover { border-color: var(--accent); }
+
+.card h2 {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+
+.kicker {
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card p { margin: 0; color: var(--muted); }
+
+.doors { padding: 0; list-style: none; }
+.doors li { margin: 0.35rem 0; }
+
+code, pre {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.92em;
+}
+
+pre {
+  overflow: auto;
+  padding: 0.9rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+
+h2 { font-weight: 500; margin-top: 2rem; }
+
+dl { margin: 0; }
+dt { margin-top: 0.8rem; }
+dd { margin: 0.15rem 0 0; color: var(--muted); }

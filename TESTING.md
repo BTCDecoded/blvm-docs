@@ -9,13 +9,15 @@
 
 ### 2. Verify GitHub Pages Status
 - Go to: https://github.com/BTCDecoded/blvm-docs/settings/pages
-- Should show: "Your site is live at https://docs.thebitcoincommons.org"
+- Should show: "Your site is live at https://docs.btcdecoded.org"
 - **Source must be: GitHub Actions** (`build_type: workflow`), **not** "Deploy from branch `main`"
 - If source is legacy branch deploy, the site 404s even when **Deploy Documentation** CI is green (repo root has no `index.html`; mdbook output is in `book/` via Actions only)
 - Deploy workflow runs `scripts/assert-pages-workflow-source.sh` and `scripts/verify-live-docs-site.sh` to catch this automatically
 
 ### 3. Test Site Access
-- **Primary URL**: https://docs.thebitcoincommons.org
+- **Primary URL**: https://docs.btcdecoded.org/
+- **BLVM manual**: https://docs.btcdecoded.org/blvm/
+- **Intelligence guide**: https://docs.btcdecoded.org/intelligence/
 - **GitHub Pages URL**: https://btcdecoded.github.io/blvm-docs/ (fallback)
 - Check that the mdBook site loads correctly
 - Verify navigation works
@@ -23,10 +25,10 @@
 ### 4. Test DNS Resolution
 ```bash
 # Check DNS propagation
-dig docs.thebitcoincommons.org CNAME
+dig docs.btcdecoded.org CNAME
 
 # Or use online tool
-# https://dnschecker.org/#CNAME/docs.thebitcoincommons.org
+# https://dnschecker.org/#CNAME/docs.btcdecoded.org
 ```
 
 ### 5. Test Content Inclusion
@@ -57,7 +59,7 @@ dig docs.thebitcoincommons.org CNAME
 ### 8. Test Links from Commons Website
 - Visit: https://thebitcoincommons.org
 - Click "Documentation" button in hero section
-- Verify it links to https://docs.thebitcoincommons.org
+- Verify it links to https://docs.btcdecoded.org/blvm
 - Check footer link works
 - Verify FAQ link works
 

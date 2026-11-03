@@ -2,7 +2,7 @@
 
 Canonical operator-facing guidance for running **`blvm`** / **`blvm-node`**: exposure classes, minimum controls, and **[RPC transport × authentication](rpc-transport-auth-matrix.md)**.
 
-Published copy: [Deployment posture (BLVM docs)](https://docs.thebitcoincommons.org/security/deployment-posture.html).
+Published copy: [Deployment posture (BLVM docs)](https://docs.btcdecoded.org/blvm/security/deployment-posture.html).
 
 ## How to read this page
 

@@ -7,5 +7,8 @@ cd "$ROOT"
 cp custom.css src/custom.css
 mdbook build
 cp custom.css book/custom.css
-cp llms.txt book/llms.txt
+if [ -f llms.txt ]; then
+  cp llms.txt book/llms.txt
+fi
 python3 "$ROOT/scripts/postprocess-mermaid.py" "$ROOT/book"
+"$ROOT/scripts/assemble-docs-site.sh"

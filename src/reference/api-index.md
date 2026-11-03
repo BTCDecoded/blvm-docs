@@ -4,7 +4,7 @@ Quick reference and cross-references to all BLVM APIs across the ecosystem.
 
 ## Complete API Documentation
 
-API reference in this book (hosted at [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org)):
+API reference in this book (hosted at [docs.btcdecoded.org/blvm](https://docs.btcdecoded.org/blvm)):
 
 - **JSON-RPC errors:** [JSON-RPC error reference](rpc-errors.md)
 - **[blvm-primitives](#foundation-blvm-primitives)** - Foundation crate: types, serialization, crypto, opcodes, constants (shared by consensus and protocol; blvm-consensus re-exports for API compatibility)

@@ -1,18 +1,28 @@
 #!/usr/bin/env bash
-# Sanity-check mdbook output before upload-pages-artifact.
+# Sanity-check the docs host artifact before upload-pages-artifact.
 set -euo pipefail
 
-BOOK_DIR="${1:-book}"
+SITE="${1:-publish}"
 
-for f in index.html CNAME .nojekyll llms.txt; do
-  if [ ! -f "${BOOK_DIR}/${f}" ]; then
-    echo "::error::Missing ${BOOK_DIR}/${f} — artifact is not a complete mdbook deploy"
+for f in index.html CNAME .nojekyll blvm/index.html intelligence/index.html hub.css; do
+  if [ ! -f "${SITE}/${f}" ]; then
+    echo "::error::Missing ${SITE}/${f} — artifact is not the docs host layout" >&2
     exit 1
   fi
 done
 
-if ! grep -q 'mdbook' "${BOOK_DIR}/index.html"; then
-  echo "::warning::${BOOK_DIR}/index.html does not mention mdbook (unexpected layout?)"
+if [ -f "${SITE}/blvm/CNAME" ]; then
+  echo "::error::${SITE}/blvm/CNAME would publish a second custom domain" >&2
+  exit 1
 fi
 
-echo "OK: ${BOOK_DIR} has index.html, CNAME, .nojekyll"
+if ! grep -qx 'docs.btcdecoded.org' "${SITE}/CNAME"; then
+  echo "::error::${SITE}/CNAME must be docs.btcdecoded.org" >&2
+  exit 1
+fi
+
+if ! grep -q 'mdbook' "${SITE}/blvm/index.html"; then
+  echo "::warning::${SITE}/blvm/index.html does not mention mdbook (unexpected layout?)"
+fi
+
+echo "OK: ${SITE} has the hub, /blvm, /intelligence, CNAME, .nojekyll"

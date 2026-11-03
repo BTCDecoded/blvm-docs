@@ -1,12 +1,12 @@
 # BLVM Documentation
 
-Unified documentation site for the Bitcoin Commons BLVM ecosystem, built with [mdBook](https://rust-lang.github.io/mdBook/) and hosted on GitHub Pages.
+BTCDecoded documentation host, built with [mdBook](https://rust-lang.github.io/mdBook/) and a small static hub, deployed to GitHub Pages.
 
 ## Overview
 
-This repository builds the [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org) site with [mdBook](https://rust-lang.github.io/mdBook/). **Most chapters are written in `src/`** here. A **few** pages embed upstream Markdown at build time via mdBook's **`{{#include}}`** from **`modules/governance/`** (governance narrative and **config YAML** checked in CI, see `.github/workflows/deploy.yml`). The **[Orange Paper](https://thebitcoincommons.org/orange-paper.html)** and **[Consensus Spec](https://thebitcoincommons.org/spec.html)** are published on the Bitcoin Commons website, not embedded in this book ([pointer chapter](src/reference/orange-paper.md)). Governance policy numbers in wired chapters use **`[[gov:KEY]]`** placeholders expanded by **`mdbook-governance-vars`** at build time, edit [governance](https://github.com/BTCDecoded/governance) `config/*.yml`, not hand-copied literals (see `docs/GOVERNANCE_MDBOOK.md` and `mdbook-governance-vars/README.md`). Optional **git submodules** under `modules/` can mirror upstream repos for local work. Component-specific documentation (for example under `blvm-consensus/docs/`) remains in each crate's repository; this book **links** there or summarizes unless you add an explicit include.
+This repository builds [docs.btcdecoded.org](https://docs.btcdecoded.org/). The hub is `hub/`. The BLVM manual is the mdBook, published at [`/blvm/`](https://docs.btcdecoded.org/blvm/). The Intelligence guide is `hub/intelligence/`. **Most chapters are written in `src/`** here. A **few** pages embed upstream Markdown at build time via mdBook's **`{{#include}}`** from **`modules/governance/`** (governance narrative and **config YAML** checked in CI, see `.github/workflows/deploy.yml`). The **[Orange Paper](https://thebitcoincommons.org/orange-paper.html)** and **[Consensus Spec](https://thebitcoincommons.org/spec.html)** are published on the Bitcoin Commons website, not embedded in this book ([pointer chapter](src/reference/orange-paper.md)). Governance policy numbers in wired chapters use **`[[gov:KEY]]`** placeholders expanded by **`mdbook-governance-vars`** at build time, edit [governance](https://github.com/BTCDecoded/governance) `config/*.yml`, not hand-copied literals (see `docs/GOVERNANCE_MDBOOK.md` and `mdbook-governance-vars/README.md`). Optional **git submodules** under `modules/` can mirror upstream repos for local work. Component-specific documentation (for example under `blvm-consensus/docs/`) remains in each crate's repository; this book **links** there or summarizes unless you add an explicit include.
 
-**Live Site:** [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org)
+**Live Site:** [docs.btcdecoded.org](https://docs.btcdecoded.org/) · [BLVM manual](https://docs.btcdecoded.org/blvm/)
 
 ## Structure
 
@@ -67,7 +67,7 @@ This repository builds the [docs.thebitcoincommons.org](https://docs.thebitcoinc
 
 ### `modules/blvm` submodule
 
-The optional **`modules/blvm`** git submodule is the **meta-repo** umbrella (`blvm`). Its `docs/` tree covers release/CI workflows for that repo. The **canonical** narrative for [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org) lives in **`src/`** in this repository.
+The optional **`modules/blvm`** git submodule is the **meta-repo** umbrella (`blvm`). Its `docs/` tree covers release/CI workflows for that repo. The **canonical** narrative for [docs.btcdecoded.org/blvm](https://docs.btcdecoded.org/blvm) lives in **`src/`** in this repository.
 
 ## Installation page
 

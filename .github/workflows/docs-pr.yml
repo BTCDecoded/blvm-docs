@@ -9,6 +9,7 @@ on:
       - 'custom.css'
       - 'mdbook-governance-vars/**'
       - 'scripts/**'
+      - 'hub/**'
       - 'docs/**'
       - '.github/workflows/deploy.yml'
       - '.github/workflows/docs-pr.yml'

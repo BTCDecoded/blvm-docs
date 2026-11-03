@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Intelligence · BTCDecoded documentation</title>
+    <meta
+      name="description"
+      content="Connect to BTCDecoded Intelligence over MCP: endpoint, key, tools, and the GitHub App."
+    />
+    <link rel="canonical" href="https://docs.btcdecoded.org/intelligence/" />
+    <link rel="stylesheet" href="/hub.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <a href="/">BTCDecoded docs</a>
+        <nav>
+          <a href="/blvm/">BLVM</a>
+          <a href="https://btcdecoded.org/intelligence/">Overview</a>
+          <a href="https://btcdecoded.org/account/">Account</a>
+        </nav>
+      </header>
+      <main>
+        <p class="kicker">Intelligence</p>
+        <h1>Pay with Lightning. Call MCP. The account holds the key.</h1>
+        <nav class="doors" aria-label="On this page">
+          <a href="#connect">Connect</a>
+          ·
+          <a href="#tools">Tools</a>
+          ·
+          <a href="#app">GitHub App</a>
+        </nav>
+
+        <section id="connect">
+          <h2>Connect</h2>
+          <dl>
+            <dt>Endpoint</dt>
+            <dd><code>https://mcp.btcdecoded.org/mcp</code>. Streamable HTTP. JSON-RPC.</dd>
+            <dt>Key</dt>
+            <dd>
+              Sign in on <a href="https://btcdecoded.org/account/">Account</a>, pay on
+              <a href="https://btcdecoded.org/subscribe/">Checkout</a>. The key stays on
+              that login. Anyone with it can use your quota.
+            </dd>
+            <dt>Clients</dt>
+            <dd>
+              Claude.ai uses OAuth fields from Account. Cursor and other clients send
+              <code>Authorization: Bearer</code>. Snippets are on Account after you reveal the key.
+            </dd>
+          </dl>
+          <p>
+            <code>tools/list</code> is public. <code>tools/call</code> needs the key.
+            Agents: fetch <a href="https://btcdecoded.org/for-agents.md">/for-agents.md</a>.
+            Holding goes to OwnandKeep through the public <code>hold</code> tool.
+            The skill is <a href="https://btcdecoded.org/intelligence/SKILL.md">/intelligence/SKILL.md</a>.
+          </p>
+          <pre>curl -s https://mcp.btcdecoded.org/mcp \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search","arguments":{"query":"taproot activation"}}}'</pre>
+        </section>
+
+        <section id="tools">
+          <h2>Tools</h2>
+          <p>
+            Use <code>tools/list</code> for the live catalog. Developer tools need a
+            Developer plan. Analyze calls spend sats like any other query.
+          </p>
+          <h3>Every plan</h3>
+          <dl>
+            <dt><code>search</code></dt>
+            <dd>Cited passages. If the reply says the index had no passage, stop there.</dd>
+            <dt><code>assess_argument</code></dt>
+            <dd>Named game, numbered claim, or monopoly fallacy from stored policy docs.</dd>
+            <dt><code>get_contributor_profile</code></dt>
+            <dd>Public-record facts for a GitHub login. Unknown logins are not found.</dd>
+            <dt><code>get_passage</code></dt>
+            <dd>The stored excerpt for a cite. Not a live crawl.</dd>
+            <dt><code>get_snapshot</code></dt>
+            <dd>Replay a dated report. Free. A new date is a new tool call.</dd>
+            <dt><code>verify_claim</code></dt>
+            <dd>Whether a stored excerpt supports a claim.</dd>
+          </dl>
+          <h3>Developer</h3>
+          <dl>
+            <dt><code>analyze_pr</code></dt>
+            <dd>Public GitHub pull request. Does not post.</dd>
+            <dt><code>analyze_issue</code></dt>
+            <dd>Public GitHub issue. Does not post.</dd>
+            <dt><code>analyze_submission</code></dt>
+            <dd>Advisory spec versus submission. Not a merge or payout.</dd>
+            <dt><code>find_discourse</code></dt>
+            <dd>Cited discussion for a path or symbol.</dd>
+            <dt><code>find_precedent</code></dt>
+            <dd>Cited precedent. No new disposition label.</dd>
+            <dt><code>find_incident</code></dt>
+            <dd>Cited incident or CVE.</dd>
+            <dt><code>find_spec_impl</code></dt>
+            <dd>Cited spec and implementation. Cites only.</dd>
+          </dl>
+          <p>
+            <code>analyze_pr</code> and <code>analyze_issue</code> take a public GitHub URL.
+            <code>analyze_submission</code> takes <code>spec</code> and <code>submission</code>.
+            An optional <code>github_pr</code> must be public. It does not fetch arbitrary URLs.
+            Labels are <code>met</code>, <code>not_met</code>, or <code>ambiguous</code>, with cites.
+          </p>
+        </section>
+
+        <section id="app">
+          <h2>GitHub App</h2>
+          <p>
+            On an armed Developer install the bot can comment and post a neutral check,
+            including on private repos. MCP review stays public-only and does not post.
+            Private review is not added to the public index. The App does not merge.
+          </p>
+          <p>
+            <a href="https://github.com/apps/btcdecoded-intelligence/installations/new">Install on GitHub</a>
+            ·
+            <a href="https://btcdecoded.org/account/">Arm from Account</a>
+            ·
+            <a href="https://btcdecoded.org/pricing/">Plans</a>
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

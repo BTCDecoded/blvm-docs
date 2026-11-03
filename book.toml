@@ -1,6 +1,6 @@
 [book]
 title = "BLVM Documentation"
-description = "Unified documentation for Bitcoin Commons BLVM ecosystem"
+description = "BLVM node manual, published at docs.btcdecoded.org/blvm/"
 authors = ["BTCDecoded Contributors"]
 language = "en"
 src = "src"
@@ -10,6 +10,7 @@ build-dir = "book"
 create-missing = true
 
 [output.html]
+site-url = "/blvm/"
 default-theme = "navy"
 preferred-dark-theme = "navy"
 git-repository-url = "https://github.com/BTCDecoded/blvm-docs"

@@ -2,25 +2,31 @@
 
 ## Domain Configuration
 
-The documentation site is configured to be hosted at **`docs.thebitcoincommons.org`**.
+BTCDecoded documentation is hosted at **`docs.btcdecoded.org`**.
 
-### DNS Configuration Required
+| Path | What |
+|---|---|
+| `/` | Hub: BLVM manual and Intelligence guide |
+| `/blvm/` | BLVM mdBook |
+| `/intelligence/` | Intelligence MCP guide |
 
-Since `thebitcoincommons.org` is already used by the `commons-website` repository, you need to add a **CNAME record** (not an A record) for the subdomain:
+The consensus specification stays on `thebitcoincommons.org`. Account, checkout, and BLVM downloads stay on `btcdecoded.org`.
+
+`btcdecoded.org` DNS is Cloudflare. Add a **DNS-only** CNAME (grey cloud) so GitHub Pages can issue the certificate:
 
 ```
 Type: CNAME
 Name: docs
-Domain: thebitcoincommons.org
-Value: BTCDecoded.github.io
+Domain: btcdecoded.org
+Value: btcdecoded.github.io
+Proxy: DNS only
 ```
 
-This creates `docs.thebitcoincommons.org` as a subdomain pointing to GitHub Pages.
+### Previous host
 
-**Note**: Use CNAME (not A record) because:
-- GitHub Pages uses CNAME records for subdomains
-- CNAME allows GitHub to handle SSL certificates automatically
-- A records would require manual IP management which changes
+The previous host served this book at the domain root. That hostname was `docs.thebitcoincommons.org`. `legacy-redirect/` is a one-page GitHub Pages site whose `CNAME` is that old host. Its `404.html` sends `/some/page` to `https://docs.btcdecoded.org/blvm/some/page`.
+
+Publish `legacy-redirect/` only after this repository's Pages custom domain is `docs.btcdecoded.org`. Two Pages sites cannot claim the old host at the same time. `thebitcoincommons.org` DNS is Namecheap (`dns1.registrar-servers.com`); leave the existing `docs` CNAME pointed at `btcdecoded.github.io` so the redirect site can claim it.
 
 ### GitHub Pages Configuration
 
@@ -28,7 +34,7 @@ This creates `docs.thebitcoincommons.org` as a subdomain pointing to GitHub Page
 2. Under "Source", select "GitHub Actions"
 3. The workflow will automatically deploy on push to `main`
 
-The `CNAME` file in the repository root tells GitHub Pages to serve the site at `docs.thebitcoincommons.org`.
+The `CNAME` file in the repository root tells GitHub Pages to serve the site at `docs.btcdecoded.org`. The deploy workflow assembles `publish/` from `hub/` plus the mdBook under `blvm/`.
 
 ## Integration with Commons Website
 
@@ -40,7 +46,7 @@ The `commons-website` repository has been updated with links to the documentatio
 
 ## Alternative Options Considered
 
-### Option 1: `docs.thebitcoincommons.org` ✅ (Selected)
+### Option 1: `docs.btcdecoded.org` ✅ (Selected)
 - **Pros**: Standard convention, clear separation, independent deployment
 - **Cons**: Requires DNS configuration
 - **Best for**: Production deployment with custom domain

@@ -47,7 +47,7 @@ Bitcoin Commons implements security boundaries and threat models to protect agai
 
 ## Threat Model: Pre-Production Testing
 
-Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (published: [docs.thebitcoincommons.org](https://docs.thebitcoincommons.org/security/deployment-posture.html)).
+Operator-facing maturity: **[Deployment posture](deployment-posture.md)** (published: [docs.btcdecoded.org/blvm](https://docs.btcdecoded.org/blvm/security/deployment-posture.html)).
 
 ### Environment
 

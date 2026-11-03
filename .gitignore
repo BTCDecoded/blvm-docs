@@ -1,5 +1,6 @@
-# mdBook output
+# mdBook output and the assembled docs host
 book/
+publish/
 
 # Rust build artifacts (if any)
 target/

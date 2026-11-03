@@ -1,6 +1,6 @@
 # Orange Paper
 
-The normative Bitcoin consensus specification lives on **[thebitcoincommons.org](https://thebitcoincommons.org)**, not inside this book. **docs.thebitcoincommons.org** (this site) documents how BLVM implements and operates on the network; the commons site hosts the auditable spec text itself.
+The normative Bitcoin consensus specification lives on **[thebitcoincommons.org](https://thebitcoincommons.org)**, not inside this book. This manual, at **[docs.btcdecoded.org/blvm](https://docs.btcdecoded.org/blvm/)**, documents how BLVM implements and operates on the network. The commons site hosts the auditable spec text itself.
 
 **Read the Orange Paper:** [thebitcoincommons.org/orange-paper.html](https://thebitcoincommons.org/orange-paper.html) · **Consensus Spec (rule register):** [spec.html](https://thebitcoincommons.org/spec.html)
 

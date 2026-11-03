@@ -1,0 +1,12 @@
+# BTCDecoded documentation
+
+> Manuals BTCDecoded publishes. The consensus specification is on thebitcoincommons.org.
+
+- [Documentation home](https://docs.btcdecoded.org/): BLVM and Intelligence
+- [BLVM manual](https://docs.btcdecoded.org/blvm/): Node operation, RPC, IBD, modules, SDK
+- [BLVM manual index](https://docs.btcdecoded.org/blvm/llms.txt)
+- [Intelligence guide](https://docs.btcdecoded.org/intelligence/): MCP, tools, GitHub App
+- [Install BLVM](https://btcdecoded.org/install/)
+- [Intelligence account](https://btcdecoded.org/account/)
+- [Consensus Spec](https://thebitcoincommons.org/spec.html)
+- [Orange Paper](https://thebitcoincommons.org/orange-paper.html)

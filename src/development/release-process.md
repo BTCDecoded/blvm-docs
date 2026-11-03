@@ -62,7 +62,7 @@ BLVM uses [Semantic Versioning](https://semver.org/):
 
 ## Release notes: deployment maturity (**D4**)
 
-Operator-facing artifacts should include **one sentence** pointing at **[Deployment posture](https://docs.thebitcoincommons.org/security/deployment-posture.html)** (RPC exposure, QUIC × auth limits) and **[RPC transport × authentication](https://docs.thebitcoincommons.org/security/rpc-transport-auth-matrix.html)**.
+Operator-facing artifacts should include **one sentence** pointing at **[Deployment posture](https://docs.btcdecoded.org/blvm/security/deployment-posture.html)** (RPC exposure, QUIC × auth limits) and **[RPC transport × authentication](https://docs.btcdecoded.org/blvm/security/rpc-transport-auth-matrix.html)**.
 
 Example:
 
