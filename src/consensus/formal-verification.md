@@ -31,7 +31,7 @@ flowchart TB
 ### Layer 3: CI Enforcement
 - **Automated testing**: Required for merge
 - **BLVM Specification Lock**: Tiered runs; policy in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
-- **OpenTimestamps audit logging**: Optional timestamps of verification artifacts
+- **OpenTimestamps**: designed to anchor verification artifacts to Bitcoin. Not a step in blvm-consensus CI today. The [whitepaper](https://thebitcoincommons.org/whitepaper.html) uses the same posture for governance anchors.
 
 ### Verify JSON semantics (`blvm-spec-lock`)
 
@@ -41,7 +41,15 @@ flowchart TB
 
 ### Formal Proofs
 
-**BLVM Specification Lock** checks spec-locked functions in tiers (strong/medium/slow). Current inventory and policy: [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+A function is proved when the check passes on the code as written and fails after a deliberate edit. A green `cargo spec-lock verify` run is not that proof.
+
+This pass proves **13** functions from the function body. Two edits of each body make the check fail:
+
+`sigop_count_push_opcode`, `is_pay_to_script_hash`, `validate_supply_limit`, `is_witness_empty`, `is_witness_version_opcode`, `validate_taproot_script`, `validate_segwit_witness_structure`, `tx_has_nonempty_input_witness`, `script_bool_bytes`, `is_version_zero_witness_program`, `validate_taproot_script_path_with_leaf_version`, `locktime_types_match`, `tx_requires_witness_script_flags`.
+
+`validate_supply_limit` returns `total_supply(height) <= MAX_MONEY`. A body that only returns `true` is not a proof.
+
+Older counts, not this pass: **93** of **224** in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), **34** of **34** in [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md), and **274** Orange Paper sentences. Of those sentences, the subsidy theorem (6.1.2) is proved in Rust and in Lean, 16 are Lean only, and 257 are not proved. Lean does not check the Rust.
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
@@ -338,7 +346,7 @@ Use the `verify` feature for full protocol verification builds; see **blvm-proto
 ## Consensus Coverage Comparison
 
 ![Consensus Coverage Comparison](https://thebitcoincommons.org/assets/images/Consensus-Coverage-Comparison.png)
-*Figure: Baseline: broad tests and review. Bitcoin Commons adds **BLVM Specification Lock** and Orange Paper–driven methodology on top.*
+*Figure: Baseline: broad tests and review. BLVM adds Specification Lock on the Orange Paper, which is the Bitcoin Commons specification.*
 
 ## Proof Maintenance Cost
 
@@ -354,13 +362,23 @@ See also [Network Protocol](../protocol/network-protocol.md) for transport and w
 
 ## Primary verification areas
 
-Functions and paths commonly covered by tests and spec-lock proofs:
+| Function | This pass |
+|---|---|
+| `sigop_count_push_opcode` | Proved from the body |
+| `is_pay_to_script_hash` | Proved from the body |
+| `validate_supply_limit` | Proved from the body |
+| `is_witness_empty` | Proved from the body |
+| `is_witness_version_opcode` | Proved from the body |
+| `validate_taproot_script` | Proved from the body |
+| `validate_segwit_witness_structure` | Proved from the body |
+| `tx_has_nonempty_input_witness` | Proved from the body |
+| `script_bool_bytes` | Proved from the body |
+| `is_version_zero_witness_program` | Proved from the body |
+| `validate_taproot_script_path_with_leaf_version` | Proved from the body |
+| `locktime_types_match` | Proved from the body |
+| `tx_requires_witness_script_flags` | Proved from the body |
 
-- **Chain selection**: `should_reorganize`, `calculate_chain_work`
-- **Block subsidy**: `get_block_subsidy` halving schedule
-- **Proof of work**: `check_proof_of_work`, target expansion
-- **Transaction validation**: `check_transaction` structure rules
-- **Block connection**: `connect_block`, UTXO consistency
+`get_block_subsidy`, `check_proof_of_work`, `expand_target`, `check_transaction`, `connect_block`, `should_reorganize`, and `calculate_chain_work` are not in these 13.
 
 Proof bounds and policy: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md), [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
