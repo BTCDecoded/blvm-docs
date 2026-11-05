@@ -22,7 +22,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ## Governance
 
-**Bitcoin Commons** - Forkable governance framework applying Elinor Ostrom's commons management principles through cryptographic enforcement. See [Governance Overview](../governance/overview.md).
+**Bitcoin Commons** - The specification and the governance model. The specification is the Orange Paper. BLVM is one implementation of that spec. See [Governance Overview](../governance/overview.md).
 
 **5-Tier Governance Model** - Constitutional governance system with graduated signature thresholds ([[gov:tier_1_signatures]] to [[gov:layer_1_signatures]]) and review periods ([[gov:tier_1_review_days]] days to [[gov:layer_1_consensus_review_days]] days on constitutional layers) based on change impact. See [Layer-Tier Model](../governance/layer-tier-model.md).
 
@@ -35,7 +35,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 ### Verification and cryptography {#verification-and-cryptography}
 
-**BLVM Specification Lock**: Z3-backed regression tests tying `#[spec_locked]` Rust functions to Orange Paper contracts. See [Formal Verification](../consensus/formal-verification.md).
+**BLVM Specification Lock**: Z3 checks spec-locked Rust functions against Orange Paper contracts. Lean checks that an Orange Paper sentence is a theorem of the spec model and does not check the Rust. See [Formal Verification](../consensus/formal-verification.md).
 
 **Orange Paper (primary spec)**: Normative mathematical specification; audit surface for mathematicians independent of any implementation language. Not generated from code.
 

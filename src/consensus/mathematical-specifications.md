@@ -249,7 +249,7 @@ let median_tip = if sorted_tips.len() % 2 == 0 {
 
 ## How verification applies
 
-**BLVM Specification Lock** uses Z3 to prove spec-locked functions against Orange Paper contracts. The symbolic specs on this page are not each a separate Z3 theorem; methodology, CI, and tooling live on [Formal Verification](formal-verification.md). Proof bounds: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+**BLVM Specification Lock** uses Z3 to check spec-locked Rust against Orange Paper contracts. Lean checks the spec model and does not check the Rust. The symbolic specs on this page are not each a separate theorem. Methodology and tooling live on [Formal Verification](formal-verification.md). Proof bounds: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 Property-based tests and runtime assertions (below) complement spec-lock on the same invariants.
 

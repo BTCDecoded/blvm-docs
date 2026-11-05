@@ -2,7 +2,7 @@
 
 How BLVM checks consensus against the [Orange Paper](../reference/orange-paper.md): spec-lock methodology, coverage, CI gates, and tooling. For what **blvm-consensus** implements and how it relates to the spec, see [Consensus Overview](overview.md).
 
-**BLVM Specification Lock** binds `#[spec_locked]` Rust functions to Orange Paper contracts and discharges obligations with Z3. Empirical layers ([testing](../development/testing.md), [differential testing](../development/differential-testing.md), fuzz, MIRI) stress the same surface from complementary angles. Together: **Rust + Tests + Math Specs = Source of Truth**.
+**BLVM Specification Lock** binds `#[spec_locked]` Rust functions to Orange Paper contracts. Z3 checks the Rust. Lean checks that an Orange Paper sentence is a theorem of the model in `blvm-spec/lean/` and does not check the Rust. Empirical layers ([testing](../development/testing.md), [differential testing](../development/differential-testing.md), fuzz, MIRI) stress the same surface from complementary angles. Together: **Rust + Tests + Math Specs = Source of Truth**.
 
 Inventory and verification policy: [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [spec-lock coverage inventory](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
@@ -12,11 +12,13 @@ Inventory and verification policy: [consensus verification guide](https://github
 flowchart LR
  OP[Orange Paper<br/>readable math IR]
  ANN["#[spec_locked]<br/>contracts on code"]
- Z3[Z3 discharge]
+ Z3[Z3 checks the Rust]
+ LEAN[Lean checks the spec model]
  DRIFT[Spec drift check]
  CI[CI merge gate]
  OP --> ANN
  ANN --> Z3
+ OP --> LEAN
  OP --> DRIFT
  Z3 --> CI
  DRIFT --> CI
@@ -26,9 +28,9 @@ flowchart LR
 
 **Proofs locked to the functions they protect.** Annotation with `#[spec_locked]` attaches Orange Paper contracts to concrete Rust. Change the code, and the obligations travel with it: proofs are not a detached appendix that drifts from the implementation.
 
-**Machine-checked alignment on merge.** Z3 verifies those contracts on every change. CI runs **`check-drift`** then **`verify`** on self-hosted runners, so a PR that softens a rule or breaks a proven invariant fails the gate instead of shipping as “still green on unit tests.”
+**Machine-checked alignment on merge.** Z3 checks those Rust contracts on every consensus change. Lean checks the Orange Paper model in the spec-lock lean-evidence workflow and does not check the Rust. CI runs **`check-drift`** then **`verify`** on self-hosted runners, so a PR that softens a rule or breaks a proven invariant fails the gate instead of shipping as “still green on unit tests.”
 
-**Growing, measurable coverage.** Spec-lock covers **251** `#[spec_locked]` functions across the stack (**240** in **blvm-consensus**, **5** in **blvm-node**, **6** in **blvm-protocol**) and **~433** parseable obligations (reconfirm with `cargo spec-lock coverage`).
+**Growing, measurable coverage.** `#[spec_locked]` attributes: **281** in **blvm-consensus**, **5** in **blvm-node**, and **6** in **blvm-protocol** (**292**). Contract totals come from `cargo spec-lock coverage`. A green `verify` run is not the body-proof count. That count is 13 functions, named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 **Confidence to evolve.** Proven bounds feed [optimization passes](overview.md#optimization-passes). Refactors and performance work land against the same contracts. Future implementations can share the Orange Paper as common IR; each codebase earns trust by locking to that IR, not by copying another node’s source.
 
@@ -42,10 +44,12 @@ Consensus verification operates on **public** block data. Secret-path constant-t
 flowchart TB
  SPEC[Orange Paper / CONSENSUS_SPEC]
  CODE[blvm-consensus implementation]
- SPEC -->|contracts| LOCK[BLVM Specification Lock: Z3]
+ SPEC -->|contracts| LOCK[Z3 checks the Rust]
+ SPEC -->|theorems| LEAN[Lean checks the spec model]
  CODE --> LOCK
  CODE --> TEST[Unit + property + integration tests]
- LOCK --> GATE[CI merge gate]
+ LOCK --> GATE[Consensus verify job]
+ LEAN --> EVID[spec-lock lean-evidence]
  TEST --> GATE
  SPEC -->|drift check| GATE
 ```
@@ -56,14 +60,14 @@ flowchart TB
 - **Integration tests**: Cross-system validation between consensus components
 
 ### Layer 2: Symbolic Verification
-- **BLVM Specification Lock**: Z3-backed proofs on spec-locked functions
+- **BLVM Specification Lock**: Z3 checks spec-locked Rust. Lean checks the spec model and does not check the Rust.
 - **Mathematical specifications**: [in-book digest](mathematical-specifications.md) and Orange Paper contracts
 - **State space exploration**: Paths relevant to spec-lock contracts
 
 ### Layer 3: CI Enforcement
 - **Automated testing**: Required for merge
 - **BLVM Specification Lock**: Required on merge; see [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
-- **OpenTimestamps audit logging**: Optional timestamps of verification artifacts
+- **OpenTimestamps audit logging**: Designed to timestamp verification artifacts. Not a consensus CI step today.
 
 ### Verify JSON semantics (`blvm-spec-lock`)
 
@@ -75,16 +79,16 @@ flowchart TB
 
 **BLVM Specification Lock** runs a single **`verify`** pass over all spec-locked functions and merged `F_*` formula registry rows.
 
-**Coverage snapshot** (count `#[spec_locked]` in source; re-run `cargo spec-lock coverage` for contract totals):
+**Coverage snapshot** (`#[spec_locked]` attributes in source; re-run `cargo spec-lock coverage` for contract totals):
 
-| Crate | Spec-locked functions |
-|-------|----------------------:|
-| **blvm-consensus** | 240 |
+| Crate | `#[spec_locked]` attributes |
+|-------|-----------------------------:|
+| **blvm-consensus** | 281 |
 | **blvm-node** | 5 |
 | **blvm-protocol** | 6 |
-| **Total** | **251** |
+| **Total** | **292** |
 
-**Parseable obligations:** **~433** (reconfirm with `cargo spec-lock coverage --spec-path …`).
+The attribute count is not a proof count. A green `verify` run is not the body-proof count. That count is 13 functions. The written list in the consensus verification guide is 93 of 224. The tool's own list is 34 of 34.
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
