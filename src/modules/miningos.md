@@ -1,5 +1,7 @@
 # Mining OS Module
 
+> **Registry status:** Not listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json). `[modules]` registry bootstrap cannot download `blvm-miningos`; [build it from source](overview.md#build-from-source) and place it under `modules_dir`.
+
 ## Overview
 
 The Mining OS module (`blvm-miningos`) integrates BLVM with MiningOS (Mos): BLVM runs as a MiningOS "rack" (worker) and exposes miners as "things".

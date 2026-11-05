@@ -1,5 +1,7 @@
 # ZMQ module (`blvm-zmq`)
 
+> **Registry status:** Listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json) as `blvm-zmq`. Pin it under `[modules]` for [registry bootstrap](overview.md#registry-bootstrap-recommended).
+
 Bitcoin-compatible **ZeroMQ PUB** notifications for blocks and mempool events. Replaces the former in-process **`[zmq]`** section on `blvm-node`: configure endpoints on this module instead.
 
 ## Overview
