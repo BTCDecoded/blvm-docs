@@ -52,6 +52,8 @@ Verification methodology, coverage, and CI: [Formal Verification](formal-verific
 - Transaction application to UTXO set
 - Proof of work verification
 
+A duplicate-transaction merkle mutation (CVE-2012-2459) is rejected when a block is connected, during IBD and after IBD. A non-final transaction is rejected at connect: after BIP112 the locktime cutoff is median time past when that median is greater than 0, and the header timestamp otherwise; before BIP112 the cutoff is the header timestamp. Output value sums use checked `i64` addition, and an overflow is an error.
+
 ### Economic model
 - Block reward calculation
 - Total supply computation

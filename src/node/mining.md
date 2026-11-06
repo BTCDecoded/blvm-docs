@@ -23,12 +23,16 @@ Block templates are built from **`blvm-consensus`** helpers (e.g. template const
 ### Algorithm Overview
 
 1. **Get Chain State**: Retrieve current chain tip, height, and difficulty
-2. **Get Mempool Transactions**: Fetch transactions from mempool
-3. **Get UTXO Set**: Load UTXO set for fee calculation
-4. **Select Transactions**: Choose transactions based on fee priority
-5. **Create Coinbase**: Generate coinbase transaction with subsidy + fees
-6. **Calculate Merkle Root**: Compute merkle root from transaction list
-7. **Build Template**: Construct block header with all components
+2. **Choose transactions**: Either fee-priority selection from the mempool, or an explicit txid list
+3. **Create Coinbase**: Caller-supplied outputs, plus the BIP141 witness commitment
+4. **Calculate Merkle Root**: Compute merkle root from the coinbase and the selected transactions
+5. **Build Template**: Construct the block header
+
+`create_block_template_with_outputs` takes those coinbase outputs. JSON-RPC `getblocktemplate`, REST, and the built-in miner share one Commons slot (`commons_gbt_outputs`). If Commons returns `issue_work: false`, template generation fails with `commons pool holding; not issuing work` and does not mint a node-default coinbase. If the outputs array is missing or empty, Commons is not used.
+
+`create_block_template_declared` takes an explicit txid list, then builds that template. An empty list is a coinbase-only block. If the selected non-coinbase txids are not exactly the declared list, generation fails. An empty declared list is not the same as an empty Commons outputs array: the first is coinbase-only, the second means Commons is not in use.
+
+`create_block_template` is the single-address helper that `create_block_template_with_outputs` calls before the caller outputs replace the coinbase. getblocktemplate uses `create_block_template_with_outputs` and `create_block_template_declared`.
 
 
 ### Transaction Selection
@@ -78,9 +82,12 @@ pub struct Block {
 
 The `getblocktemplate` RPC method generates a block template:
 
-1. Uses `create_block_template` (or equivalent) from **`blvm-consensus`**, covered by tests and upstream verification policy
-2. Converts to JSON-RPC format (BIP 22/23)
-3. Returns template ready for mining
+1. Asks Commons for coinbase outputs. Holding (`issue_work: false`) refuses the template. Missing or empty outputs means Commons is not used.
+2. Builds the template with `create_block_template_with_outputs`, or with `create_block_template_declared` when the caller names the txids
+3. Converts to JSON-RPC format (BIP 22/23)
+4. Returns the template ready for mining
+
+ckpool and the Stratum module use this admin RPC (or NodeAPI) as before. DATUM pool payouts are a different API: see [DATUM](../modules/datum.md).
 
 
 ### Proof of Work
