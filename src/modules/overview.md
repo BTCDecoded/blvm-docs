@@ -78,9 +78,17 @@ Each module uses `module.toml` plus optional `config.toml`. See per-module pages
 - **Unload** without stopping the base node
 - **Reload** configuration where the module supports hot reload
 
-## WASM modules (`wasm-modules`)
+## WASM deployment (`wasm-modules`)
 
-When the node loads **WebAssembly** guests (**`wasm-modules`** / **`blvm-sdk`** embedding), treat them as trusted only if your governance policy says so. The embedder applies **wasmtime fuel** and **store limits** with conservative defaults; override per module via **`[modules.<name>]`** keys in **[node configuration guide](https://github.com/BTCDecoded/blvm-node/blob/main/docs/CONFIGURATION_GUIDE.md)**.
+WASM is a second way to load a module that already has a `module.toml`, next to the native process. The same capability strings apply. The entry is either the native `entry_point` binary or a file whose name ends in `.wasm`. The feature is off on the default `blvm` binary.
+
+A guest exports `module_name`, `module_version`, `cli_spec`, `dispatch_cli`, `dispatch_rpc`, `event_types`, and `on_event`. `event_types` returns a JSON array of event names. `on_event` receives one JSON event message and returns an empty string or an error string. Fuel resets on each of those calls.
+
+Host imports that already exist stay (`host_log`, KV storage, `host_config_get`). One added import is `host_node_call(method_ptr, method_len, args_ptr, args_len) -> (ptr, len)`, JSON in and JSON out. The methods are `get_block_height` (`read_chain_state`) and `get_block` (`read_blockchain`). The host builds `RequestPayload::GetBlockHeight` or `RequestPayload::GetBlock` and calls `PermissionChecker::check_api_call` with the permission set registered at load. `get_block` args are `{"hash":"<64 hex>"}`. A guest that was not registered, or that was registered without the capability for that call, gets error JSON. The guest does not get a socket import and does not get native `NodeAPI` parity.
+
+CLI spec registration for a loaded guest stays `#[cfg(unix)]`. This feature does not claim Windows while that spec is discarded.
+
+When the node loads a guest, treat it as trusted only if your governance policy says so. The embedder applies **wasmtime fuel** and **store limits** with conservative defaults; override per module via **`[modules.<name>]`** keys in the **[node configuration guide](https://github.com/BTCDecoded/blvm-node/blob/main/docs/CONFIGURATION_GUIDE.md)**.
 
 ## See Also
 
