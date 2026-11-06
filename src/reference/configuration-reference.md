@@ -51,8 +51,6 @@ When `[mempool]` or `[rbf]` is present, those sizes are copied onto the consensu
 
 `[storage.pruning]`: `mode`, `auto_prune`, `auto_prune_interval`, `min_blocks_to_keep`, `prune_on_startup`, `incremental_prune_during_ibd`, `prune_window_size`, `min_blocks_for_incremental_prune`, `utxo_commitments`, `bip158_filters`.
 
-`[storage.tidesdb]`: `utxo_klog_threshold`, `flush_threads`, `compact_threads`.
-
 ## `[ibd]`
 
 Operator surface, including `dump_dir`. Fields: `chunk_size`, `download_timeout_secs`, `mode`, `preferred_peers`, `max_ahead_blocks`, `memory_only`, `dump_dir`, `snapshot_dir`, `yield_interval`, `eviction`, `earliest_first`, `prefetch_workers`, `prefetch_queue_size`, `utxo_prefetch_lookahead`, `max_blocks_in_transit_per_peer`, `headers_timeout_secs`, `headers_max_failures`, `dedicated`, `utxo_engine`, `checkpoint_interval`, `checkpoint_min_interval`, `checkpoint_max_interval`, `checkpoint_target_secs`, `muhash_persist_interval`.
