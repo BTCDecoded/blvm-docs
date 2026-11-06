@@ -9,29 +9,21 @@ UDP/FEC **block** relay as a **loadable Commons module**. Distinct from Dandelio
 - **Outbound:** on `NewBlock` / `BlockMined`, fetches the block via `NodeAPI::get_block`, FEC-encodes, and sends UDP chunks to registered FIBRE peers.
 - **Inbound:** assembles chunks and enqueues raw block bytes via `NodeAPI::queue_received_block_bytes` (same validation path as P2P `BlockReceived`).
 
-The node core advertises **`NODE_FIBRE`** on P2P and emits companion-UDP events when peers advertise FIBRE (UDP port = peer TCP port + 1) for dynamic peer registration.
+The node advertises **`NODE_FIBRE`** (`1 << 26`) only while the module that set the bit is still running. Setup sets it after UDP bind succeeds. Unload, crash, and `fibre.enabled = false` leave the bit clear. The node still emits companion-UDP events when a remote peer advertises FIBRE (UDP port = peer TCP port + 1) for dynamic peer registration.
 
-Wire types and `FibreConfig` live in **`blvm-protocol`** (`fibre` feature). The module crate owns UDP, Reed–Solomon, and relay logic.
+Wire types (`FecChunk`, `FibreConfig`, `FIBRE_MAGIC`, CRC32) live in **`blvm-fibre`** (`src/wire.rs`). The module crate owns UDP, Reed–Solomon, and relay logic.
 
 **Repository:** [BTCDecoded/blvm-fibre](https://github.com/BTCDecoded/blvm-fibre)
 
 ## Requirements
 
 - `blvm-node` with modules enabled.
-- Module listed in **`registry/modules.json`** (bootstrap via **`[modules]`** version pin) or built locally.
+- A local binary + `module.toml` on the module search path. **`module.toml` has no `[downloads]`**, so **`blvm-fibre` is not in `registry/modules.json`** and cannot be bootstrapped from the registry yet.
 - Do **not** bind the same UDP port twice on one host (only one FIBRE listener per deployment unless ports are explicitly separated).
 
 ## Loading
 
-Pin in `blvm.toml` (example):
-
-```toml
-[modules]
-registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-blvm-fibre = "0.1.*"
-```
-
-Or place a release binary + `module.toml` on the module search path. See [Module catalog — Installing modules](overview.md#installing-modules).
+Place the binary + `module.toml` on the module search path. See [Module catalog — Installing modules](overview.md#installing-modules). Registry pin waits until `[downloads]` is non-empty.
 
 ## Configuration
 
@@ -45,7 +37,7 @@ Module `config.toml` (or `[modules.blvm-fibre]` overrides):
 | `register_peers_from_p2p` | Register peers that advertise `NODE_FIBRE` on P2P (UDP = peer TCP port + 1) |
 | `[[fibre_peers]]` | Static outbound targets: `peer_id`, `udp_addr` |
 
-FEC and timeout options are under the nested **`fibre`** table (`FibreConfig` in protocol), including **`fibre.enabled`**.
+FEC and timeout options are under the nested **`fibre`** table (`FibreConfig` in `blvm-fibre` `src/wire.rs`), including **`fibre.enabled`** (default true).
 
 Example — follow node P2P port (mainnet P2P 8333 → FIBRE UDP 8334):
 
@@ -82,7 +74,7 @@ udp_addr = "203.0.113.10:8334"
 | | Node core (`blvm-node`) | **`blvm-fibre` module** |
 |--|--|--|
 | FIBRE UDP/FEC | Not implemented in-process | Subprocess + IPC |
-| P2P | Advertises `NODE_FIBRE`; companion UDP events | Registers peers; sends/receives UDP |
+| P2P | Advertises `NODE_FIBRE` only while the module that set the bit is loaded; companion UDP events | Sets the bit after UDP bind; registers peers; sends/receives UDP |
 | Config | Module pins / `[modules.blvm-fibre]` | Module `config.toml` |
 | Operator docs | [Privacy relay](../node/privacy-relay.md) | This page |
 

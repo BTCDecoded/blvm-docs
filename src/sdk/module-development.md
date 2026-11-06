@@ -530,6 +530,14 @@ while let Some(event) = event_receiver.recv().await {
 
 And many more. For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) and [Event System](../architecture/module-system.md#event-system).
 
+## WASM deployment
+
+WASM is a deployment target for a module, not a separate module kind. Use the same `module.toml` and the same capability strings. Ship either the native `entry_point` binary or a file whose name ends in `.wasm`. `wasm-modules` stays off the default `blvm` binary.
+
+Guest exports are `module_name`, `module_version`, `cli_spec`, `dispatch_cli`, `dispatch_rpc`, plus `event_types` (JSON array of the same event names a native module would subscribe to) and `on_event` (one JSON event message; return an empty string or an error string). The node registers an `EventManager` channel and calls `on_event` from that channel. Fuel resets per call.
+
+The host adds `host_node_call(method_ptr, method_len, args_ptr, args_len) -> (ptr, len)` beside the existing `host_log`, storage, and `host_config_get` imports. The methods are `get_block_height` (`RequestPayload::GetBlockHeight`, permission `ReadChainState`, capability `read_chain_state`) and `get_block` (`RequestPayload::GetBlock`, permission `ReadBlockchain`, capability `read_blockchain`). `get_block` args are JSON `{"hash":"<64 hex>"}`. The host checks `PermissionChecker::check_api_call` against the set registered at load. There is no socket import. Guests do not get native `NodeAPI` parity. CLI spec registration is Linux-only (`#[cfg(unix)]`).
+
 ## Configuration
 
 Module system is configured in node config (see [Node Configuration](../node/configuration.md)):
