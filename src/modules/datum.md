@@ -6,7 +6,7 @@ The Datum module (`blvm-datum`) implements the DATUM Gateway mining protocol for
 
 ## Features
 
-- **DATUM Protocol Client**: Encrypted communication with DATUM pools (Ocean)
+- **DATUM protocol client**: The pool channel is encrypted only when `pool_public_key` is set. A sample that leaves that key commented is an unencrypted password. Do not print a pool password.
 - **Decentralized Templates**: Block templates generated locally via NodeAPI
 - **Coinbase Coordination**: Coordinates coinbase payouts with DATUM pool
 - **Module Cooperation**: Works with `blvm-stratum-v2` for complete mining solution
@@ -32,7 +32,7 @@ The module integrates with both the node and the Stratum V2 module:
 │ v2 │ │ │
 │ │ │ ┌──────────┐ │
 │ ┌─────┐ │ │ │ DATUM │ │◄─── DATUM Pool (Ocean)
-│ │ SV2 │ │ │ │ Client │ │ (Encrypted Protocol)
+│ │ SV2 │ │ │ │ Client │ │ (encrypts only if pool_public_key is set)
 │ │Server│ │ │ └──────────┘ │
 │ └─────┘ │ └──────────────┘
 │ │
@@ -104,7 +104,8 @@ listen_addr = "0.0.0.0:3333"
 [modules.blvm-datum]
 pool_url = "https://ocean.xyz/datum"
 pool_username = "user"
-pool_password = "pass"
+# Do not commit a pool password. Encryption is off until pool_public_key is set.
+# pool_password = ""
 ```
 
 See [Installing modules](overview.md#installing-modules).
@@ -122,7 +123,8 @@ listen_addr = "0.0.0.0:3333"
 [modules.blvm-datum]
 pool_url = "https://ocean.xyz/datum"
 pool_username = "user"
-pool_password = "pass"
+# Do not commit a pool password. Encryption is off until pool_public_key is set.
+# pool_password = ""
 ```
 
 **Module data-dir config** (optional, same keys): `<modules.data_dir>/blvm-stratum-v2/config.toml` and `<modules.data_dir>/blvm-datum/config.toml`.
@@ -132,8 +134,9 @@ Example **`blvm-datum`** module `config.toml` (matches `DatumConfig` in the modu
 ```toml
 pool_url = "https://ocean.xyz/datum"
 pool_username = "user"
-pool_password = "pass"
-pool_public_key = "hex_encoded_32_byte_public_key" # optional
+# Do not commit a pool password. Encryption is off until pool_public_key is set.
+# pool_password = ""
+# pool_public_key = ""  # 32-byte hex. Unset leaves the channel unencrypted.
 reconnect_interval = 30 # seconds between reconnect attempts (default: 30)
 # min_difficulty = 1 # optional pool min difficulty
 ```

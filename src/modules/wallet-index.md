@@ -1,4 +1,6 @@
-# Wallet index (`blvm-wallet-index`)
+# Wallet index (`blvm-index`)
+
+`blvm-index` replaces `blvm-wallet-index` and keeps that database format. The node binds Electrum (`[services.electrum]`) and Esplora (`[services.esplora]`). This process does not bind them. An unset `listen` does not open a port.
 
 Script history for outputs created on chain, and for spends of those outputs. The module process owns the database. It does not open the node chain store, and it does not hold keys.
 
@@ -14,7 +16,7 @@ The script key is SHA256(`scriptPubKey`), byte-reversed. That is the scripthash 
 
 ## Electrum
 
-The module binds a TCP port only when `listen` is set in its `config.toml`:
+The node binds Electrum only when `[services.electrum]` sets `listen`:
 
 ```toml
 listen = "127.0.0.1:50001"

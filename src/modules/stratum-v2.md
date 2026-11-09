@@ -8,7 +8,7 @@ The Stratum V2 module (`blvm-stratum-v2`) implements [Stratum V2 mining protocol
 
 ## Features
 
-- **Stratum V2 Server**: Full Stratum V2 protocol server implementation
+- **Stratum listener**: bincode on `listen_addr` (default `0.0.0.0:3333`). There is no Noise key. This is not encrypted Stratum V2.
 - **Mining Pool Management**: Manages connections to mining pools
 - **Mining Job Distribution**: Distributes mining jobs to connected miners
 - **Network integration**: Uses **`NodeAPI`** and node events; optional P2P Stratum TLV demux surfaces **`StratumV2MessageReceived`** (see [Stratum V2 mining](../node/mining-stratum-v2.md)); dedicated miner TCP is served by this module

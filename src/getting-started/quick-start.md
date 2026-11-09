@@ -40,6 +40,8 @@ In the first log lines, confirm:
 
 Leave this process running. On a **fresh datadir**, wait until logs show **`Component startup complete`** or **`NodeStartupCompleted`** (~10-15 seconds) before mining in step 4: RPC listens earlier, but `generatetoaddress` needs an initialized chain tip.
 
+This sample sets an admin bearer token. When no RPC password is set, the process also writes `~/.local/share/blvm-quickstart/.cookie` as `__cookie__:<hex>` and deletes it on stop. Mainnet assumptions are on [First Node Setup](first-node.md).
+
 ## 3. Check chain state
 
 Regtest uses RPC port **18443** (Core-aligned; mainnet **8332**, testnet **18332**):

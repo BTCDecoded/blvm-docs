@@ -4,7 +4,7 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-Registry-backed modules (**blvm-zmq**, **blvm-wallet-index**, **blvm-miniscript**, **blvm-governance**, **blvm-fibre**, **blvm-payment**, optional **blvm-marketplace**) bootstrap from **`[modules].registry_url`** (`registry/modules.json`) when pinned under **`[modules]`**. **blvm-payment** is not a default pin. See [Module catalog](../modules/overview.md).
+A fresh install enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. **blvm-payment** is not a default pin. **blvm-fibre** is not in the registry until `[downloads]` exists. See [Module catalog](../modules/overview.md) and [First Node Setup](../getting-started/first-node.md).
 
 ## Available modules
 
@@ -13,7 +13,7 @@ Registry-backed modules (**blvm-zmq**, **blvm-wallet-index**, **blvm-miniscript*
 - **[Stratum V2 Module](../modules/stratum-v2.md)**: Stratum V2 mining protocol
 - **[Datum Module](../modules/datum.md)**: DATUM Gateway mining protocol
 - **blvm-zmq**: [ZMQ module](../modules/zmq.md)
-- **blvm-wallet-index**: [Wallet index](../modules/wallet-index.md)
+- **blvm-index**: [Wallet index](../modules/wallet-index.md)
 - **blvm-miniscript**: [Miniscript module](../modules/miniscript.md)
 - **blvm-governance**: [Governance module](../modules/governance-module.md)
 - **blvm-fibre**: [FIBRE module](../modules/fibre.md)
@@ -616,7 +616,6 @@ For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protoc
 - [manager.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/manager.rs)
 - [spawner.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/process/spawner.rs)
 - [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/ipc/protocol.rs)
-- [network.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/sandbox/network.rs)
 - [permissions.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/security/permissions.rs)
 - [discovery.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/discovery.rs)
 - [manifest_validator.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/validation/manifest_validator.rs)

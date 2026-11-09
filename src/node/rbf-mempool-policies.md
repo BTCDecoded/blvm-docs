@@ -124,7 +124,7 @@ cooldown_seconds = 60
 | `min_fee_rate_multiplier` | Minimum fee rate multiplier for replacement | Mode-specific |
 | `min_fee_bump_satoshis` | Minimum absolute fee bump in satoshis | Mode-specific |
 | `min_confirmations` | Minimum confirmations before allowing replacement | `0` |
-| `allow_package_replacements` | Allow package replacements | `false` |
+| `allow_package_replacements` | Allow package replacements | `true` |
 | `max_replacements_per_tx` | Maximum replacements per transaction | Mode-specific |
 | `cooldown_seconds` | Replacement cooldown period | Mode-specific |
 

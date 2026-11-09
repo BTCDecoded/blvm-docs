@@ -102,6 +102,7 @@ What this provider does:
 What it does not do:
 
 - Invent a second wallet. On-chain coins must already pay the deposit address. A peer can also open a channel to a listening node.
+- Hold mainnet channel funds. That stays out of scope until a restart and a reorg deeper than the LDK tip are in the test record. A queued `pay_invoice` is not a settled payment.
 
 LNBits is the provider that pays through an external wallet.
 

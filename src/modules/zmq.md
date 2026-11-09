@@ -12,7 +12,7 @@ Bitcoin-compatible **ZeroMQ PUB** notifications for blocks and mempool events. R
 | `hashtx` | 32-byte tx hash | Mempool add (`MempoolTransactionAdded`) |
 | `rawblock` | Block wire bytes | New block (when block body is available via `get_block`) |
 | `rawtx` | Transaction wire bytes | Mempool add (when tx is available via `get_mempool_transaction`) |
-| `sequence` | 33 bytes (type + txid) | Mempool add (`0x01`) or remove (`0x02`) |
+| `sequence` | 33 bytes (type + txid) | Mempool add (`0x01`) or remove (`0x02`). Not Core's `C`/`D`/`R`/`A` frame. The socket is not authenticated. |
 
 If the module cannot fetch a full block or transaction from the node API, it still publishes **hash** / **sequence** topics where configured (see [Behaviour](#behaviour)).
 
