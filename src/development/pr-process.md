@@ -120,7 +120,7 @@ The PR can be merged.
 
 **Requirements**:
 - **Signatures**: Special process (5-of-7 maintainers + 2-of-3 emergency keyholders): see [governance policy](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md) and [action tiers](https://github.com/BTCDecoded/governance/blob/main/docs/ACTION_TIERS.md) (not the `action-tiers.yml` row alone)
-- **Review Period**: [[gov:tier_5_review_days]] days
+- **Review Period**: [[gov:tier_5_review_days]] days. This placeholder renders `tier_5_governance.review_period_days`, which is 180 days. `GOVERNANCE.md` states a 90-day special-process review. Both remain.
 
 **Examples**:
 - Changing signature requirements
