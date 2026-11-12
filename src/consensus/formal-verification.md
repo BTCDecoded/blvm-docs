@@ -136,7 +136,7 @@ The **Verify** jobs in [blvm-consensus](https://github.com/BTCDecoded/blvm-conse
 
 | Repo | Steps | `blvm-spec-lock` version |
 |------|-------|--------------------------|
-| **blvm-consensus** | `check-drift`, then `verify` | Pinned to **0.1.45** for now, a temporary hold (`ci.yml`: 0.1.48 `check-drift` exits on notation the Orange Paper spells differently) |
+| **blvm-consensus** | `check-drift`, then `verify` | Pinned to **0.1.45** for now, a temporary hold (held until `check-drift` passes on consensus (pending blvm-spec-lock#6/#7 and blvm-spec#7)) |
 | **blvm-node** | `verify` against the crates.io `blvm-consensus` release, then `verify` on the node tree. No `check-drift` | Pinned to **0.1.45**. Draft [blvm-node#45](https://github.com/BTCDecoded/blvm-node/pull/45) proposes floating again |
 | **blvm-protocol** | `check-drift`, then `verify` | Floats on `'>=0.1, <1'` |
 
