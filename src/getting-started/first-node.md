@@ -168,7 +168,7 @@ blvm --config /path/to/blvm-mainnet-ibd.toml.example \
  --verbose
 ```
 
-**What you should see:** config loads → `Network: Mainnet` → quiet 15-60s (peer discovery) → `IBD: <height> / <tip>` in logs. Plan for **~15 GB+** pruned disk, **hours** on WAN-only (faster with LAN Core). Validation slows when the seeded assume-valid height (`912683`) ends: expected.
+**What you should see:** config loads → `Network: Mainnet` → quiet 15-60s (peer discovery) → `IBD: <height> / <tip>` in logs. Plan for **~15 GB+** pruned disk, **hours** on WAN-only (faster with LAN Core). Pruning limits what stays on disk, not what is downloaded: a pruned node still fetches and validates every block from genesis, about 690–740 GB of one-time IBD transfer as of mid-2026, the same as an archival node, which stores about 700–750 GB ([Full Cost of Running a Bitcoin Node](https://secsov.com/articles/full-cost-of-running-a-bitcoin-node/), v2.4, July 2026). Validation slows when the seeded assume-valid height (`912683`) ends: expected.
 
 **Monitor** (match start flags):
 

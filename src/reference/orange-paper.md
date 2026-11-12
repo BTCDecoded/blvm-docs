@@ -15,7 +15,7 @@ Bitcoin Commons publishes several linked viewers, all sourced from [blvm-spec](h
 | [**PROTOCOL**](https://thebitcoincommons.org/protocol.html) | [protocol specification](https://thebitcoincommons.org/protocol.html) | Formal consensus mathematics (functions, invariants, proofs) |
 | [**ARCHITECTURE**](https://thebitcoincommons.org/architecture.html) | [architecture spec](https://github.com/BTCDecoded/blvm-spec/blob/main/ARCHITECTURE.md) | Implementation design and how spec pieces compose |
 
-Cross-links between viewers rewrite internal markdown references (for example `§5.3.1` in the Consensus Spec jumps to the matching section in PROTOCOL or ARCHITECTURE). The [homepage spec section](https://thebitcoincommons.org/#path-orange-paper) includes an interactive structure map (sunburst) over Orange Paper content.
+Cross-links between viewers rewrite internal markdown references (for example `§5.3.1` in the Consensus Spec jumps to the matching section in PROTOCOL or ARCHITECTURE). The [homepage spec section](https://thebitcoincommons.org/#path-orange-paper) includes an interactive structure map (sunburst) over Orange Paper content. The [spec visualizations](https://thebitcoincommons.org/spec-viz/index.html) page on the commons site has the interactive views of Orange Paper sections.
 
 ## Which page should I open?
 
