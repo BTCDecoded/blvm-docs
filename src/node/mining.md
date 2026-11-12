@@ -133,7 +133,7 @@ Optional Stratum V2 protocol support provides:
 
 There is **no** `[mining]` table on `NodeConfig`. Mining uses RPC (`getblocktemplate`, `submitblock`), optional **`blvm-stratum-v2`** for Stratum traffic, and optional **`blvm-merge-mining`**.
 
-### ckpool solo (Bitaxe / Stratum V1)
+### ckpool solo (Bitaxe / Stratum V1) {#ckpool-solo-bitaxe-stratum-v1}
 
 Stack: synced **`blvm`** node → **ckpool** (`-B` solo) → miners on `:3333`.
 

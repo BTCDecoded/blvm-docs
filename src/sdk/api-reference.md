@@ -471,7 +471,7 @@ When building modules against **`blvm-sdk`** with the **`node`** feature, the SD
 | `Module`, `ModuleContext`, `ModuleManifest` | Module trait + manifest types |
 | `ModuleIpcClient`, `NodeAPI` | IPC to the running node |
 | `EventType`, `EventPayload`, `EventMessage` | Event subscription / publish |
-| `open_module_db` | Open module-local embedded DB under the module data dir |
+| `open_module_db` | Open module-local embedded DB under `<module data dir>/db`. Default is the heed3 module environment; `MODULE_CONFIG_DATABASE_BACKEND` or `MODULE_DATABASE_BACKEND` selects another compiled-in backend (sled or redb are opt-in SDK features). TidesDB is no longer a module backend (`blvm-sdk` 33cadb3, cb42cc9) |
 | `Permission`, `PermissionSet` | Capability checks |
 
 Subprocess modules that register **`ModuleAPI`** over IPC should use **`run_module_with_setup_and_api`** (not plain **`run_module!`**): see [Module IPC Protocol: Subprocess ModuleAPI registration](../architecture/module-ipc-protocol.md#subprocess-moduleapi-registration) and [Building modules](module-development.md#spawned-modules-and-moduleapi).
