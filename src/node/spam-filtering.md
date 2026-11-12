@@ -311,6 +311,27 @@ To prevent peer flooding, transaction rate limiting is enforced per peer:
 
 Transactions exceeding the rate limit are dropped before processing.
 
+### What `reject_spam_in_mempool` turns on
+
+`reject_spam_in_mempool` defaults to false (`blvm-node/src/config/mempool.rs:339–341`), so out of the box the node relays OP_RETURN outputs up to the 100,000-byte standardness limit. Setting it to true makes the node reject any transaction the spam filter flags (`blvm-node/src/node/mempool.rs:3144–3160`), and that applies every filter that is on by default, not only the 80-byte OP_RETURN check: `filter_ordinals`, `filter_unexec_if`, `filter_null_data_op13`, `filter_null_data_magic`, `filter_data_like_ms`, `filter_dust`, `filter_brc20`, `filter_large_witness`, `filter_high_size_value_ratio` and `filter_many_small_outputs` all default to true, and only `filter_low_fee_rate` defaults to false (`blvm-protocol/src/spam_filter/mod.rs:308–322`, `:1492–1505`). The 80-byte OP_RETURN rule is part of `filter_ordinals`, which also catches inscription envelopes. An operator who wants only that check sets the other `filter_*` keys to false:
+
+```toml
+[mempool]
+reject_spam_in_mempool = true
+
+[mempool.spam_filter]
+filter_ordinals = true
+filter_unexec_if = false
+filter_null_data_op13 = false
+filter_null_data_magic = false
+filter_data_like_ms = false
+filter_dust = false
+filter_brc20 = false
+filter_large_witness = false
+filter_high_size_value_ratio = false
+filter_many_small_outputs = false
+```
+
 ### Example Configuration
 
 ```toml
