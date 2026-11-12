@@ -103,6 +103,8 @@
 - [ZMQ](modules/zmq.md)
 - [Wallet index](modules/wallet-index.md)
 - [Miniscript](modules/miniscript.md)
+- [Fee estimators](modules/fees.md)
+- [Upstream connectors](modules/upstream.md)
 - [Governance module](modules/governance-module.md)
 - [Marketplace](modules/marketplace-module.md)
 
