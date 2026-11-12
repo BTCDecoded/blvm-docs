@@ -59,7 +59,7 @@ graph TB
 - UTXO set management
 - Chain state tracking
 - Transaction indexing
-- Pruning support
+- Pruning support: keeps a recent window of block bodies; initial block download still fetches and validates the full chain (about 690–740 GB as of mid-2026, per [Full Cost of Running a Bitcoin Node](https://secsov.com/articles/full-cost-of-running-a-bitcoin-node/), v2.4, July 2026)
 
 
 ### RPC Server

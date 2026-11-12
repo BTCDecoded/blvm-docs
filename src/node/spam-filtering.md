@@ -254,9 +254,34 @@ The mempool also enforces stricter standard transaction checks:
 
 #### OP_RETURN Limits
 
-- **Maximum OP_RETURN size**: 80 bytes (common policy default, configurable)
-- **Multiple OP_RETURN rejection**: By default, transactions with more than 1 OP_RETURN output are rejected
-- **Configuration**: `MempoolConfig::max_op_return_size`, `max_op_return_outputs`, `reject_multiple_op_return`
+- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most **100,000 bytes**, the standard transaction weight (400,000) divided by four, and every byte after `OP_RETURN` must be a push (`blvm-node/src/node/mempool.rs:283`, `:294`, `:302–309`). The node's mempool applies this when `require_standard = true` (the default) and has no config key for it.
+- **Multiple OP_RETURN outputs**: the node's admission path checks each output on its own and does not limit how many `OP_RETURN` outputs a transaction has.
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_op_return_size` (default 80), `max_op_return_outputs` (1), and `reject_multiple_op_return` (`src/config.rs:135–145`, `:210`), read by `blvm-consensus` `is_standard_tx_with_config`. These are not `[mempool]` keys in the node and do not set the node's relay limit.
+
+#### Data-carrying channels by cost (Core v30 accounting)
+
+The channel order and tables below come from [The Achievable Floor](https://secsov.com/articles/the-achievable-floor/), §II. They describe Bitcoin Core v30 policy (`-datacarriersize` 100,000) and BIP141 weight accounting, not a BLVM measurement. BLVM's node default for a standard `OP_RETURN` output is 100,000 bytes (see [OP_RETURN Limits](#op_return-limits)). The knobs on this page touch the `OP_RETURN` and script-pattern channels; hash and key fields that look like real payments cannot be told apart by policy.
+
+The article ranks five channel types by what they cost the person embedding the data, in this order: Free, Near-free, Expensive, Unenforced, Dedicated. The first table lists them in that order, with what each costs and whether consensus could close it.
+
+| Channel | Embedding cost | Closable at consensus? | Cost to close |
+|---|---|---|---|
+| Free | None beyond tx fee | No | Lose privacy, precision, or supply audit |
+| Near-free | ~2 trial attempts | Partial | Filters barely help |
+| Expensive | Exponential with chosen bits | No | Cost is the only limit |
+| Unenforced | Low; no validation yet | Yes | Tighten unused upgrade hooks |
+| Dedicated | Fee-paid, large payloads | Yes | No hit to normal payments |
+
+Fees per embedded byte, BIP141 accounting, Core v30 `-datacarriersize` (100k), dust at 3 sat/vB. Fee columns are (vbytes × rate + dust where applicable) ÷ payload bytes. The two fake-data rows assume the article's §III changes.
+
+| Channel | Payload bytes | vbytes / embedded byte | sats / byte @ 10 sat/vB | @ 50 sat/vB | @ 100 sat/vB |
+|---|---:|---:|---:|---:|---:|
+| OP_RETURN (dedicated) | 1,024 | 1.01 | 10.1 | 50.7 | 101.5 |
+| Taproot envelope (dedicated) | 1,024 | 0.29 | 2.9 | 14.6 | 29.2 |
+| P2WPKH fake hash (free, after §III) | 20 | 1.55 | 30.2 | 92.2 | 169.7 |
+| P2TR fake pubkey (near-free, after §III) | 32 | 1.34 | 23.8 | 77.5 | 144.7 |
+
+The durable point is the witness discount: an envelope byte costs about 0.29 vbytes against about 1.01 for an `OP_RETURN` byte. The sat columns move with fee rates and Core policy.
 
 #### UnexecIf rejection
 
@@ -293,11 +318,6 @@ Transactions exceeding the rate limit are dropped before processing.
 [mempool]
 # Enable spam filtering at mempool entry
 reject_spam_in_mempool = true
-
-# OP_RETURN limits
-max_op_return_size = 80
-max_op_return_outputs = 1
-reject_multiple_op_return = true
 
 # Standard script checks
 max_standard_script_size = 200
