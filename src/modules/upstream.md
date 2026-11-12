@@ -6,7 +6,7 @@ It is **not** a default module pin, and it is not in `registry/modules.json`. So
 
 ## Network access
 
-The module has no direct socket. HTTP goes through the node's outbound broker (`module-http`, in the node default features), and the operator allow-list controls what it may reach:
+The module has no direct socket. HTTP goes through the node's outbound broker (`module-http`). It is a `blvm-node` default feature, but the `blvm` default and release feature sets do not enable it; build `blvm` with `--features blvm-node/module-http`. The operator allow-list controls what it may reach:
 
 ```toml
 [module_network.blvm-upstream]

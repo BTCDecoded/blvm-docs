@@ -130,7 +130,7 @@ cooldown_seconds = 60
 
 ### BIP125 signaling and fee rules
 
-Only **conservative** mode requires the original to signal BIP125 (an input sequence below `0xffffffff`, `signals_rbf` in `blvm-consensus/src/mempool.rs`). **Standard** and **aggressive** replace a non-signaling original, as Core does by default (`blvm-node/src/node/mempool.rs`, test `a_final_sequence_can_be_replaced`). In every enabled mode:
+Only **conservative** mode requires the original to signal BIP125 (an input sequence below `0xffffffff`, `signals_rbf` in `blvm-consensus/src/mempool.rs`). **Standard** and **aggressive** replace a non-signaling original, as Core does by default (`blvm-node/src/node/mempool.rs`; test `a_final_sequence_can_be_replaced` in `blvm-node/src/node/mempool_tests.rs`). In every enabled mode:
 
 - The replacement must conflict with the existing transaction
 - Its fee rate must clear `min_fee_rate_multiplier` against the replaced set
