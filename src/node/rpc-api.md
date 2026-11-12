@@ -302,9 +302,16 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 | `getmininginfo` | Mining status |
 | `getblocktemplate` | Block template (**admin**; ckpool) |
 | `submitblock` | Submit solved block (**admin**) |
-| `estimatesmartfee` | Fee estimate |
+| `estimatesmartfee` | Fee estimate; see [Fee estimation](#fee-estimation) |
+| `listfeeestimators` | `native` plus every estimator a module registered |
 | `prioritisetransaction` | Mempool priority (**admin**) |
 | `generatetoaddress` | Regtest mine to address (**admin**, regtest only) |
+
+### Fee estimation {#fee-estimation}
+
+`estimatesmartfee` takes positional `conf_target` (default `6`, 1 to 1008), `estimate_mode` (`unset`, `economical`, or `conservative`; default and `unset` are conservative), `fee_rate_estimator` (`none`, `history`, `mempool`, or a module-registered estimator name), and `verbosity` (`0` to `2`). `feerate` is BTC per kvB. Verbosity 1 adds `source`, `mempool_healthy`, `requested_estimator`, `active_estimator`, and `degraded`; verbosity 2 adds the tip, the table age, and the mempool health ratio. When no rate is available, the reply carries `errors` and, at verbosity 1 or 2, a `reason` (`warming_up`, `mempool_unhealthy`, `empty_mempool`, `disabled`, or `external_stale`). Out-of-range parameters are `invalid_params` errors.
+
+The estimator is configured under [`[fees]`](../reference/configuration-reference.md#fee-estimator-fees). Modules such as [blvm-fees](../modules/fees.md) register named estimators that `listfeeestimators` reports. Full reply shapes: [blvm-node RPC reference](https://github.com/BTCDecoded/blvm-node/blob/main/docs/RPC_REFERENCE.md#estimatesmartfee).
 
 ### Module Methods
 
@@ -326,6 +333,8 @@ Dynamic module RPC (mesh, miniscript overrides, …) registers at load time. See
 | `getrpcinfo` | RPC server info |
 | `help` / `logging` | Help and log levels |
 | `gethealth` / `getmetrics` | **blvm-node** extensions (not Core) |
+| `listtimers` / `gettimerstats` | Module timers and timer service counters; see [Module timers](../architecture/module-system.md#module-timers) |
+| `gettimerjournal` / `verifytimerjournal` | Read and hash-check the audit journal of durable timers created with `audit: true` |
 
 ### Mesh Methods
 
@@ -578,7 +587,8 @@ Same **`RpcAuthConfig`** / **`RpcAuthManager`** as JSON-RPC when the REST server
 
 #### Fees
 
-- `GET /api/v1/fees/estimate?blocks=6`: Smart fee estimate (default 6 blocks)
+- `GET /api/v1/fees/estimate?blocks=N&mode=conservative|economical`: calls `estimatesmartfee` with that target and mode. `blocks` defaults to 6 and must be 1 to 1008; a bad `blocks` or `mode` is HTTP 400
+- `GET /api/v1/fees/lnd`: raw JSON for lnd's `feeurl` (`SparseConfFeeSource`), not the REST envelope. Integer sat/kvB quotes for each `fees.lnd_targets` entry; HTTP 503 when no target has a quote
 
 #### Payment / CTV (`bip70-http`, `ctv`)
 

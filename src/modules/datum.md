@@ -184,7 +184,9 @@ When loaded, registers commands such as **`blvm datum status`**, **`datum_info`*
 
 The module handles these node events (see `#[on_event(...)]` on `DatumModule`):
 
-- `BlockMined`, `BlockTemplateUpdated`, `MiningDifficultyChanged`, `NewBlock`, `ChainReorg`, `ShareSubmitted`
+- `BlockMined`, `BlockTemplateUpdated`, `MiningDifficultyChanged`, `NewBlock`, `ChainReorg`
+
+`ShareSubmitted` is now a reserved node slot; the module dropped that subscription in `blvm-datum` 3b36fcc.
 
 It does **not** publish separate custom event types; pool state is queried via module CLI or the inter-module **`get_coinbase_payout`** API.
 

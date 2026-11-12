@@ -117,17 +117,11 @@ Shipped **`version`** is in each release’s `module.toml` and **`registry/modul
 | `BlockMined` | Refresh template / job distribution for locally mined blocks |
 | `BlockTemplateUpdated` | Pull new template and distribute jobs to miners |
 | `MiningDifficultyChanged` | Log; pool recalculates targets on next job |
-| `MiningJobCreated` | Coordination with other modules (e.g. merge mining); jobs are driven by `BlockTemplateUpdated` |
-| `ShareSubmitted` | Coordination with other modules |
 | `StratumV2MessageReceived` | Handle P2P-delivered Stratum TLV when node `stratum-v2` feature + `p2p_stratum_demux` are enabled |
 
 ### Published events
 
-| Event | When |
-|-------|------|
-| `StratumClientConnected` | Miner completes setup on module TCP |
-| `StratumClientDisconnected` | Miner disconnects or times out |
-| `ShareSubmitted` | Valid share accepted by the pool |
+The module publishes no node `EventType`. `ShareSubmitted`, `MiningJobCreated`, `StratumClientConnected`, and `StratumClientDisconnected` became reserved node slots in `blvm-node` e292087; `blvm-stratum-v2` 0889fc1 removed their subscriptions and best-effort publishes.
 
 **Note**: Merge mining events (such as `MergeMiningReward`) are published by the separate `blvm-merge-mining` module, not by this module.
 
@@ -165,8 +159,7 @@ Once installed and configured, the module typically:
 2. Accepts **miner connections** on **`listen_addr`** (module-owned TCP) and parses Stratum V2 TLV frames locally
 3. Optionally handles **P2P-delivered** Stratum-shaped traffic when the node publishes **`StratumV2MessageReceived`** (`stratum-v2` feature on the node)
 4. Creates and distributes mining jobs to connected miners
-5. Publishes `StratumClientConnected` / `ShareSubmitted` / `StratumClientDisconnected` for observability
-6. Tracks mining rewards via share and block submission paths
+5. Tracks mining rewards via share and block submission paths
 
 **Note**: Merge mining is handled by a separate module (`blvm-merge-mining`) that integrates with this module.
 
@@ -184,9 +177,8 @@ The module integrates with the node via `ModuleClient` and `NodeApiIpc`:
 
 - **Read-only blockchain access**: Queries blockchain data for block templates
 - **Event subscription**: Receives mining and template events from the node
-- **Event publication**: Publishes `StratumClientConnected`, `ShareSubmitted`, and `StratumClientDisconnected`
 
-The module also **subscribes** to `MiningJobCreated` and `ShareSubmitted` from other modules for coordination (e.g. merge mining); job creation is driven internally from `BlockTemplateUpdated`.
+Job creation is driven internally from `BlockTemplateUpdated`.
 
 ## Troubleshooting
 

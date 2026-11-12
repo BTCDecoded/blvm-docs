@@ -329,31 +329,17 @@ client.subscribe_events(event_types).await?;
 
 ### Event Categories
 
-Catalog of shared **`EventType`** variants on the node bus. **Individual modules subscribe/publish subsets only**: see each [module page](../modules/overview.md) (e.g. `blvm-lightning` does not emit `ChannelOpened`; `blvm-stratum-v2` does not emit `MiningPoolConnected`).
+Catalog of shared **`EventType`** variants on the node bus. **Individual modules subscribe/publish subsets only**: see each [module page](../modules/overview.md). Listed below are the non-reserved variants; see **Reserved slots** at the end of this list.
 - `NewBlock` - Block connected to chain
 - `NewTransaction` - Transaction in mempool
 - `BlockDisconnected` - Block disconnected (reorg)
 - `ChainReorg` - Chain reorganization
 
-**Payment Events:**
-- `PaymentRequestCreated` - Payment request created
-- `PaymentSettled` - Payment settled (confirmed on-chain)
-- `PaymentFailed` - Payment failed
-- `PaymentVerified` - Lightning payment verified
-- `PaymentRouteFound` - Payment route discovered
-- `PaymentRouteFailed` - Payment routing failed
-- `ChannelOpened` - Lightning channel opened
-- `ChannelClosed` - Lightning channel closed
 
 **Mining Events:**
 - `BlockMined` - Block mined successfully
 - `BlockTemplateUpdated` - Block template updated
 - `MiningDifficultyChanged` - Mining difficulty changed
-- `MiningJobCreated` - Mining job created
-- `ShareSubmitted` - Mining share submitted
-- `MergeMiningReward` - Merge mining reward received
-- `MiningPoolConnected` - Mining pool connected
-- `MiningPoolDisconnected` - Mining pool disconnected
 
 **Mesh Networking Events:**
 - `MeshPacketReceived` - Mesh packet received from network
@@ -380,21 +366,11 @@ Catalog of shared **`EventType`** variants on the node bus. **Individual modules
 
 **Maintenance Events:**
 - `DataMaintenance` - Unified cleanup/flush event (replaces StorageFlush + DataCleanup)
-- `MaintenanceStarted` - Maintenance started
-- `MaintenanceCompleted` - Maintenance completed
 - `HealthCheck` - Health check performed
 
 **Resource Management Events:**
 - `DiskSpaceLow` - Disk space low
-- `ResourceLimitWarning` - Resource limit warning
 
-**Governance Events:**
-- `GovernanceProposalCreated` - Proposal created
-- `GovernanceProposalVoted` - Vote cast
-- `GovernanceProposalMerged` - Proposal merged
-- `GovernanceForkDetected` - Governance fork detected
-- `WebhookSent` - Webhook sent
-- `WebhookFailed` - Webhook delivery failed
 
 **Network Events:**
 - `PeerConnected` - Peer connected
@@ -403,29 +379,11 @@ Catalog of shared **`EventType`** variants on the node bus. **Individual modules
 - `PeerUnbanned` - Peer unbanned
 - `MessageReceived` - Network message received
 - `MessageSent` - Network message sent
-- `BroadcastStarted` - Broadcast started
-- `BroadcastCompleted` - Broadcast completed
-- `RouteDiscovered` - Route discovered
-- `RouteFailed` - Route failed
-- `ConnectionAttempt` - Connection attempt (success/failure)
-- `AddressDiscovered` - New peer address discovered
-- `AddressExpired` - Peer address expired
-- `NetworkPartition` - Network partition detected
-- `NetworkReconnected` - Network partition reconnected
-- `DoSAttackDetected` - DoS attack detected
-- `RateLimitExceeded` - Rate limit exceeded
 
 **Consensus Events:**
 - `BlockValidationStarted` - Block validation started
 - `BlockValidationCompleted` - Block validation completed (success/failure)
-- `ScriptVerificationStarted` - Script verification started
-- `ScriptVerificationCompleted` - Script verification completed
-- `UTXOValidationStarted` - UTXO validation started
-- `UTXOValidationCompleted` - UTXO validation completed
 - `DifficultyAdjusted` - Network difficulty adjusted
-- `SoftForkActivated` - Soft fork activated (SegWit, Taproot, CTV, etc.)
-- `SoftForkLockedIn` - Soft fork locked in (BIP9)
-- `ConsensusRuleViolation` - Consensus rule violation detected
 
 **Sync Events:**
 - `HeadersSyncStarted` - Headers sync started
@@ -440,17 +398,31 @@ Catalog of shared **`EventType`** variants on the node bus. **Individual modules
 - `MempoolTransactionRemoved` - Transaction removed from mempool
 - `FeeRateChanged` - Fee rate changed
 
-**Additional Event Categories:**
-- Dandelion++ Events (DandelionStemStarted, DandelionStemAdvanced, DandelionFluffed, etc.)
-- Compact Blocks Events (CompactBlockReceived, BlockReconstructionStarted, etc.)
-- FIBRE Events (FibreBlockEncoded, FibreBlockSent, CompanionUdpPeerRegistered / CompanionUdpPeerUnregistered for NODE_FIBRE companion UDP)
-- Package Relay Events (PackageReceived, PackageRejected)
-- UTXO Commitments Events (UtxoCommitmentReceived, UtxoCommitmentVerified)
-- Ban List Sharing Events (BanListShared, BanListReceived)
+**Additional events:**
+- `ModuleReloaded`, `ModuleHealthChanged`, `ModuleStateChanged` - Module lifecycle detail
+- `MempoolThresholdExceeded`, `MempoolCleared` - Mempool state
+- `SyncStateChanged` - Sync state transition
+- `CompanionUdpPeerRegistered` / `CompanionUdpPeerUnregistered` - NODE_FIBRE companion UDP peers
+- `BanListShared`, `BanListReceived` - Ban list sharing
+- `PeerPayment` - Peer payment notification
+- `ModuleEvent` - Module-published event. Modules such as `blvm-lightning`, `blvm-mesh`, `blvm-governance`, and `blvm-selective-sync` publish their own events this way (their 0.1 releases after 2026-11-07)
+- `FeeTableReady` - A fee table is ready for the fee estimator
+
+**Reserved slots.** `blvm-node` e292087 renamed variants that nothing publishes to `Reserved*` (for example `ReservedShareSubmitted`, `ReservedPaymentSettled`, `ReservedGovernanceProposalCreated`, `ReservedDandelionFluffed`). The slots keep their bincode index, so the wire format does not shift. Do not subscribe to them: no node code path or shipped module emits them. Module-specific events travel as `ModuleEvent`.
 
 For a complete list of all event types, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs).
 
 Delivery guarantees, timing (`ModuleLoaded` ordering), backpressure, and monitoring: [Module events](module-events.md). Maintenance payloads: [Janitorial events](janitorial-events.md).
+
+## Module timers
+
+A module schedules work through the **node-owned timer service**, not through lossy event delivery. A fire is `InvocationType::Timer`; the runner replies with `InvocationResultPayload::Timer`. `blvm-node/src/module/timers/` owns the clock, quotas, heap, delivery, and durable state. Native SDK modules use `ctx.timers()` (see [SDK timers](../sdk/module-development.md#module-timers)).
+
+The IPC requests are `TimerCreate`, `TimerCancel`, `TimerPause`, `TimerResume`, `TimerTrigger`, `TimerGet`, and `TimerList`. They require `manage_timers`. The older `RegisterTimer`, `CancelTimer`, and `ScheduleTask` wire requests return `timer_unsupported:use TimerCreate`; they are not the new service. In-process `NodeAPI` callback methods still exist, but callbacks cannot be serialized over IPC.
+
+A durable timer lives in the **node** database tree `module_timers`, not the module database. Unload/disconnect detaches it; it resumes when the module reconnects. `delete_module_timers` removes records, but there is no uninstall path that calls it yet. `Persist::Durable { audit: true }` also appends to `module_timer_journal`. The journal detects changed records, not a writer who can rewrite the entire tree and recompute every hash.
+
+Configure global limits under [`[timers]`](../reference/configuration-reference.md#module-timers-timers); `[module_timers.<name>]` can override `max_timers` for one handshake module name. RPCs `listtimers`, `gettimerstats`, `gettimerjournal`, and `verifytimerjournal` inspect the service. Metrics include active timers, fires, lateness, acknowledgement time, and circuit-breaker trips.
 
 ## Module Registry
 
