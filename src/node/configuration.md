@@ -295,12 +295,10 @@ max_replacements_per_tx = 3
 cooldown_seconds = 300
 ```
 
-**Standard** (default): BIP125-compliant RBF
+**Standard** (default): Core-default replacement. The original does not need to signal; the bump is the incremental relay fee
 ```toml
 [rbf]
 mode = "standard"
-min_fee_rate_multiplier = 1.1
-min_fee_bump_satoshis = 1000
 ```
 
 **Aggressive**: Relaxed rules for miners
