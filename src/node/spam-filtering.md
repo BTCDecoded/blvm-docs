@@ -18,7 +18,7 @@ Detects data embedded in Bitcoin transactions:
 - **Witness Scripts**: Detects data embedded in witness scripts (SegWit v0 or Taproot) - **PRIMARY METHOD**
 - **OP_RETURN Outputs**: Detects OP_RETURN outputs with large data pushes
 - **UnexecIf**: Detects UnexecIf patterns (`OP_FALSE OP_IF` … `OP_ENDIF`)
-- **Pattern Detection**: Large scripts (>100 bytes) or OP_RETURN with >80 bytes
+- **Pattern Detection**: An `OP_RETURN` output script longer than 80 bytes (`blvm-protocol/src/spam_filter/mod.rs:789–791`)
 - **Witness Detection**: Large witness stacks (>1000 bytes) or suspicious data patterns
 
 ### 2. Dust Outputs (`SpamType::Dust`)
@@ -285,14 +285,13 @@ The durable point is the witness discount: an envelope byte costs about 0.29 vby
 
 #### UnexecIf rejection
 
-- **UnexecIf detection**: Rejects scripts matching UnexecIf (`OP_FALSE OP_IF` … `OP_ENDIF`) patterns (used by Ordinals)
-- **Configuration**: `MempoolConfig::reject_unexec_if` (default: true)
-- **Legacy key**: the old name `reject_envelope_protocol` is still accepted as a serde alias for `reject_unexec_if`
+- **UnexecIf detection**: when `reject_spam_in_mempool` is on, the protocol spam filter rejects UnexecIf (`OP_FALSE OP_IF` … `OP_ENDIF`) scripts if `filter_unexec_if` is true (the default) (`blvm-protocol/src/spam_filter/mod.rs:411–414`, `:312`). That flag is a `[mempool.spam_filter]` key (`blvm-node/src/config/mempool.rs:262–264`, `blvm-protocol/src/spam_filter/mod.rs:1348–1349`). The node's `require_standard` path does not read it.
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `reject_unexec_if` (default true), and still accepts the old name `reject_envelope_protocol` as a serde alias (`src/config.rs:154–158`, `:226–227`, `:255`), read by `blvm-consensus` `is_standard_tx_with_config` (`src/mempool.rs:195`, `:216`). These are not `[mempool]` keys in the node.
 
 #### Script Size Limits
 
-- **Maximum standard script size**: 200 bytes (configurable)
-- **Configuration**: `MempoolConfig::max_standard_script_size`
+- **scriptSig size**: a standard `scriptSig` is at most **1,650 bytes** (`MAX_STANDARD_SCRIPTSIG_SIZE`). The node's mempool applies this when `require_standard = true` (the default) and has no config key for it (`blvm-node/src/node/mempool.rs:290`, `:2368`, `:3130`).
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_standard_script_size` (default 200) (`src/config.rs:149–150`, `:222–223`, `:254`), read by `blvm-consensus` `is_standard_tx_with_config` (`src/mempool.rs:214–226`). This is not a `[mempool]` key in the node and does not set the node's scriptSig limit.
 
 #### Sigop-adjusted vsize and structural templates
 
@@ -316,31 +315,29 @@ Transactions exceeding the rate limit are dropped before processing.
 
 ```toml
 [mempool]
-# Enable spam filtering at mempool entry
+# Enable spam filtering at mempool entry (default: false)
 reject_spam_in_mempool = true
 
-# Standard script checks
-max_standard_script_size = 200
-reject_unexec_if = true
-
-# Fee rate requirements for large transactions
-min_fee_rate_large_tx = 2
-large_tx_threshold_bytes = 1000
-
-[mempool_policy]
-# Per-peer transaction rate limiting
+# Per-peer transaction rate limiting (defaults: 10, 1)
 tx_rate_limit_burst = 10
 tx_rate_limit_per_sec = 1
 
-# Per-peer byte rate limiting
+# Per-peer byte rate limiting (defaults: 100,000 bytes/s, 1,000,000 burst)
 tx_byte_rate_limit = 100000 # 100 KB/s
 tx_byte_rate_burst = 1000000 # 1 MB burst
 
-# Spam-aware eviction
+# Spam-aware eviction (default: "lowestfeerate")
 eviction_strategy = "spamfirst"
 
+# Large-transaction fee-rate keys live under [mempool.spam_filter].
+# They apply only when filter_low_fee_rate is true (default: false).
+[mempool.spam_filter]
+filter_low_fee_rate = true
+min_fee_rate_large_tx = 2
+large_tx_threshold_bytes = 1000
+
 [spam_ban]
-# Spam-specific peer banning
+# Spam-specific peer banning (defaults: 10, 3600)
 spam_ban_threshold = 10
 spam_ban_duration_seconds = 3600 # 1 hour
 ```
@@ -403,8 +400,8 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 - **Ancestor/Descendant Limits**: Package limits prevent transaction package spam (default: 25 transactions, 101 kB)
 - **DoS Protection**: Automatic peer banning for connection rate violations
 - **Per-Peer Byte Rate Limiting**: Limits bytes per second per peer (default: 100 KB/s, 1 MB burst)
-- **Fee Rate Requirements for Large Transactions**: Requires higher fees for large transactions (default: 2 sat/vB for transactions >1000 bytes)
-- **Spam-Aware Eviction**: Evict spam transactions first when mempool is full (eviction strategy: `SpamFirst`)
+- **Fee Rate Requirements for Large Transactions**: when `filter_low_fee_rate` is true (default false), the spam filter requires 2 sat/vB for transactions larger than 1000 bytes (`blvm-protocol/src/spam_filter/mod.rs:319`, `:460`, `:896–900`)
+- **Spam-Aware Eviction**: evict spam transactions first when mempool is full if `eviction_strategy` is `spamfirst` (the default is `lowestfeerate`, `blvm-node/src/config/mempool.rs:228–229`, `:307–308`, `:380`)
 - **Spam-Specific Peer Banning**: Auto-ban peers that repeatedly send spam transactions (default: ban after 10 spam transactions, 1 hour duration)
 
 ### Per-Peer Byte Rate Limiting
@@ -412,19 +409,20 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 Prevents large transaction flooding by limiting bytes per second per peer:
 
 ```toml
-[mempool_policy]
+[mempool]
 tx_byte_rate_limit = 100000 # 100 KB/s
 tx_byte_rate_burst = 1000000 # 1 MB burst
 ```
 
 ### Fee Rate Requirements for Large Transactions
 
-Large transactions must pay higher fees to discourage spam:
+The protocol spam filter can require a higher fee rate for large transactions. Those keys are under `[mempool.spam_filter]`, and they apply only when `filter_low_fee_rate` is true (default false, `blvm-protocol/src/spam_filter/mod.rs:319`, `:460`, `:896–900`):
 
 ```toml
-[mempool]
-min_fee_rate_large_tx = 2 # 2 sat/vB (higher than standard 1 sat/vB)
-large_tx_threshold_bytes = 1000 # Transactions >1 KB require higher fees
+[mempool.spam_filter]
+filter_low_fee_rate = true
+min_fee_rate_large_tx = 2 # 2 sat/vB (default)
+large_tx_threshold_bytes = 1000 # transactions larger than 1 KB (default)
 ```
 
 ### Spam-Aware Eviction Strategy
@@ -432,11 +430,11 @@ large_tx_threshold_bytes = 1000 # Transactions >1 KB require higher fees
 When mempool is full, spam transactions are evicted first:
 
 ```toml
-[mempool_policy]
-eviction_strategy = "spamfirst" # Evict spam transactions first
+[mempool]
+eviction_strategy = "spamfirst" # Evict spam transactions first (default: "lowestfeerate")
 ```
 
-**Note**: Requires `utxo-commitments` feature. Falls back to `lowest_fee_rate` if feature is disabled.
+**Note**: Requires `utxo-commitments` feature. Falls back to `lowestfeerate` if feature is disabled.
 
 ### Spam-Specific Peer Banning
 
