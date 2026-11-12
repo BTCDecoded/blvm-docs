@@ -1,5 +1,7 @@
 # Stratum V2 Module
 
+> **Registry status:** Not listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json). `[modules]` registry bootstrap cannot download `blvm-stratum-v2`; [build it from source](overview.md#build-from-source) and place it under `modules_dir`.
+
 ## Overview
 
 The Stratum V2 module (`blvm-stratum-v2`) implements [Stratum V2 mining protocol](../node/mining-stratum-v2.md) support: server, pool management, and job distribution.

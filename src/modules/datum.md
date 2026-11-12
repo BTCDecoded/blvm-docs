@@ -1,5 +1,7 @@
 # Datum Module
 
+> **Registry status:** Not listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json). `[modules]` registry bootstrap cannot download `blvm-datum`; [build it from source](overview.md#build-from-source) and place it under `modules_dir`.
+
 ## Overview
 
 The Datum module (`blvm-datum`) implements the DATUM Gateway mining protocol for Ocean pool support. Pool communication runs here; miners connect through `blvm-stratum-v2`.
