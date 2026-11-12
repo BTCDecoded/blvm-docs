@@ -89,7 +89,7 @@ After `refresh` or `apply`, merged tx/block hashes are pushed to the node via `m
 
 ## IBD witness filter
 
-When `ibd_filter_enabled = true`, the module exposes **`filter_block_before_store`** via `ModuleAPI`. During parallel IBD, the node calls this hook before writing witness blobs to the blockstore. Flagged witness stacks are emptied; the module publishes `IBDBlockFiltered` events.
+When `ibd_filter_enabled = true`, the module exposes **`filter_block_before_store`** via `ModuleAPI`. During parallel IBD, the node calls this hook before writing witness blobs to the blockstore. Flagged witness stacks are emptied; the module publishes `ModuleEvent` named `IBDBlockFiltered` (`blvm-selective-sync` 1167a7d; `SelectiveSyncPolicyApplied` travels the same way).
 
 The node integration is generic (`blvm-node` `module/pipeline.rs`): not selective-sync-specific code in `parallel_ibd/`. On IPC failure the node **fail-opens** (stores unfiltered data).
 

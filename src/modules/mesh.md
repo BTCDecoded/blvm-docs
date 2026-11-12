@@ -51,7 +51,7 @@ blvm-mesh = "0.1.*"
 
 Routing policy uses **`packet_type`** on mesh packets, not payload sniffing. Fee quotes use a 60% / 30% / 10% split (destination / intermediate hops / source) in `RoutingTable::calculate_routing_fee`.
 
-**Events (subscribed):** `MeshPacketReceived`, `PeerConnected`, `PeerDisconnected`, `MessageReceived`, `MessageSent`, payment and chain/mempool events as registered in the module. **Published:** `RouteDiscovered`, `RouteFailed`.
+**Events (subscribed):** `MeshPacketReceived`, `PeerConnected`, `PeerDisconnected`, `MessageReceived`, `MessageSent`, payment and chain/mempool events as registered in the module. **Published:** `ModuleEvent` named `RouteDiscovered` or `RouteFailed` (`blvm-mesh` cc091b4; the node variants of those names are reserved slots).
 
 ## Node integration
 

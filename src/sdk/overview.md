@@ -93,7 +93,7 @@ Threshold-based signature verification:
 - **N-of-M Thresholds**: Configurable signature requirements (policy thresholds: [Multisig Configuration](../governance/multisig-configuration.md))
 - **Key Management**: [Maintainer key registration](../governance/keyholder-procedures.md) and rotation
 - **Signature Aggregation**: Combine multiple signatures
-- **Verification**: Cryptographic verification of threshold satisfaction
+- **Verification**: Cryptographic verification of threshold satisfaction. Each signer counts once: a repeated signature from the same key does not add toward N, and `blvm-verify` fails when the threshold is missed (`blvm-sdk` 29b0eba, released in 0.1.23)
 
 
 ### Bitcoin-Compatible Signing
