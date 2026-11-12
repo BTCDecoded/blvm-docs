@@ -260,22 +260,17 @@ The mempool also enforces stricter standard transaction checks:
 
 #### Data-carrying channels by cost (Core v30 accounting)
 
-The ladder and tables below come from [The Achievable Floor](https://secsov.com/articles/the-achievable-floor/), §II. They describe Bitcoin Core v30 policy (`-datacarriersize` 100,000) and BIP141 weight accounting, not a BLVM measurement. BLVM's node default for a standard `OP_RETURN` output is 100,000 bytes (see [OP_RETURN Limits](#op_return-limits)). The knobs on this page touch the `OP_RETURN` and script-pattern channels; hash and key fields that look like real payments cannot be told apart by policy.
+The channel order and tables below come from [The Achievable Floor](https://secsov.com/articles/the-achievable-floor/), §II. They describe Bitcoin Core v30 policy (`-datacarriersize` 100,000) and BIP141 weight accounting, not a BLVM measurement. BLVM's node default for a standard `OP_RETURN` output is 100,000 bytes (see [OP_RETURN Limits](#op_return-limits)). The knobs on this page touch the `OP_RETURN` and script-pattern channels; hash and key fields that look like real payments cannot be told apart by policy.
 
-```mermaid
-flowchart LR
- F[Free] --> N[Near-free] --> E[Expensive] --> U[Unenforced] --> D[Dedicated]
-```
-
-Text version: five channel types in the article's order, Free → Near-free → Expensive → Unenforced → Dedicated. The first table gives what each costs and whether consensus could close it.
+The article ranks five channel types by what they cost the person embedding the data, in this order: Free, Near-free, Expensive, Unenforced, Dedicated. The first table lists them in that order, with what each costs and whether consensus could close it.
 
 | Channel | Embedding cost | Closable at consensus? | Cost to close |
 |---|---|---|---|
-| Dedicated | Fee-paid, large payloads | Yes | No hit to normal payments |
-| Unenforced | Low; no validation yet | Yes | Tighten unused upgrade hooks |
-| Expensive | Exponential with chosen bits | No | Cost is the only limit |
-| Near-free | ~2 trial attempts | Partial | Filters barely help |
 | Free | None beyond tx fee | No | Lose privacy, precision, or supply audit |
+| Near-free | ~2 trial attempts | Partial | Filters barely help |
+| Expensive | Exponential with chosen bits | No | Cost is the only limit |
+| Unenforced | Low; no validation yet | Yes | Tighten unused upgrade hooks |
+| Dedicated | Fee-paid, large payloads | Yes | No hit to normal payments |
 
 Fees per embedded byte, BIP141 accounting, Core v30 `-datacarriersize` (100k), dust at 3 sat/vB. Fee columns are (vbytes × rate + dust where applicable) ÷ payload bytes. The two fake-data rows assume the article's §III changes.
 
