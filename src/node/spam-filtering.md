@@ -326,7 +326,7 @@ tx_rate_limit_per_sec = 1
 tx_byte_rate_limit = 100000 # 100 KB/s
 tx_byte_rate_burst = 1000000 # 1 MB burst
 
-# Spam-aware eviction (default: "lowest_fee_rate")
+# Spam-aware eviction (default: "lowestfeerate")
 eviction_strategy = "spamfirst"
 
 # Large-transaction fee-rate keys live under [mempool.spam_filter].
@@ -401,7 +401,7 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 - **DoS Protection**: Automatic peer banning for connection rate violations
 - **Per-Peer Byte Rate Limiting**: Limits bytes per second per peer (default: 100 KB/s, 1 MB burst)
 - **Fee Rate Requirements for Large Transactions**: when `filter_low_fee_rate` is true (default false), the spam filter requires 2 sat/vB for transactions larger than 1000 bytes (`blvm-protocol/src/spam_filter/mod.rs:319`, `:460`, `:896–900`)
-- **Spam-Aware Eviction**: evict spam transactions first when mempool is full if `eviction_strategy` is `spamfirst` (the default is `lowest_fee_rate`, `blvm-node/src/config/mempool.rs:228–229`, `:307–308`, `:380`)
+- **Spam-Aware Eviction**: evict spam transactions first when mempool is full if `eviction_strategy` is `spamfirst` (the default is `lowestfeerate`, `blvm-node/src/config/mempool.rs:228–229`, `:307–308`, `:380`)
 - **Spam-Specific Peer Banning**: Auto-ban peers that repeatedly send spam transactions (default: ban after 10 spam transactions, 1 hour duration)
 
 ### Per-Peer Byte Rate Limiting
@@ -431,10 +431,10 @@ When mempool is full, spam transactions are evicted first:
 
 ```toml
 [mempool]
-eviction_strategy = "spamfirst" # Evict spam transactions first (default: "lowest_fee_rate")
+eviction_strategy = "spamfirst" # Evict spam transactions first (default: "lowestfeerate")
 ```
 
-**Note**: Requires `utxo-commitments` feature. Falls back to `lowest_fee_rate` if feature is disabled.
+**Note**: Requires `utxo-commitments` feature. Falls back to `lowestfeerate` if feature is disabled.
 
 ### Spam-Specific Peer Banning
 
