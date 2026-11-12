@@ -47,13 +47,9 @@ The module uses a hybrid approach combining:
 
 ## Installation
 
-### Via Cargo
+`blvm-miningos` is not on crates.io and not in `registry/modules.json`, so the node cannot install it from the registry. Download a binary from the [GitHub releases](https://github.com/BTCDecoded/blvm-miningos/releases) (Linux x86_64 and aarch64, Windows x86_64, with `sha256sums.txt`) or build it, then place it per [Manual placement](overview.md#manual-placement). The Node.js bridge is not in the release binaries; take `bridge/` from the repository.
 
-```bash
-cargo install blvm-miningos
-```
-
-### Manual Installation
+### Build from source
 
 1. Clone the repository:
  ```bash
@@ -88,15 +84,9 @@ cargo install blvm-miningos
 
 ## Loading
 
-Pin in `blvm.toml`:
+The node discovers the module from its modules directory (see [Manual placement](overview.md#manual-placement)). A registry pin such as `blvm-miningos = "0.1.*"` does not resolve, because the module is not in `registry/modules.json`.
 
-```toml
-[modules]
-registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-blvm-miningos = "0.1.*"
-```
-
-Config file search order (first found wins): `{data_dir}/config.toml`, `{data_dir}/config/miningos.toml`, `{data_dir}/miningos.toml`, then `./config/miningos.toml` / `./miningos.toml`. See [Configuration](#configuration). See [Installing modules](overview.md#installing-modules).
+Config file search order (first found wins): `{data_dir}/config.toml`, `{data_dir}/config/miningos.toml`, `{data_dir}/miningos.toml`, then `./config/miningos.toml` / `./miningos.toml`. See [Configuration](#configuration).
 
 ## Configuration
 
@@ -210,9 +200,7 @@ At startup the module subscribes to:
 
 ### Published events
 
-When actions complete via the module API, the module may publish:
-
-- `ActionExecuted`: MiningOS action handled (payload includes action name and result)
+When actions complete via the module API, the module publishes `EventType::ModuleEvent` named `ActionExecuted`, with `action_id`, `action_type`, `target`, and `success` in the payload (`blvm-miningos` 8c796d1; the SDK no longer has an `ActionExecuted` event type).
 
 Statistics and template updates are pushed to MiningOS over HTTP/P2P; they are **not** separate custom `EventType` values.
 
@@ -227,13 +215,14 @@ The module connects via **`ModuleIntegration`**, registers **`MiningOsModuleApi`
 
 ## Action Execution System
 
-The module can execute actions from MiningOS:
+The action handler registers four executors (`src/actions/handler.rs`); `[actions] supported_actions` limits which ones run:
 
-- **Reboot**: System reboot commands
-- **Power Management**: Power on/off commands
-- **Pool Config Update**: Updates pool configuration via inter-module IPC to Stratum V2 module
-- **Statistics Query**: Queries node statistics (chain info, network stats, mempool)
-- **Template Refresh**: Refreshes block templates
+- **`reboot`**: System reboot
+- **`setPowerMode`**: Power mode changes
+- **`updatePoolConfig`**: Updates pool configuration via inter-module IPC to the Stratum V2 module
+- **`setHashrate`**: Hashrate target changes
+
+Statistics (chain info, network stats, mempool) and block templates are collected by background tasks, not run as actions.
 
 ### Inter-Module Integration
 

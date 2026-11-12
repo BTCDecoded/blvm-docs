@@ -168,7 +168,7 @@ Once installed and configured, the module typically:
 ### Integration with Other Modules
 
 - **blvm-datum**: Works together with `blvm-datum` for DATUM Gateway mining. `blvm-stratum-v2` handles miner connections while `blvm-datum` handles pool communication.
-- **blvm-miningos**: MiningOS can update pool configuration via this module's inter-module API.
+- **[blvm-miningos](miningos.md)**: MiningOS can update pool configuration via this module's inter-module API.
 - **blvm-merge-mining**: Separate module that integrates with Stratum V2 for merge mining functionality.
 
 ## API Integration

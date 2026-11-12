@@ -576,7 +576,7 @@ let mut event_receiver = client.event_receiver();
 - Direct access to IPC client for custom requests
 - Established, stable API
 
-**Used by:** `blvm-lightning`, `blvm-stratum-v2`, `blvm-datum`, `blvm-miningos`
+**Used by:** `blvm-lightning`, `blvm-stratum-v2`, `blvm-datum`, [`blvm-miningos`](../modules/miningos.md)
 
 **Migration:** New modules should use `ModuleIntegration`. Existing modules can continue using `ModuleClient` + `NodeApiIpc`, but migration to `ModuleIntegration` is recommended for consistency and simplicity.
 

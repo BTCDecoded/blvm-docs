@@ -30,6 +30,7 @@ A fresh install pins **blvm-miniscript**, **blvm-zmq**, and **blvm-index** (`def
 - **blvm-fibre**: FIBRE UDP/FEC block relay ([FIBRE module](fibre.md)). Dropped from the registry until `[downloads]` exists (`blvm` 0449603)
 - **blvm-fees**: `blend` and `blend-min` fee estimators ([Fee estimators](fees.md))
 - **blvm-upstream**: mempool.space, Esplora, and bitcoind connectors behind `blvm.upstream.v1` ([Upstream connectors](upstream.md))
+- **blvm-miningos**: MiningOS rack integration with a Node.js Hyperswarm bridge ([Mining OS](miningos.md))
 
 ## Module system architecture
 
