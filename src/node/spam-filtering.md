@@ -254,9 +254,9 @@ The mempool also enforces stricter standard transaction checks:
 
 #### OP_RETURN Limits
 
-- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most **100,000 bytes**, the standard transaction weight (400,000) divided by four, and every byte after `OP_RETURN` must be a push (`blvm-node/src/node/mempool.rs:283`, `:294`, `:302–309`). The node's mempool applies this when `require_standard = true` (the default) and has no config key for it.
-- **Multiple OP_RETURN outputs**: the node's admission path checks each output on its own and does not limit how many `OP_RETURN` outputs a transaction has.
-- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_op_return_size` (default 80), `max_op_return_outputs` (1), and `reject_multiple_op_return` (`src/config.rs:135–145`, `:210`), read by `blvm-consensus` `is_standard_tx_with_config`. These are not `[mempool]` keys in the node and do not set the node's relay limit.
+- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most **100,000 bytes**, the standard transaction weight (400,000) divided by four, and every byte after `OP_RETURN` must be a push. The node's mempool applies this when `require_standard = true` (the default). Operators can set `[mempool] max_op_return_size` (`blvm-node/src/config/mempool.rs:271`, `:368`; applied in `src/node/mempool.rs:296`, `:304–309`). This requires [blvm-node#46](https://github.com/BTCDecoded/blvm-node/pull/46).
+- **Multiple OP_RETURN outputs**: by default the node's admission path still checks each output on its own and does not cap how many `OP_RETURN` outputs a transaction has (`reject_multiple_op_return = false`, `max_op_return_outputs = 4294967295`, i.e. `u32::MAX`). Operators can set `reject_multiple_op_return = true` or lower `max_op_return_outputs` (`blvm-node/src/config/mempool.rs:278–283`, `:372–376`; applied in `src/node/mempool.rs:351–356`). This requires [blvm-node#46](https://github.com/BTCDecoded/blvm-node/pull/46).
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_op_return_size` (default 80), `max_op_return_outputs` (1), and `reject_multiple_op_return` (true) (`src/config.rs:135–145`, `:210`), read by `blvm-consensus` `is_standard_tx_with_config`. Those library defaults are not the node's `[mempool]` defaults and do not set the node's relay limit unless an operator configures the node keys.
 
 #### Data-carrying channels by cost (Core v30 accounting)
 
@@ -290,8 +290,8 @@ The durable point is the witness discount: an envelope byte costs about 0.29 vby
 
 #### Script Size Limits
 
-- **scriptSig size**: a standard `scriptSig` is at most **1,650 bytes** (`MAX_STANDARD_SCRIPTSIG_SIZE`). The node's mempool applies this when `require_standard = true` (the default) and has no config key for it (`blvm-node/src/node/mempool.rs:290`, `:2368`, `:3130`).
-- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_standard_script_size` (default 200) (`src/config.rs:149–150`, `:222–223`, `:254`), read by `blvm-consensus` `is_standard_tx_with_config` (`src/mempool.rs:214–226`). This is not a `[mempool]` key in the node and does not set the node's scriptSig limit.
+- **scriptSig size**: a standard `scriptSig` is at most **1,650 bytes** (`MAX_STANDARD_SCRIPTSIG_SIZE`). The node's mempool applies this when `require_standard = true` (the default). Operators can set `[mempool] max_standard_script_size` (`blvm-node/src/config/mempool.rs:289`, `:380`; applied in `src/node/mempool.rs:291`, `:2386`, `:3148`). This requires [blvm-node#46](https://github.com/BTCDecoded/blvm-node/pull/46).
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_standard_script_size` (default 200) (`src/config.rs:149–150`, `:222–223`, `:254`), read by `blvm-consensus` `is_standard_tx_with_config` (`src/mempool.rs:214–226`). That library default is not the node's `[mempool]` default and does not set the node's scriptSig limit unless an operator configures the node key.
 
 #### Sigop-adjusted vsize and structural templates
 
@@ -338,6 +338,14 @@ filter_many_small_outputs = false
 [mempool]
 # Enable spam filtering at mempool entry (default: false)
 reject_spam_in_mempool = true
+
+# Standardness limits (defaults match current node behavior).
+# Requires https://github.com/BTCDecoded/blvm-node/pull/46.
+max_op_return_size = 100000
+# No count cap (u32::MAX). Set to 1, or set reject_multiple_op_return = true, to refuse a second OP_RETURN.
+max_op_return_outputs = 4294967295
+reject_multiple_op_return = false
+max_standard_script_size = 1650
 
 # Per-peer transaction rate limiting (defaults: 10, 1)
 tx_rate_limit_burst = 10
