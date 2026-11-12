@@ -94,9 +94,9 @@ Stable **GitHub Releases** ship one **base** binary set per tag (see [Release ar
 |----------|-------------------------|-------------|
 | **Linux x86_64** | `cargo build --release` | `blvm` **default** features (see `blvm/Cargo.toml`; `rocksdb` optional, not in defaults) |
 | **Linux aarch64** | Cross-build via `scripts/ci-build-aarch64.sh` | Same as Linux x86_64 (`BLVM_LINUX_RELEASE_FEATURES` in `scripts/ci-portable-cross-features.sh`) |
-| **Windows x86_64** | Cross-build, `--no-default-features` | Linux defaults minus Unix-only `nix` / `libc` (`BLVM_PORTABLE_CROSS_FEATURES`) |
+| **Windows x86_64** | Cross-build, `--no-default-features` | Linux defaults minus Unix-only `libc` (`BLVM_PORTABLE_CROSS_FEATURES`) |
 
-Core P2P, RPC, storage, modules, **iroh**, **dandelion**, **sigop**, **governance**, **REST `/api/v1/*`**, and **storage/index zstd compression** are in the shared release feature set on all platforms. **`bip70-http` is not.** Payment RPC lives in the `blvm-payment` module. Runtime compression stays **off** until configured (`[storage.compression]` or `storage.indexing.enable_compression`). **RocksDB** remains opt-in (`--features rocksdb`). Other extras (CTV, Stratum V2, …) still require explicit `--features` or the [experimental CI bundle](#experimental-variant-source-build) when not in your binary.
+Core P2P, RPC, storage, modules, **iroh**, **dandelion**, **sigop**, **governance**, **REST `/api/v1/*`**, and **storage/index zstd compression** are in the shared release feature set on all platforms. **`bip70-http` is not.** Payment RPC lives in the `blvm-payment` module. Runtime compression stays **off** until configured (`[storage.compression]` or `storage.indexing.enable_compression`). **heed3** is the only storage engine in the release feature set; **RocksDB**, **redb**, and **sled** are opt-in (`--features rocksdb`, …). Other extras (CTV, Stratum V2, …) still require explicit `--features` or the [experimental CI bundle](#experimental-variant-source-build) when not in your binary.
 
 #### Experimental variant (source build)
 

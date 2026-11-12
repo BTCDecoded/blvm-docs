@@ -10,8 +10,8 @@ Always verify `checksums.sha256` (or the release checksum file) before running a
 
 | Artifact | Platform | Feature set | Typical use |
 |----------|----------|-------------|-------------|
-| Release tarball / package | Linux **x86_64** | Full defaults (`rest-api`, `bip70-http`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, …) | Production mainnet / testnet |
-| Release tarball / package | Linux **aarch64**, Windows **x86_64** | Portable subset (`sled`, `redb`, `production`, `protocol-verification`, `utxo-commitments`; **no** REST / BIP70 HTTP / compression) | Lighter deployments |
+| Release tarball / package | Linux **x86_64** | `blvm` default features (`heed3`, `rest-api`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, `sigop`, …). `bip70-http` is not a default | Production mainnet / testnet |
+| Release tarball / package | Linux **aarch64**, Windows **x86_64** | Same set as the defaults (`BLVM_COMMON_FEATURES` in `scripts/ci-portable-cross-features.sh`); Windows omits `libc`. heed3 is the only storage engine | Lighter deployments |
 | Docker | GHCR [ghcr.io/btcdecoded/blvm](https://github.com/BTCDecoded/blvm/pkgs/container/blvm) | Per-release tag | Container ops |
 | Source build | Any supported Rust target | Explicit `--features` | Experimental flags, custom arch |
 

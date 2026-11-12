@@ -42,15 +42,15 @@ See [Deployment posture](../security/deployment-posture.md): RPC auth, bind addr
 
 ### Can I start from an existing Bitcoin Core datadir?
 
-Yes, with the **`rocksdb`** feature (**`blvm` default features**; portable Windows/aarch64 release builds use redb/sled instead): stop **`bitcoind`**, point **`--data-dir`** at a synced Core tree, migrate once to **`<datadir>/blvm/`**. See [Operations: Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
+Yes, with a source build that enables the **`rocksdb`** feature (it is not in the `blvm` default features or the release binaries, which compile heed3 only): stop **`bitcoind`**, point **`--data-dir`** at a synced Core tree, migrate once to **`<datadir>/blvm/`**. See [Operations: Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir).
 
 ### What storage backends are supported?
 
-`database_backend = "auto"` (usually **heed3** in default builds), or explicit **rocksdb**, **redb**, **sled**, **tidesdb**. See [Storage Backends](../node/storage-backends.md).
+`database_backend = "auto"` (usually **heed3** in default builds), or explicit **rocksdb**, **redb**, **sled** when those features are compiled in. See [Storage Backends](../node/storage-backends.md).
 
 ### What experimental compile-time features exist?
 
-Stable GitHub Releases ship **platform-specific** feature sets (see [Release process: Build variants](../development/release-process.md#build-variants)). **`blvm` default features** (local `cargo build` and Linux x86_64 release artifacts) include Dandelion++, Iroh, UTXO commitments, REST, and **`compression`**. **`bip70-http` is off that set.** Portable **Windows** and **Linux aarch64** release CI builds omit several of the default features. BIP119 CTV, Stratum V2 node demux, sigop counting, and Quinn still often need explicit `--features`. See [Installation: experimental variant](../getting-started/installation.md#experimental-variant).
+Stable GitHub Releases ship one shared feature set (see [Release process: Build variants](../development/release-process.md#build-variants)). **`blvm` default features** (local `cargo build` and Linux x86_64 release artifacts) include Dandelion++, Iroh, UTXO commitments, REST, and **`compression`**. **`bip70-http` is off that set.** Windows and Linux aarch64 release builds use the same set (Windows drops only the Unix `libc` helper). Sigop counting is in that set. BIP119 CTV, Stratum V2 node demux, Quinn, and the RocksDB/redb/sled engines need explicit `--features`. See [Installation: experimental variant](../getting-started/installation.md#experimental-variant).
 
 ### What RPC methods are available?
 

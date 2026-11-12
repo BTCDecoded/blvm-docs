@@ -2,7 +2,7 @@
 
 > **Layer**: Optional **node fast-sync** feature (**blvm-protocol** / **blvm-node**). Not part of Orange Paper consensus rules; see [Consensus overview](../consensus/overview.md).
 
-> **Build**: `utxo-commitments` is in **`blvm` default features** (Linux x86_64 release artifacts; also in portable Windows/aarch64 CI subset). Enable at runtime via config when your deployment uses it.
+> **Build**: `utxo-commitments` is in **`blvm` default features** (and in the release feature set on every platform). Enable at runtime via config when your deployment uses it.
 
 ## Overview
 

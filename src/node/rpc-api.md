@@ -355,7 +355,7 @@ See [Commons Mesh Module](../modules/mesh.md).
 
 ### Payment Methods (BIP70)
 
-> **Build / platform**: `bip70-http` requires full `blvm` features; portable Windows/aarch64 CI builds omit it. `ctv` is a separate compile-time feature. See [Installation](../getting-started/installation.md).
+> **Build / platform**: `bip70-http` is not in the `blvm` default features or any release binary; enable it in a source build. `ctv` is a separate compile-time feature. See [Installation](../getting-started/installation.md).
 
 | Method | Description |
 |--------|-------------|
@@ -474,7 +474,7 @@ The RPC API implements JSON-RPC 2.0 methods documented in the [Available Methods
 
 ### Overview
 
-The REST API is a **separate HTTP server** from JSON-RPC (`blvm-node/src/rpc/rest/`). It requires the **`rest-api`** compile-time feature (included in **`blvm` default features**; omitted from portable Windows/aarch64 release builds).
+The REST API is a **separate HTTP server** from JSON-RPC (`blvm-node/src/rpc/rest/`). It requires the **`rest-api`** compile-time feature (included in **`blvm` default features** and in the release feature set on every platform).
 
 > **Operator note**: REST is **off by default** (`[rest_api].enabled = false`). When enabled, it binds its **own** address (default loopback **8080** / **18080** from RPC port). Handler coverage matches **`rest/server.rs` routing**, not every function in `rest/*.rs`.
 

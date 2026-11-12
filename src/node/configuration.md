@@ -59,7 +59,7 @@ enable_self_advertisement = true
 
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto" # auto | rocksdb | tidesdb | heed3 | redb | sled: see storage docs
+database_backend = "auto" # auto | heed3 | rocksdb | redb | sled: see storage docs
 
 # Optional: RPC limits only (not bind address)
 # [rpc]
@@ -202,15 +202,15 @@ The node uses multiple [storage backends](storage-backends.md) with automatic fa
 
 ### Database Backends
 
-- **auto** (default): Resolve by build features, heed3 when `heed3` feature enabled, then RocksDB, TidesDB, Redb, Sled (see [Configuration Reference](../reference/configuration-reference.md))
-- **rocksdb**, **tidesdb**, **redb**, **sled**: Force a specific backend (see [Storage Backends](storage-backends.md)); **`auto`** matches `default_backend()` order in code
+- **auto** (default): Resolve by build features, heed3 when `heed3` feature enabled, then RocksDB, Redb, Sled (see [Configuration Reference](../reference/configuration-reference.md))
+- **heed3**, **rocksdb**, **redb**, **sled**: Force a specific backend (each needs its feature compiled in; release builds compile heed3 only) (see [Storage Backends](storage-backends.md)); **`auto`** matches `default_backend()` order in code
 
 ### Storage Configuration
 
 ```toml
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto" # or "rocksdb", "tidesdb", "heed3", "redb", "sled"
+database_backend = "auto" # or "heed3", "rocksdb", "redb", "sled"
 
 [storage.cache]
 block_cache_mb = 100
@@ -226,7 +226,7 @@ min_blocks_to_keep = 144
 
 ### Backend Selection
 
-When `database_backend = "auto"`, the node selects by build features: heed3 (LMDB, if `heed3` feature enabled: default), then RocksDB, TidesDB, Redb, Sled. Falls back to the next option if the preferred backend is unavailable.
+When `database_backend = "auto"`, the node selects by build features: heed3 (LMDB, if `heed3` feature enabled: default), then RocksDB, Redb, Sled. Falls back to the next option if the preferred backend is unavailable.
 
 ### Cache Configuration
 

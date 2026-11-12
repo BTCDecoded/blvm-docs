@@ -2,42 +2,39 @@
 
 ## Overview
 
-The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by **build features** via `default_backend()`: **not** by host OS. **heed3 (LMDB)** wins when the `heed3` feature is compiled in, then RocksDB, TidesDB, Redb, Sled. **`blvm` / `blvm-node` Cargo.toml defaults enable `heed3`**, so **`auto` → heed3** on a normal local build and on **Linux x86_64** release artifacts. **Windows portable** and **Linux aarch64** cross-release builds include **heed3** (bundled LMDB) plus **redb/sled** fallbacks: omit **rocksdb** and other native-heavy deps. There **`auto` → heed3**. See [Configuration Reference](../reference/configuration-reference.md).
+The node supports multiple database backends for persistent storage of blocks, UTXO set, and chain state. When `database_backend = "auto"` (the default), the backend is chosen by **build features** via `default_backend()`: **not** by host OS. **heed3 (LMDB)** wins when the `heed3` feature is compiled in, then RocksDB, Redb, Sled. **`blvm` / `blvm-node` Cargo.toml defaults enable `heed3` only**; RocksDB, Redb, and Sled are opt-in features. So **`auto` → heed3** on a normal local build and on every release artifact: the release feature sets (`scripts/ci-portable-cross-features.sh` in `blvm`) compile **heed3** and no other engine. See [Configuration Reference](../reference/configuration-reference.md).
+
+The four engines are owned by one crate, **`blvm-storage-fence`** (`blvm-node/crates/blvm-storage-fence`). It is the only crate that depends on heed3, redb, sled, and rocksdb; the node's `heed3`, `redb`, `sled`, and `rocksdb` features forward to it. TidesDB was removed from the node in `blvm-node` 6dd5964.
 
 ## Supported Backends
 
 | Backend | Typical `auto` rank | Production | Core migrate | Notes |
 |---------|---------------------|------------|--------------|-------|
-| **heed3** (LMDB) | 1st (default builds) | Yes | No | `{datadir}/heed3/`; needs liblmdb |
-| **rocksdb** | 2nd | Yes | **Yes** | Explicit or fallback; needs libclang |
-| **tidesdb** | 3rd | When enabled | No | Optional feature |
-| **redb** | 4th (Windows portable) | Yes | No | Pure Rust |
+| **heed3** (LMDB) | 1st (default and release builds) | Yes | No | `{datadir}/heed3/`; needs liblmdb |
+| **rocksdb** | 2nd | Yes | **Yes** | Opt-in `rocksdb` feature; needs libclang |
+| **redb** | 3rd | Yes | No | Opt-in `redb` feature; pure Rust |
 | **sled** | Last | Dev / fallback | No | Not recommended for production |
 
 ### rocksdb (optional; explicit config or fallback)
 
-**RocksDB** remains available when the `rocksdb` feature is enabled (default builds include both `heed3` and `rocksdb`). Use **`database_backend = "rocksdb"`** to keep or create a RocksDB store, or when migrating from Core LevelDB layouts:
+**RocksDB** is available when the `rocksdb` feature is enabled. It is not in the `blvm` or `blvm-node` default features and not in the release builds. Use **`database_backend = "rocksdb"`** to keep or create a RocksDB store, or when migrating from Core LevelDB layouts:
 
 - **High performance** for large chain state
 - **Interop**: Can work with **typical** LevelDB-format chain state and `blk*.dat` layouts where supported
 - **Build**: Requires system **libclang** / LLVM for the `librocksdb-sys` stack
-- **Feature**: `rocksdb` (on by default in `blvm-node` / `blvm` default features)
+- **Feature**: `rocksdb` (opt-in; not in the `blvm-node` / `blvm` default features)
 
 
 **Note**: RocksDB and **erlay** features are mutually exclusive in this tree (dependency conflicts).
 
 ### redb (pure Rust)
 
-**redb** is a production-ready embedded database. It is chosen by **`auto` only when** RocksDB and TidesDB are **not** in the build (or you set `database_backend = "redb"`):
+**redb** is a production-ready embedded database. It is chosen by **`auto` only when** heed3 and RocksDB are **not** in the build (or you set `database_backend = "redb"`):
 
 - **Pure Rust**: No C dependencies
 - **ACID Compliance**: Full ACID transactions
 - **Typical use**: `--no-default-features` / minimal builds that omit RocksDB, or explicit operator choice
 
-
-### tidesdb
-
-**TidesDB** is optional; in **`auto`** it is preferred over Redb/Sled **only when** RocksDB is not enabled. See crate features and [Configuration Reference](../reference/configuration-reference.md).
 
 ### heed3 (LMDB mdb.master3)
 
@@ -85,30 +82,26 @@ flowchart TD
  P1 -->|yes| H[heed3]
  P1 -->|no| P2{rocksdb feature?}
  P2 -->|yes| R[rocksdb]
- P2 -->|no| P3{tidesdb feature?}
- P3 -->|yes| T[tidesdb]
- P3 -->|no| P4{redb feature?}
+ P2 -->|no| P4{redb feature?}
  P4 -->|yes| RD[redb]
  P4 -->|no| S[sled]
  PIN --> OPEN{Opens OK?}
  H --> OPEN
  R --> OPEN
- T --> OPEN
  RD --> OPEN
  S --> OPEN
  OPEN -->|No| FB[fallback_backend: next enabled]
  OPEN -->|Yes| RUN[Store under data_dir]
 ```
 
-**Core chainstate import** requires the **`rocksdb`** feature: use `blvm migrate core` / auto-migrate, independent of `auto` selection above.
+**Core chainstate import** requires the **`rocksdb`** feature: use `blvm migrate core` / auto-migrate, independent of `auto` selection above. The release binaries do not compile `rocksdb`, so Core chainstate import needs a source build with `--features rocksdb` (the LevelDB reader in `storage/bitcoin_core_leveldb.rs` is behind that feature).
 
 ### Selection order (`auto`)
 
 1. **heed3 / LMDB** (if the `heed3` feature is enabled: default in standard builds)
 2. **RocksDB** (if the `rocksdb` feature is enabled)
-3. **TidesDB** (if the `tidesdb` feature is enabled and neither heed3 nor RocksDB is)
-4. **Redb** (if the `redb` feature is enabled and no higher-priority backend is)
-5. **Sled** (if the `sled` feature is enabled and no other backend is)
+3. **Redb** (if the `redb` feature is enabled and no higher-priority backend is)
+4. **Sled** (if the `sled` feature is enabled and no other backend is)
 
 At least one backend feature must be enabled at build time. If the chosen backend fails to open (e.g. missing data dir or lock), the node may fall back to another enabled backend where implemented.
 
@@ -213,21 +206,20 @@ Transaction indexing:
 ```toml
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto" # typical release: heed3 (LMDB); or "rocksdb" | "tidesdb" | "redb" | "sled"
+database_backend = "auto" # release builds: heed3 (LMDB); or "rocksdb" | "redb" | "sled" when compiled in
 ```
 
 **Options**:
-- `"auto"`: Select by build features (heed3 when `heed3` enabled, then RocksDB, TidesDB, Redb, Sled)
+- `"auto"`: Select by build features (heed3 when `heed3` enabled, then RocksDB, Redb, Sled)
 - `"heed3"`: Force heed3 / LMDB (requires `heed3` feature; rkyv UTXO encoding)
 - `"rocksdb"`: Force RocksDB (requires `rocksdb` feature)
-- `"tidesdb"`: Force TidesDB (requires `tidesdb` feature)
-- `"redb"`: Force redb backend
-- `"sled"`: Force sled backend
+- `"redb"`: Force redb backend (requires `redb` feature)
+- `"sled"`: Force sled backend (requires `sled` feature)
 
 
 ### RocksDB Configuration
 
-The **`rocksdb`** feature is **enabled by default** in `blvm-node` / `blvm`; you only need flags when building a **minimal** tree without RocksDB:
+The **`rocksdb`** feature is **not** in the `blvm-node` / `blvm` default features. Enable it explicitly:
 
 ```bash
 cargo build -p blvm-node --features rocksdb
@@ -262,7 +254,7 @@ header_cache_mb = 10
 
 ### redb Backend
 
-- **When**: Explicit `database_backend = "redb"` or `auto` without RocksDB/TidesDB in the build
+- **When**: Explicit `database_backend = "redb"` or `auto` without heed3 or RocksDB in the build
 - **Read Performance**: Excellent for sequential and random reads
 - **Write Performance**: Good for batch writes
 - **Production**: A solid **pure-Rust** choice when you are not using RocksDB
@@ -274,7 +266,7 @@ header_cache_mb = 10
 
 ### RocksDB Backend
 
-- **When**: Explicit `database_backend = "rocksdb"`, or **`auto`** when the `heed3` feature is absent from the build (Windows portable CI). Standard Linux / default-feature builds use heed3 for `auto`.
+- **When**: Explicit `database_backend = "rocksdb"`, or **`auto`** when the `heed3` feature is absent from a source build. Default-feature and release builds use heed3 for `auto`.
 - **Read/Write**: Tuned for large chain-state workloads; required for Core LevelDB migration reader
 
 ### sled Backend
@@ -289,7 +281,7 @@ header_cache_mb = 10
 
 ### Bitcoin Core drop-in (migrate on start)
 
-With the **`rocksdb`** feature (**`blvm` default features**; omitted from portable Windows/aarch64 release builds), point **`--data-dir`** at a **synced Core** tree (`chainstate/` + `blocks/`) to import once into **`<datadir>/blvm/`**. Stop **`bitcoind`** first; match **`--network`** to the datadir.
+With a source build that enables the **`rocksdb`** feature (not in the `blvm` defaults or the release binaries), point **`--data-dir`** at a **synced Core** tree (`chainstate/` + `blocks/`) to import once into **`<datadir>/blvm/`**. Stop **`bitcoind`** first; match **`--network`** to the datadir.
 
 **Operator steps:** [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir). **Flags and ENV:** [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in). **Config keys:** `storage.auto_migrate_core`, `core_migrate_destination`, `storage.reuse_core_block_files`.
 

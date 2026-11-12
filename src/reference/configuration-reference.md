@@ -243,12 +243,11 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 - **Type**: `string` (enum)
 - **Default**: `"auto"`
 - **Options**:
- - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default**, Linux x86_64 releases, and portable **Windows** / **Linux aarch64** cross-releases), else RocksDB, else TidesDB, else Redb, else Sled. **Not OS-specific**: only the compile-time feature set matters. Portable cross-builds omit rocksdb/nix but include heed3 (bundled LMDB via `lmdb-master3-sys`).
+ - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default** and every release build), else RocksDB, else Redb, else Sled. **Not OS-specific**: only the compile-time feature set matters. Release builds compile heed3 and no other engine; RocksDB, Redb, and Sled are opt-in source-build features.
  - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
- - `"tidesdb"` - Use TidesDB (if available)
  - `"heed3"` - Use heed3 / LMDB (requires `heed3` feature; UTXO values use rkyv encoding)
- - `"redb"` - Use redb (pure Rust; common when building **without** RocksDB)
- - `"sled"` - Use sled database (beta, fallback option)
+ - `"redb"` - Use redb (requires `redb` feature; pure Rust)
+ - `"sled"` - Use sled database (requires `sled` feature; beta, fallback option)
 - **Description**: Database backend selection. System automatically falls back if preferred backend fails.
 
 #### `storage.heed3.map_size_mb`
@@ -270,7 +269,7 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 ### `storage.auto_migrate_core`
 - **Type**: `boolean`
 - **Default**: `true`
-When `true` and `--data-dir` contains a Bitcoin Core layout (`chainstate/` + `blocks/`), **`blvm start`** runs a one-time migration into **`storage.core_migrate_destination`** or **`<data-dir>/blvm/`** before opening the BLVM store. Requires **`rocksdb`** feature (**`blvm` default features**; absent from portable Windows/aarch64 releases). Disabled by **`--no-auto-migrate`** or **`BLVM_NO_AUTO_MIGRATE_CORE=1`**.
+When `true` and `--data-dir` contains a Bitcoin Core layout (`chainstate/` + `blocks/`), **`blvm start`** runs a one-time migration into **`storage.core_migrate_destination`** or **`<data-dir>/blvm/`** before opening the BLVM store. Requires the **`rocksdb`** feature, which is not in the `blvm` defaults or any release binary (source build with `--features rocksdb`). Disabled by **`--no-auto-migrate`** or **`BLVM_NO_AUTO_MIGRATE_CORE=1`**.
 
 ### `storage.core_migrate_destination`
 - **Type**: `string` (path), optional
@@ -396,7 +395,7 @@ Fine-grained control over what data to keep:
 
 ### Storage compression (`[storage.compression]`)
 
-**Requires:** **`compression`** compile-time feature (in **`blvm` default features**; omitted from portable Windows/aarch64 release CI). **Off at runtime** until this table is present in `blvm.toml`. Block/witness zstd applies on all backends; **UTXO zstd is incompatible with heed3/rkyv**: use block/witness/index compression only on default heed3 builds, or set `database_backend = "rocksdb"` if you need UTXO compression.
+**Requires:** **`compression`** compile-time feature (in **`blvm` default features** and in every release build). **Off at runtime** until this table is present in `blvm.toml`. Block/witness zstd applies on all backends; **UTXO zstd is incompatible with heed3/rkyv**: use block/witness/index compression only on default heed3 builds, or set `database_backend = "rocksdb"` if you need UTXO compression.
 
 | Key | Default (when table present) | Description |
 |-----|------------------------------|-------------|
@@ -417,7 +416,7 @@ Optional address and value-range indexes (off by default). See [Transaction Inde
 | `enable_value_index` | `false` | Index outputs by logarithmic value bucket |
 | `strategy` | `"eager"` | `"eager"` = index at block connect; `"lazy"` = defer until query or background worker |
 | `max_indexed_addresses` | `0` | Cap distinct address keys (`0` = unlimited) |
-| `enable_compression` | `false` | zstd-compress index blobs (requires **`compression`** in binary: **`blvm` default features**; omitted from portable Windows/aarch64 release builds) |
+| `enable_compression` | `false` | zstd-compress index blobs (requires **`compression`** in binary: **`blvm` default features** and every release build) |
 | `background_indexing` | `false` | With **`lazy`**, advanced indexing on `txindex-bg` thread after connect |
 
 ### UTXO Commitments Pruning (Experimental)

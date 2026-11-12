@@ -95,7 +95,7 @@ graph TB
 
 ### Payment Processing
 - CTV (CheckTemplateVerify) payment state machine when `ctv` compile-time feature is enabled
-- BIP70 HTTP payment RPC only when the binary is built with `bip70-http`. That feature is off the default build. `blvm-payment` owns the payment state machine. Portable release builds also omit it: see [Installation](../getting-started/installation.md)
+- BIP70 HTTP payment RPC only when the binary is built with `bip70-http`. That feature is off the default build. `blvm-payment` owns the payment state machine. No release build includes it: see [Installation](../getting-started/installation.md)
 - Lightning Network via optional **`blvm-lightning`** module (not core node RPC)
 - Payment vaults / covenant tooling in `blvm-node` payment layer (CTV-gated at runtime)
 
@@ -125,7 +125,7 @@ graph TB
 - [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with the [IBD UTXO engine](ibd-engine.md) on unless `BLVM_IBD_ENGINE=0`
 
 ### Storage Features
-- [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → heed3 (LMDB)** in typical release builds; optional RocksDB, redb, sled, tidesdb)
+- [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → heed3 (LMDB)** in typical release builds; optional RocksDB, redb, sled behind opt-in features)
 - [Common on-disk chain layouts](storage-backends.md#bitcoin-core-drop-in-migrate-on-start) via RocksDB backend
 - Automatic backend fallback on failure
 - Pruning support
