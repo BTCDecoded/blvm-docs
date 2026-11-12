@@ -20,7 +20,17 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 - **blvm-miniscript**: Descriptor / PSBT RPC overrides ([Miniscript module](miniscript.md))
 - **blvm-governance**: On-chain proposal webhook module ([Governance module](governance-module.md))
 - **blvm-marketplace**: Optional registry/payments ([Marketplace module](marketplace-module.md))
-- **blvm-fibre**: FIBRE UDP/FEC block relay ([FIBRE module](fibre.md))
+- **blvm-selective-sync**: Registry policy, P2P serve denylists, and IBD witness/OP_RETURN strip ([Selective Sync](selective-sync.md))
+- **blvm-wallet-index**: Older name of the script-history index; `blvm-index` replaces it
+
+A fresh install pins **blvm-miniscript**, **blvm-zmq**, and **blvm-index** (`default_enabled_modules` in `blvm-node/src/config/mod.rs`).
+
+**Not in the registry** (build or download the release yourself, then place it per [Manual placement](#manual-placement)):
+
+- **blvm-fibre**: FIBRE UDP/FEC block relay ([FIBRE module](fibre.md)). Dropped from the registry until `[downloads]` exists (`blvm` 0449603)
+- **blvm-fees**: `blend` and `blend-min` fee estimators ([Fee estimators](fees.md))
+- **blvm-upstream**: mempool.space, Esplora, and bitcoind connectors behind `blvm.upstream.v1` ([Upstream connectors](upstream.md))
+- **blvm-miningos**: MiningOS rack integration with a Node.js Hyperswarm bridge ([Mining OS](miningos.md))
 
 ## Module system architecture
 

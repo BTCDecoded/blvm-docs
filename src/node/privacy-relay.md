@@ -1,6 +1,6 @@
 # Transaction relay
 
-> **Platform / build**: **Dandelion++** (`dandelion`) is in **`blvm` default features**; portable Windows/aarch64 release CI builds omit it. **FIBRE** is a loadable module (`blvm-fibre`), not an in-node config table. See [Release process: Build variants](../development/release-process.md#build-variants).
+> **Platform / build**: **Dandelion++** (`dandelion`) is in **`blvm` default features** and in the release feature set on every platform. **FIBRE** is a loadable module (`blvm-fibre`), not an in-node config table. See [Release process: Build variants](../development/release-process.md#build-variants).
 
 ## Overview
 
@@ -12,7 +12,7 @@ The node supports **Dandelion++** for privacy-preserving **transaction** relay (
 
 Dandelion++ provides privacy-preserving transaction relay with formal anonymity guarantees against transaction origin analysis. It operates in two phases: stem phase (obscures origin) and fluff phase (standard diffusion).
 
-**Requires:** `dandelion` Cargo feature in the binary (**`blvm` default features**; omitted from portable release builds).
+**Requires:** `dandelion` Cargo feature in the binary (**`blvm` default features** and every release build).
 
 ### Architecture
 

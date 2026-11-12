@@ -126,7 +126,7 @@ The `sequence` body is 33 bytes: `0x01` for a mempool entry and `0x02` for a rem
 
 REST is compiled into the default binary. It does not listen until `rest_api.enabled` is set. Routes are under `/api/v1`. They are not Bitcoin Core `/rest/*`. Payment REST routes are not served. Fee estimates from `blvm-index` are the node's own paths (`GET /fee-estimates` and `GET /api/fee-estimates`).
 
-`RbfConfig::default` sets `allow_package_replacements` to `true` and `mode` to standard. `min_relay_fee_rate` defaults to `100`, in satoshis per 1,000 virtual bytes. A 67-virtual-byte transaction at that floor pays 7 satoshis. That is 0.1 sat/vB. Replacement still requires BIP125 signaling (sequence below `0xffffffff`).
+`RbfConfig::default` sets `allow_package_replacements` to `true` and `mode` to standard. `min_relay_fee_rate` defaults to `100`, in satoshis per 1,000 virtual bytes. A 67-virtual-byte transaction at that floor pays 7 satoshis. That is 0.1 sat/vB. In standard mode a replacement does not need the original to signal BIP125, as in Core's default; only `mode = "conservative"` requires signaling. The standard-mode bump is the incremental relay fee, not `min_fee_bump_satoshis`.
 
 ### Assume-valid
 

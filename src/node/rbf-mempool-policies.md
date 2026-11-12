@@ -67,26 +67,26 @@ cooldown_seconds = 300
 
 #### Standard (Default)
 
-BIP125-compliant RBF with standard fee requirements.
+Matches Bitcoin Core's default replacement rules (`RbfConfig::default` in `blvm-node/src/config/mempool.rs`).
 
 **Features:**
-- 1.1x fee rate multiplier (10% increase, BIP125 minimum)
-- 1000 sat minimum absolute fee bump (BIP125 MIN_RELAY_FEE)
+- Replaces an original that does **not** signal BIP125 (full RBF, as in Core's default)
+- 1.0x fee rate multiplier: the replacement's fee rate must not be lower
+- Absolute fee bump is the incremental relay fee over the replacement's virtual size; `min_fee_bump_satoshis` is ignored in this mode
+- Conflicting transaction and its in-mempool descendants are priced together (`allow_package_replacements = true`)
 - No confirmation requirement
 - Maximum 10 replacements per transaction
-- 60 second cooldown period
+- No cooldown (`cooldown_seconds = 0`)
 
 **Use Cases:**
 - General purpose nodes
 - Default configuration
-- Familiar defaults for operators coming from common node configs
+- Operators who want Core's replacement behavior
 
 **Configuration:**
 ```toml
 [rbf]
 mode = "standard"
-min_fee_rate_multiplier = 1.1
-min_fee_bump_satoshis = 1000
 ```
 
 #### Aggressive
@@ -128,14 +128,14 @@ cooldown_seconds = 60
 | `max_replacements_per_tx` | Maximum replacements per transaction | Mode-specific |
 | `cooldown_seconds` | Replacement cooldown period | Mode-specific |
 
-### BIP125 Compliance
+### BIP125 signaling and fee rules
 
-All modes enforce BIP125 rules:
-- Existing transaction must signal RBF (sequence < 0xffffffff)
-- New transaction must have higher fee rate
-- New transaction must have higher absolute fee
-- New transaction must conflict with existing transaction
-- No new unconfirmed dependencies
+Only **conservative** mode requires the original to signal BIP125 (an input sequence below `0xffffffff`, `signals_rbf` in `blvm-consensus/src/mempool.rs`). **Standard** and **aggressive** replace a non-signaling original, as Core does by default (`blvm-node/src/node/mempool.rs`, test `a_final_sequence_can_be_replaced`). In every enabled mode:
+
+- The replacement must conflict with the existing transaction
+- Its fee rate must clear `min_fee_rate_multiplier` against the replaced set
+- Its absolute fee must exceed the replaced set's fee by the required bump: the incremental relay fee in standard mode, and the larger of that and `min_fee_bump_satoshis` in conservative and aggressive modes
+- When `allow_package_replacements` is false, a conflict that still has in-mempool descendants is refused
 
 Mode-specific requirements are applied in addition to BIP125 rules.
 
@@ -155,9 +155,9 @@ max_mempool_txs = 100000 # Maximum number of transactions (default: 100000)
 
 ```toml
 [mempool]
-min_relay_fee_rate = 1 # Minimum relay fee rate (sat/vB, default: 1)
-min_tx_fee = 1000 # Minimum transaction fee (satoshis, default: 1000)
-incremental_relay_fee = 1000 # Incremental relay fee (satoshis, default: 1000)
+min_relay_fee_rate = 100 # Minimum relay fee rate (sat per 1,000 vbytes, default: 100 = 0.1 sat/vB)
+min_tx_fee = 0 # Minimum absolute transaction fee (satoshis, default: 0)
+incremental_relay_fee = 100 # Fee a replacement adds for its own relay (sat per 1,000 vbytes, default: 100)
 ```
 
 ### Eviction Strategies
@@ -280,14 +280,14 @@ cooldown_seconds = 300
 [mempool]
 max_mempool_mb = 500
 max_mempool_txs = 200000
-min_relay_fee_rate = 2
+min_relay_fee_rate = 2000
 eviction_strategy = "lowest_fee_rate"
 max_ancestor_count = 25
 max_descendant_count = 25
 persist_mempool = true
 ```
 
-**Why:** Conservative RBF (2× fee increase), 1 confirmation before replacement, higher relay fee (2 sat/vB), and mempool persistence for restart reliability.
+**Why:** Conservative RBF (2× fee increase), 1 confirmation before replacement, higher relay fee (2,000 sat/kvB = 2 sat/vB), and mempool persistence for restart reliability.
 
 ### Mining Pool (Aggressive)
 
@@ -305,7 +305,7 @@ cooldown_seconds = 60
 [mempool]
 max_mempool_mb = 1000
 max_mempool_txs = 500000
-min_relay_fee_rate = 1
+min_relay_fee_rate = 100
 eviction_strategy = "lowest_fee_rate"
 max_ancestor_count = 50
 max_descendant_count = 50
@@ -320,13 +320,11 @@ For general-purpose nodes using conventional mempool defaults:
 ```toml
 [rbf]
 mode = "standard"
-min_fee_rate_multiplier = 1.1
-min_fee_bump_satoshis = 1000
 
 [mempool]
 max_mempool_mb = 300
 max_mempool_txs = 100000
-min_relay_fee_rate = 1
+min_relay_fee_rate = 100
 eviction_strategy = "lowest_fee_rate"
 max_ancestor_count = 25
 max_descendant_count = 25
@@ -380,7 +378,8 @@ Expected fields include `size`, `bytes`, `maxmempool`, `mempoolminfee`, and `min
 
 These defaults match widely used mainnet mempool parameters:
 - `max_mempool_mb`: 300 MB
-- `min_relay_fee_rate`: 1 sat/vB
+- `min_relay_fee_rate`: 100 sat/kvB (0.1 sat/vB)
+- `incremental_relay_fee`: 100 sat/kvB
 - `max_ancestor_count`: 25
 - `max_ancestor_size`: 101 kB
 - `max_descendant_count`: 25

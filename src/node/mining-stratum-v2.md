@@ -1,6 +1,6 @@
 # Stratum V2 Mining Protocol
 
-> **Node P2P demux**: The `stratum-v2` **node** compile-time feature (P2P TLV demux) is not in portable Windows/aarch64 release builds. Use the **`blvm-stratum-v2`** module for miner TCP in all builds. See [Release process: Build variants](../development/release-process.md#build-variants).
+> **Node P2P demux**: The `stratum-v2` **node** compile-time feature (P2P TLV demux) is not in the `blvm` default features or any release build. Use the **`blvm-stratum-v2`** module for miner TCP in all builds. See [Release process: Build variants](../development/release-process.md#build-variants).
 
 ## Overview
 

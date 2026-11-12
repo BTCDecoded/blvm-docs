@@ -286,7 +286,7 @@ Eclipse attack prevention:
 Storage layer security:
 
 - **`auto` / heed3**: Default path in typical builds (mmap UTXO reads + rkyv); **`rocksdb`**: explicit choice or fallback (performance + Core layout interop; see storage docs)
-- **redb / sled / tidesdb**: Alternative backends with different trust and build surfaces; **redb** is pure Rust when RocksDB is not used
+- **redb / sled / rocksdb**: Opt-in alternative backends (not in release builds) with different trust and build surfaces; **redb** is pure Rust when RocksDB is not used
 - **Database Abstraction**: Allows switching backends explicitly
 - **Storage Bounds**: Storage bounds checking
 

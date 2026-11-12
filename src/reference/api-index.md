@@ -111,17 +111,16 @@ The full **`NodeAPI`** surface includes **events** (`subscribe_events`) and **ta
 - `EventType::BlockDisconnected` - Block disconnected (chain reorg)
 - `EventType::ChainReorg` - Chain reorganization occurred
 
-**Payment Events:**
-- `EventType::PaymentRequestCreated`, `EventType::PaymentSettled`, `EventType::PaymentFailed`, `EventType::PaymentVerified`, `EventType::PaymentRouteFound`, `EventType::PaymentRouteFailed`, `EventType::ChannelOpened`, `EventType::ChannelClosed`
-
 **Mining Events:**
-- `EventType::BlockMined`, `EventType::BlockTemplateUpdated`, `EventType::MiningDifficultyChanged`, `EventType::MiningJobCreated`, `EventType::ShareSubmitted`, `EventType::MergeMiningReward`, `EventType::MiningPoolConnected`, `EventType::MiningPoolDisconnected`
+- `EventType::BlockMined`, `EventType::BlockTemplateUpdated`, `EventType::MiningDifficultyChanged`
 
 **Network Events:**
-- `EventType::PeerConnected`, `EventType::PeerDisconnected`, `EventType::MessageReceived`, `EventType::MessageSent`, `EventType::BroadcastStarted`, `EventType::BroadcastCompleted`, `EventType::RouteDiscovered`, `EventType::RouteFailed`
+- `EventType::PeerConnected`, `EventType::PeerDisconnected`, `EventType::PeerBanned`, `EventType::PeerUnbanned`, `EventType::MessageReceived`, `EventType::MessageSent`
 
 **Module Lifecycle Events:**
 - `EventType::ModuleLoaded`, `EventType::ModuleUnloaded`, `EventType::ModuleCrashed`, `EventType::ModuleDiscovered`, `EventType::ModuleInstalled`, `EventType::ModuleUpdated`, `EventType::ModuleRemoved`
+
+**Module-defined events:** `EventType::ModuleEvent`. Payment, channel, share, governance, and route names are reserved node slots (`Reserved*`) since `blvm-node` e292087; nothing publishes them.
 
 **And many more.** For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) and [Event System](../architecture/module-system.md#event-system).
 
@@ -164,7 +163,7 @@ pub struct ModuleContext {
 - `get_chain_tip(&self) -> Result<Hash>`
 - `get_block_height(&self) -> Result<u64>`
 
-**Backends:** Selected by `database_backend` (default `auto` resolves by build features: heed3 when `heed3` enabled, then RocksDB, TidesDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
+**Backends:** Selected by `database_backend` (default `auto` resolves by build features: heed3 when `heed3` enabled, then RocksDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
 
 **Documentation:** See [Storage Backends](../node/storage-backends.md) and [Node Configuration](../node/configuration.md#storage-backends).
 

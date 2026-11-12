@@ -171,17 +171,17 @@ Shipped **`version`** is in each release’s `module.toml` and **`registry/modul
 
 ### Subscribed events
 
-Via `#[on_event(...)]` in the module:
+Via `#[on_event(ModuleEvent, NewBlock, BlockDisconnected)]` in the module:
 
-- `PaymentRequestCreated`
-- `PaymentSettled`
-- `PaymentFailed`
+- `ModuleEvent` named `PaymentRequestCreated` (other names are ignored)
 - `NewBlock`
 - `BlockDisconnected`
 
+The node `PaymentRequestCreated`, `PaymentSettled`, and `PaymentFailed` variants are reserved slots since `blvm-node` e292087; `blvm-lightning` 3752a14 moved to `ModuleEvent`.
+
 ### Published events
 
-`LightningProcessor` may publish (depending on provider path):
+`LightningProcessor` and the LDK provider publish `EventType::ModuleEvent` with these names (depending on provider path):
 
 - `PaymentRequestCreated` — new invoice / payment request
 - `PaymentVerified` — Lightning payment verified
@@ -196,10 +196,10 @@ Via `#[on_event(...)]` in the module:
 
 Once installed and configured, the module automatically:
 
-1. Subscribes to payment and chain events from the node (`PaymentRequestCreated`, `PaymentSettled`, `PaymentFailed`, `NewBlock`, `BlockDisconnected`)
+1. Subscribes to `ModuleEvent` (`PaymentRequestCreated`), `NewBlock`, and `BlockDisconnected`
 2. Verifies Lightning invoices (BOLT11) when payment requests are created
 3. Asks the configured provider to verify the payment. LNBits checks its wallet. LDK reports a payment only after a claim event. Stub always reports success. The LDK provider also advances its chain tip from `NewBlock`.
-4. Publishes payment verification and status events (`PaymentVerified`, `PaymentRouteFound`, `PaymentRouteFailed`)
+4. Publishes payment verification and status as `ModuleEvent` names (`PaymentVerified`, `PaymentRouteFound`, `PaymentRouteFailed`)
 5. Monitors payment lifecycle and publishes status events
 
 The module automatically selects the provider based on configuration. All providers implement the same interface, so switching providers requires only a configuration change.

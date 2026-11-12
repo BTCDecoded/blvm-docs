@@ -85,7 +85,7 @@ See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a
 **Solution**:
 - The system automatically falls back to alternative backends when the chosen one fails
 - Check data directory permissions and sufficient disk space
-- Set backend explicitly in config if needed: `[storage] database_backend = "rocksdb"` / `"heed3"` / `"redb"` / `"sled"` / `"tidesdb"`, or keep **`"auto"`** (default builds usually pick **heed3** first). See [Configuration Reference](../reference/configuration-reference.md).
+- Set backend explicitly in config if needed: `[storage] database_backend = "rocksdb"` / `"heed3"` / `"redb"` / `"sled"` (each needs its feature compiled in), or keep **`"auto"`** (default builds usually pick **heed3** first). See [Configuration Reference](../reference/configuration-reference.md).
 
 ### Corrupted Database {#corrupted-database}
 
@@ -94,7 +94,7 @@ See [Starting from a Bitcoin Core datadir](../node/operations.md#starting-from-a
 **Solution**:
 
 1. **Stop the node** before deleting anything.
-2. Identify the active backend under `{data_dir}`: e.g. `heed3/`, `rocksdb/`, `redb/`, `sled/`, `tidesdb/` (see [Storage backends](../node/storage-backends.md)).
+2. Identify the active backend under `{data_dir}`: e.g. `heed3/`, `rocksdb/`, `redb/`, `sled/` (see [Storage backends](../node/storage-backends.md)).
 3. Back up the datadir, then remove only the corrupted backend subtree (not generic `data/blocks` / `data/chainstate` Core paths unless you intentionally reset a Core-import layout).
 4. Restart; expect resync or migration depending on what you removed.
 

@@ -57,7 +57,7 @@ The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consen
 
 ## Storage & Networking
 
-**Storage Backends** - Database backends for blockchain data. **`database_backend = auto`** selects by build features (heed3 when enabled, then RocksDB, TidesDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
+**Storage Backends** - Database backends for blockchain data. **`database_backend = auto`** selects by build features (heed3 when enabled, then RocksDB, Redb, Sled). See [Storage Backends](../node/storage-backends.md) and [Configuration Reference](configuration-reference.md).
 
 **Pruning** - Storage optimization that removes old block data while keeping the UTXO set. Configurable to keep last N blocks.
 

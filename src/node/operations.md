@@ -102,7 +102,7 @@ After a successful migrate you may delete Core **`chainstate/`** (~12 GB) if you
 | `BLVM_REUSE_CORE_BLOCK_FILES=0` | Same as `reuse_core_block_files = false` |
 | `BLVM_CORE_MIGRATE_BLOCK_WORKERS` / `BLVM_CORE_MIGRATE_BLOCK_BATCH` | Parallel block read tuning |
 
-Requires the **`rocksdb`** Cargo feature (**`blvm` default features**; omitted from portable Windows/aarch64 release builds). Config and ENV details: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
+Requires the **`rocksdb`** Cargo feature. It is not in the `blvm` default features or any release binary, so build from source with `--features rocksdb` ([Release process: Build variants](../development/release-process.md#build-variants)). Config and ENV details: [Bitcoin Core drop-in](configuration.md#bitcoin-core-drop-in), [Storage Backends](storage-backends.md#bitcoin-core-drop-in-migrate-on-start).
 
 **Verify:** `--verify` on `blvm migrate core`; regtest test `core_drop_in` (fixture: `blvm-node/scripts/gen-core-regtest-fixture.sh`); mainnet smoke: `blvm-node/scripts/core-drop-in-mainnet-smoke.sh`.
 

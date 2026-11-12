@@ -416,10 +416,24 @@ Corresponding IPC `MessageType` / `RequestPayload` names match the `NodeAPI` met
 - `register_rpc_endpoint(method, description)` - Register a JSON-RPC endpoint
 - `unregister_rpc_endpoint(method)` - Unregister an RPC endpoint
 
-**Timers API:**
-- `register_timer(interval_seconds, callback)` - Register a periodic timer
-- `cancel_timer(timer_id)` - Cancel a registered timer
-- `schedule_task(delay_seconds, callback)` - Schedule a one-time task
+### Module timers {#module-timers}
+
+For subprocess SDK modules, use `ctx.timers()` (`TimerBuilder`) and handle fires through the runner. The node delivers `InvocationType::Timer` and the SDK acknowledges `InvocationResultPayload::Timer`. `run_module_with_tick` registers `on_tick` as a 30-second monotonic fixed-rate timer (`Overlap::Skip`, key `sdk.tick`), so receiving events no longer resets the tick interval.
+
+The builder supports `every`, `once`, `fixed_rate`, `on_overlap`, `key`, `exec`, `jitter`, `spread`, `missed`, `persist_durable`, chain-height triggers, and wall-clock specs. `spawn` returns a `TimerHandle` with `cancel`, `pause`, `resume`, `trigger`, and `info`. Dropping that handle **does not cancel** the timer.
+
+| `Exec` | Handler location |
+|--------|------------------|
+| `Serial` (default) | Module loop; serialized with events, RPC, and other serial timers |
+| `Task` | `tokio::spawn`; panic reports a failed acknowledgement |
+| `Blocking` | `spawn_blocking`; at most four at once |
+| `Dedicated(name)` | One OS thread and current-thread runtime per name; at most four names |
+
+Default `AckMode::Completion` waits for the handler. `AckMode::Receipt` acknowledges when the runtime accepts the fire. Timing jitter, spread, and exponential gaps are obfuscation, **not** a source of keys, nonces, or secrets. The optional `timer-cron` feature is not a default on the node.
+
+The older `NodeAPI` callback signatures `register_timer(interval_seconds, callback)`, `cancel_timer(timer_id)`, and `schedule_task(delay_seconds, callback)` remain for in-process use. A subprocess cannot serialize these callbacks; its `NodeApiIpc` implementation returns an error. Do not use them as a substitute for `TimerCreate`/`TimerBuilder`.
+
+See [node timer semantics and durable state](../architecture/module-system.md#module-timers), the [SDK timer guide](https://github.com/BTCDecoded/blvm-sdk/blob/main/docs/TIMERS.md), and [timer_poll.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/examples/timer_poll.rs).
 
 **Metrics API:**
 - `report_metric(metric)` - Report a metric to the node
@@ -501,32 +515,29 @@ while let Some(event) = event_receiver.recv().await {
 - `BlockDisconnected` - Block disconnected (chain reorg)
 - `ChainReorg` - Chain reorganization occurred
 
-**Payment Events:**
-- `PaymentRequestCreated`, `PaymentSettled`, `PaymentFailed`, `PaymentVerified`, `PaymentRouteFound`, `PaymentRouteFailed`, `ChannelOpened`, `ChannelClosed`
-
 **Mining Events:**
-- `BlockMined`, `BlockTemplateUpdated`, `MiningDifficultyChanged`, `MiningJobCreated`, `ShareSubmitted`, `MergeMiningReward`, `MiningPoolConnected`, `MiningPoolDisconnected`
+- `BlockMined`, `BlockTemplateUpdated`, `MiningDifficultyChanged`
 
 **Network Events:**
-- `PeerConnected`, `PeerDisconnected`, `PeerBanned`, `MessageReceived`, `MessageSent`, `BroadcastStarted`, `BroadcastCompleted`, `RouteDiscovered`, `RouteFailed`
+- `PeerConnected`, `PeerDisconnected`, `PeerBanned`, `PeerUnbanned`, `MessageReceived`, `MessageSent`
 
 **Module Lifecycle Events:**
-- `ModuleLoaded`, `ModuleUnloaded`, `ModuleCrashed`, `ModuleDiscovered`, `ModuleInstalled`, `ModuleUpdated`, `ModuleRemoved`
+- `ModuleLoaded`, `ModuleUnloaded`, `ModuleReloaded`, `ModuleCrashed`, `ModuleHealthChanged`, `ModuleStateChanged`, `ModuleDiscovered`, `ModuleInstalled`, `ModuleUpdated`, `ModuleRemoved`
 
 **Configuration & Lifecycle Events:**
 - `ConfigLoaded`, `NodeStartupCompleted`, `NodeShutdown`, `NodeShutdownCompleted`
 
 **Maintenance & Resource Events:**
-- `DataMaintenance`, `MaintenanceStarted`, `MaintenanceCompleted`, `HealthCheck`, `DiskSpaceLow`, `ResourceLimitWarning`
-
-**Governance Events:**
-- `GovernanceProposalCreated`, `GovernanceProposalVoted`, `GovernanceProposalMerged`, `WebhookSent`, `WebhookFailed`, `GovernanceForkDetected`
+- `DataMaintenance`, `HealthCheck`, `DiskSpaceLow`
 
 **Consensus Events:**
-- `BlockValidationStarted`, `BlockValidationCompleted`, `ScriptVerificationStarted`, `ScriptVerificationCompleted`, `DifficultyAdjusted`, `SoftForkActivated`
+- `BlockValidationStarted`, `BlockValidationCompleted`, `DifficultyAdjusted`
 
-**Mempool Events:**
-- `MempoolTransactionAdded`, `MempoolTransactionRemoved`, `FeeRateChanged`
+**Mempool and fee events:**
+- `MempoolTransactionAdded`, `MempoolTransactionRemoved`, `MempoolThresholdExceeded`, `MempoolCleared`, `FeeRateChanged`, `FeeTableReady`
+
+**Module-defined events:**
+- `ModuleEvent` carries module-published events. Payment, channel, governance, route, and similar names are no longer node `EventType` variants: `blvm-node` e292087 turned them into `Reserved*` slots that nothing publishes. See [Event Categories](../architecture/module-system.md#event-categories).
 
 And many more. For complete list, see [EventType enum](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/traits.rs) and [Event System](../architecture/module-system.md#event-system).
 

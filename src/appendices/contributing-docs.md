@@ -22,7 +22,7 @@ The public book is built from **`blvm-docs`**: most content is authored in **`sr
 - **Accurate feature status**: Do not label features as "deprecated" when they are actively reimplemented (e.g. BIP70).
 - **IR vs implementation**: The Orange Paper is the spec (IR). The implementation is **validated against** it (e.g. blvm-spec-lock). Do not say the IR is "transformed" or "generated" into code.
 - **API reference**: The canonical API reference is this book ([API Index](../reference/api-index.md), [SDK API Reference](../sdk/api-reference.md)). Do not point users to docs.rs as the primary API docs; link in-book or docs.btcdecoded.org/blvm.
-- **Storage default**: `database_backend = "auto"` resolves by build features: heed3 (if `heed3` feature) → RocksDB → TidesDB → Redb → Sled. Do not describe "redb" or "RocksDB" as the default without this context.
+- **Storage default**: `database_backend = "auto"` resolves by build features: heed3 (if `heed3` feature) → RocksDB → Redb → Sled. Release builds compile heed3 only. Do not describe "redb" or "RocksDB" as the default without this context.
 - **Paths**: Code links must use actual paths: `block/`, `script/` (dirs), `node/parallel_ibd/` (dir), blvm-protocol for spam_filter/utxo_commitments; no `block.rs`, `script.rs`, `parallel_ibd.rs` as single files, no utxostore_proofs.
 - **Brittle links**: Prefer file or module links without line-number anchors (`#L123`). Line numbers break as code changes; use them only when pointing to a stable, narrow section and prefer "see `path/to/file.rs`" when the exact line is not critical.
 - **No meta openers**: Do not restate the page title ("This document explains…", "This guide covers…"). Start with substance.

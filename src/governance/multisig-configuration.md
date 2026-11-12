@@ -66,7 +66,7 @@ For configuration details, see the [governance config/ directory](https://github
 
 ## Nested multisig (SDK)
 
-Flat **N-of-M** thresholds above describe maintainer rules per layer. The [SDK overview](../sdk/overview.md) also documents **nested multisig** for team-based and hierarchical governance setups using **`blvm-sdk`** primitives, see that chapter for APIs beyond a single flat quorum.
+Flat **N-of-M** thresholds above describe maintainer rules per layer. N counts **distinct signers**: `blvm-sdk` 0.1.23 (29b0eba) and `blvm-commons` (faa7320) count each signer once, so a repeated signature does not satisfy a threshold. The [SDK overview](../sdk/overview.md) also documents **nested multisig** for team-based and hierarchical governance setups using **`blvm-sdk`** primitives, see that chapter for APIs beyond a single flat quorum.
 
 ## See Also
 

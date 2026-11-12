@@ -14,7 +14,7 @@ Reference for BLVM node configuration options. Configuration can be provided via
 
 | Goal | Where to look |
 |------|----------------|
-| P2P listen address | `listen_addr` (top level) |
+| P2P bind | `listen_addr` and `listen` (top level). `listen = false` skips P2P binds |
 | RPC bind | CLI `--rpc-addr` / `BLVM_RPC_ADDR` (not a `NodeConfig` port key). Defaults: mainnet `127.0.0.1:8332`, testnet `127.0.0.1:18332`, regtest `127.0.0.1:18443` |
 | RPC auth | `[rpc_auth]`: `required`, `tokens`, `admin_tokens`, `username`, `password` |
 | Data directory | `[storage].data_dir` |
@@ -72,6 +72,11 @@ This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` co
 
 ### Network settings
 
+#### `listen`
+- **Type**: `boolean`
+- **Default**: `true`
+- **Description**: Whether to bind P2P listeners. `false` skips the binds while transport initialization and outbound peering still run. `blvm config convert-core` maps an explicit Core `listen=0` to `listen = false`; omitting Core `listen` keeps the default `true`.
+
 #### `listen_addr`
 - **Type**: `SocketAddr` (e.g., `"127.0.0.1:8333"`)
 - **Default**: `"127.0.0.1:8333"`
@@ -103,7 +108,7 @@ This section documents **BLVM `NodeConfig`** fields (the `blvm` / `blvm-node` co
 - **Description**: Bitcoin protocol variant. See [Protocol variants](../protocol/overview.md#protocol-variants).
 
 #### `persistent_peers`
-- **Type**: `array` of `SocketAddr`
+- **Type**: `array` of strings (IP:port or hostname:port)
 - **Default**: `[]`
 - **Description**: List of peer addresses to connect to on startup. Format: `["192.168.1.1:8333", "example.com:8333"]`
 - **Example**: `persistent_peers = ["192.168.1.1:8333", "10.0.0.1:8333"]`
@@ -243,12 +248,11 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 - **Type**: `string` (enum)
 - **Default**: `"auto"`
 - **Options**:
- - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default**, Linux x86_64 releases, and portable **Windows** / **Linux aarch64** cross-releases), else RocksDB, else TidesDB, else Redb, else Sled. **Not OS-specific**: only the compile-time feature set matters. Portable cross-builds omit rocksdb/nix but include heed3 (bundled LMDB via `lmdb-master3-sys`).
+ - `"auto"` - Select by build features: heed3 when `heed3` feature enabled ( **`blvm` default** and every release build), else RocksDB, else Redb, else Sled. **Not OS-specific**: only the compile-time feature set matters. Release builds compile heed3 and no other engine; RocksDB, Redb, and Sled are opt-in source-build features.
  - `"rocksdb"` - Use RocksDB (requires `rocksdb` feature; reads common LevelDB/`blk*.dat` layouts)
- - `"tidesdb"` - Use TidesDB (if available)
  - `"heed3"` - Use heed3 / LMDB (requires `heed3` feature; UTXO values use rkyv encoding)
- - `"redb"` - Use redb (pure Rust; common when building **without** RocksDB)
- - `"sled"` - Use sled database (beta, fallback option)
+ - `"redb"` - Use redb (requires `redb` feature; pure Rust)
+ - `"sled"` - Use sled database (requires `sled` feature; beta, fallback option)
 - **Description**: Database backend selection. System automatically falls back if preferred backend fails.
 
 #### `storage.heed3.map_size_mb`
@@ -270,7 +274,7 @@ Limits bandwidth when **serving** IBD to peers (not when downloading). Defaults 
 ### `storage.auto_migrate_core`
 - **Type**: `boolean`
 - **Default**: `true`
-When `true` and `--data-dir` contains a Bitcoin Core layout (`chainstate/` + `blocks/`), **`blvm start`** runs a one-time migration into **`storage.core_migrate_destination`** or **`<data-dir>/blvm/`** before opening the BLVM store. Requires **`rocksdb`** feature (**`blvm` default features**; absent from portable Windows/aarch64 releases). Disabled by **`--no-auto-migrate`** or **`BLVM_NO_AUTO_MIGRATE_CORE=1`**.
+When `true` and `--data-dir` contains a Bitcoin Core layout (`chainstate/` + `blocks/`), **`blvm start`** runs a one-time migration into **`storage.core_migrate_destination`** or **`<data-dir>/blvm/`** before opening the BLVM store. Requires the **`rocksdb`** feature, which is not in the `blvm` defaults or any release binary (source build with `--features rocksdb`). Disabled by **`--no-auto-migrate`** or **`BLVM_NO_AUTO_MIGRATE_CORE=1`**.
 
 ### `storage.core_migrate_destination`
 - **Type**: `string` (path), optional
@@ -319,7 +323,7 @@ When `true` and `--data-dir` contains a Bitcoin Core layout (`chainstate/` + `bl
 
 #### `storage.pruning.min_blocks_to_keep`
 - **Type**: `integer` (blocks)
-- **Default**: `144` (~1 day at 10 min/block)
+- **Default**: `288` (~2 days at 10 min/block)
 - **Description**: Minimum number of blocks to keep as safety margin, even with aggressive pruning.
 
 #### `storage.pruning.prune_on_startup`
@@ -362,14 +366,14 @@ mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
 #### Aggressive Mode
 ```toml
 [storage.pruning]
-mode = { type = "aggressive", keep_from_height = 0, keep_commitments = true, keep_filtered_blocks = false, min_blocks = 144 }
+mode = { type = "aggressive", keep_from_height = 0, keep_commitments = true, keep_filtered_blocks = false, min_blocks = 288 }
 ```
 **Requires**: `utxo-commitments` feature enabled.
 
 - `keep_from_height`: Keep blocks from this height onwards (default: `0`)
 - `keep_commitments`: Keep UTXO commitments for pruned blocks (default: `true`)
 - `keep_filtered_blocks`: Keep spam-filtered blocks for pruned range (default: `false`)
-- `min_blocks`: Minimum blocks to keep as safety margin (default: `144` = ~1 day)
+- `min_blocks`: Minimum blocks to keep as safety margin (default: `288` = ~2 days)
 
 #### Custom Mode
 ```toml
@@ -396,7 +400,7 @@ Fine-grained control over what data to keep:
 
 ### Storage compression (`[storage.compression]`)
 
-**Requires:** **`compression`** compile-time feature (in **`blvm` default features**; omitted from portable Windows/aarch64 release CI). **Off at runtime** until this table is present in `blvm.toml`. Block/witness zstd applies on all backends; **UTXO zstd is incompatible with heed3/rkyv**: use block/witness/index compression only on default heed3 builds, or set `database_backend = "rocksdb"` if you need UTXO compression.
+**Requires:** **`compression`** compile-time feature (in **`blvm` default features** and in every release build). **Off at runtime** until this table is present in `blvm.toml`. Block/witness zstd applies on all backends; **UTXO zstd is incompatible with heed3/rkyv**: use block/witness/index compression only on default heed3 builds, or set `database_backend = "rocksdb"` if you need UTXO compression.
 
 | Key | Default (when table present) | Description |
 |-----|------------------------------|-------------|
@@ -417,31 +421,49 @@ Optional address and value-range indexes (off by default). See [Transaction Inde
 | `enable_value_index` | `false` | Index outputs by logarithmic value bucket |
 | `strategy` | `"eager"` | `"eager"` = index at block connect; `"lazy"` = defer until query or background worker |
 | `max_indexed_addresses` | `0` | Cap distinct address keys (`0` = unlimited) |
-| `enable_compression` | `false` | zstd-compress index blobs (requires **`compression`** in binary: **`blvm` default features**; omitted from portable Windows/aarch64 release builds) |
+| `enable_compression` | `false` | zstd-compress index blobs (requires **`compression`** in binary: **`blvm` default features** and every release build) |
 | `background_indexing` | `false` | With **`lazy`**, advanced indexing on `txindex-bg` thread after connect |
 
-### UTXO Commitments Pruning (Experimental)
+### Removed config keys
 
-**Requires**: `utxo-commitments` feature enabled.
+The node no longer reads `[storage.pruning.utxo_commitments]` or `[storage.pruning.bip158_filters]`. Use the fields on `PruningMode::Aggressive` or `PruningMode::Custom` above for retention instead. The separate nested tables (including `generate_before_prune`, `max_commitment_age_days`, `keep_filter_headers`, and `max_filter_age_days`) were removed in `blvm-node` 0427d90.
 
-```toml
-[storage.pruning.utxo_commitments]
-keep_commitments = true
-keep_filtered_blocks = false
-generate_before_prune = true
-max_commitment_age_days = 0 # 0 = keep forever
-```
+That commit also removed `background_tasks.ban_cleanup_interval_secs` (the outer `ban_cleanup_outer_interval_secs` remains), and the LAN timeouts `request_timeouts.checkpoint_request_timeout_secs`, `request_timeouts.protocol_verify_timeout_secs`, and `request_timeouts.headers_verify_timeout_secs`. Old files still load, but these keys are ignored. `network_timing.target_peer_count` also accepts its old name `target_outbound_peers`. `persistent_peers` remains, but is now a list of strings so hostnames survive conversion.
 
-### BIP158 Filter Pruning
+## Fee estimator (`[fees]`) {#fee-estimator-fees}
 
-**Requires**: BIP158 filter data (always available in default node builds).
+Omit `[fees]` to use the built-in defaults. The estimator stays on. The schema and validation live in `blvm-node/src/config/fees.rs`. `estimator` is `auto` by default, `native`, or a name registered by a module. `fallback = "native"` serves built-in quotes if the selection is unavailable; `fallback = "none"` fails the quote instead. External data is not selected by default: `allow_auto_override` is empty. See [blvm-fees](../modules/fees.md) and [blvm-upstream](../modules/upstream.md).
 
 ```toml
-[storage.pruning.bip158_filters]
-keep_filters = true
-keep_filter_headers = true # Always required for verification
-max_filter_age_days = 0 # 0 = keep forever
+[fees]
+enabled = true
+history_enabled = true
+mempool_enabled = true
+allow_mempool_only = true
+mempool_horizon_blocks = 1
+mempool_percentile_conservative = 50
+mempool_percentile_economical = 75
+projection_full_threshold = 0.95
+health_window_blocks = 6
+health_min_ratio = 0.75
+# health_required is false on regtest, true elsewhere when omitted
+recompute_interval_secs = 7
+multiplier = 1.0
+state_path = "data/fee_estimator.dat"
+persist_interval_blocks = 6
+max_state_age_blocks = 6048
+lnd_targets = [1, 2, 3, 6, 12, 24, 48, 144, 504, 1008]
+estimator = "auto"
+fallback = "native"
+allow_auto_override = []
+
+[fees.external]
+ttl_secs = 120
+max_lag_blocks = 1
+max_sat_per_kvb = 10000000
 ```
+
+Setting both `history_enabled` and `mempool_enabled` to false is a startup error. Bucket spacing, decays, and success thresholds are fixed. `min_fee_sat_per_kvb` is an optional extra floor in sat/kvB; `multiplier` scales estimates, not the floor. Optional `eval_log_path` appends pre-block quotes and the accepted block's fee-rate band to JSONL; `scripts/score-fee-eval.py` in `blvm-node` scores it. `lnd_targets` controls only `GET /api/v1/fees/lnd`, not `estimatesmartfee`. See [RPC API](../node/rpc-api.md#fee-estimation).
 
 ## Module System Configuration
 
@@ -514,6 +536,36 @@ version = "0.1.*"
 port = "9735"
 network = "mainnet"
 ```
+
+### Module timers (`[timers]`) {#module-timers-timers}
+
+Node-owned timers are enabled by default (`module/timers/types.rs`, `TimerConfig`). This is independent of a module's own storage. Representative defaults:
+
+```toml
+[timers]
+enabled = true
+max_timers_per_module = 256
+max_durable_per_module = 16
+max_timers_total = 16384
+min_period_ms = 100
+min_wall_period_secs = 1
+max_payload_bytes = 256
+max_in_flight_per_module = 64
+max_queued_per_module = 256
+max_fires_per_sec_per_module = 200
+default_ack_timeout_secs = 30
+max_ack_timeout_secs = 600
+max_consecutive_failures = 5
+clock_step_threshold_ms = 500
+durable_max_detached_secs = 2592000
+count_manual = false
+
+# Optional cap for a handshake module name:
+# [module_timers.blvm-upstream]
+# max_timers = 32
+```
+
+`rng_seed` is honored only in library test builds; production ignores it. Cron expressions need the opt-in `timer-cron` build feature. See [Module timers](../architecture/module-system.md#module-timers) for durable storage and RPC inspection.
 
 ### Module Resource Limits
 

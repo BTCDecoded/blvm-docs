@@ -43,11 +43,13 @@ flowchart TD
 ### Peer layer (P2P)
 
 - **Required (mainnet/testnet):** Run maintained releases; keep **`listen_addr`** bound intentionally (avoid accidental **`0.0.0.0`** without firewall intent).
+- **Built in:** Inbound TCP is capped at three connections per address; the fourth is dropped at accept (`blvm-node` ca0b77e). Set `listen = false` to skip P2P binds entirely.
 - **Recommended:** Monitor peer bans / DoS logs; cap LAN peer assumptions using documented LAN-peering rules (**[Threat models](threat-models.md)**).
 
 ### Data directory, backups, integrity
 
 - **Required:** Protect the configured **`data_dir`** with host filesystem permissions (only the node OS user).
+- **Built in:** The `blvm` binary locks the data directory, so a second process cannot open it, and startup rejects a store that fails the stored-block check (`blvm` 89c23a6). A named `--config` path that is missing or does not parse is an error rather than a silent default, and `blvm config set` writes through a temporary file and rename (`blvm` e013987).
 - **Recommended:** Encrypted backups of wallet-adjacent artifacts **elsewhere**: the node is **not** a wallet, but keys or module secrets on the same host still warrant backup hygiene.
 - **Recommended:** Snapshot **`data_dir`** only when the node is stopped or via backend-specific backup guidance (**[Storage backends](../node/storage-backends.md)**) to avoid torn pages.
 

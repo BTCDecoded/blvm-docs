@@ -1,6 +1,6 @@
 # Transport abstraction
 
-> **Platform / build**: **Iroh** is in **`blvm` default features** (Linux x86_64 release artifacts use the same default set; portable Windows/aarch64 CI omits several defaults). **Quinn** requires the `quinn` feature (source build). All release binaries default to TCP-capable builds; set `transport_preference` in config. See [Release process: Build variants](../development/release-process.md#build-variants).
+> **Platform / build**: **Iroh** is in **`blvm` default features** (all release artifacts compile it; see [Release process: Build variants](../development/release-process.md#build-variants)). **Quinn** requires the `quinn` feature (source build). All release binaries default to TCP-capable builds; set `transport_preference` in config. See [Release process: Build variants](../development/release-process.md#build-variants).
 
 ## Overview
 
