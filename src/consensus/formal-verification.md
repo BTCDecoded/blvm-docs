@@ -28,9 +28,9 @@ flowchart LR
 
 **Proofs locked to the functions they protect.** Annotation with `#[spec_locked]` attaches Orange Paper contracts to concrete Rust. Change the code, and the obligations travel with it: proofs are not a detached appendix that drifts from the implementation.
 
-**Machine-checked alignment on merge.** Z3 checks those Rust contracts on every consensus change. Lean checks the Orange Paper model in the spec-lock lean-evidence workflow and does not check the Rust. CI runs **`check-drift`** then **`verify`** on self-hosted runners, so a PR that softens a rule or breaks a proven invariant fails the gate instead of shipping as “still green on unit tests.”
+**Machine-checked alignment on merge.** Z3 checks those Rust contracts on every consensus change. Lean checks the Orange Paper model in the spec-lock lean-evidence workflow and does not check the Rust. Consensus and protocol CI run **`check-drift`** then **`verify`** on self-hosted runners (node CI runs `verify` only), so a PR that softens a rule or breaks a proven invariant fails the gate instead of shipping as “still green on unit tests.”
 
-**Growing, measurable coverage.** `#[spec_locked]` attributes: **281** in **blvm-consensus**, **5** in **blvm-node**, and **6** in **blvm-protocol** (**292**). Contract totals come from `cargo spec-lock coverage`. A green `verify` run is not the body-proof count. That count is 13 functions, named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+**Growing, measurable coverage.** `#[spec_locked]` attributes: **281** in **blvm-consensus**, **8** in **blvm-node**, and **8** in **blvm-protocol** (**297**), counted in source at consensus f63c328, node 36bb40c, and protocol 0bc9307. Contract totals come from `cargo spec-lock coverage`. A green `verify` run is not the body-proof count. That count is 13 functions, named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 **Confidence to evolve.** Proven bounds feed [optimization passes](overview.md#optimization-passes). Refactors and performance work land against the same contracts. Future implementations can share the Orange Paper as common IR; each codebase earns trust by locking to that IR, not by copying another node’s source.
 
@@ -71,7 +71,7 @@ flowchart TB
 
 ### Verify JSON semantics (`blvm-spec-lock`)
 
-`cargo spec-lock verify` emits structured status per function. **Failed** means the proof obligation did not pass: CI gates on these when strict mode is enabled. **Partial** marks obligations demoted or skipped (timeout, translation gap, advisory tier): read the log and [verify JSON format](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/VERIFY_JSON.md) for jq filters; treat **Passed** under explicit policy as the release signal.
+`cargo spec-lock verify` emits structured status per function. **Failed** means the proof obligation did not pass: CI gates on these when strict mode is enabled. **Partial** marks obligations demoted or skipped (timeout, translation gap, advisory tier): read the log and [verify JSON format](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/VERIFY_JSON.md) for jq filters; treat **Passed** under explicit policy as the release signal. A **Partial** result still exits 0, with or without strict mode; a job that must reject it checks `.summary.partial` in the JSON (`blvm-spec-lock` d9a3cbe).
 
 ## Verification Statistics
 
@@ -79,21 +79,21 @@ flowchart TB
 
 **BLVM Specification Lock** runs a single **`verify`** pass over all spec-locked functions and merged `F_*` formula registry rows.
 
-**Coverage snapshot** (`#[spec_locked]` attributes in source; re-run `cargo spec-lock coverage` for contract totals):
+**Coverage snapshot** (`#[spec_locked]` attributes in source at consensus f63c328, node 36bb40c, protocol 0bc9307, including `cfg_attr(feature = "spec-lock", spec_locked(...))` forms; re-run `cargo spec-lock coverage` for contract totals):
 
 | Crate | `#[spec_locked]` attributes |
 |-------|-----------------------------:|
 | **blvm-consensus** | 281 |
-| **blvm-node** | 5 |
-| **blvm-protocol** | 6 |
-| **Total** | **292** |
+| **blvm-node** | 8 |
+| **blvm-protocol** | 8 |
+| **Total** | **297** |
 
 The attribute count is not a proof count. A green `verify` run is not the body-proof count. That count is 13 functions. The written list in the consensus verification guide is 93 of 224. The tool's own list is 34 of 34.
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
 ```bash
-# Install CLI (matches library floor; picks latest published 0.1.x)
+# Install CLI. Latest published 0.1.x; consensus and node CI currently pin 0.1.45 (see CI Integration)
 cargo install blvm-spec-lock --version '>=0.1, <1' --locked --features z3
 
 export SPEC_LOCK_STRICT=1
@@ -132,10 +132,18 @@ Local development uses the same **`verify`** command as CI. For property tests, 
 
 ## CI Integration
 
-The **Verify** / **verify** jobs in [blvm-consensus](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml), [blvm-node](https://github.com/BTCDecoded/blvm-node/blob/main/.github/workflows/ci.yml), and [blvm-protocol](https://github.com/BTCDecoded/blvm-protocol/blob/main/.github/workflows/ci.yml) CI are the authoritative **`cargo-spec-lock`** gates. Optional umbrella **`workflow_dispatch`** mirrors exist for multi-repo workspace checkouts.
+The **Verify** jobs in [blvm-consensus](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml), [blvm-node](https://github.com/BTCDecoded/blvm-node/blob/main/.github/workflows/ci.yml), and [blvm-protocol](https://github.com/BTCDecoded/blvm-protocol/blob/main/.github/workflows/ci.yml) CI are the **`cargo-spec-lock`** gates. They differ:
+
+| Repo | Steps | `blvm-spec-lock` version |
+|------|-------|--------------------------|
+| **blvm-consensus** | `check-drift`, then `verify` | Pinned to **0.1.45** for now, a temporary hold (`ci.yml`: 0.1.48 `check-drift` exits on notation the Orange Paper spells differently) |
+| **blvm-node** | `verify` against the crates.io `blvm-consensus` release, then `verify` on the node tree. No `check-drift` | Pinned to **0.1.45**. Draft [blvm-node#45](https://github.com/BTCDecoded/blvm-node/pull/45) proposes floating again |
+| **blvm-protocol** | `check-drift`, then `verify` | Floats on `'>=0.1, <1'` |
+
+**spec-lock is an optional dependency.** `blvm-consensus` fe108a5 and `blvm-protocol` 7feb664 made `blvm-spec-lock` an optional `spec-lock` feature that the node does not enable, and `blvm-node` 90f890f dropped the dependency from the node. The node's 8 sites are written `#[cfg_attr(feature = "spec-lock", spec_locked(...))]`, so rustc compiles them out of the binary. `cargo-spec-lock` reads the attributes from source (`has_spec_locked` accepts the `cfg_attr` form), so node CI still verifies those contracts. Optional umbrella **`workflow_dispatch`** mirrors exist for multi-repo workspace checkouts.
 
 1. **Unit & Property Tests** (required in each crate CI): `cargo test --all-features`
-2. **BLVM Specification Lock** (required where **`#[spec_locked]`** is enabled): `check-drift` then `verify` per the [spec-lock dependency guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)
+2. **BLVM Specification Lock**: `check-drift` then `verify` in consensus and protocol, `verify` only in node, per the [spec-lock dependency guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)
 3. **OpenTimestamps Audit** (non-blocking: consensus umbrella CI parity / monorepo only where enabled)
 
 Run commands locally: [Testing Infrastructure](../development/testing.md#running-tests). Other subcommands: `coverage`, `summary`, `list`, `check-formulas`, `verify-formulas`. Full CLI reference: [blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/README.md).
