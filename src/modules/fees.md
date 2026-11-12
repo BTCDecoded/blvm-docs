@@ -7,7 +7,7 @@ It is **not** a default module pin, and it is not in `registry/modules.json`. Ex
 ## Inputs
 
 - The node's native fee table (always).
-- `blvm.upstream.v1` from [blvm-upstream](upstream.md), when that module is loaded. If upstream data is missing, the module still submits a table built from the native quotes.
+- `blvm.upstream.v1` from [blvm-upstream](upstream.md), when that module is loaded. If upstream data is missing, the module still submits a table built from the native quotes. `blvm-fees` makes no HTTP requests itself; upstream fetches need a `blvm` built with `--features blvm-node/module-http` (see [blvm-upstream](upstream.md)).
 
 An upstream source whose height is more than `max_height_delta` blocks behind the best source is dropped before merging. The remaining sources are ordered by `priority`.
 
