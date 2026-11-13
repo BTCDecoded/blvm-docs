@@ -28,7 +28,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Forkable Governance** - Governance rules can be forked by users if they disagree with decisions, creating exit competition and preventing capture. See [Governance Fork](../governance/governance-fork.md).
 
-**Cryptographic Enforcement** - All governance actions require cryptographic signatures from maintainers, making power visible and accountable. See [Keyholder Procedures](../governance/keyholder-procedures.md).
+**Cryptographic Enforcement** - The written schedule says a governance action carries maintainer signatures. That check is Designed and is not on. The keys are test keys. See [Keyholder Procedures](../governance/keyholder-procedures.md).
 
 
 ## Technical Concepts
