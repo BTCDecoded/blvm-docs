@@ -8,27 +8,25 @@ BLVM writes a **5-tier** action-tier model. Cryptographic enforcement is Designe
 
 ## PR Lifecycle
 
+The steps below are the written schedule. They do not run while enforcement is off.
+
 ### 1. Developer Opens PR
 
 When you open a Pull Request:
 
 1. **Automated CI runs** - Tests, linting, and build verification
-2. **Governance tier classification** - PR is automatically classified (with temporary manual override available)
-3. **Status checks appear** - Shows what needs to happen for merge
+2. **Governance tier** - The tier is the written rule for the files the change touches. The app does not classify the pull request while enforcement is off.
+3. **Status checks** - CI results appear. A governance status check is not posted while the app is not installed.
 
-### 2. Maintainers Review and Sign
+### 2. Maintainer review
 
-Maintainers review your code and cryptographically sign approval:
+Maintainers review the change. A cryptographic signature is the written schedule. It is not collected, and it does not block the merge, while enforcement is off.
 
-1. **Review PR** - Understand the change and its impact
-2. **Generate signature** - Use `blvm-sign` from blvm-sdk
-3. **Post signature** - Comment `/governance-sign <signature>` on PR
-4. **Governance App verifies** - Cryptographically verifies signature
-5. **Status check updates** - Shows signature count progress
+The designed steps, once enforcement is on, are: review the change, produce a signature with `blvm-sign` from blvm-sdk, comment `/governance-sign <signature>`, and have the Governance App verify it. The app is not installed.
 
-### 3. Review Period Elapses
+### 3. Review period
 
-Each tier has a specific review period that must elapse:
+Each tier has a written review period:
 
 - **Tier 1**: [[gov:lifecycle_tier1_days]] days
 - **Tier 2**: [[gov:lifecycle_tier2_days]] days
@@ -36,16 +34,11 @@ Each tier has a specific review period that must elapse:
 - **Tier 4**: [[gov:lifecycle_tier4_days]] days (immediate)
 - **Tier 5**: [[gov:lifecycle_tier5_days]] days
 
-The review period starts when the PR is opened and all required signatures are collected.
+That period does not start, and it does not block a merge, while enforcement is off.
 
-### 4. Requirements Met → Merge Enabled
+### 4. Merge
 
-Once all requirements are met:
-- Required signatures collected
-- Review period elapsed
-- All CI checks pass
-
-The PR can be merged.
+CI is the check that runs. A signature count and a review period do not enable or block the merge while enforcement is off.
 
 ## Governance Tiers
 
