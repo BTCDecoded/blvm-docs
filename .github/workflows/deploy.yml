@@ -161,6 +161,9 @@ jobs:
 
     needs: build
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
