@@ -24,7 +24,7 @@ Cryptographic governance for Bitcoin Commons repositories: tiers, signatures, an
 | OpenTimestamps / Nostr integrations | [OpenTimestamps](opentimestamps-integration.md), [Nostr](nostr-integration.md) |
 | Operator FAQ (governance) | [FAQ: governance](../appendices/faq.md#do-i-need-governance-to-run-a-node) |
 
-The governance system enforces development processes cryptographically across Bitcoin Commons repositories. Module README (below) covers day-to-day governance module usage; the [Governance Model](governance-model.md) page includes the full constitutional document.
+The governance rules are published and are not enforced. Phase 1 is current, the keys in the governance repository are test keys, and merges are not blocked by a second reviewer. The module README below is the day-to-day note. The [Governance Model](governance-model.md) page includes the constitutional document.
 
 {{#include ../../modules/governance/README.md}}
 
