@@ -30,7 +30,7 @@ flowchart LR
 
 **Machine-checked alignment on merge.** Z3 checks those Rust contracts on every consensus change. Lean checks the Orange Paper model in the spec-lock lean-evidence workflow and does not check the Rust. Consensus and protocol CI run **`check-drift`** then **`verify`** on self-hosted runners (node CI runs `verify` only), so a PR that softens a rule or breaks a proven invariant fails the gate instead of shipping as “still green on unit tests.”
 
-**Growing, measurable coverage.** `#[spec_locked]` attributes: **281** in **blvm-consensus**, **8** in **blvm-node**, and **8** in **blvm-protocol** (**297**), counted in source at consensus f63c328, node 36bb40c, and protocol 0bc9307. Contract totals come from `cargo spec-lock coverage`. A green `verify` run is not the body-proof count. That count is 13 functions, named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+**Growing, measurable coverage.** `#[spec_locked]` attributes: **281** in **blvm-consensus**, **8** in **blvm-node**, and **8** in **blvm-protocol** (**297**), counted in source at consensus f63c328, node 36bb40c, and protocol 0bc9307. Contract totals come from `cargo spec-lock coverage`. A green `verify` run means the spec-lock prover and Z3 accepted that function's contract. The body-proof count is 13 functions, named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
 
 **Confidence to evolve.** Proven bounds feed [optimization passes](overview.md#optimization-passes). Refactors and performance work land against the same contracts. Future implementations can share the Orange Paper as common IR; each codebase earns trust by locking to that IR, not by copying another node’s source.
 
@@ -88,7 +88,7 @@ flowchart TB
 | **blvm-protocol** | 8 |
 | **Total** | **297** |
 
-The attribute count is not a proof count. A green `verify` run is not the body-proof count. That count is 13 functions. The written list in the consensus verification guide is 93 of 224. The tool's own list is 34 of 34.
+The attribute count is the surface the spec-lock prover and Z3 check. A green `verify` run means they accepted that function's contract. The body-proof count is 13 functions. The written list in the consensus verification guide is 93 of 224. The tool's own list is 34 of 34.
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
