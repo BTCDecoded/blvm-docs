@@ -4,7 +4,7 @@ For **human maintainer expectations** and the **AI review intelligence** operati
 
 ## Overview
 
-BLVM uses a **5-tier constitutional governance model** with cryptographic signatures to ensure secure, transparent, and accountable code changes. Every PR is automatically classified into a governance tier based on the scope and impact of the changes.
+BLVM writes a **5-tier** action-tier model. Cryptographic enforcement is Designed and is off. The keys are test keys. The tier of a change is the written rule in the governance repository. A signature does not block a merge while enforcement is off.
 
 ## PR Lifecycle
 
