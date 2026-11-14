@@ -100,26 +100,14 @@ class RenderChartsTest(unittest.TestCase):
         self.assertIn("Merkle proofs", svg)
         self.assertIn("Bitcoin Commons", svg)
 
-    def test_carried_pngs_match_the_previous_bytes(self):
+    def test_carried_pngs_match_the_pinned_bytes(self):
         import hashlib
-        import subprocess
 
-        previous = {
-            "pr-review-time-distribution.png": "src/images/pr-review-time-distribution.png",
-            "proof-maintenance-cost.png": "src/images/proof-maintenance-cost.png",
-            "spec-drift-vs-test-coverage.png": "src/images/spec-drift-vs-test-coverage.png",
-            "governance-process-latency.png": "src/images/governance-process-latency.png",
-            "multisig-threshold-sensitivity.png": "src/images/multisig-threshold-sensitivity.png",
-        }
-        for name, old in previous.items():
-            blob = subprocess.check_output(["git", "show", f"HEAD:{old}"], cwd=ROOT)
-            carried = (ROOT / "charts" / "carried" / name).read_bytes()
-            self.assertEqual(hashlib.sha256(blob).digest(), hashlib.sha256(carried).digest(), name)
-        radar = (ROOT / "charts" / "carried" / "consensus-coverage.png").read_bytes()
-        website = Path(
-            "/mnt/data/bitcoin/blvm/commons-website/assets/images/Consensus-Coverage-Comparison.png"
-        ).read_bytes()
-        self.assertEqual(hashlib.sha256(radar).digest(), hashlib.sha256(website).digest())
+        carried = [c for c in rc.load_catalog() if c["kind"] == "carried"]
+        self.assertEqual(len(carried), 6)
+        for chart in carried:
+            digest = hashlib.sha256((ROOT / chart["source"]).read_bytes()).hexdigest()
+            self.assertEqual(digest, chart["sha256"], chart["id"])
 
     def test_missing_series_stays_empty(self):
         svg = rc.series_chart(

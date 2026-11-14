@@ -78,30 +78,35 @@ charts:
     title: Proof maintenance cost
     measure: Developer-weeks per quarter on the previous figure
     source: charts/carried/proof-maintenance-cost.png
+    sha256: ec340b71a31379c61f5def7c557e576e247e6391beae026e30e8604a1219d766
 
   - id: spec-drift
     kind: carried
     title: Spec drift and test coverage
     measure: Drift bars and coverage line for Core, Knots, btcd, Libbitcoin, and Commons on the previous figure
     source: charts/carried/spec-drift-vs-test-coverage.png
+    sha256: 58856cbeae1ce4d60f97440ab3a30e4a3e5e0cc9907dd4304eca8037bef31284
 
   - id: pr-review-time
     kind: carried
     title: Pull request review time
     measure: Monolith and modular review-time boxes on the previous figure
     source: charts/carried/pr-review-time-distribution.png
+    sha256: 0a3079b46e0f6f327ad1416f96305ab93c456cb1fb54c82d228b41ee774dcfa4
 
   - id: process-latency
     kind: carried
     title: Governance process latency
     measure: Core and Commons review-day bars for tiers 1–5 on the previous figure
     source: charts/carried/governance-process-latency.png
+    sha256: f0d321c087c4b5cd7a291a7265ef68fc16ce58390f846a4e856b578f427c80f3
 
   - id: multisig-sensitivity
     kind: carried
     title: Multisig threshold sensitivity
     measure: The policy bars on the previous figure
     source: charts/carried/multisig-threshold-sensitivity.png
+    sha256: 7afc3d5b6d3793bd765f804863f01e36dfb9d9ffbaf6862e070d244966a769d1
 
   - id: audit-completeness
     kind: matrix
@@ -114,3 +119,4 @@ charts:
     title: Consensus coverage comparison
     measure: Ten areas and five series on the previous radar
     source: charts/carried/consensus-coverage.png
+    sha256: f5b63683f72186308ac0e5d79bf89b9dac82bf45374552c792d35277d8cca777

@@ -137,6 +137,11 @@ jobs:
             cp llms.txt book/llms.txt
           fi
 
+      - name: Copy carried chart images into the book
+        run: |
+          mkdir -p book/charts/carried
+          cp -a charts/carried/*.png book/charts/carried/
+
       - name: Assemble docs host (/ , /blvm , /intelligence)
         run: ./scripts/assemble-docs-site.sh
 
