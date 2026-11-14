@@ -1,0 +1,30 @@
+status: carried
+measured_at: "2026-11-14"
+source: "Line positions on the previous figure, rounded to 5. Vertices were not printed."
+categories:
+  - Block validation
+  - Transaction
+  - Script
+  - Proof of work
+  - Segwit
+  - Taproot
+  - Mempool
+  - Economic
+  - Network
+  - Locktime
+series:
+  - name: Bitcoin Core test coverage
+    color: "#9b2335"
+    values: [20, 20, 15, 20, 35, 35, 35, 30, 25, 25]
+  - name: Commons formal verification
+    color: "#0e7c66"
+    values: [80, 85, 70, 95, 100, 100, 100, 85, 90, 85]
+  - name: Commons test coverage
+    color: "#1d4e89"
+    values: [85, 85, 85, 85, 90, 95, 100, 85, 75, 75]
+  - name: Commons property tests
+    color: "#c44900"
+    values: [100, 100, 100, 45, 30, 30, 25, 20, 15, 15]
+  - name: Commons debug assertions
+    color: "#6b3fa0"
+    values: [60, 80, 95, 60, 45, 45, 65, 50, 20, 25]

@@ -545,6 +545,210 @@ def matrix_chart(chart: dict) -> str:
     return "\n".join(parts)
 
 
+def carried_series(chart_id: str) -> dict:
+    path = series_path(chart_id)
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if data.get("status") != "carried":
+        raise SystemExit(f"{path} must be status carried")
+    for key in ("measured_at", "source", "categories", "series"):
+        if not data.get(key):
+            raise SystemExit(f"{path} is missing {key}")
+    width = len(data["categories"])
+    for item in data["series"]:
+        if len(item["values"]) != width:
+            raise SystemExit(f"{path} series {item.get('name')} does not match categories")
+        item["values"] = [float(v) for v in item["values"]]
+    return data
+
+
+def radar_chart(chart: dict) -> str:
+    data = carried_series(chart["id"])
+    categories = [str(c) for c in data["categories"]]
+    n = len(categories)
+    width, height = 760, 680
+    cx, cy, radius = 380, 300, 188
+    vmax = 100
+    desc = (
+        f"{chart['measure']} Carried {data['measured_at']}. {data['source']}"
+    )
+    parts = svg_open(width, height, chart["title"], desc)
+    parts.append(
+        f'<text x="32" y="32" fill="{INK}" font-family="system-ui,sans-serif" '
+        f'font-size="18" font-weight="650">{esc(chart["title"])}</text>'
+    )
+    for ring in (25, 50, 75, 100):
+        r = radius * ring / vmax
+        pts = []
+        for i in range(n):
+            ang = math.pi / 2 - i * 2 * math.pi / n
+            pts.append(f"{cx + r * math.cos(ang):.1f},{cy - r * math.sin(ang):.1f}")
+        parts.append(
+            f'<polygon fill="none" stroke="{GRID}" points="{" ".join(pts)}"/>'
+        )
+        parts.append(
+            f'<text x="{cx + 6:.0f}" y="{cy - r + 4:.0f}" fill="{MUTED}" '
+            f'font-family="system-ui,sans-serif" font-size="11">{ring}</text>'
+        )
+    for i, name in enumerate(categories):
+        ang = math.pi / 2 - i * 2 * math.pi / n
+        x2 = cx + radius * math.cos(ang)
+        y2 = cy - radius * math.sin(ang)
+        parts.append(f'<line x1="{cx}" y1="{cy}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{GRID}"/>')
+        lx = cx + (radius + 18) * math.cos(ang)
+        ly = cy - (radius + 18) * math.sin(ang)
+        anchor = "start" if math.cos(ang) > 0.25 else "end" if math.cos(ang) < -0.25 else "middle"
+        parts.append(
+            f'<text x="{lx:.1f}" y="{ly:.1f}" fill="{INK}" text-anchor="{anchor}" '
+            f'font-family="system-ui,sans-serif" font-size="12">{esc(name)}</text>'
+        )
+    for index, item in enumerate(data["series"]):
+        color = item.get("color") or CURVE_COLORS[index % len(CURVE_COLORS)]
+        pts = []
+        for i, value in enumerate(item["values"]):
+            ang = math.pi / 2 - i * 2 * math.pi / n
+            r = radius * (float(value) / vmax)
+            pts.append(f"{cx + r * math.cos(ang):.1f},{cy - r * math.sin(ang):.1f}")
+        points = " ".join(pts)
+        parts.append(
+            f'<polygon fill="{color}" fill-opacity="0.16" stroke="{color}" '
+            f'stroke-width="2" points="{points}"/>'
+        )
+        parts.append(
+            f'<rect x="{48 + (index % 3) * 230}" y="{height - 78 + (index // 3) * 22}" '
+            f'width="12" height="12" fill="{color}"/>'
+        )
+        parts.append(
+            f'<text x="{66 + (index % 3) * 230}" y="{height - 68 + (index // 3) * 22}" '
+            f'fill="{INK}" font-family="system-ui,sans-serif" font-size="12">{esc(item["name"])}</text>'
+        )
+    parts.append(
+        f'<text x="32" y="{height - 22}" fill="{MUTED}" font-family="system-ui,sans-serif" '
+        f'font-size="12">Carried {esc(data["measured_at"])}. {esc(data["source"])}</text>'
+    )
+    parts.append("</svg>\n")
+    return "\n".join(parts)
+
+
+def line_chart(chart: dict) -> str:
+    data = carried_series(chart["id"])
+    categories = [str(c) for c in data["categories"]]
+    values = [v for item in data["series"] for v in item["values"]]
+    band = data.get("band")
+    if band:
+        values.extend([float(band["low"]), float(band["high"])])
+    y_max = max(values) or 1
+    width, height = 760, 380
+    left, right, top, bottom = 78, 24, 64, 100
+    plot_w = width - left - right
+    plot_h = height - top - bottom
+    ceiling = axis_ceiling(y_max)
+    desc = f"{chart['measure']} Carried {data['measured_at']}. {data['source']}"
+    parts = svg_open(width, height, chart["title"], desc)
+    parts.append(
+        f'<text x="32" y="32" fill="{INK}" font-family="system-ui,sans-serif" '
+        f'font-size="18" font-weight="650">{esc(chart["title"])}</text>'
+    )
+    parts.append(
+        f'<text x="18" y="{top + plot_h / 2:.0f}" fill="{MUTED}" '
+        f'font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" '
+        f'transform="rotate(-90 18 {top + plot_h / 2:.0f})">{esc(data.get("unit", ""))}</text>'
+    )
+    for val in axis_ticks(ceiling):
+        y = y_scale(val, ceiling, top, plot_h)
+        parts.append(
+            f'<line x1="{left}" y1="{y:.1f}" x2="{left + plot_w}" y2="{y:.1f}" stroke="{GRID}"/>'
+        )
+        parts.append(
+            f'<text x="{left - 8}" y="{y + 4:.1f}" fill="{MUTED}" text-anchor="end" '
+            f'font-family="system-ui,sans-serif" font-size="12">{format_tick(val)}</text>'
+        )
+    n = len(categories)
+
+    def xy(i: int, value: float) -> tuple[float, float]:
+        x = left + (plot_w * i / (n - 1) if n > 1 else plot_w / 2)
+        return x, y_scale(value, ceiling, top, plot_h)
+
+    if band:
+        top_pts = [xy(i, float(band["high"])) for i in range(n)]
+        bot_pts = [xy(i, float(band["low"])) for i in range(n)]
+        poly = top_pts + list(reversed(bot_pts))
+        parts.append(
+            f'<polygon fill="{TOTAL}" fill-opacity="0.18" stroke="none" points="'
+            + " ".join(f"{x:.1f},{y:.1f}" for x, y in poly)
+            + '"/>'
+        )
+    for index, item in enumerate(data["series"]):
+        color = item.get("color") or CURVE_COLORS[index % len(CURVE_COLORS)]
+        pts = [xy(i, value) for i, value in enumerate(item["values"])]
+        parts.append(
+            f'<polyline fill="none" stroke="{color}" stroke-width="2.5" points="'
+            + " ".join(f"{x:.1f},{y:.1f}" for x, y in pts)
+            + '"/>'
+        )
+    for i, name in enumerate(categories):
+        x, _ = xy(i, 0)
+        parts.append(
+            f'<text x="{x:.1f}" y="{top + plot_h + 20}" fill="{INK}" text-anchor="middle" '
+            f'font-family="system-ui,sans-serif" font-size="12">{esc(name)}</text>'
+        )
+    legend = list(data["series"])
+    if band:
+        legend.append({"name": band["name"], "color": TOTAL})
+    legend_x = left
+    for item in legend:
+        color = item.get("color") or TOTAL
+        parts.append(f'<rect x="{legend_x}" y="{height - 52}" width="12" height="12" fill="{color}"/>')
+        parts.append(
+            f'<text x="{legend_x + 18}" y="{height - 42}" fill="{INK}" '
+            f'font-family="system-ui,sans-serif" font-size="12">{esc(item["name"])}</text>'
+        )
+        legend_x += 18 + 7 * len(item["name"]) + 24
+    parts.append(
+        f'<text x="32" y="{height - 18}" fill="{MUTED}" font-family="system-ui,sans-serif" '
+        f'font-size="12">Carried {esc(data["measured_at"])}. {esc(data["source"])}</text>'
+    )
+    parts.append("</svg>\n")
+    return "\n".join(parts)
+
+
+def bars_line_chart(chart: dict) -> str:
+    data = carried_series(chart["id"])
+    if len(data["series"]) != 2:
+        raise SystemExit(f"{chart['id']} bars-line chart needs two series")
+    bars, line = data["series"]
+    categories = [str(c) for c in data["categories"]]
+    y_max = max(bars["values"] + line["values"]) or 1
+    bar_color = bars.get("color", REVIEW)
+    line_color = line.get("color", REQUIRED)
+    svg = grouped_bars(
+        chart["title"],
+        f"{chart['measure']} Carried {data['measured_at']}. {data['source']}",
+        categories,
+        [{"name": bars["name"], "color": bar_color, "values": bars["values"]}],
+        y_max=y_max,
+        y_label=str(data.get("unit", "")),
+        footnote=f"Carried {data['measured_at']}. {data['source']}",
+    )
+    width, height = 760, 360
+    left, right, top, bottom = 78, 20, 64, 108
+    plot_w = width - left - right
+    plot_h = height - top - bottom
+    ceiling = axis_ceiling(y_max)
+    group_w = plot_w / len(categories)
+    pts = []
+    for i, value in enumerate(line["values"]):
+        x = left + i * group_w + group_w / 2
+        y = y_scale(value, ceiling, top, plot_h)
+        pts.append(f"{x:.1f},{y:.1f}")
+    overlay = (
+        f'<polyline fill="none" stroke="{line_color}" stroke-width="2.5" points="{" ".join(pts)}"/>'
+        f'<rect x="220" y="{height - 58}" width="12" height="12" fill="{line_color}"/>'
+        f'<text x="238" y="{height - 48}" fill="{INK}" font-family="system-ui,sans-serif" '
+        f'font-size="12">{esc(line["name"])}</text>'
+    )
+    return svg.replace("</svg>\n", overlay + "</svg>\n")
+
+
 def render_chart(chart: dict, layers: list[dict], tiers: list[dict]) -> str | None:
     kind = chart["kind"]
     if kind == "carried":
@@ -564,6 +768,12 @@ def render_chart(chart: dict, layers: list[dict], tiers: list[dict]) -> str | No
         return series_chart(chart)
     if kind == "matrix":
         return matrix_chart(chart)
+    if kind == "radar":
+        return radar_chart(chart)
+    if kind == "lines":
+        return line_chart(chart)
+    if kind == "bars-line":
+        return bars_line_chart(chart)
     raise SystemExit(f"unknown chart kind {kind} on {chart.get('id')}")
 
 

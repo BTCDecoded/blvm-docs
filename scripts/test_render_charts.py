@@ -103,11 +103,29 @@ class RenderChartsTest(unittest.TestCase):
     def test_carried_pngs_match_the_pinned_bytes(self):
         import hashlib
 
-        carried = [c for c in rc.load_catalog() if c["kind"] == "carried"]
+        carried = [c for c in rc.load_catalog() if c.get("sha256")]
         self.assertEqual(len(carried), 6)
         for chart in carried:
             digest = hashlib.sha256((ROOT / chart["source"]).read_bytes()).hexdigest()
             self.assertEqual(digest, chart["sha256"], chart["id"])
+
+    def test_coverage_figures_are_drawn_from_series_files(self):
+        rendered = rc.outputs()
+        radar = rendered[ROOT / "src/images/charts/consensus-coverage.svg"]
+        self.assertIn("Block validation", radar)
+        self.assertIn("Commons formal verification", radar)
+        self.assertIn("rounded to 5", radar)
+        self.assertIn("<polygon", radar)
+        cost = rendered[ROOT / "src/images/charts/proof-maintenance-cost.svg"]
+        self.assertIn("Monolithic", cost)
+        self.assertIn("Budget band", cost)
+        self.assertIn("Not a measured inventory", cost)
+        self.assertIn("<polyline", cost)
+        drift = rendered[ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg"]
+        for value in (75, 80, 50, 55, 25):
+            self.assertIn(f">{value}<", drift)
+        self.assertIn("Phase 3 estimates", drift)
+        self.assertIn("<polyline", drift)
 
     def test_missing_series_stays_empty(self):
         svg = rc.series_chart(

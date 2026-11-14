@@ -1,0 +1,19 @@
+status: carried
+measured_at: "2026-11-14"
+source: "Illustrative curves on the previous figure. Not a measured inventory."
+unit: developer-weeks
+categories: [Y0, Y5, Y10, Y15, Y20, Y25, Y30]
+series:
+  - name: Monolithic
+    color: "#9b2335"
+    values: [8, 12, 16, 23, 29, 34, 38]
+  - name: Hybrid
+    color: "#1d4e89"
+    values: [10, 12, 13, 16, 19, 22, 24]
+  - name: Modular
+    color: "#0e7c66"
+    values: [18, 18, 18, 18, 18, 18, 18]
+band:
+  name: Budget band
+  low: 10
+  high: 18

@@ -160,21 +160,21 @@ Use the `verify` feature for full protocol verification builds; see [protocol ov
 
 ## Consensus Coverage Comparison
 
-![Consensus coverage comparison](../charts/carried/consensus-coverage.png)
+![Consensus coverage comparison](../images/charts/consensus-coverage.svg)
 
-Ten areas, with series for Bitcoin Core test coverage, Commons formal verification, Commons test coverage, Commons property tests, and Commons debug assertions.
+Ten areas. The lines are the positions on the previous figure, rounded to the nearest 5.
 
 ## Proof Maintenance Cost
 
-![Proof maintenance cost](../charts/carried/proof-maintenance-cost.png)
+![Proof maintenance cost](../images/charts/proof-maintenance-cost.svg)
 
-Developer-weeks per quarter. The figure said to replace the curves once a proof inventory and CI metrics exist.
+Developer-weeks per quarter, from the illustrative curves on the previous figure.
 
 ## Spec Drift vs Test Coverage
 
-![Spec drift and test coverage](../charts/carried/spec-drift-vs-test-coverage.png)
+![Spec drift and test coverage](../images/charts/spec-drift-vs-test-coverage.svg)
 
-Drift bars and a coverage line for Bitcoin Core, Bitcoin Knots, btcd, Libbitcoin, and Bitcoin Commons.
+Phase 3 estimates. The previous figure printed no scale, so the axis is the position on that plot.
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 

@@ -22,13 +22,13 @@ python3 scripts/test_render_charts.py
 | `spec-maintenance` | The steps on the previous figure, including its drift-detection label | Catalog diagram |
 | `verification-anchors` | The three layers printed on the previous figure | Catalog diagram |
 | `release-gates` | The six strength percents printed on the previous figure | `charts/series/release-gates.yml` |
-| `proof-maintenance-cost` | Developer-weeks per quarter | `charts/carried/proof-maintenance-cost.png` |
-| `spec-drift` | Drift bars and a coverage line | `charts/carried/spec-drift-vs-test-coverage.png` |
+| `proof-maintenance-cost` | Developer-weeks per quarter, illustrative curves | `charts/series/proof-maintenance-cost.yml` |
+| `spec-drift` | Drift bars and a coverage line, previous-figure positions | `charts/series/spec-drift.yml` |
 | `pr-review-time` | Monolith and modular review time | PNG pinned, not embedded. Draw from `charts/series/pr-review-time.yml` |
 | `process-latency` | Review days by action tier | `tier-review-days`, from `action-tiers.yml`. The Core comparison PNG is pinned and not embedded |
 | `multisig-sensitivity` | Quorum capture for the published signature counts | `quorum-capture`, from `repository-layers.yml`. The old sensitivity PNG is pinned and not embedded |
 | `audit-completeness` | Complete, partial, or absent, read from the previous figure's cell colors | `charts/series/audit-completeness.yml` |
-| `consensus-coverage` | Ten-area coverage radar | `charts/carried/consensus-coverage.png` |
+| `consensus-coverage` | Ten-area coverage radar, previous-figure positions rounded to 5 | `charts/series/consensus-coverage.yml` |
 
 ## Adding a measurement
 

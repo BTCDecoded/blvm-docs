@@ -1,0 +1,17 @@
+status: carried
+measured_at: "2026-11-14"
+source: "Phase 3 estimates. Positions on the previous figure, which printed no scale."
+unit: plot position
+categories:
+  - Bitcoin Core
+  - Bitcoin Knots
+  - btcd
+  - Libbitcoin
+  - Bitcoin Commons
+series:
+  - name: Spec drift
+    color: "#9b2335"
+    values: [75, 80, 50, 55, 25]
+  - name: Test coverage
+    color: "#1d4e89"
+    values: [65, 64, 70, 68, 75]
