@@ -102,7 +102,7 @@
 - [Selective Sync](modules/selective-sync.md)
 - [FIBRE](modules/fibre.md)
 - [ZMQ](modules/zmq.md)
-- [Wallet index](modules/wallet-index.md)
+- [Script history](modules/wallet-index.md)
 - [Miniscript](modules/miniscript.md)
 - [Fee estimators](modules/fees.md)
 - [Upstream connectors](modules/upstream.md)

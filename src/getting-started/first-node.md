@@ -102,7 +102,7 @@ See [RPC API Reference](../node/rpc-api.md) for authentication and the full meth
 
 A fresh install enables `blvm-miniscript`, `blvm-zmq`, and `blvm-index`, each at `0.1.*`. `blvm-payment` is not in that set. Payment, vault, pool, and congestion methods return method-not-found until that module is loaded. The IBD example below sets `[modules].enabled = false` for the sync. That example is not the fresh-install default.
 
-`blvm-index` replaces `blvm-wallet-index`. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port.
+`blvm-index` is script history. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port.
 
 ZMQ's default binds are loopback:
 

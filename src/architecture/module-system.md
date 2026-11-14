@@ -13,7 +13,7 @@ A fresh install enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. *
 - **[Stratum V2 Module](../modules/stratum-v2.md)**: Stratum V2 mining protocol
 - **[Datum Module](../modules/datum.md)**: DATUM Gateway mining protocol
 - **blvm-zmq**: [ZMQ module](../modules/zmq.md)
-- **blvm-index**: [Wallet index](../modules/wallet-index.md)
+- **blvm-index**: [Script history](../modules/wallet-index.md)
 - **blvm-miniscript**: [Miniscript module](../modules/miniscript.md)
 - **blvm-governance**: [Governance module](../modules/governance-module.md)
 - **blvm-fibre**: [FIBRE module](../modules/fibre.md)

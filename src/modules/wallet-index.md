@@ -1,6 +1,6 @@
-# Wallet index (`blvm-index`)
+# Script history (`blvm-index`)
 
-`blvm-index` replaces `blvm-wallet-index` and keeps that database format. The node binds Electrum (`[services.electrum]`) and Esplora (`[services.esplora]`). This process does not bind them. An unset `listen` does not open a port.
+`blvm-index` keeps the script-history database format. The node binds Electrum (`[services.electrum]`) and Esplora (`[services.esplora]`). This process does not bind them. An unset `listen` does not open a port.
 
 Script history for outputs created on chain, and for spends of those outputs. The module process owns the database. It does not open the node chain store, and it does not hold keys.
 
@@ -30,8 +30,8 @@ Each line is one JSON-RPC object, or a batch array. The methods are `server.vers
 
 ## Esplora
 
-Set `esplora` in the same `config.toml` to bind an HTTP port, for example `127.0.0.1:3000`. `GET /blocks/tip/height` returns the highest stored header. `GET /address/<address>` returns confirmed output counts and satoshi totals for that script. `spent_txo_sum` is present when nothing is spent or when every output is spent, and null when only some outputs are spent. `mempool_stats` reports the unconfirmed transaction count only. Transaction hex and `/address/<address>/txs` are not served. `signet_invalidate_disconnects_the_index` disconnects a signet tip through the node and clears this database at that height, including the Esplora tip.
+Set `[services.esplora]` `listen` to bind an HTTP port, for example `127.0.0.1:3000`. `GET /blocks/tip/height` returns the highest stored header. `GET /address/<address>` returns confirmed output counts and satoshi totals for that script. `spent_txo_sum` is present when nothing is spent or when every output is spent, and null when only some outputs are spent. `mempool_stats` reports the unconfirmed transaction count only. Transaction hex and `/address/<address>/txs` are not served. `signet_invalidate_disconnects_the_index` disconnects a signet tip through the node and clears this database at that height, including the Esplora tip.
 
 ## Loading
 
-Run the `blvm-wallet-index` binary as a node module (`loadmodule`, or a `[modules]` pin). The module manifest asks for `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `read_storage`, `write_storage`, and `register_rpc_endpoint`.
+Run the `blvm-index` binary as a node module (`loadmodule`, or a `[modules]` pin). The module manifest asks for `read_blockchain`, `read_utxo`, `read_chain_state`, `subscribe_events`, `read_storage`, `write_storage`, `register_rpc_endpoint`, and `host_service`.
