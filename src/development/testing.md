@@ -220,44 +220,21 @@ All tests run in CI:
 - **MIRI**: Run on property tests and critical unit tests
 
 
-## Test Metrics
-
-- **Property Test Functions**: Multiple functions across all files
-- **Runtime Assertions**: Multiple assertions (`assert!` and `debug_assert!`)
-- **Fuzz Targets**: Multiple fuzz targets
-
-
-## Components
-
-The testing infrastructure includes:
-- Unit tests for all public functions
-- Property-based tests for mathematical invariants
-- Integration tests for end-to-end scenarios
-- Fuzz tests for edge case discovery
-- blvm-spec-lock proofs for formal verification
-- Runtime assertions for execution-time checks
-- MIRI integration for undefined behavior detection
-- Differential tests (see [Differential Testing](differential-testing.md))
-
-
 ## Source
 
 - [test scripts guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/scripts/README.md) (test data helpers); [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) (verification workflows)
 - [consensus_property_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/consensus_property_tests.rs)
 - [mod.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/mod.rs)
-- [Formal Verification](../consensus/formal-verification.md)
-- [tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests)
+- [tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests), [fuzz/](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz/)
 - [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
 - [differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs) (consensus stub)
 - [blvm-bench integration tests](https://github.com/BTCDecoded/blvm-bench/blob/main/tests/integration.rs), [full-chain differential testing](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md)
-- [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
-- [blvm-consensus/tests/](https://github.com/BTCDecoded/blvm-consensus/tree/main/tests/), [blvm-consensus/fuzz/](https://github.com/BTCDecoded/blvm-consensus/tree/main/fuzz/), [blvm-consensus/src/](https://github.com/BTCDecoded/blvm-consensus/tree/main/src/) (blvm-consensus/fuzz/blvm-consensus/src/`)
+
 ## See Also
 
-- [Property-Based Testing](property-based-testing.md) - Verify mathematical invariants
-- [Differential Testing](differential-testing.md) - Cross-check vs Core (RPC, historical, full-chain)
-- [Benchmarking](benchmarking.md) - Performance measurement
-- [Snapshot Testing](snapshot-testing.md) - Output consistency verification
-- [Formal Verification](../consensus/formal-verification.md) - blvm-spec-lock model checking
-- [UTXO Commitments](../node/utxo-commitments.md#formal-verification) - Spec-lock verification for UTXO operations
-- [Contributing](contributing.md) - Testing requirements for contributions
+- [Property-Based Testing](property-based-testing.md) — mathematical invariants
+- [Differential Testing](differential-testing.md) — cross-check vs Core
+- [Benchmarking](benchmarking.md)
+- [Snapshot Testing](snapshot-testing.md)
+- [UTXO Commitments](../node/utxo-commitments.md#formal-verification)
+- [Contributing](contributing.md)

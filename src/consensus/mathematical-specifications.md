@@ -1,10 +1,6 @@
 # Mathematical Specifications
 
-**Canonical spec:** The [Orange Paper](../reference/orange-paper.md) on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) ([Consensus Spec](https://thebitcoincommons.org/spec.html)). **This page** is an in-book digest of formal properties and notation used when reasoning about **blvm-consensus**, checked by tests and **BLVM Specification Lock**, not a substitute for the full commons spec.
-
-## Overview
-
-Bitcoin Commons documents **Orange Paper-aligned** mathematical specifications for consensus behavior. The Rust code implements this spec, checked by tests and **BLVM Specification Lock** on spec-locked functions. Proof scope: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+**Canonical spec:** The [Orange Paper](../reference/orange-paper.md) on [thebitcoincommons.org](https://thebitcoincommons.org/orange-paper.html) ([Consensus Spec](https://thebitcoincommons.org/spec.html)). **This page** is an in-book digest of formal properties and notation used when reasoning about **blvm-consensus**—checked by tests and **BLVM Specification Lock**, not a substitute for the full commons spec. Proof scope: [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Specification Format
 
@@ -48,7 +44,6 @@ Mathematical specifications use formal notation to define consensus rules:
 - Subsidy halves every 210,000 blocks
 - Subsidy is non-negative
 - Subsidy decreases monotonically
-- Total supply converges to 21 million BTC
 
 
 ### Total Supply
@@ -97,8 +92,8 @@ consensus_met ⟺ agreement_count >= required_agreement_count
 **Mathematical Specification**:
 ```
 median(tips) = {
- tips[n/2] if n is odd,
- (tips[n/2-1] + tips[n/2]) / 2 if n is even
+    tips[n/2] if n is odd,
+    (tips[n/2-1] + tips[n/2]) / 2 if n is even
 }
 ```
 
@@ -215,7 +210,7 @@ Floating-point arithmetic replaced with integer-based calculations:
 // Integer-based threshold calculation
 let required_agreement_count = ((total_peers as f64) * threshold).ceil() as usize;
 if agreement_count >= required_agreement_count {
- // Consensus met
+    // Consensus met
 }
 ```
 
@@ -237,43 +232,43 @@ Checked arithmetic prevents overflow/underflow:
 ```rust
 // Median calculation with overflow protection
 let median_tip = if sorted_tips.len() % 2 == 0 {
- let mid = sorted_tips.len() / 2;
- let lower = sorted_tips[mid - 1];
- let upper = sorted_tips[mid];
- (lower + upper) / 2 // Safe: Natural type prevents overflow
+    let mid = sorted_tips.len() / 2;
+    let lower = sorted_tips[mid - 1];
+    let upper = sorted_tips[mid];
+    (lower + upper) / 2  // Safe: Natural type prevents overflow
 } else {
- sorted_tips[sorted_tips.len() / 2]
+    sorted_tips[sorted_tips.len() / 2]
 };
 ```
 
 
-## How verification applies
+## Formal Verification
 
-**BLVM Specification Lock** uses Z3 to check spec-locked Rust against Orange Paper contracts. Lean checks the spec model and does not check the Rust. The symbolic specs on this page are not each a separate theorem. Methodology and tooling live on [Formal Verification](formal-verification.md). Proof bounds: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+### Z3 and Lean
 
-Property-based tests and runtime assertions (below) complement spec-lock on the same invariants.
+**BLVM Specification Lock** uses Z3 to check spec-locked Rust functions against Orange Paper contracts. Lean checks that an Orange Paper sentence is a theorem of the model in `blvm-spec/lean/`. Lean does not check the Rust. The subsidy theorem (6.1.2) is checked both ways. The symbolic specs above are not each a separate theorem; see [PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
-## Documentation
 
-Consensus repository references (see [consensus docs index](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)):
+### Property-Based Tests
 
-- **[verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)**: how to run verification and what is in scope
-- **[proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)**: proof bounds, coverage, and protections beyond formal verification
+Property-based tests verify invariants:
 
-## Components
-
-The mathematical specifications system includes formal notation, invariants, integer-based arithmetic, runtime assertions, and checked arithmetic on consensus paths. Verification tooling and CI: [Formal Verification](formal-verification.md) and [Testing Infrastructure](../development/testing.md).
+- Generate random inputs
+- Verify properties hold
+- Discover edge cases
+- Test mathematical correctness
 
 
 ## Source
 
-- [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)
-- [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)
-- [repository docs](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)
+Consensus-repo documents for this material ([docs/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/README.md)):
+
+- **[VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md)** — how to run verification and what is in scope
+- **[PROOF_LIMITATIONS.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md)** — proof bounds, coverage, and protections beyond formal verification
 
 ## See Also
 
-- [Consensus Overview](overview.md): Consensus layer introduction
-- [Formal Verification](formal-verification.md): BLVM Specification Lock methodology
-- [Orange Paper](../reference/orange-paper.md): Normative specification on Bitcoin Commons
-- [Property-Based Testing](../development/property-based-testing.md): Property-based testing
+- [Consensus Overview](overview.md) — Consensus layer introduction
+- [Formal Verification](formal-verification.md) — BLVM Specification Lock methodology
+- [Orange Paper](../reference/orange-paper.md) — Normative specification on Bitcoin Commons
+- [Property-Based Testing](../development/property-based-testing.md) — Property-based testing

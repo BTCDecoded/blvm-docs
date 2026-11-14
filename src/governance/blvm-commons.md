@@ -37,19 +37,14 @@ Validates code changes, detects placeholder implementations, and enforces securi
 
 **Documentation:** [PR security control classification](../development/security-controls.md)
 
-## Repository
-
-**GitHub**: [blvm-commons](https://github.com/BTCDecoded/blvm-commons)
-
 ## Source
 
-- [GitHub App](https://github.com/BTCDecoded/blvm-commons)
+- [blvm-commons](https://github.com/BTCDecoded/blvm-commons)
 - [OpenTimestamps Integration](opentimestamps-integration.md)
 - [Nostr Integration](nostr-integration.md)
+
 ## See Also
 
-- [Governance Overview](overview.md) - Governance system introduction
-- [OpenTimestamps Integration](opentimestamps-integration.md) - Audit trail system
-- [Nostr Integration](nostr-integration.md) - Decentralized communication
-- [PR security control classification](../development/security-controls.md) - Security validation
-- [CI/CD Workflows](../development/ci-cd-workflows.md) - Reusable workflows
+- [Governance Overview](overview.md) — where this crate sits
+- [PR security control classification](../development/security-controls.md)
+- [CI/CD Workflows](../development/ci-cd-workflows.md)

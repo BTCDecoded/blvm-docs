@@ -34,6 +34,7 @@ graph TB
 ### Stack layer 2: [blvm-consensus](../consensus/overview.md) (Pure Math Implementation)
 - Direct implementation of [Orange Paper](../reference/orange-paper.md) functions
 - [Formal proofs](../consensus/formal-verification.md) verify mathematical correctness
+- [Property-based testing](../development/property-based-testing.md) checks mathematical invariants
 - Side-effect-free, deterministic functions
 - Consensus-critical dependencies and transitive pins follow **`Cargo.toml`** (BLVM crates use **published ranges**; many third-party crates use **`=`** where pinned)
 
@@ -45,8 +46,7 @@ graph TB
 
 ### Stack layer 4: [blvm-node](../node/overview.md) (Node Implementation)
 - Reference full node: non-consensus storage, P2P, RPC, and [module system](../architecture/module-system.md)
-- [Multi-transport networking](../node/transport-abstraction.md) and operational hardening for real deployments
-- Component detail, lifecycle, and features: [Node overview](../node/overview.md)
+- [Multi-transport networking](../node/transport-abstraction.md), [storage backends](../node/storage-backends.md), and [performance](../node/performance.md)
 
 ### Stack layer 5: [blvm-sdk](../sdk/overview.md) (Developer Toolkit)
 - Governance primitives (key management, signatures, [multisig](../governance/multisig-configuration.md))
@@ -54,12 +54,13 @@ graph TB
 - [Composition framework](../architecture/module-system.md) (declarative node composition)
 - Bitcoin-compatible signing standards
 
-### Stack layer 6: blvm-commons (Governance Enforcement)
-- GitHub App for governance enforcement
+### Stack layer 6: [blvm-commons](../governance/blvm-commons.md) (Governance Enforcement)
+- GitHub App for [governance](../governance/overview.md) enforcement
 - Cryptographic signature verification
 - Multisig threshold enforcement
-- Audit trail management
+- [Audit trails](../governance/audit-trails.md)
 - OpenTimestamps integration
+- [Forkable governance rules](../governance/governance-fork.md)
 
 ## Data Flow
 
@@ -68,30 +69,6 @@ Runtime data flow and crate dependencies: [Component Relationships](component-re
 ## Cross-Layer Validation
 
 Dependency rules, crate-graph boundaries, and version coordination: [Component Relationships](component-relationships.md#cross-layer-validation).
-
-## Key Features
-
-### Mathematical Rigor
-- Direct implementation of [Orange Paper](../reference/orange-paper.md) specifications
-- [Formal verification](../consensus/formal-verification.md) with [BLVM Specification Lock](../consensus/formal-verification.md)
-- [Property-based testing](../development/property-based-testing.md) for mathematical invariants
-- [Formal proofs](../consensus/formal-verification.md) verify critical consensus functions
-
-### Protocol Abstraction
-- Multiple Bitcoin variants (mainnet, testnet, regtest)
-- Commons-specific protocol extensions
-- BIP implementations (BIP152, BIP157, BIP158)
-- Protocol evolution support
-
-### Node and operational features
-- Full Bitcoin node-style functionality when configured and secured appropriately
-- Details: [Node overview](../node/overview.md), [performance](../node/performance.md), [storage backends](../node/storage-backends.md), [transport abstraction](../node/transport-abstraction.md)
-
-### Governance Infrastructure
-- [Cryptographic governance primitives](../governance/overview.md)
-- [Multisig threshold enforcement](../governance/multisig-configuration.md)
-- [Transparent audit trails](../governance/audit-trails.md)
-- [Forkable governance rules](../governance/governance-fork.md)
 
 ## Source repositories
 
@@ -106,10 +83,5 @@ Dependency rules, crate-graph boundaries, and version coordination: [Component R
 
 ## See Also
 
-- [Crate dependencies](component-relationships.md) - Dependency graph and governance layers by crate
-- [Design Philosophy](design-philosophy.md) - Core design principles
-- [Module System](module-system.md) - Module system architecture
-- [Node Overview](../node/overview.md) - Node implementation details
-- [Consensus Overview](../consensus/overview.md) - Consensus layer details
-- [Protocol Overview](../protocol/overview.md) - Protocol layer details
+- [Design Philosophy](design-philosophy.md) — why the stack is split this way
 

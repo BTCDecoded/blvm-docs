@@ -33,12 +33,10 @@ Verification methodology, coverage, and CI: [Formal Verification](formal-verific
 ## Design principles
 
 1. **Pure functions**: Deterministic validation; explicit inputs instead of hidden globals
-2. **No rule interpretation in apps**: Node calls into consensus; modules never patch rules
+2. **No rule interpretation outside this layer**: The node calls into consensus; modules never patch rules. This crate is the mathematical implementation of the Orange Paper
 3. **Controlled dependencies**: `Cargo.toml` pins and ranges are the source of truth for crypto and BLVM crates
 4. **Testing in depth**: [Testing](../development/testing.md), [property-based tests](../development/property-based-testing.md), [differential testing](../development/differential-testing.md) via **blvm-bench**
 5. **Formal verification**: Spec-lock proofs complement tests; see [Formal Verification](formal-verification.md)
-6. **No consensus rule interpretation**: Only mathematical implementation of the Orange Paper
-7. **Optimization passes**: Runtime optimizations speed the code without changing specified meaning; see [Optimization passes](#optimization-passes)
 
 ## Core functions
 
@@ -119,10 +117,3 @@ Declare versions from [blvm-consensus `Cargo.toml`](https://github.com/BTCDecode
 | Mining helpers | `src/mining.rs` |
 | SegWit / Taproot | `src/segwit.rs` |
 | Optimizations | `src/optimizations.rs` |
-
-## See Also
-
-- [API Index: Consensus functions](../reference/api-index.md#consensus-function-catalog-orange-paper-names)
-- [Formal Verification](formal-verification.md): Methodology
-- [Mathematical Specifications](mathematical-specifications.md): Formal properties
-- [Orange Paper](../reference/orange-paper.md): Normative spec

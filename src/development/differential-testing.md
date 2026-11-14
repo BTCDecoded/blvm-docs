@@ -113,5 +113,3 @@ Script differentials live in `blvm-consensus` (`height_script_differential` and 
 ## See also
 
 - [Testing](testing.md)
-- [Fuzzing](testing.md#fuzzing)
-- [Formal Verification](../consensus/formal-verification.md)

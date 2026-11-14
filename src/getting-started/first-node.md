@@ -217,6 +217,6 @@ Blocks, UTXO set, chain state, and indexes live under `[storage].data_dir`. See 
 
 ## See also
 
-- [Node Configuration](../node/configuration.md) · [Configuration Reference](../reference/configuration-reference.md)
+- [Configuration Reference](../reference/configuration-reference.md)
 - [Node Operations](../node/operations.md): backup, Core datadir import
 - [Deployment posture](../security/deployment-posture.md): before exposing mainnet RPC

@@ -23,8 +23,9 @@ Cryptographic governance for Bitcoin Commons repositories: tiers, signatures, an
 | blvm-commons enforcement | [blvm-commons](blvm-commons.md) |
 | OpenTimestamps / Nostr integrations | [OpenTimestamps](opentimestamps-integration.md), [Nostr](nostr-integration.md) |
 | Operator FAQ (governance) | [FAQ: governance](../appendices/faq.md#do-i-need-governance-to-run-a-node) |
+| Governance primitives in code | [SDK API Reference](../sdk/api-reference.md) |
 
-The governance rules are published and are not enforced. Phase 1 is current, the keys in the governance repository are test keys, and merges are not blocked by a second reviewer. The module README below is the day-to-day note. The [Governance Model](governance-model.md) page includes the constitutional document.
+The governance rules are published and are not enforced. Phase 1 is current, the keys in the governance repository are test keys, and merges are not blocked by a second reviewer. The module README below is the day-to-day note. The [Governance Model](governance-model.md) page includes the constitutional document ([GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md)).
 
 {{#include ../../modules/governance/README.md}}
 
@@ -36,13 +37,4 @@ Human maintainer expectations and AI-assisted “review intelligence” for Bitc
 - **[Review intelligence](https://github.com/BTCDecoded/governance/blob/main/guides/REVIEW_INTELLIGENCE.md)**: Operating document for **AI-assisted** review of Bitcoin implementations: true alternative vs Core fork taxonomy, flag structure, and alignment with the [Orange Paper](../reference/orange-paper.md) and the [Bitcoin Commons Compact](https://github.com/BTCDecoded/governance/blob/main/COMPACT.md).
 
 For PR tiers, cryptographic signatures, and merge rules, see [PR process](../development/pr-process.md) and [Layer-tier model](layer-tier-model.md).
-
-## See Also
-
-- [Governance Model](governance-model.md): Constitutional model and included [governance policy](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md)
-- [PR Process](../development/pr-process.md): How tiers apply to pull requests
-- [Multisig Configuration](multisig-configuration.md): Configuring multisig thresholds
-- [Keyholder Procedures](keyholder-procedures.md): Maintainer responsibilities
-- [Audit Trails](audit-trails.md): Audit logging and verification
-- [SDK API Reference](../sdk/api-reference.md): Governance primitives API
 
