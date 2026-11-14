@@ -54,7 +54,7 @@ When both layer and tier apply, the system uses **"most restrictive wins"** rule
 
 ## Multisig Threshold Sensitivity
 
-![Multisig threshold sensitivity from the previous figure](../../charts/carried/multisig-threshold-sensitivity.png)
+![Multisig threshold sensitivity from the previous figure](../charts/carried/multisig-threshold-sensitivity.png)
 
 The previous figure. Its axis labels were not printed, so the picture is carried unchanged.
 

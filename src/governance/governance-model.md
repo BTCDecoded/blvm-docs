@@ -16,13 +16,13 @@ Required signatures, maintainer set size, and the review window come from `repos
 
 The bar for each action tier is the published review period (`tier_1` through `tier_5` in `action-tiers.yml`). The emergency tier is [[gov:tier_4_review_days]] days. This is the policy window.
 
-![Governance process latency from the previous figure](../../charts/carried/governance-process-latency.png)
+![Governance process latency from the previous figure](../charts/carried/governance-process-latency.png)
 
 The second figure is the previous chart. It draws a Bitcoin Core range beside a Commons range for the same five tiers. Those Core values were not printed as a table, so the picture is carried unchanged.
 
 ## Pull request review time
 
-![Pull request review time from the previous figure](../../charts/carried/pr-review-time-distribution.png)
+![Pull request review time from the previous figure](../charts/carried/pr-review-time-distribution.png)
 
 Monolith and modular review-time boxes from the previous figure. The category axis was not printed, so the picture is carried unchanged.
 
