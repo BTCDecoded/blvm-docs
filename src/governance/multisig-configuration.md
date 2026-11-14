@@ -54,10 +54,6 @@ When both layer and tier apply, the system uses **"most restrictive wins"** rule
 
 ## Multisig Threshold Sensitivity
 
-![Multisig threshold sensitivity from the previous figure](../charts/carried/multisig-threshold-sensitivity.png)
-
-The previous figure. Its axis labels were not printed, so the picture is carried unchanged.
-
 ![Quorum capture probability](../images/charts/quorum-capture.svg)
 
 The curves are rebuilt from the current *k* and *n* in `repository-layers.yml`. Each signer is compromised independently with probability *p*. The curve is the probability that the number of compromised signers reaches the required count. Layers that share a quorum share a curve. *p* is not a measured attacker rate.

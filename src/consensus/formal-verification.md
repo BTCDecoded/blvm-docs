@@ -160,21 +160,15 @@ Use the `verify` feature for full protocol verification builds; see [protocol ov
 
 ## Consensus Coverage Comparison
 
-![Consensus coverage comparison from the previous figure](../charts/carried/consensus-coverage.png)
-
-The previous radar: ten areas, and series for Bitcoin Core test coverage, Commons formal verification, Commons test coverage, Commons property tests, and Commons debug assertions. The vertices were not printed as a table, so the picture is carried unchanged.
+A measured `charts/series/consensus-coverage.yml` draws this radar. The previous picture had no printed vertex table.
 
 ## Proof Maintenance Cost
 
-![Proof maintenance cost from the previous figure](../charts/carried/proof-maintenance-cost.png)
-
-Developer-weeks per quarter on the previous figure, which said to replace the curves once a proof inventory and CI metrics exist. The picture is carried unchanged.
+A measured `charts/series/proof-maintenance-cost.yml` draws this figure. The previous picture said to replace the curves once a proof inventory and CI metrics exist.
 
 ## Spec Drift vs Test Coverage
 
-![Spec drift and test coverage from the previous figure](../charts/carried/spec-drift-vs-test-coverage.png)
-
-Drift bars and a coverage line for Bitcoin Core, Bitcoin Knots, btcd, Libbitcoin, and Bitcoin Commons. The axis scale was not printed, so the picture is carried unchanged.
+A measured `charts/series/spec-drift.yml` draws this figure. The previous picture had no printed axis scale.
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 
