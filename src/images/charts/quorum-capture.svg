@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 480" role="img" width="760" height="480">
+<title>Quorum capture probability</title>
+<desc>Model: each signer is compromised independently with probability p. The curve is P(X ≥ required) for the k and n in repository-layers.yml. p is not a measured attacker rate.</desc>
+<rect width="100%" height="100%" fill="#fbfaf7"/>
+<text x="32" y="32" fill="#1c1915" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Quorum capture probability</text>
+<line x1="64" y1="330.0" x2="736" y2="330.0" stroke="#e4ddd0"/>
+<text x="56" y="334.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0.00</text>
+<text x="64.0" y="348" fill="#5c564c" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">0.00</text>
+<line x1="64" y1="261.5" x2="736" y2="261.5" stroke="#e4ddd0"/>
+<text x="56" y="265.5" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0.25</text>
+<text x="232.0" y="348" fill="#5c564c" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">0.25</text>
+<line x1="64" y1="193.0" x2="736" y2="193.0" stroke="#e4ddd0"/>
+<text x="56" y="197.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0.50</text>
+<text x="400.0" y="348" fill="#5c564c" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">0.50</text>
+<line x1="64" y1="124.5" x2="736" y2="124.5" stroke="#e4ddd0"/>
+<text x="56" y="128.5" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0.75</text>
+<text x="568.0" y="348" fill="#5c564c" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">0.75</text>
+<line x1="64" y1="56.0" x2="736" y2="56.0" stroke="#e4ddd0"/>
+<text x="56" y="60.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">1.00</text>
+<text x="736.0" y="348" fill="#5c564c" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">1.00</text>
+<text x="400.0" y="368" fill="#5c564c" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">per-signer compromise probability p</text>
+<polyline fill="none" stroke="#1d4e89" stroke-width="2.5" points="64.0,330.0 97.6,330.0 131.2,330.0 164.8,330.0 198.4,329.9 232.0,329.6 265.6,329.0 299.2,327.5 332.8,324.8 366.4,320.2 400.0,312.9 433.6,301.9 467.2,286.5 500.8,265.9 534.4,239.7 568.0,208.1 601.6,172.0 635.2,133.7 668.8,97.0 702.4,68.2 736.0,56.0"/>
+<rect x="64" y="416" width="12" height="12" fill="#1d4e89"/>
+<text x="82" y="426" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">L1 spec and L2 consensus, 6 of 7</text>
+<polyline fill="none" stroke="#c44900" stroke-width="2.5" points="64.0,330.0 97.6,330.0 131.2,329.9 164.8,329.4 198.4,328.2 232.0,325.7 265.6,321.6 299.2,315.2 332.8,306.2 366.4,294.0 400.0,278.6 433.6,259.8 467.2,237.7 500.8,212.6 534.4,185.3 568.0,156.6 601.6,128.0 635.2,101.2 668.8,78.3 702.4,62.2 736.0,56.0"/>
+<rect x="404" y="416" width="12" height="12" fill="#c44900"/>
+<text x="422" y="426" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">L3 protocol, 4 of 5</text>
+<polyline fill="none" stroke="#0e7c66" stroke-width="2.5" points="64.0,330.0 97.6,329.7 131.2,327.7 164.8,322.7 198.4,314.1 232.0,301.6 265.6,285.3 299.2,265.6 332.8,243.0 366.4,218.5 400.0,193.0 433.6,167.5 467.2,143.0 500.8,120.4 534.4,100.7 568.0,84.4 601.6,71.9 635.2,63.3 668.8,58.3 702.4,56.3 736.0,56.0"/>
+<rect x="64" y="394" width="12" height="12" fill="#0e7c66"/>
+<text x="82" y="404" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">L4 node, 3 of 5</text>
+<polyline fill="none" stroke="#6b3fa0" stroke-width="2.5" points="64.0,330.0 97.6,328.0 131.2,322.3 164.8,313.4 198.4,301.5 232.0,287.2 265.6,270.8 299.2,252.8 332.8,233.6 366.4,213.5 400.0,193.0 433.6,172.5 467.2,152.4 500.8,133.2 534.4,115.2 568.0,98.8 601.6,84.5 635.2,72.6 668.8,63.7 702.4,58.0 736.0,56.0"/>
+<rect x="404" y="394" width="12" height="12" fill="#6b3fa0"/>
+<text x="422" y="404" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">L5 sdk, 2 of 3</text>
+</svg>

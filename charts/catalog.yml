@@ -1,0 +1,116 @@
+# Chart contract for the BLVM manual.
+# `scripts/render-charts.py` reads this file plus governance YAML and writes
+# the SVG and Mermaid fragments the book includes. Do not edit those outputs.
+#
+# kind: layer-thresholds | tier-review | quorum-curves | mermaid | series
+# A `series` chart draws bars only from charts/series/<id>.yml when that file
+# has status: measured, a measured_at date, and a source. Otherwise it draws
+# an empty panel that names the measure.
+
+charts:
+  - id: layer-thresholds
+    kind: layer-thresholds
+    title: Signature thresholds by repository layer
+    measure: Required signatures, maintainer set size, and the published review window
+    source: modules/governance/config/repository-layers.yml
+    output: src/images/charts/layer-thresholds.svg
+
+  - id: tier-review-days
+    kind: tier-review
+    title: Review period by action tier
+    measure: Published review period in days for action tiers 1–5
+    source: modules/governance/config/action-tiers.yml
+    output: src/images/charts/tier-review-days.svg
+
+  - id: quorum-capture
+    kind: quorum-curves
+    title: Quorum capture probability
+    measure: Probability that independent per-signer compromises reach the required signature count
+    source: modules/governance/config/repository-layers.yml
+    output: src/images/charts/quorum-capture.svg
+
+  - id: block-path
+    kind: mermaid
+    title: Path of a received block
+    measure: The six steps printed on the previous figure
+    output: charts/fragments/block-path.md
+    diagram: |
+      flowchart LR
+        A["1 Block arrives"] --> B["2 Consensus validation"]
+        B --> C["3 Protocol processing"]
+        C --> D["4 Module execution"]
+        D --> E["5 State update"]
+        E --> F["6 Governance logging"]
+
+  - id: spec-maintenance
+    kind: mermaid
+    title: Spec maintenance
+    measure: The steps printed on the previous figure
+    output: charts/fragments/spec-maintenance.md
+    diagram: |
+      flowchart LR
+        C[Code change] --> D["Drift detection: CI/CD runs AI extraction"]
+        D --> A[Alert generated]
+        A --> U["Update spec: Orange Paper updated"]
+        U --> R["Re-verify: formal verification runs"]
+
+  - id: verification-anchors
+    kind: mermaid
+    title: Verification records
+    measure: The three layers printed on the previous figure
+    output: charts/fragments/verification-anchors.md
+    diagram: |
+      flowchart TB
+        G["Layer 1 GitHub enforcement: 3-of-5 merge multisig, webhook gate, VPN runner"]
+        N["Layer 2 Nostr: hourly signed status broadcasts, public verification"]
+        O["Layer 3 OpenTimestamps: monthly anchoring to Bitcoin, court-grade record"]
+        G --> N --> O
+
+  - id: release-gates
+    kind: series
+    title: Release pipeline gate strength
+    measure: Strength percent printed on the previous figure for each named gate
+    unit: percent
+    output: src/images/charts/release-gates.svg
+
+  - id: proof-maintenance-cost
+    kind: carried
+    title: Proof maintenance cost
+    measure: Developer-weeks per quarter on the previous figure
+    source: charts/carried/proof-maintenance-cost.png
+
+  - id: spec-drift
+    kind: carried
+    title: Spec drift and test coverage
+    measure: Drift bars and coverage line for Core, Knots, btcd, Libbitcoin, and Commons on the previous figure
+    source: charts/carried/spec-drift-vs-test-coverage.png
+
+  - id: pr-review-time
+    kind: carried
+    title: Pull request review time
+    measure: Monolith and modular review-time boxes on the previous figure
+    source: charts/carried/pr-review-time-distribution.png
+
+  - id: process-latency
+    kind: carried
+    title: Governance process latency
+    measure: Core and Commons review-day bars for tiers 1–5 on the previous figure
+    source: charts/carried/governance-process-latency.png
+
+  - id: multisig-sensitivity
+    kind: carried
+    title: Multisig threshold sensitivity
+    measure: The policy bars on the previous figure
+    source: charts/carried/multisig-threshold-sensitivity.png
+
+  - id: audit-completeness
+    kind: matrix
+    title: Audit trail completeness
+    measure: Complete, partial, or absent for each artifact class and implementation, read from the previous figure's cell colors
+    output: src/images/charts/audit-completeness.svg
+
+  - id: consensus-coverage
+    kind: carried
+    title: Consensus coverage comparison
+    measure: Ten areas and five series on the previous radar
+    source: charts/carried/consensus-coverage.png

@@ -160,18 +160,21 @@ Use the `verify` feature for full protocol verification builds; see [protocol ov
 
 ## Consensus Coverage Comparison
 
-![Consensus Coverage Comparison](https://thebitcoincommons.org/assets/images/Consensus-Coverage-Comparison.png)
-*Figure: Baseline: broad tests and review. Bitcoin Commons adds **BLVM Specification Lock** and Orange Paper-driven methodology on top.*
+![Consensus coverage comparison from the previous figure](../../charts/carried/consensus-coverage.png)
+
+The previous radar: ten areas, and series for Bitcoin Core test coverage, Commons formal verification, Commons test coverage, Commons property tests, and Commons debug assertions. The vertices were not printed as a table, so the picture is carried unchanged.
 
 ## Proof Maintenance Cost
 
-![Proof Maintenance Cost](../images/proof-maintenance-cost.png)
-*Figure: Proof maintenance cost: proofs changed per change by area; highlights refactor hotspots.*
+![Proof maintenance cost from the previous figure](../../charts/carried/proof-maintenance-cost.png)
+
+Developer-weeks per quarter on the previous figure, which said to replace the curves once a proof inventory and CI metrics exist. The picture is carried unchanged.
 
 ## Spec Drift vs Test Coverage
 
-![Spec Drift vs Test Coverage](../images/spec-drift-vs-test-coverage.png)
-*Figure: Spec drift decreases as test coverage increases. Higher test coverage reduces the likelihood of specification drift over time.*
+![Spec drift and test coverage from the previous figure](../../charts/carried/spec-drift-vs-test-coverage.png)
+
+Drift bars and a coverage line for Bitcoin Core, Bitcoin Knots, btcd, Libbitcoin, and Bitcoin Commons. The axis scale was not printed, so the picture is carried unchanged.
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 

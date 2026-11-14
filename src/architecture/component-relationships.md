@@ -44,8 +44,9 @@ See [Governance layers and tiers](../governance/layer-tier-model.md) for how lay
 
 The dependency graph above is the accurate picture for **crate dependencies**. At runtime, **blocks and transactions** flow through the node, which calls into **protocol** and **consensus** libraries to validate; the Orange Paper remains the **specification** those libraries implement.
 
-![How the Stack Works](../images/how-the-stack-works-in-practice.png)
-*Figure: Operational view (IBD, validation, modules, governance). For **which crate depends on which**, use the dependency graph in this page.*
+{{#include ../../charts/fragments/block-path.md}}
+
+The figure is the previous operational picture: block arrival, consensus validation, protocol processing, module execution, state update, and governance logging. The numbered list below is the crate order. For **which crate depends on which**, use the dependency graph above.
 
 1. **Orange Paper** specifies consensus rules.
 2. **blvm-consensus** implements those rules (pure functions).

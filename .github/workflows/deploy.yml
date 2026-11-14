@@ -64,7 +64,10 @@ jobs:
           fi
 
       - name: Verify book inputs (includes + governance config)
-        run: ./scripts/verify-book-inputs.sh
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-yaml
+          ./scripts/verify-book-inputs.sh
 
       - name: Check governance policy literals use [[gov:…]]
         run: ./scripts/check-governance-literals.sh

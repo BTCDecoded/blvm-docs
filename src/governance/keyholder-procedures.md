@@ -46,10 +46,11 @@ Emergency keyholders can activate **emergency response classes** defined in `eme
 - **Urgent class**: [[gov:emergency_urgent_signature]] signatures; maximum [[gov:emergency_urgent_max_days]] days
 - **Elevated class**: [[gov:emergency_elevated_signature]] signatures; maximum [[gov:emergency_elevated_max_days]] days
 
-## Release Pipeline Gate Strength
+## Release pipeline gate strength
 
-![Release Pipeline Gate Strength](../images/release-pipeline-gate-strength.png)
-*Figure: Gate strength across the release pipeline. Each gate requires specific signatures and review periods based on the change tier.*
+![Release pipeline gate strength](../images/charts/release-gates.svg)
+
+The six percents printed on the previous figure. That figure called them Phase 3 estimates. Signature counts and review windows for a change live in [Multisig configuration](multisig-configuration.md).
 
 For detailed maintainer procedures, see [maintainer guide](https://github.com/BTCDecoded/governance/blob/main/guides/MAINTAINER_GUIDE.md).
 

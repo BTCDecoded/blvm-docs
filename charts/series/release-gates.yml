@@ -1,0 +1,14 @@
+status: carried
+measured_at: "2026-05-10"
+source: "numbers printed on the previous figure release-pipeline-gate-strength.png, which labeled them Phase 3 estimates"
+unit: percent
+categories:
+  - Lint and static analysis
+  - Unit and integration tests
+  - CI verification
+  - Review thresholds
+  - Merge signatures
+  - Release signatures
+series:
+  - name: printed strength
+    values: [60, 75, 80, 85, 90, 95]

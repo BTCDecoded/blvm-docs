@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 720" role="img" width="760" height="720">
+<title>Signature thresholds by repository layer</title>
+<desc>Required signatures, set size, and review windows from repository-layers.yml.</desc>
+<rect width="100%" height="100%" fill="#fbfaf7"/>
+<g transform="translate(0 0)"><text x="32" y="32" fill="#1c1915" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Signatures by repository layer</text>
+<text x="18" y="158.0" fill="#5c564c" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" transform="rotate(-90 18 158.0)">signatures</text>
+<line x1="78" y1="252.0" x2="740" y2="252.0" stroke="#e4ddd0"/>
+<text x="70" y="256.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0</text>
+<line x1="78" y1="225.1" x2="740" y2="225.1" stroke="#e4ddd0"/>
+<text x="70" y="229.1" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">1</text>
+<line x1="78" y1="198.3" x2="740" y2="198.3" stroke="#e4ddd0"/>
+<text x="70" y="202.3" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">2</text>
+<line x1="78" y1="171.4" x2="740" y2="171.4" stroke="#e4ddd0"/>
+<text x="70" y="175.4" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">3</text>
+<line x1="78" y1="144.6" x2="740" y2="144.6" stroke="#e4ddd0"/>
+<text x="70" y="148.6" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">4</text>
+<line x1="78" y1="117.7" x2="740" y2="117.7" stroke="#e4ddd0"/>
+<text x="70" y="121.7" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">5</text>
+<line x1="78" y1="90.9" x2="740" y2="90.9" stroke="#e4ddd0"/>
+<text x="70" y="94.9" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">6</text>
+<line x1="78" y1="64.0" x2="740" y2="64.0" stroke="#e4ddd0"/>
+<text x="70" y="68.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">7</text>
+<rect x="122.2" y="90.9" width="19.0" height="161.1" fill="#1d4e89"/>
+<text x="131.7" y="86.9" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">6</text>
+<rect x="144.2" y="64.0" width="19.0" height="188.0" fill="#0e7c66"/>
+<text x="153.7" y="60.0" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">7</text>
+<text x="144.2" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L1 spec</text>
+<rect x="254.6" y="90.9" width="19.0" height="161.1" fill="#1d4e89"/>
+<text x="264.1" y="86.9" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">6</text>
+<rect x="276.6" y="64.0" width="19.0" height="188.0" fill="#0e7c66"/>
+<text x="286.1" y="60.0" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">7</text>
+<text x="276.6" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L2 consensus</text>
+<rect x="387.0" y="144.6" width="19.0" height="107.4" fill="#1d4e89"/>
+<text x="396.5" y="140.6" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">4</text>
+<rect x="409.0" y="117.7" width="19.0" height="134.3" fill="#0e7c66"/>
+<text x="418.5" y="113.7" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">5</text>
+<text x="409.0" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L3 protocol</text>
+<rect x="519.4" y="171.4" width="19.0" height="80.6" fill="#1d4e89"/>
+<text x="528.9" y="167.4" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">3</text>
+<rect x="541.4" y="117.7" width="19.0" height="134.3" fill="#0e7c66"/>
+<text x="550.9" y="113.7" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">5</text>
+<text x="541.4" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L4 node</text>
+<rect x="651.8" y="198.3" width="19.0" height="53.7" fill="#1d4e89"/>
+<text x="661.3" y="194.3" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">2</text>
+<rect x="673.8" y="171.4" width="19.0" height="80.6" fill="#0e7c66"/>
+<text x="683.3" y="167.4" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">3</text>
+<text x="673.8" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L5 sdk</text>
+<rect x="78" y="302" width="12" height="12" fill="#1d4e89"/>
+<text x="96" y="312" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">Required</text>
+<rect x="188" y="302" width="12" height="12" fill="#0e7c66"/>
+<text x="206" y="312" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">Set size</text>
+<text x="32" y="338" fill="#5c564c" font-family="system-ui,sans-serif" font-size="12">From repository-layers.yml. Counts are the published policy, not observed signatures.</text>
+</g>
+<g transform="translate(0 360)"><text x="32" y="32" fill="#1c1915" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Review window by repository layer</text>
+<text x="18" y="158.0" fill="#5c564c" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" transform="rotate(-90 18 158.0)">days</text>
+<line x1="78" y1="252.0" x2="740" y2="252.0" stroke="#e4ddd0"/>
+<text x="70" y="256.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0</text>
+<line x1="78" y1="205.0" x2="740" y2="205.0" stroke="#e4ddd0"/>
+<text x="70" y="209.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">100</text>
+<line x1="78" y1="158.0" x2="740" y2="158.0" stroke="#e4ddd0"/>
+<text x="70" y="162.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">200</text>
+<line x1="78" y1="111.0" x2="740" y2="111.0" stroke="#e4ddd0"/>
+<text x="70" y="115.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">300</text>
+<line x1="78" y1="64.0" x2="740" y2="64.0" stroke="#e4ddd0"/>
+<text x="70" y="68.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">400</text>
+<rect x="122.2" y="167.4" width="19.0" height="84.6" fill="#c44900"/>
+<text x="131.7" y="163.4" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">180</text>
+<rect x="144.2" y="80.5" width="19.0" height="171.5" fill="#5c4d7a"/>
+<text x="153.7" y="76.5" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">365</text>
+<text x="144.2" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L1 spec</text>
+<rect x="254.6" y="167.4" width="19.0" height="84.6" fill="#c44900"/>
+<text x="264.1" y="163.4" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">180</text>
+<rect x="276.6" y="80.5" width="19.0" height="171.5" fill="#5c4d7a"/>
+<text x="286.1" y="76.5" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">365</text>
+<text x="276.6" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L2 consensus</text>
+<rect x="387.0" y="209.7" width="19.0" height="42.3" fill="#c44900"/>
+<text x="396.5" y="205.7" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">90</text>
+<text x="409.0" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L3 protocol</text>
+<rect x="519.4" y="223.8" width="19.0" height="28.2" fill="#c44900"/>
+<text x="528.9" y="219.8" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">60</text>
+<text x="541.4" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L4 node</text>
+<rect x="651.8" y="245.4" width="19.0" height="6.6" fill="#c44900"/>
+<text x="661.3" y="241.4" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">14</text>
+<text x="673.8" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">L5 sdk</text>
+<rect x="78" y="302" width="12" height="12" fill="#c44900"/>
+<text x="96" y="312" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">Review days</text>
+<rect x="212" y="302" width="12" height="12" fill="#5c4d7a"/>
+<text x="230" y="312" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">Consensus-change days</text>
+<text x="32" y="338" fill="#5c564c" font-family="system-ui,sans-serif" font-size="12">Policy windows. Not a measured review duration.</text>
+</g>
+</svg>

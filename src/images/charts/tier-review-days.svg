@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" width="760" height="360">
+<title>Review period by action tier</title>
+<desc>Published review period in days for action tiers 1 through 5.</desc>
+<rect width="100%" height="100%" fill="#fbfaf7"/>
+<text x="32" y="32" fill="#1c1915" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Review period by action tier</text>
+<text x="18" y="158.0" fill="#5c564c" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" transform="rotate(-90 18 158.0)">days</text>
+<line x1="78" y1="252.0" x2="740" y2="252.0" stroke="#e4ddd0"/>
+<text x="70" y="256.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0</text>
+<line x1="78" y1="205.0" x2="740" y2="205.0" stroke="#e4ddd0"/>
+<text x="70" y="209.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">50</text>
+<line x1="78" y1="158.0" x2="740" y2="158.0" stroke="#e4ddd0"/>
+<text x="70" y="162.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">100</text>
+<line x1="78" y1="111.0" x2="740" y2="111.0" stroke="#e4ddd0"/>
+<text x="70" y="115.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">150</text>
+<line x1="78" y1="64.0" x2="740" y2="64.0" stroke="#e4ddd0"/>
+<text x="70" y="68.0" fill="#5c564c" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">200</text>
+<rect x="133.2" y="245.4" width="19.0" height="6.6" fill="#c44900"/>
+<text x="142.7" y="241.4" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">7</text>
+<text x="144.2" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">T1 Routine</text>
+<rect x="265.6" y="223.8" width="19.0" height="28.2" fill="#c44900"/>
+<text x="275.1" y="219.8" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">30</text>
+<text x="276.6" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">T2 Features</text>
+<rect x="398.0" y="167.4" width="19.0" height="84.6" fill="#c44900"/>
+<text x="407.5" y="163.4" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">90</text>
+<text x="409.0" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">T3 Consensus-adjacent</text>
+<rect x="530.4" y="252.0" width="19.0" height="0.0" fill="#c44900"/>
+<text x="539.9" y="248.0" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">0</text>
+<text x="541.4" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">T4 Emergency</text>
+<rect x="662.8" y="82.8" width="19.0" height="169.2" fill="#c44900"/>
+<text x="672.3" y="78.8" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">180</text>
+<text x="673.8" y="272" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">T5 Governance</text>
+<rect x="78" y="302" width="12" height="12" fill="#c44900"/>
+<text x="96" y="312" fill="#1c1915" font-family="system-ui,sans-serif" font-size="12">Review days</text>
+<text x="32" y="338" fill="#5c564c" font-family="system-ui,sans-serif" font-size="12">From action-tiers.yml. The emergency tier is zero days. Not a measured pull-request time.</text>
+</svg>

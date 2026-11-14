@@ -33,4 +33,11 @@ else
   echo "::warning::check-governance-literals.sh missing or not executable; skipping"
 fi
 
+if ! python3 -c 'import yaml' 2>/dev/null; then
+  echo "::error::python3-yaml is required (apt install python3-yaml)"
+  exit 1
+fi
+python3 ./scripts/render-charts.py --check
+PYTHONDONTWRITEBYTECODE=1 python3 ./scripts/test_render_charts.py
+
 echo "verify-book-inputs: OK"

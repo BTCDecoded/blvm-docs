@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 822 368" role="img" width="822" height="368">
+<title>Audit trail completeness</title>
+<desc>Complete, partial, or absent for each artifact class and implementation, read from the previous figure's cell colors Carried 2026-05-10. Source: cell colors on the previous figure audit-trail-completeness.png.</desc>
+<rect width="100%" height="100%" fill="#fbfaf7"/>
+<text x="24" y="32" fill="#1c1915" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Audit trail completeness</text>
+<text x="288" y="68" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Bitcoin Core</text>
+<text x="404" y="68" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Bitcoin Knots</text>
+<text x="520" y="68" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">btcd</text>
+<text x="636" y="68" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Libbitcoin</text>
+<text x="752" y="68" fill="#1c1915" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Bitcoin Commons</text>
+<text x="24" y="100" fill="#1c1915" font-family="system-ui,sans-serif" font-size="13">Release signatures</text>
+<rect x="234" y="84" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="288" y="101" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<rect x="350" y="84" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="404" y="101" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<rect x="466" y="84" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="520" y="101" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="582" y="84" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="636" y="101" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="698" y="84" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="752" y="101" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<text x="24" y="136" fill="#1c1915" font-family="system-ui,sans-serif" font-size="13">Deterministic builds</text>
+<rect x="234" y="120" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="288" y="137" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="350" y="120" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="404" y="137" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="466" y="120" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="520" y="137" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="582" y="120" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="636" y="137" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="698" y="120" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="752" y="137" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<text x="24" y="172" fill="#1c1915" font-family="system-ui,sans-serif" font-size="13">Review logs</text>
+<rect x="234" y="156" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="288" y="173" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="350" y="156" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="404" y="173" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="466" y="156" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="520" y="173" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="582" y="156" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="636" y="173" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="698" y="156" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="752" y="173" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<text x="24" y="208" fill="#1c1915" font-family="system-ui,sans-serif" font-size="13">CI verification proofs</text>
+<rect x="234" y="192" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="288" y="209" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="350" y="192" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="404" y="209" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="466" y="192" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="520" y="209" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="582" y="192" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="636" y="209" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="698" y="192" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="752" y="209" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<text x="24" y="244" fill="#1c1915" font-family="system-ui,sans-serif" font-size="13">OpenTimestamps</text>
+<rect x="234" y="228" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="288" y="245" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="350" y="228" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="404" y="245" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="466" y="228" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="520" y="245" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="582" y="228" width="108" height="26" rx="4" fill="#c44900"/>
+<text x="636" y="245" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">partial</text>
+<rect x="698" y="228" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="752" y="245" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<text x="24" y="280" fill="#1c1915" font-family="system-ui,sans-serif" font-size="13">Merkle proofs</text>
+<rect x="234" y="264" width="108" height="26" rx="4" fill="#9b2335"/>
+<text x="288" y="281" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">absent</text>
+<rect x="350" y="264" width="108" height="26" rx="4" fill="#9b2335"/>
+<text x="404" y="281" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">absent</text>
+<rect x="466" y="264" width="108" height="26" rx="4" fill="#9b2335"/>
+<text x="520" y="281" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">absent</text>
+<rect x="582" y="264" width="108" height="26" rx="4" fill="#9b2335"/>
+<text x="636" y="281" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">absent</text>
+<rect x="698" y="264" width="108" height="26" rx="4" fill="#0e7c66"/>
+<text x="752" y="281" fill="#fbfaf7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">complete</text>
+<text x="24" y="350" fill="#5c564c" font-family="system-ui,sans-serif" font-size="12">Carried 2026-05-10. cell colors on the previous figure audit-trail-completeness.png</text>
+</svg>

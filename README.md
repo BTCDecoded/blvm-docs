@@ -51,6 +51,15 @@ This repository builds [docs.btcdecoded.org](https://docs.btcdecoded.org/). The 
  ```
  The drift tests fail if `governance/config/*.yml` disagrees with `blvm-commons` `threshold.rs` (see `docs/GOVERNANCE_MDBOOK.md`).
 
+   Charts in the manual are rebuilt from that YAML and from `charts/catalog.yml`:
+
+   ```bash
+   python3 scripts/render-charts.py
+   python3 scripts/test_render_charts.py
+   ```
+
+   `./scripts/verify-book-inputs.sh` fails when the committed SVG or Mermaid fragments are stale. Measured series that are not policy numbers go in `charts/series/` (see `charts/README.md`).
+
 4. Serve the documentation locally:
  ```bash
  mdbook serve

@@ -88,8 +88,9 @@ The implementation is validated against the [Orange Paper](../reference/orange-p
 
 ## Spec maintenance workflow
 
-![Spec Maintenance Workflow](../images/spec-maintenance-workflow.png)
-*Figure: Specification maintenance workflow showing how changes are detected, verified, and integrated.*
+{{#include ../../charts/fragments/spec-maintenance.md}}
+
+The figure is the previous workflow, including the drift-detection label “CI/CD runs AI extraction.” The commands the verification chapter documents are `cargo spec-lock check-drift`, then `cargo spec-lock verify`.
 
 ## BIP implementation
 

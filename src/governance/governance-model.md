@@ -6,18 +6,25 @@ Bitcoin Commons publishes a constitutional governance model: graduated signature
 
 ## Governance Signature Thresholds
 
-![Governance Signature Thresholds](../images/governance-signature-thresholds.png)
-*Figure: Signature thresholds by layer showing the graduated security model. Constitutional layers require [[gov:layer_1_signatures]], while extension layers require [[gov:layer_5_signatures]].*
+![Signature thresholds by repository layer](../images/charts/layer-thresholds.svg)
+
+Required signatures, maintainer set size, and the review window come from `repository-layers.yml` at book build time. Constitutional layers require [[gov:layer_1_signatures]]. Extension layers require [[gov:layer_5_signatures]]. The bars are that policy. They are not a count of signatures collected on a pull request.
 
 ## Governance Process Latency
 
-![Governance Process Latency](../images/governance-process-latency.png)
-*Figure: Governance process latency showing review periods and decision timelines across different tiers.*
+![Review period by action tier](../images/charts/tier-review-days.svg)
 
-## PR Review Time Distribution
+The bar for each action tier is the published review period (`tier_1` through `tier_5` in `action-tiers.yml`). The emergency tier is [[gov:tier_4_review_days]] days. This is the policy window.
 
-![PR Review Time Distribution](../images/pr-review-time-distribution.png)
-*Figure: Pull request review time distribution. Long tails reveal why throughput stalls without process and tooling. Bitcoin Commons addresses this through structured review periods and automated tooling.*
+![Governance process latency from the previous figure](../../charts/carried/governance-process-latency.png)
+
+The second figure is the previous chart. It draws a Bitcoin Core range beside a Commons range for the same five tiers. Those Core values were not printed as a table, so the picture is carried unchanged.
+
+## Pull request review time
+
+![Pull request review time from the previous figure](../../charts/carried/pr-review-time-distribution.png)
+
+Monolith and modular review-time boxes from the previous figure. The category axis was not printed, so the picture is carried unchanged.
 
 ## See Also
 

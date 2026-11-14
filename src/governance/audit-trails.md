@@ -37,13 +37,15 @@ blvm-commons verify-audit-log --log-path audit.log
 
 The governance system implements three complementary verification layers:
 
-![Three-Layer Verification](../images/three-layer-verification-arch.png)
-*Figure: Three-layer verification: GitHub merge control, real-time Nostr transparency, and OpenTimestamps historical proof.*
+{{#include ../../charts/fragments/verification-anchors.md}}
+
+The rules are published and are not enforced. The keys in the governance repository are test keys, and merges are not blocked by a second reviewer. The Nostr hour and the monthly OpenTimestamps anchor are the schedules on those integration pages.
 
 ## Audit Trail Completeness
 
-![Audit Trail Completeness](../images/audit-trail-completeness.png)
-*Figure: Audit-trail completeness across governance layers.*
+![Audit trail completeness](../images/charts/audit-completeness.svg)
+
+Each cell is the color on the previous figure: complete, partial, or absent. `security-control-status.yml` is not the source.
 
 ## OpenTimestamps Integration
 
