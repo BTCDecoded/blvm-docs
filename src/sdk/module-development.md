@@ -2,6 +2,16 @@
 
 Optional node features (Lightning, merge mining, privacy relays, and similar) run in separate processes with IPC. See [Module system (design)](../architecture/module-system.md).
 
+| You are doing | Read |
+|---|---|
+| Laying out the crate and `module.toml` | [Module structure](#module-structure) |
+| Writing the module | [SDK declarative style](#sdk-declarative-style-recommended) |
+| Exposing commands on the `blvm` binary | [Module CLI](#module-cli-under-the-blvm-binary) |
+| Talking to the node without the macros | [Integration API](#basic-module-structure-integration-api) |
+| Timers or events | [Module timers](#module-timers), [events](#subscribing-to-events) |
+| Shipping a WASM guest | [WASM deployment](#wasm-deployment) |
+| Permissions and the sandbox | [Security model](#security-model) |
+
 ### Core Principles
 
 1. **Process Isolation**: Each module runs in a separate process with isolated memory

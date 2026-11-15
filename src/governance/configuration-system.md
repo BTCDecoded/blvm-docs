@@ -97,98 +97,9 @@ Configuration parameters are organized into categories:
 - **Security**: Security-related parameters
 - **Other**: Miscellaneous parameters
 
-## 87+ Forkable Variables
+## Forkable variables
 
-The system manages 87+ governance-controlled configuration variables, organized into categories:
-
-### Complete Configuration Schema
-
-| Category | Variables | Description |
-|----------|-----------|-------------|
-| **Action Tier Thresholds** | 15 | Signature requirements and review periods for each tier |
-| **Commons Contributor Thresholds** | 8 | Qualification thresholds and weight calculation |
-| **Governance Phase Thresholds** | 11 | Phase boundaries (Early, Growth, Mature) |
-| **Repository Layer Thresholds** | 9 | Signature requirements per repository layer |
-| **Emergency Tier Thresholds** | 10 | Emergency action thresholds and windows |
-| **Governance Review Policy** | 10 | Review period policies and requirements |
-| **Feature Flags** | 7 | Feature enable/disable flags |
-| **Network & Security** | 3 | Network and security configuration |
-
-**Total**: 87+ variables
-
-
-### Action Tier Thresholds (15 variables)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `tier_1_signatures_required` | 3 | Tier 1: Required signatures (out of 5) |
-| `tier_1_signatures_total` | 5 | Tier 1: Total signatures available |
-| `tier_1_review_period_days` | 7 | Tier 1: Review period (days) |
-| `tier_2_signatures_required` | 4 | Tier 2: Required signatures (out of 5) |
-| `tier_2_signatures_total` | 5 | Tier 2: Total signatures available |
-| `tier_2_review_period_days` | 30 | Tier 2: Review period (days) |
-| `tier_3_signatures_required` | 5 | Tier 3: Required signatures (unanimous) |
-| `tier_3_signatures_total` | 5 | Tier 3: Total signatures available |
-| `tier_3_review_period_days` | 90 | Tier 3: Review period (days) |
-| `tier_4_signatures_required` | 4 | Tier 4: Required signatures (emergency) |
-| `tier_4_signatures_total` | 5 | Tier 4: Total signatures available |
-| `tier_4_review_period_days` | 0 | Tier 4: Review period (immediate) |
-| `tier_5_signatures_required` | 5 | Tier 5: Required signatures (governance) |
-| `tier_5_signatures_total` | 5 | Tier 5: Total signatures available |
-| `tier_5_review_period_days` | 180 | Tier 5: Review period (days) |
-
-
-| `signaling_tier_5_mining_percent` | 50.0 | Tier 5: Fork signaling: mining / hashpower share (%) |
-| `signaling_tier_5_economic_percent` | 60.0 | Tier 5: Fork signaling: participation-weight share (%) |
-
-
-### Commons Contributor Thresholds (8 variables)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `commons_contributor_min_zaps_btc` | 0.01 | Minimum zap contribution (BTC) |
-| `commons_contributor_min_marketplace_btc` | 0.01 | Minimum marketplace contribution (BTC) |
-| `commons_contributor_measurement_period_days` | 90 | Measurement period (days) |
-| `commons_contributor_qualification_logic` | "OR" | Qualification logic (OR/AND) |
-| `commons_contributor_weight_formula` | "linear" | Weight calculation formula |
-| `commons_contributor_weight_cap` | 0.10 | Maximum weight per contributor (10%) |
-
-
-### Governance Phase Thresholds (11 variables)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `phase_early_max_blocks` | 50000 | Early phase: Maximum blocks |
-| `phase_early_max_contributors` | 10 | Early phase: Maximum contributors |
-| `phase_growth_min_blocks` | 50000 | Growth phase: Minimum blocks |
-| `phase_growth_max_blocks` | 200000 | Growth phase: Maximum blocks |
-| `phase_growth_min_contributors` | 10 | Growth phase: Minimum contributors |
-| `phase_growth_max_contributors` | 100 | Growth phase: Maximum contributors |
-| `phase_mature_min_blocks` | 200000 | Mature phase: Minimum blocks |
-| `phase_mature_min_contributors` | 100 | Mature phase: Minimum contributors |
-
-
-### Repository Layer Thresholds (9 variables)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `layer_1_2_signatures_required` | 3 | Layer 1-2: Required signatures |
-| `layer_1_2_signatures_total` | 5 | Layer 1-2: Total signatures |
-| `layer_1_2_review_period_days` | 7 | Layer 1-2: Review period (days) |
-| `layer_3_signatures_required` | 4 | Layer 3: Required signatures |
-| `layer_3_signatures_total` | 5 | Layer 3: Total signatures |
-| `layer_3_review_period_days` | 30 | Layer 3: Review period (days) |
-| `layer_4_signatures_required` | 5 | Layer 4: Required signatures |
-| `layer_4_signatures_total` | 5 | Layer 4: Total signatures |
-| `layer_4_review_period_days` | 90 | Layer 4: Review period (days) |
-| `layer_5_signatures_required` | 5 | Layer 5: Required signatures |
-| `layer_5_signatures_total` | 5 | Layer 5: Total signatures |
-| `layer_5_review_period_days` | 180 | Layer 5: Review period (days) |
-
-
-### Complete Reference
-
-Authoritative defaults and forkable parameters live in the **[governance](https://github.com/BTCDecoded/governance)** repository under `config/` (YAML) and `ruleset-export-template*.y`. Use **`blvm-commons/src/config/loader.rs`** for what the node loads today.
+The values live in the governance repository under `config/` (YAML) and `ruleset-export-template*.y`. This page does not copy them. `repository-layers.yml` is [[gov:layer_1_signatures]] and [[gov:layer_1_review_days]] days. The schedules the book draws are on [Governance model](governance-model.md). Emergency classes are on [PR process](../development/pr-process.md#emergency-procedures). What the process loads is `blvm-commons/src/config/loader.rs`.
 
 ## Governance Change Workflow
 
@@ -197,8 +108,8 @@ Changing a configuration parameter requires Tier 5 governance approval:
 1. **Proposal**: Create a configuration change proposal via PR
 2. **Review**: [[gov:tier_5_signatures]] maintainer signatures required
 3. **Review Period**: [[gov:tier_5_review_days]] days review period
-5. **Activation**: Change activated in database via `activate_change()`
-6. **Sync**: Change optionally synced back to YAML files
+4. **Activation**: Change activated in database via `activate_change()`
+5. **Sync**: Change optionally synced back to YAML files
 
 
 ## Usage Examples

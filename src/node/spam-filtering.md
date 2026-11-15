@@ -9,105 +9,30 @@ Spam filtering provides transaction-level filtering for bandwidth optimization a
 
 Spam filtering is implemented in the protocol layer (blvm-protocol). It can be used independently of UTXO commitments; mempool and consensus config reference it where needed.
 
-## Spam Detection Types
+## Detectors
 
-### 1. Ordinals/Inscriptions (`SpamType::Ordinals`)
+| Detector | Default | Rule |
+|---|---|---|
+| Ordinals | on | Witness data, an `OP_RETURN` script longer than 80 bytes, or an UnexecIf envelope |
+| Dust | on | Every output is below 546 satoshis (`dust_threshold`) |
+| BRC-20 | on | `OP_RETURN` JSON with `"p":"brc-20"` and mint, transfer, or deploy |
+| Large witness | on | A witness stack larger than 1000 bytes (`max_witness_size`) |
+| Low fee rate | off | Below 1 sat/vbyte (`min_fee_rate`) |
+| High size-to-value | on | More than 1000 bytes per satoshi (`max_size_value_ratio`) |
+| Many small outputs | on | More than 10 outputs below the dust threshold (`max_small_outputs`) |
+| UnexecIf | on | The envelope pattern below (`filter_unexec_if`) |
+| Null-data `OP_13` | on | The wrapper below (`filter_null_data_op13`) |
+| Null-data magic | on | The prefixes below (`filter_null_data_magic`) |
+| Data-like multisig | on | The bare-multisig pattern below (`filter_data_like_ms`) |
 
-Detects data embedded in Bitcoin transactions:
+Four detectors are script patterns rather than a size cutoff.
 
-- **Witness Scripts**: Detects data embedded in witness scripts (SegWit v0 or Taproot) - **PRIMARY METHOD**
-- **OP_RETURN Outputs**: Detects OP_RETURN outputs with large data pushes
-- **UnexecIf**: Detects UnexecIf patterns (`OP_FALSE OP_IF` … `OP_ENDIF`)
-- **Pattern Detection**: An `OP_RETURN` output script longer than 80 bytes (`blvm-protocol/src/spam_filter/mod.rs:789–791`)
-- **Witness Detection**: Large witness stacks (>1000 bytes) or suspicious data patterns
+- **UnexecIf.** Exactly one `OP_0` / `OP_IF` … `OP_ENDIF` whose interior is data pushes only, plus a 34-byte `PUSH32 <32-byte key> OP_CHECKSIG` immediately before or after that envelope. Scripts that contain `OP_SUCCESS` are skipped. `ScriptTemplate::UnexecIf`.
+- **Null-data `OP_13`.** `OP_RETURN` `OP_13` followed only by pushes. `ScriptTemplate::NullDataOp13`.
+- **Null-data magic.** The first push after `OP_RETURN` begins with `CNTRPRTY`, `omni`, or the OpenTimestamps tag `05 88 96 0d 73 d7 19 01`. `ScriptTemplate::NullDataMagic`.
+- **Data-like multisig.** A bare `m`-of-`n` ending in `OP_CHECKMULTISIG` where every pushed key fails the compressed-pubkey check (length 33 and prefix `0x02` or `0x03`). `ScriptTemplate::DataLikeMs`.
 
-### 2. Dust Outputs (`SpamType::Dust`)
-
-Filters outputs below threshold:
-
-- **Threshold**: Default 546 satoshis (configurable)
-- **Detection**: All outputs must be below threshold for transaction to be considered dust
-- **Configuration**: `SpamFilterConfig::dust_threshold`
-
-### 3. BRC-20 Tokens (`SpamType::BRC20`)
-
-Detects BRC-20 token transactions:
-
-- **Pattern Matching**: Detects BRC-20 JSON patterns in OP_RETURN outputs
-- **Patterns**: `"p":"brc-20"`, `"op":"mint"`, `"op":"transfer"`, `"op":"deploy"`
-
-### 4. Large Witness Data (`SpamType::LargeWitness`)
-
-Detects transactions with suspiciously large witness data:
-
-- **Threshold**: Default 1000 bytes (configurable)
-- **Indication**: Potential data embedding in witness data
-- **Configuration**: `SpamFilterConfig::max_witness_size`
-
-### 5. Low Fee Rate (`SpamType::LowFeeRate`)
-
-Detects transactions with suspiciously low fee rates:
-
-- **Detection**: Low fee rate relative to transaction size
-- **Indication**: Non-monetary transactions pay minimal fees
-- **Threshold**: Default 1 sat/vbyte (configurable)
-- **Configuration**: `SpamFilterConfig::min_fee_rate`
-- **Status**: **Disabled by default** (can be too aggressive)
-
-### 6. High Size-to-Value Ratio (`SpamType::HighSizeValueRatio`)
-
-Detects transactions with very large size relative to value transferred:
-
-- **Pattern**: >1000 bytes per satoshi (default threshold)
-- **Indication**: Non-monetary use (large data, small value)
-- **Configuration**: `SpamFilterConfig::max_size_value_ratio`
-
-### 7. Many Small Outputs (`SpamType::ManySmallOutputs`)
-
-Detects transactions with many small outputs:
-
-- **Pattern**: >10 outputs below dust threshold (default)
-- **Indication**: Common in token distributions and Ordinal transfers
-- **Configuration**: `SpamFilterConfig::max_small_outputs`
-
-### 8. UnexecIf (`SpamType::UnexecIf`)
-
-Detects tapscripts that wrap data in an unexecuted `OP_IF` and finish with a Taproot CHECKSIG leaf:
-
-- **Pattern**: Exactly one `OP_0` / `OP_IF` … `OP_ENDIF` whose interior is **data pushes only** (no nested `OP_IF` / `OP_NOTIF` / `OP_ELSE`), plus a 34-byte remainder `PUSH32 <32-byte key> OP_CHECKSIG` immediately before or after that envelope
-- **Skips**: Scripts that contain an `OP_SUCCESS` opcode
-- **Indication**: Common inscription / envelope-style witness scripts
-- **Configuration**: `SpamFilterConfig::filter_unexec_if` (default: **true**)
-- **Implementation**: `blvm-consensus::script::templates` (`ScriptTemplate::UnexecIf`); policy wiring in `blvm-protocol` spam filter; coverage in `blvm-protocol/tests/spam_filter_templates.rs`
-
-### 9. Null-Data OP_13 (`SpamType::NullDataOp13`)
-
-Detects `OP_RETURN` scripts that use the `OP_13` null-data wrapper:
-
-- **Pattern**: `OP_RETURN` `OP_13` followed by zero or more push opcodes only (runestone-style wrapper)
-- **Indication**: Structured null-data payloads that are not plain OP_RETURN text
-- **Configuration**: `SpamFilterConfig::filter_null_data_op13` (default: **true**)
-- **Implementation**: `ScriptTemplate::NullDataOp13` in `blvm-consensus/src/script/templates.rs`
-
-### 10. Null-Data Magic Prefix (`SpamType::NullDataMagic`)
-
-Detects `OP_RETURN` payloads that start with a known magic prefix:
-
-- **Pattern**: `OP_RETURN` plus a first push whose payload begins with one of:
-  - `CNTRPRTY` (`NULLDATA_CNTRPRTY`)
-  - `omni` (`NULLDATA_OMNI`)
-  - OpenTimestamps attestation tag `05 88 96 0d 73 d7 19 01` (`NULLDATA_OTS`)
-- **Configuration**: `SpamFilterConfig::filter_null_data_magic` (default: **true**)
-- **Implementation**: `ScriptTemplate::NullDataMagic` in `blvm-consensus/src/script/templates.rs`
-
-### 11. Data-Like Multisig (`SpamType::DataLikeMs`)
-
-Detects bare multisig outputs whose “keys” are data blobs rather than compressed pubkeys:
-
-- **Pattern**: `m`-of-`n` bare multisig ending in `OP_CHECKMULTISIG` where **every** pushed key fails the compressed-pubkey check (length 33 and prefix `0x02` or `0x03`)
-- **Indication**: Data embedding disguised as multisig
-- **Configuration**: `SpamFilterConfig::filter_data_like_ms` (default: **true**)
-- **Implementation**: `ScriptTemplate::DataLikeMs` in `blvm-consensus/src/script/templates.rs`; coverage in `blvm-protocol/tests/spam_filter_templates.rs`
+The templates live in `blvm-consensus/src/script/templates.rs`. The ordinals length check is `blvm-protocol/src/spam_filter/mod.rs`. Coverage is `blvm-protocol/tests/spam_filter_templates.rs`.
 
 ## Critical Design: Output-Only Filtering
 

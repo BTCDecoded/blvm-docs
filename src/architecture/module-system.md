@@ -4,24 +4,16 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-A fresh install enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. **blvm-payment** is not a default pin. **blvm-fibre** is not in the registry until `[downloads]` exists. See [Module catalog](../modules/overview.md) and [First Node Setup](../getting-started/first-node.md).
+A fresh install enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. **blvm-payment** is not a default pin. **blvm-fibre** is not in the registry until `[downloads]` exists. The module list is the [catalog](../modules/overview.md).
 
-## Available modules
-
-- **[Lightning Network Module](../modules/lightning.md)**: Lightning payment processing
-- **[Commons Mesh Module](../modules/mesh.md)**: Payment-gated mesh overlay; four JSON-RPC methods when `blvm-mesh` is loaded
-- **[Stratum V2 Module](../modules/stratum-v2.md)**: Stratum V2 mining protocol
-- **[Datum Module](../modules/datum.md)**: DATUM Gateway mining protocol
-- **blvm-zmq**: [ZMQ module](../modules/zmq.md)
-- **blvm-index**: [Script history](../modules/wallet-index.md)
-- **blvm-miniscript**: [Miniscript module](../modules/miniscript.md)
-- **blvm-governance**: [Governance module](../modules/governance-module.md)
-- **blvm-fibre**: [FIBRE module](../modules/fibre.md)
-- **blvm-marketplace**: [Marketplace module](../modules/marketplace-module.md) (optional; registry bootstrap usually does not need it)
-
-For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
-
-**Writing modules:** Use the **SDK declarative style** (blvm-sdk attribute macros and `run_module!`) to define CLI, RPC, and event handling in one impl block without manual IPC loops; see [Building modules](../sdk/module-development.md#sdk-declarative-style-recommended). Alternatively use the integration API or low-level IPC for custom control.
+| You are looking up | Read |
+|---|---|
+| Which modules exist | [Module catalog](../modules/overview.md) |
+| How a module is isolated | [Architecture](#architecture) |
+| Load order | [Module lifecycle](#module-lifecycle) |
+| `module.toml` | [Module manifest](#module-manifest) |
+| Events and timers | [Event system](#event-system), [Module timers](#module-timers) |
+| How to write one | [Building modules](../sdk/module-development.md#sdk-declarative-style-recommended) |
 
 ## Architecture
 
@@ -468,34 +460,6 @@ manager.load_module(
 manager.auto_load_modules().await?;
 ```
 
-
-## Benefits
-
-1. **Consensus Isolation**: Modules cannot affect consensus rules
-2. **Crash Containment**: Module failures don't affect base node
-3. **Security**: Process isolation and permission system
-4. **Extensibility**: Add features without consensus changes
-5. **Flexibility**: Load/unload modules at runtime
-6. **Governance**: Modules subject to governance approval
-
-## Use Cases
-
-- **Lightning Network**: Payment channel management
-- **Merge Mining**: Auxiliary chain support
-- **Privacy Enhancements**: Transaction mixing, coinjoin
-- **Alternative Mempool Policies**: Custom transaction selection
-- **Smart Contracts**: Layer 2 contract execution
-
-## Components
-
-The module system includes:
-- Process isolation
-- IPC communication
-- Security sandboxing
-- Permission system
-- Module registry
-- Event system
-- API hub
 
 
 ## IPC Communication
