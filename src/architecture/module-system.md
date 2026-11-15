@@ -464,7 +464,7 @@ manager.auto_load_modules().await?;
 
 ## IPC Communication
 
-Modules communicate with the node via the Module IPC Protocol:
+The wire format is the [Module IPC protocol](module-ipc-protocol.md). The samples below are how a module connects.
 
 - **Protocol**: Length-delimited binary messages over Unix domain sockets
 - **Message Types**: Requests, Responses, Events, Logs

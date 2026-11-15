@@ -24,6 +24,8 @@ graph TB
  L5 -->|cryptographic governance| L6
 ```
 
+The arrows are stack order. The import edges are on [Crate dependencies](component-relationships.md): the SDK's default `node` feature depends on `blvm-node`, and `blvm-commons` depends on `blvm-sdk` and `blvm-protocol`.
+
 ## Component Overview
 
 ### Stack layer 1: [Orange Paper](../reference/orange-paper.md) (Mathematical Foundation)

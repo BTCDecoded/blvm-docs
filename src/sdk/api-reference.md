@@ -1,6 +1,6 @@
 # SDK API Reference
 
-Complete API documentation for the BLVM Developer SDK, including governance primitives and composition framework.
+The generated API is [docs.rs/blvm-sdk](https://docs.rs/blvm-sdk). This page is the governance and composition guide.
 
 ## Overview
 

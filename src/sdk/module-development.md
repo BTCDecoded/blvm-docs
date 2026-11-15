@@ -22,7 +22,7 @@ Optional node features (Lightning, merge mining, privacy relays, and similar) ru
 
 ### Communication
 
-Modules communicate with the node via **Inter-Process Communication (IPC)** using Unix domain sockets. Protocol uses length-delimited binary messages (bincode serialization) with message types: Requests, Responses, Events. Connection is persistent for request/response pattern; events use pub/sub pattern for real-time notifications.
+Modules talk to the node over the [Module IPC protocol](../architecture/module-ipc-protocol.md): length-delimited bincode on a Unix socket. That page is the wire format.
 
 ## Module Structure
 
