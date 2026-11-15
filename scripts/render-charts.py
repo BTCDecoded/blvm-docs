@@ -34,15 +34,16 @@ TIER_KEYS = (
 )
 LAYER_SHORT = ("L1 spec", "L2 consensus", "L3 protocol", "L4 node", "L5 sdk")
 
-INK = "#1c1915"
-MUTED = "#5c564c"
-GRID = "#e4ddd0"
-PAPER = "#fbfaf7"
-REQUIRED = "#1d4e89"
-TOTAL = "#0e7c66"
-REVIEW = "#c44900"
-CONSENSUS = "#5c4d7a"
-CURVE_COLORS = ("#1d4e89", "#c44900", "#0e7c66", "#6b3fa0", "#9a3412")
+# mdBook navy, the same colors mermaid uses in postprocess-mermaid.py.
+INK = "#bcbdd0"
+MUTED = "#8e90a8"
+GRID = "#505274"
+PAPER = "#161923"
+REQUIRED = "#7eb6e8"
+TOTAL = "#5dcaa5"
+REVIEW = "#f0a05a"
+CONSENSUS = "#c4b5fd"
+CURVE_COLORS = ("#7eb6e8", "#f0a05a", "#5dcaa5", "#c4b5fd", "#e07a7a")
 
 
 def load_catalog() -> list[dict]:
@@ -673,7 +674,7 @@ def line_chart(chart: dict) -> str:
         bot_pts = [xy(i, float(band["low"])) for i in range(n)]
         poly = top_pts + list(reversed(bot_pts))
         parts.append(
-            f'<polygon fill="{TOTAL}" fill-opacity="0.18" stroke="none" points="'
+            f'<polygon fill="{TOTAL}" fill-opacity="0.28" stroke="none" points="'
             + " ".join(f"{x:.1f},{y:.1f}" for x, y in poly)
             + '"/>'
         )

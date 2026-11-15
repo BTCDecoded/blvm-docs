@@ -10,8 +10,8 @@ categories:
   - Bitcoin Commons
 series:
   - name: Spec drift
-    color: "#9b2335"
+    color: "#e07a7a"
     values: [75, 80, 50, 55, 25]
   - name: Test coverage
-    color: "#1d4e89"
+    color: "#7eb6e8"
     values: [65, 64, 70, 68, 75]

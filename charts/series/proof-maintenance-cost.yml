@@ -5,13 +5,13 @@ unit: developer-weeks
 categories: [Y0, Y5, Y10, Y15, Y20, Y25, Y30]
 series:
   - name: Monolithic
-    color: "#9b2335"
+    color: "#e07a7a"
     values: [8, 12, 16, 23, 29, 34, 38]
   - name: Hybrid
-    color: "#1d4e89"
+    color: "#7eb6e8"
     values: [10, 12, 13, 16, 19, 22, 24]
   - name: Modular
-    color: "#0e7c66"
+    color: "#5dcaa5"
     values: [18, 18, 18, 18, 18, 18, 18]
 band:
   name: Budget band
