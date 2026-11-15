@@ -1,22 +1,13 @@
-status: carried
-measured_at: "2026-05-10"
-source: "cell colors on the previous figure audit-trail-completeness.png"
-categories:
-  - Bitcoin Core
-  - Bitcoin Knots
-  - btcd
-  - Libbitcoin
-  - Bitcoin Commons
+status: measured
+measured_at: "2026-11-13"
+source: "Governance wording 2026-11-13. Designed means written, not running."
+categories: [Bitcoin Commons]
 rows:
-  - name: Release signatures
-    values: [complete, complete, partial, partial, complete]
-  - name: Deterministic builds
-    values: [partial, partial, partial, partial, complete]
-  - name: Review logs
-    values: [partial, partial, partial, partial, complete]
-  - name: CI verification proofs
-    values: [partial, partial, partial, partial, complete]
-  - name: OpenTimestamps
-    values: [partial, partial, partial, partial, complete]
-  - name: Merkle proofs
-    values: [absent, absent, absent, absent, complete]
+  - name: Release attestation
+    values: [designed]
+  - name: Signature record
+    values: [designed]
+  - name: Audit log
+    values: [designed]
+  - name: Live enforcement
+    values: [absent]

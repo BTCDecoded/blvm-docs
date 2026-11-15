@@ -1,50 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 680" role="img" width="760" height="680">
-<title>Consensus coverage comparison</title>
-<desc>Ten areas and five series read from the previous radar Carried 2026-11-14. Line positions on the previous figure, rounded to 5. Vertices were not printed.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 360" role="img" width="962" height="360">
+<title>Spec-lock attributes by area</title>
+<desc>Production spec_locked attributes in blvm-consensus, counted from the source Unit: attributes. Measured 2026-11-14. Source: Count of spec_locked in blvm-consensus/src. 121 more are witness fixtures. Total 281. Not the 13 body proofs..</desc>
 <rect width="100%" height="100%" fill="#161923"/>
-<text x="32" y="32" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Consensus coverage comparison</text>
-<polygon fill="none" stroke="#505274" points="380.0,253.0 407.6,262.0 424.7,285.5 424.7,314.5 407.6,338.0 380.0,347.0 352.4,338.0 335.3,314.5 335.3,285.5 352.4,262.0"/>
-<text x="386" y="257" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="11">25</text>
-<polygon fill="none" stroke="#505274" points="380.0,206.0 435.3,224.0 469.4,271.0 469.4,329.0 435.3,376.0 380.0,394.0 324.7,376.0 290.6,329.0 290.6,271.0 324.7,224.0"/>
-<text x="386" y="210" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="11">50</text>
-<polygon fill="none" stroke="#505274" points="380.0,159.0 462.9,185.9 514.1,256.4 514.1,343.6 462.9,414.1 380.0,441.0 297.1,414.1 245.9,343.6 245.9,256.4 297.1,185.9"/>
-<text x="386" y="163" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="11">75</text>
-<polygon fill="none" stroke="#505274" points="380.0,112.0 490.5,147.9 558.8,241.9 558.8,358.1 490.5,452.1 380.0,488.0 269.5,452.1 201.2,358.1 201.2,241.9 269.5,147.9"/>
-<text x="386" y="116" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="11">100</text>
-<line x1="380" y1="300" x2="380.0" y2="112.0" stroke="#505274"/>
-<text x="380.0" y="94.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Block validation</text>
-<line x1="380" y1="300" x2="490.5" y2="147.9" stroke="#505274"/>
-<text x="501.1" y="133.3" fill="#bcbdd0" text-anchor="start" font-family="system-ui,sans-serif" font-size="12">Transaction</text>
-<line x1="380" y1="300" x2="558.8" y2="241.9" stroke="#505274"/>
-<text x="575.9" y="236.3" fill="#bcbdd0" text-anchor="start" font-family="system-ui,sans-serif" font-size="12">Script</text>
-<line x1="380" y1="300" x2="558.8" y2="358.1" stroke="#505274"/>
-<text x="575.9" y="363.7" fill="#bcbdd0" text-anchor="start" font-family="system-ui,sans-serif" font-size="12">Proof of work</text>
-<line x1="380" y1="300" x2="490.5" y2="452.1" stroke="#505274"/>
-<text x="501.1" y="466.7" fill="#bcbdd0" text-anchor="start" font-family="system-ui,sans-serif" font-size="12">Segwit</text>
-<line x1="380" y1="300" x2="380.0" y2="488.0" stroke="#505274"/>
-<text x="380.0" y="506.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Taproot</text>
-<line x1="380" y1="300" x2="269.5" y2="452.1" stroke="#505274"/>
-<text x="258.9" y="466.7" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">Mempool</text>
-<line x1="380" y1="300" x2="201.2" y2="358.1" stroke="#505274"/>
-<text x="184.1" y="363.7" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">Economic</text>
-<line x1="380" y1="300" x2="201.2" y2="241.9" stroke="#505274"/>
-<text x="184.1" y="236.3" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">Network</text>
-<line x1="380" y1="300" x2="269.5" y2="147.9" stroke="#505274"/>
-<text x="258.9" y="133.3" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">Locktime</text>
-<polygon fill="#e07a7a" fill-opacity="0.16" stroke="#e07a7a" stroke-width="2" points="380.0,262.4 402.1,269.6 406.8,291.3 415.8,311.6 418.7,353.2 380.0,365.8 341.3,353.2 326.4,317.4 335.3,285.5 352.4,262.0"/>
-<rect x="48" y="602" width="12" height="12" fill="#e07a7a"/>
-<text x="66" y="612" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Bitcoin Core test coverage</text>
-<polygon fill="#5dcaa5" fill-opacity="0.16" stroke="#5dcaa5" stroke-width="2" points="380.0,149.6 473.9,170.7 505.2,259.3 549.9,355.2 490.5,452.1 380.0,488.0 269.5,452.1 228.0,349.4 219.1,247.7 286.1,170.7"/>
-<rect x="278" y="602" width="12" height="12" fill="#5dcaa5"/>
-<text x="296" y="612" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Commons formal verification</text>
-<polygon fill="#7eb6e8" fill-opacity="0.16" stroke="#7eb6e8" stroke-width="2" points="380.0,140.2 473.9,170.7 532.0,250.6 532.0,349.4 479.5,436.9 380.0,478.6 269.5,452.1 228.0,349.4 245.9,256.4 297.1,185.9"/>
-<rect x="508" y="602" width="12" height="12" fill="#7eb6e8"/>
-<text x="526" y="612" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Commons test coverage</text>
-<polygon fill="#f0a05a" fill-opacity="0.16" stroke="#f0a05a" stroke-width="2" points="380.0,112.0 490.5,147.9 558.8,241.9 460.5,326.1 413.2,345.6 380.0,356.4 352.4,338.0 344.2,311.6 353.2,291.3 363.4,277.2"/>
-<rect x="48" y="624" width="12" height="12" fill="#f0a05a"/>
-<text x="66" y="634" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Commons property tests</text>
-<polygon fill="#c4b5fd" fill-opacity="0.16" stroke="#c4b5fd" stroke-width="2" points="380.0,187.2 468.4,178.3 549.9,244.8 487.3,334.9 429.7,368.4 380.0,384.6 308.2,398.9 290.6,329.0 344.2,288.4 352.4,262.0"/>
-<rect x="278" y="624" width="12" height="12" fill="#c4b5fd"/>
-<text x="296" y="634" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Commons debug assertions</text>
-<text x="32" y="658" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Carried 2026-11-14. Line positions on the previous figure, rounded to 5. Vertices were not printed.</text>
+<text x="32" y="32" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Spec-lock attributes by area</text>
+<text x="18" y="158.0" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" transform="rotate(-90 18 158.0)">attributes</text>
+<line x1="78" y1="252.0" x2="942" y2="252.0" stroke="#505274"/>
+<text x="70" y="256.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0</text>
+<line x1="78" y1="205.0" x2="942" y2="205.0" stroke="#505274"/>
+<text x="70" y="209.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">10</text>
+<line x1="78" y1="158.0" x2="942" y2="158.0" stroke="#505274"/>
+<text x="70" y="162.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">20</text>
+<line x1="78" y1="111.0" x2="942" y2="111.0" stroke="#505274"/>
+<text x="70" y="115.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">30</text>
+<line x1="78" y1="64.0" x2="942" y2="64.0" stroke="#505274"/>
+<text x="70" y="68.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">40</text>
+<rect x="103.0" y="167.4" width="19.0" height="84.6" fill="#7eb6e8"/>
+<text x="112.5" y="163.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">18</text>
+<text x="114.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Block</text>
+<rect x="175.0" y="167.4" width="19.0" height="84.6" fill="#7eb6e8"/>
+<text x="184.5" y="163.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">18</text>
+<text x="186.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Tx</text>
+<rect x="247.0" y="64.0" width="19.0" height="188.0" fill="#7eb6e8"/>
+<text x="256.5" y="60.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">40</text>
+<text x="258.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Script</text>
+<rect x="319.0" y="205.0" width="19.0" height="47.0" fill="#7eb6e8"/>
+<text x="328.5" y="201.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">10</text>
+<text x="330.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">PoW</text>
+<rect x="391.0" y="214.4" width="19.0" height="37.6" fill="#7eb6e8"/>
+<text x="400.5" y="210.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">8</text>
+<text x="402.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Segwit</text>
+<rect x="463.0" y="214.4" width="19.0" height="37.6" fill="#7eb6e8"/>
+<text x="472.5" y="210.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">8</text>
+<text x="474.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Witness</text>
+<rect x="535.0" y="190.9" width="19.0" height="61.1" fill="#7eb6e8"/>
+<text x="544.5" y="186.9" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">13</text>
+<text x="546.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Taproot</text>
+<rect x="607.0" y="242.6" width="19.0" height="9.4" fill="#7eb6e8"/>
+<text x="616.5" y="238.6" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">2</text>
+<text x="618.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Mempool</text>
+<rect x="679.0" y="228.5" width="19.0" height="23.5" fill="#7eb6e8"/>
+<text x="688.5" y="224.5" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">5</text>
+<text x="690.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Econ</text>
+<rect x="751.0" y="195.6" width="19.0" height="56.4" fill="#7eb6e8"/>
+<text x="760.5" y="191.6" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">12</text>
+<text x="762.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Reorg</text>
+<rect x="823.0" y="205.0" width="19.0" height="47.0" fill="#7eb6e8"/>
+<text x="832.5" y="201.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">10</text>
+<text x="834.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Locktime</text>
+<rect x="895.0" y="176.8" width="19.0" height="75.2" fill="#7eb6e8"/>
+<text x="904.5" y="172.8" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">16</text>
+<text x="906.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Root</text>
+<rect x="78" y="302" width="12" height="12" fill="#7eb6e8"/>
+<text x="96" y="312" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Production attributes</text>
+<text x="32" y="338" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Measured 2026-11-14. Source: Count of spec_locked in blvm-consensus/src. 121 more are witness fixtures. Total 281. Not the 13 body proofs..</text>
 </svg>

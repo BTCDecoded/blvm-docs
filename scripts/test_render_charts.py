@@ -88,16 +88,15 @@ class RenderChartsTest(unittest.TestCase):
         self.assertIn("Governance logging", block)
         self.assertIn("Module execution", block)
         gates = rendered[ROOT / "src/images/charts/release-gates.svg"]
-        for value in (60, 75, 80, 85, 90, 95):
-            self.assertIn(f">{value}<", gates)
-        self.assertIn("Phase 3 estimates", gates)
+        self.assertIn("No series is published.", gates)
+        self.assertNotIn(">60<", gates)
 
-    def test_audit_cells_match_the_previous_figure(self):
+    def test_audit_cells_match_the_governance_wording(self):
         svg = rc.outputs()[ROOT / "src/images/charts/audit-completeness.svg"]
-        self.assertEqual(svg.count(">complete<"), 8)
-        self.assertEqual(svg.count(">partial<"), 18)
-        self.assertEqual(svg.count(">absent<"), 4)
-        self.assertIn("Merkle proofs", svg)
+        self.assertEqual(svg.count(">designed<"), 3)
+        self.assertEqual(svg.count(">absent<"), 1)
+        self.assertEqual(svg.count(">complete<"), 0)
+        self.assertIn("Live enforcement", svg)
         self.assertIn("Bitcoin Commons", svg)
 
     def test_carried_pngs_match_the_pinned_bytes(self):
@@ -111,21 +110,18 @@ class RenderChartsTest(unittest.TestCase):
 
     def test_coverage_figures_are_drawn_from_series_files(self):
         rendered = rc.outputs()
-        radar = rendered[ROOT / "src/images/charts/consensus-coverage.svg"]
-        self.assertIn("Block validation", radar)
-        self.assertIn("Commons formal verification", radar)
-        self.assertIn("rounded to 5", radar)
-        self.assertIn("<polygon", radar)
+        attrs = rendered[ROOT / "src/images/charts/consensus-coverage.svg"]
+        for value in (18, 40, 13, 2, 16):
+            self.assertIn(f">{value}<", attrs)
+        self.assertIn("Total 281", attrs)
+        self.assertIn("Not the 13 body proofs", attrs)
         cost = rendered[ROOT / "src/images/charts/proof-maintenance-cost.svg"]
-        self.assertIn("Monolithic", cost)
-        self.assertIn("Budget band", cost)
-        self.assertIn("Not a measured inventory", cost)
-        self.assertIn("<polyline", cost)
+        self.assertIn("No series is published.", cost)
+        self.assertNotIn("Monolithic", cost)
         drift = rendered[ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg"]
-        for value in (75, 80, 50, 55, 25):
+        for value in (1, 15, 259):
             self.assertIn(f">{value}<", drift)
-        self.assertIn("Phase 3 estimates", drift)
-        self.assertIn("<polyline", drift)
+        self.assertIn("sentence-inventory.tsv", drift)
 
     def test_missing_series_stays_empty(self):
         svg = rc.series_chart(

@@ -1,17 +1,9 @@
-status: carried
+status: measured
 measured_at: "2026-11-14"
-source: "Phase 3 estimates. Positions on the previous figure, which printed no scale."
-unit: plot position
-categories:
-  - Bitcoin Core
-  - Bitcoin Knots
-  - btcd
-  - Libbitcoin
-  - Bitcoin Commons
+source: "sentence-inventory.tsv. The disputed 6.2.3 row is counted in Not proved."
+unit: sentences
+categories: [Rust and Lean, Lean only, Not proved]
 series:
-  - name: Spec drift
-    color: "#e07a7a"
-    values: [75, 80, 50, 55, 25]
-  - name: Test coverage
+  - name: Orange Paper sentences
     color: "#7eb6e8"
-    values: [65, 64, 70, 68, 75]
+    values: [1, 15, 259]

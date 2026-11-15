@@ -69,22 +69,23 @@ charts:
   - id: release-gates
     kind: series
     title: Release pipeline gate strength
-    measure: Strength percent printed on the previous figure for each named gate
+    measure: No current gate-strength measurement is published
     unit: percent
     output: src/images/charts/release-gates.svg
 
   - id: proof-maintenance-cost
-    kind: lines
+    kind: series
     title: Proof maintenance cost
-    measure: Developer-weeks per quarter read from the previous figure
+    measure: Developer-weeks per quarter are not measured
+    unit: developer-weeks
     output: src/images/charts/proof-maintenance-cost.svg
     sha256: ec340b71a31379c61f5def7c557e576e247e6391beae026e30e8604a1219d766
     source: charts/carried/proof-maintenance-cost.png
 
   - id: spec-drift
-    kind: bars-line
-    title: Spec drift and test coverage
-    measure: Drift bars and coverage line read from the previous figure
+    kind: series
+    title: Orange Paper sentences
+    measure: Sentences proved in Rust and Lean, proved in Lean only, or not proved
     output: src/images/charts/spec-drift-vs-test-coverage.svg
     sha256: 58856cbeae1ce4d60f97440ab3a30e4a3e5e0cc9907dd4304eca8037bef31284
     source: charts/carried/spec-drift-vs-test-coverage.png
@@ -112,14 +113,14 @@ charts:
 
   - id: audit-completeness
     kind: matrix
-    title: Audit trail completeness
-    measure: Complete, partial, or absent for each artifact class and implementation, read from the previous figure's cell colors
+    title: Audit trail status
+    measure: Commons controls from the governance wording. Designed means written and not running
     output: src/images/charts/audit-completeness.svg
 
   - id: consensus-coverage
-    kind: radar
-    title: Consensus coverage comparison
-    measure: Ten areas and five series read from the previous radar
+    kind: series
+    title: Spec-lock attributes by area
+    measure: Production spec_locked attributes in blvm-consensus, counted from the source
     output: src/images/charts/consensus-coverage.svg
     sha256: f5b63683f72186308ac0e5d79bf89b9dac82bf45374552c792d35277d8cca777
     source: charts/carried/consensus-coverage.png

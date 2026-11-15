@@ -195,7 +195,9 @@ def grouped_bars(
     y_label: str,
     footnote: str,
 ) -> str:
-    width, height = 760, 360
+    n_cat = len(categories)
+    width = 760 if n_cat <= 8 else 98 + n_cat * 72
+    height = 360
     left, right, top, bottom = 78, 20, 64, 108
     plot_w = width - left - right
     plot_h = height - top - bottom
@@ -483,14 +485,19 @@ def mermaid_fragment(chart: dict) -> str:
     return f"```mermaid\n{body}\n```\n"
 
 
-CELL = {"complete": "#0e7c66", "partial": "#c44900", "absent": "#9b2335"}
+CELL = {
+    "complete": "#0e7c66",
+    "partial": "#c44900",
+    "absent": "#9b2335",
+    "designed": "#5c4d7a",
+}
 
 
 def load_matrix(chart_id: str) -> dict:
     path = series_path(chart_id)
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    if data.get("status") != "carried":
-        raise SystemExit(f"{path} matrix must be status carried")
+    if data.get("status") not in ("measured", "carried"):
+        raise SystemExit(f"{path} matrix must be status measured or carried")
     for key in ("measured_at", "source", "categories", "rows"):
         if not data.get(key):
             raise SystemExit(f"{path} matrix is missing {key}")
@@ -500,7 +507,7 @@ def load_matrix(chart_id: str) -> dict:
             raise SystemExit(f"{path} row {row.get('name')} does not match categories")
         for value in row["values"]:
             if value not in CELL:
-                raise SystemExit(f"{path} value {value} is not complete, partial, or absent")
+                raise SystemExit(f"{path} value {value} is not complete, partial, absent, or designed")
     return data
 
 
@@ -511,7 +518,8 @@ def matrix_chart(chart: dict) -> str:
     label_w, cell, gap = 210, 108, 8
     width = 32 + label_w + len(categories) * (cell + gap)
     height = 96 + len(rows) * 36 + 56
-    desc = f"{chart['measure']} Carried {data['measured_at']}. Source: {data['source']}."
+    label = "Measured" if data.get("status") == "measured" else "Carried"
+    desc = f"{chart['measure']} {label} {data['measured_at']}. Source: {data['source']}."
     parts = svg_open(width, height, chart["title"], desc)
     parts.append(
         f'<text x="24" y="32" fill="{INK}" font-family="system-ui,sans-serif" '
@@ -540,7 +548,7 @@ def matrix_chart(chart: dict) -> str:
             )
     parts.append(
         f'<text x="24" y="{height - 18}" fill="{MUTED}" font-family="system-ui,sans-serif" '
-        f'font-size="12">Carried {esc(data["measured_at"])}. {esc(data["source"])}</text>'
+        f'font-size="12">{esc(label)} {esc(data["measured_at"])}. {esc(data["source"])}</text>'
     )
     parts.append("</svg>\n")
     return "\n".join(parts)

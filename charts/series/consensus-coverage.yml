@@ -1,30 +1,9 @@
-status: carried
+status: measured
 measured_at: "2026-11-14"
-source: "Line positions on the previous figure, rounded to 5. Vertices were not printed."
-categories:
-  - Block validation
-  - Transaction
-  - Script
-  - Proof of work
-  - Segwit
-  - Taproot
-  - Mempool
-  - Economic
-  - Network
-  - Locktime
+source: "Count of spec_locked in blvm-consensus/src. 121 more are witness fixtures. Total 281. Not the 13 body proofs."
+unit: attributes
+categories: [Block, Tx, Script, PoW, Segwit, Witness, Taproot, Mempool, Econ, Reorg, Locktime, Root]
 series:
-  - name: Bitcoin Core test coverage
-    color: "#e07a7a"
-    values: [20, 20, 15, 20, 35, 35, 35, 30, 25, 25]
-  - name: Commons formal verification
-    color: "#5dcaa5"
-    values: [80, 85, 70, 95, 100, 100, 100, 85, 90, 85]
-  - name: Commons test coverage
+  - name: Production attributes
     color: "#7eb6e8"
-    values: [85, 85, 85, 85, 90, 95, 100, 85, 75, 75]
-  - name: Commons property tests
-    color: "#f0a05a"
-    values: [100, 100, 100, 45, 30, 30, 25, 20, 15, 15]
-  - name: Commons debug assertions
-    color: "#c4b5fd"
-    values: [60, 80, 95, 60, 45, 45, 65, 50, 20, 25]
+    values: [18, 18, 40, 10, 8, 8, 13, 2, 5, 12, 10, 16]

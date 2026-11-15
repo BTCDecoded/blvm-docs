@@ -50,7 +50,7 @@ Emergency keyholders can activate **emergency response classes** defined in `eme
 
 ![Release pipeline gate strength](../images/charts/release-gates.svg)
 
-The six percents printed on the previous figure. That figure called them Phase 3 estimates. Signature counts and review windows for a change live in [Multisig configuration](multisig-configuration.md).
+No current gate-strength measurement is published. Signature counts and review windows for a change live in [Multisig configuration](multisig-configuration.md).
 
 For detailed maintainer procedures, see [maintainer guide](https://github.com/BTCDecoded/governance/blob/main/guides/MAINTAINER_GUIDE.md).
 

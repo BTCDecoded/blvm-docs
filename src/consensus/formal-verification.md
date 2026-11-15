@@ -158,23 +158,23 @@ Run commands locally: [Testing Infrastructure](../development/testing.md#running
 
 Use the `verify` feature for full protocol verification builds; see [protocol overview](../protocol/overview.md).
 
-## Consensus Coverage Comparison
+## Spec-lock attributes by area
 
-![Consensus coverage comparison](../images/charts/consensus-coverage.svg)
+![Spec-lock attributes by area](../images/charts/consensus-coverage.svg)
 
-Ten areas. The lines are the positions on the previous figure, rounded to the nearest 5.
+Production `#[spec_locked]` attributes in `blvm-consensus` source, counted 2026-11-14. Witness fixtures are not in the bars. The total with those fixtures is 281.
 
 ## Proof Maintenance Cost
 
 ![Proof maintenance cost](../images/charts/proof-maintenance-cost.svg)
 
-Developer-weeks per quarter, from the illustrative curves on the previous figure.
+Developer-weeks are not measured. The panel stays empty until a series file records them.
 
-## Spec Drift vs Test Coverage
+## Orange Paper sentences
 
-![Spec drift and test coverage](../images/charts/spec-drift-vs-test-coverage.svg)
+![Orange Paper sentences](../images/charts/spec-drift-vs-test-coverage.svg)
 
-Phase 3 estimates. The previous figure printed no scale, so the axis is the position on that plot.
+The sentence inventory: 1 proved in Rust and Lean, 15 proved in Lean only, 259 not proved. The disputed 6.2.3 row is in the 259. `check-drift` is a pass/fail gate and does not draw this chart.
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 
