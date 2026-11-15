@@ -1,39 +1,26 @@
 # Governance Model
 
-Bitcoin Commons publishes a constitutional governance model: graduated signature thresholds and review periods.
+The rules are published. Enforcement is off. The keys are test keys. A signature does not block a merge.
 
-{{#include ../../modules/governance/GOVERNANCE.md}}
+A change has a repository layer and an action tier. When both apply, the higher signature count and the longer review window win. The matrix is on [Layers and tiers](layer-tier-model.md).
 
-## Governance Signature Thresholds
+## Signature thresholds by layer
 
 ![Signature thresholds by repository layer](../images/charts/layer-thresholds.svg)
 
-Required signatures, maintainer set size, and the review window come from `repository-layers.yml` at book build time. Constitutional layers require [[gov:layer_1_signatures]]. Extension layers require [[gov:layer_5_signatures]]. The bars are that policy. They are not a count of signatures collected on a pull request.
+Required signatures, maintainer set size, and the review window come from `repository-layers.yml`. Constitutional layers require [[gov:layer_1_signatures]]. Extension layers require [[gov:layer_5_signatures]]. The bars are that policy. They are not a count of signatures collected on a pull request.
 
-## Governance Process Latency
+## Review period by action tier
 
 ![Review period by action tier](../images/charts/tier-review-days.svg)
 
-The bar for each action tier is the published review period (`tier_1` through `tier_5` in `action-tiers.yml`). The emergency tier is [[gov:tier_4_review_days]] days. This is the policy window.
+Each bar is the published review period in `action-tiers.yml`. The emergency tier is [[gov:tier_4_review_days]] days. Signature counts for the tiers are on [Layers and tiers](layer-tier-model.md).
 
-## Pull request review time
+Emergency classes, the maintainer roster, and the constitutional text stay in [GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md).
 
-A measured `charts/series/pr-review-time.yml` draws this figure. The previous picture had no printed category axis.
+## See also
 
-## See Also
-
-### Operator quick answers (FAQ)
-
-- [Do I need governance to run a node?](../appendices/faq.md#do-i-need-governance-to-run-a-node)
-- [What is Bitcoin Commons vs BLVM?](../appendices/faq.md#what-is-bitcoin-commons-vs-blvm)
-- [What are layers, tiers, and signatures?](../appendices/faq.md#what-are-layers-tiers-and-signatures)
-- [Why graduated signature thresholds?](../appendices/faq.md#why-graduated-signature-thresholds)
-- [Is the system production ready?](../appendices/faq.md#is-the-system-production-ready) (governance is not universally activated)
-
-### Governance docs
-
-- [PR Process](../development/pr-process.md) - How governance applies to pull requests
-- [Layer-Tier Model](layer-tier-model.md) - Layer and tier combination rules
-- [Multisig Configuration](multisig-configuration.md) - Signature threshold configuration
-- [Governance Overview](overview.md) - Governance system introduction
-- [Keyholder Procedures](keyholder-procedures.md) - Maintainer responsibilities
+- [Layers and tiers](layer-tier-model.md)
+- [Multisig configuration](multisig-configuration.md)
+- [PR process](../development/pr-process.md)
+- [Governance overview](overview.md)

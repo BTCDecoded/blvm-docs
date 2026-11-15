@@ -10,7 +10,7 @@ Cryptographic governance for Bitcoin Commons repositories: tiers, signatures, an
 
 | Topic | Guide |
 |------|--------|
-| Constitutional model, tiers, capture resistance | [Governance Model](governance-model.md) |
+| Layer and tier schedules | [Governance Model](governance-model.md) |
 | Layers × tiers and signature rules | [Layer-tier model](layer-tier-model.md) |
 | PR lifecycle, signatures, merge rules | [PR process](../development/pr-process.md) |
 | Human review and AI review intelligence | [Review standards](#review-standards) |
@@ -25,9 +25,7 @@ Cryptographic governance for Bitcoin Commons repositories: tiers, signatures, an
 | Operator FAQ (governance) | [FAQ: governance](../appendices/faq.md#do-i-need-governance-to-run-a-node) |
 | Governance primitives in code | [SDK API Reference](../sdk/api-reference.md) |
 
-The governance rules are published and are not enforced. Phase 1 is current, the keys in the governance repository are test keys, and merges are not blocked by a second reviewer. The module README below is the day-to-day note. The [Governance Model](governance-model.md) page includes the constitutional document ([GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md)).
-
-{{#include ../../modules/governance/README.md}}
+The governance rules are published and are not enforced. Phase 1 is current, the keys in the governance repository are test keys, and merges are not blocked by a second reviewer. The schedules are on [Governance Model](governance-model.md). The constitutional text is [GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md).
 
 ## Review standards {#review-standards}
 
