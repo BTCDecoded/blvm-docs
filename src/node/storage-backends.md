@@ -201,20 +201,11 @@ Transaction indexing:
 
 ## Configuration
 
-### Backend Selection
+`database_backend` chooses the engine. The other `[storage]` keys, including cache and pruning, are the [configuration reference](../reference/configuration-reference.md#storage).
 
-```toml
-[storage]
-data_dir = "/var/lib/blvm"
-database_backend = "auto" # release builds: heed3 (LMDB); or "rocksdb" | "redb" | "sled" when compiled in
-```
-
-**Options**:
-- `"auto"`: Select by build features (heed3 when `heed3` enabled, then RocksDB, Redb, Sled)
-- `"heed3"`: Force heed3 / LMDB (requires `heed3` feature; rkyv UTXO encoding)
-- `"rocksdb"`: Force RocksDB (requires `rocksdb` feature)
-- `"redb"`: Force redb backend (requires `redb` feature)
-- `"sled"`: Force sled backend (requires `sled` feature)
+- `auto`: heed3 when that feature is compiled in, then RocksDB, Redb, Sled
+- `heed3`: LMDB, with rkyv UTXO encoding
+- `rocksdb`, `redb`, `sled`: that engine, and the matching Cargo feature
 
 
 ### RocksDB Configuration
@@ -236,18 +227,6 @@ The system can detect typical Bitcoin-style data directories:
 - Mainnet: `~/.bitcoin/` or `~/Library/Application Support/Bitcoin/`
 - Testnet: `~/.bitcoin/testnet3/` or `~/Library/Application Support/Bitcoin/testnet3/`
 - Regtest: `~/.bitcoin/regtest/` or `~/Library/Application Support/Bitcoin/regtest/`
-
-
-### Cache Configuration
-
-```toml
-[storage.cache]
-block_cache_mb = 100
-utxo_cache_mb = 50
-header_cache_mb = 10
-```
-
-**Cache Sizes**: See [Configuration Reference](../reference/configuration-reference.md) for canonical defaults (e.g. block 100 MB, UTXO 50 MB, header 10 MB).
 
 
 ## Performance Characteristics
@@ -307,20 +286,7 @@ To migrate between backends:
 
 ## Pruning Support
 
-All backends support pruning:
-
-```toml
-[storage.pruning]
-mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
-auto_prune = true
-auto_prune_interval = 144
-```
-
-**Pruning Modes**:
-- **Disabled**: Keep all blocks (archival node)
-- **Normal**: Conservative pruning (keep recent blocks)
-- **Aggressive**: Prune with UTXO commitments (requires utxo-commitments feature)
-- **Custom**: Fine-grained control over what to keep
+Every backend can prune. The mode is `disabled` (keep every block), `normal` (keep recent blocks), `aggressive` (requires `utxo-commitments`), or `custom`. The keys are [`[storage.pruning]`](../reference/configuration-reference.md#storage).
 
 
 ## Error Handling

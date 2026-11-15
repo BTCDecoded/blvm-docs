@@ -4,7 +4,7 @@ BLVM node configuration supports different use cases.
 
 ## Protocol Variants
 
-The node supports multiple Bitcoin protocol variants: **Regtest** (default, regression testing network for development), **Testnet3** (Bitcoin test network), and **BitcoinV1** (production Bitcoin mainnet). See [Protocol Variants](../protocol/overview.md#protocol-variants) for details.
+The file names are `mainnet`, `testnet`, `testnet4`, `signet`, and `regtest`. `BitcoinV1` and `Testnet3` are aliases. The binary writes the five names above. With no `--network`, no `BLVM_NETWORK`, and no chain in the file, it uses `regtest`. See [Protocol Variants](../protocol/overview.md#protocol-variants).
 
 ## Configuration Precedence
 
@@ -19,19 +19,21 @@ flowchart TD
  CLI -.->|wins over| ENV
  ENV -.->|wins over| TOML
  TOML -.->|wins over| DEF
- WIN --> RPC[RPC bind: CLI / BLVM_RPC_ADDR only: not TOML host:port]
+ WIN --> RPC[rpc_addr is a file key; CLI and BLVM_RPC_ADDR win]
  WIN --> FILE[TOML-only: transport_preference required when loading a file]
 ```
 
-Environment variables (e.g. `BLVM_DATA_DIR`, `BLVM_IBD_EVICTION`) override config file values. See [Environment variables](../reference/configuration-reference.md#environment-variables) in the configuration reference for the full list. Some options (relay, fibre, dandelion) are config-file-only; use CLI flags like `--enable-dandelion` for common overrides.
+The binary applies the CLI, then the environment variables it reads, then the file, then the built-in default. Keys are in the [configuration reference](../reference/configuration-reference.md).
 
-### Network defaults (`blvm` binary, no `--rpc-addr` override) {#network-defaults-blvm-binary-no-rpc-addr-override}
+### Network defaults when the address is unset {#network-defaults-blvm-binary-no-rpc-addr-override}
 
-| Network | `protocol_version` | P2P (`--listen-addr`) | RPC (`--rpc-addr`) |
-|---------|-------------------|------------------------|---------------------|
-| Mainnet | `BitcoinV1` | `0.0.0.0:8333` | `127.0.0.1:8332` |
-| Testnet | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` |
-| Regtest (CLI default) | `Regtest` | `0.0.0.0:18444` | `127.0.0.1:18443` |
+| Network | `protocol_version` | P2P | RPC |
+|---------|-------------------|-----|-----|
+| Mainnet | `mainnet` | `127.0.0.1:8333` | `127.0.0.1:8332` |
+| Testnet | `testnet` | `127.0.0.1:18333` | `127.0.0.1:18332` |
+| Testnet4 | `testnet4` | `127.0.0.1:48333` | `127.0.0.1:48332` |
+| Signet | `signet` | `127.0.0.1:38333` | `127.0.0.1:38332` |
+| Regtest | `regtest` | `127.0.0.1:18444` | `127.0.0.1:18443` |
 
 Separate **`data_dir` per network**. REST bind (when enabled) derives from RPC port: **8080** (mainnet), **18080** (testnet), **28443** (regtest).
 
@@ -43,32 +45,24 @@ Config path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, e
 
 Create a `blvm.toml` configuration file. Keys are **top-level** or in nested tables such as `[storage]`: there is **no** `[network]` wrapper.
 
-**RPC bind address** is set by the **`blvm`** binary (`--rpc-addr` / `BLVM_RPC_ADDR`), not by a `port`/`host` table. The optional **`[rpc]`** table holds **RPC server limits** only (e.g. `max_request_size_bytes`, IP rate limits). **Auth** uses **`[rpc_auth]`**. See the [configuration reference](../reference/configuration-reference.md).
+`rpc_addr` is the RPC bind. `--rpc-addr` and `BLVM_RPC_ADDR` win over the file. An absent address uses the row above. `[rpc]` holds server limits. Auth is `[rpc_auth]`. The key list is the [configuration reference](../reference/configuration-reference.md).
 
 ```toml
-# P2P listen address (NodeConfig library default: 127.0.0.1:8333; `blvm` CLI without config file uses network-aware ports)
 listen_addr = "127.0.0.1:8333"
-
-# TOML uses serde enum tags (lowercase, no underscore): tcponly, irohonly, quinnonly, hybrid, all
-# The `blvm` CLI and BLVM_NODE_TRANSPORT accept forms like tcp_only
+rpc_addr = "127.0.0.1:8332"
+# File tags: tcponly, irohonly, quinnonly, hybrid, all.
+# The CLI and BLVM_NODE_TRANSPORT accept tcp_only.
 transport_preference = "tcponly"
-
 max_peers = 100
-protocol_version = "BitcoinV1" # mainnet-style; use "Regtest" / Testnet3 naming per protocol variant docs
+protocol_version = "mainnet"
 enable_self_advertisement = true
 
 [storage]
 data_dir = "/var/lib/blvm"
-database_backend = "auto" # auto | heed3 | rocksdb | redb | sled: see storage docs
-
-# Optional: RPC limits only (not bind address)
-# [rpc]
-# max_request_size_bytes = 1048576
+database_backend = "auto"
 ```
 
-**Defaults (two layers)**:
-- **`blvm` operator binary** (no config file): default network **`regtest`**. RPC when `--rpc-addr` is omitted: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, regtest **`127.0.0.1:18443`** (Core-aligned). P2P: mainnet **`0.0.0.0:8333`**, testnet **`0.0.0.0:18333`**, regtest **`0.0.0.0:18444`**. Override with `--listen-addr` / `BLVM_LISTEN_ADDR` and `--rpc-addr` / `BLVM_RPC_ADDR`.
-- **`NodeConfig` library default** (used when embedding `blvm-node`): `listen_addr` localhost `8333`, `protocol_version` `"BitcoinV1"`, `transport_preference` TCP-only, `max_peers` 100.
+`NodeConfig` itself leaves `listen_addr`, `rpc_addr`, and `protocol_version` unset. Its transport default is TCP-only, and `max_peers` is 100. The binary fills the chain and the two addresses from the table above.
 
 Configuration is organized in logical sections (`storage`, `ibd`, `modules`, optional `[stratum_v2]`, etc.) in the node codebase. Initial block download uses parallel IBD only.
 
@@ -79,11 +73,11 @@ Configuration is organized in logical sections (`storage`, `ibd`, `modules`, opt
 | Bitcoin Core (`bitcoin.conf` or CLI) | BLVM |
 |--------------------------------------|------|
 | `rpcuser` / `rpcpassword` | **`[rpc_auth].username`** / **`password`** (HTTP Basic; password auto-granted admin), or **`tokens`** / **`admin_tokens`** with **`Authorization: Bearer …`** |
-| `rpcbind` / `rpcport` | **`blvm --rpc-addr`** / **`BLVM_RPC_ADDR`** |
+| `rpcbind` / `rpcport` | `rpc_addr`, or `--rpc-addr` / `BLVM_RPC_ADDR` |
 | `port` (P2P) | **`listen_addr`** (top-level TOML) or **`--listen-addr`** |
 | `addnode=` | **`persistent_peers`** or the **`addnode`** RPC after startup |
 
-To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-core <path/to/bitcoin.conf>`** (or the **`convert-bitcoin-core-config`** shell/Rust tools in the **`blvm-node`** repo). **Review and normalize** the output: remove legacy **`[network]`** wrappers and nested **`[transport_preference]`** blobs. **`[rpc_auth].username`** / **`password`** are valid for HTTP Basic (map from Core **`rpcuser`** / **`rpcpassword`**), or use **`tokens`** / **`admin_tokens`** for Bearer auth: see the [blvm-node Integration Guide: Migrating from bitcoin.conf](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#migrating-from-bitcoinconf). Always wire **`--rpc-addr`** and set **`storage.data_dir`** separately.
+To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-core <path/to/bitcoin.conf>`** (or the **`convert-bitcoin-core-config`** shell/Rust tools in the **`blvm-node`** repo). **Review and normalize** the output: remove legacy **`[network]`** wrappers and nested **`[transport_preference]`** blobs. **`[rpc_auth].username`** / **`password`** are valid for HTTP Basic (map from Core **`rpcuser`** / **`rpcpassword`**), or use **`tokens`** / **`admin_tokens`** for Bearer auth: see the [blvm-node Integration Guide: Migrating from bitcoin.conf](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#migrating-from-bitcoinconf). Set `rpc_addr` or `--rpc-addr`, and set `storage.data_dir` separately.
 
 ## IBD Configuration
 
@@ -100,7 +94,7 @@ headers_timeout_secs = 30
 headers_max_failures = 10
 ```
 
-ENV: `BLVM_IBD_*`: see [configuration reference](../reference/configuration-reference.md#environment-variables).
+`BLVM_IBD_*` overrides the same fields. The key list is [`[ibd]`](../reference/configuration-reference.md#ibd).
 
 ## Protocol Limits
 
@@ -116,20 +110,7 @@ max_headers_results = 2000
 
 ## Environment Variables
 
-You can also configure via environment variables (ENV overrides config file):
-
-```bash
-export BLVM_NETWORK=testnet
-export BLVM_DATA_DIR=/var/lib/blvm
-# Use the RPC socket your node binds (example: mainnet 8332; testnet 18332; regtest 18443)
-export BLVM_RPC_ADDR=127.0.0.1:8332
-export BLVM_IBD_EVICTION=dynamic
-export BLVM_NETWORK_TARGET_PEER_COUNT=125
-```
-
-**Common ENV vars:** `BLVM_DATA_DIR`, `BLVM_NETWORK`, `BLVM_LISTEN_ADDR`, `BLVM_RPC_ADDR`, `BLVM_LOG_LEVEL`, `BLVM_NODE_MAX_PEERS`, `BLVM_IBD_*`, `BLVM_NETWORK_TARGET_PEER_COUNT`, `BLVM_REQUEST_*`, `BLVM_MODULE_MAX_*`, `RPC_AUTH_TOKENS`, `COMMONS_API_KEY`, `RUST_LOG`.
-
-See [Environment variables](../reference/configuration-reference.md#environment-variables) for the complete list.
+The environment sits between the CLI and the file. `BLVM_NETWORK`, `BLVM_DATA_DIR`, `BLVM_LISTEN_ADDR`, and `BLVM_RPC_ADDR` are the addresses and the chain. The other `BLVM_*` names override the field of the same meaning. The fields are in the [configuration reference](../reference/configuration-reference.md).
 
 ## Command Line Options
 
@@ -139,9 +120,9 @@ See [Environment variables](../reference/configuration-reference.md#environment-
 
 | Option | Short | Default | Description |
 |--------|-------|---------|-------------|
-| `--network` | `-n` | `regtest` | Network: `regtest`, `testnet`, `mainnet` |
+| `--network` | `-n` | `regtest` | `mainnet`, `testnet`, `testnet4`, `signet`, `regtest` |
 | `--rpc-addr` | `-r` | network-aware when omitted | RPC bind: mainnet `127.0.0.1:8332`; testnet `127.0.0.1:18332`; regtest `127.0.0.1:18443` |
-| `--listen-addr` | `-l` | network-aware when omitted | P2P listen: mainnet `0.0.0.0:8333`, testnet `0.0.0.0:18333`, regtest `0.0.0.0:18444` |
+| `--listen-addr` | `-l` | network-aware when omitted | P2P listen. Unset uses `127.0.0.1` and the port in the table above. |
 | `--data-dir` | `-d` |: | Data directory (overrides ENV and config) |
 | `--config` | `-c` |: | Configuration file path (TOML or JSON) |
 | `--verbose` | `-v` | false | Enable verbose logging |
@@ -198,53 +179,9 @@ ENV and reference: [Configuration Reference](../reference/configuration-referenc
 
 ## Storage Backends
 
-The node uses multiple [storage backends](storage-backends.md) with automatic fallback:
+`database_backend = "auto"` selects heed3 when that feature is compiled in, then RocksDB, Redb, and Sled. Naming `heed3`, `rocksdb`, `redb`, or `sled` forces that backend, and the binary has to be built with the feature. Release builds compile heed3. How a backend behaves is on [Storage Backends](storage-backends.md). Cache, indexing, and pruning keys are [`[storage]`](../reference/configuration-reference.md#storage).
 
-### Database Backends
-
-- **auto** (default): Resolve by build features, heed3 when `heed3` feature enabled, then RocksDB, Redb, Sled (see [Configuration Reference](../reference/configuration-reference.md))
-- **heed3**, **rocksdb**, **redb**, **sled**: Force a specific backend (each needs its feature compiled in; release builds compile heed3 only) (see [Storage Backends](storage-backends.md)); **`auto`** matches `default_backend()` order in code
-
-### Storage Configuration
-
-```toml
-[storage]
-data_dir = "/var/lib/blvm"
-database_backend = "auto" # or "heed3", "rocksdb", "redb", "sled"
-
-[storage.cache]
-block_cache_mb = 100
-utxo_cache_mb = 50
-header_cache_mb = 10
-
-# Pruning uses PruningConfig: see configuration reference. Example: normal mode with ~288 recent blocks
-[storage.pruning]
-mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
-auto_prune = true
-min_blocks_to_keep = 144
-```
-
-### Backend Selection
-
-When `database_backend = "auto"`, the node selects by build features: heed3 (LMDB, if `heed3` feature enabled: default), then RocksDB, Redb, Sled. Falls back to the next option if the preferred backend is unavailable.
-
-### Cache Configuration
-
-Storage cache sizes can be configured:
-- **Block / UTXO / header cache**: See [Configuration Reference](../reference/configuration-reference.md) for canonical defaults (e.g. 100 / 50 / 10 MB).
-
-### Pruning
-
-Pruning reduces storage requirements by trimming old block data. **`PruningConfig`** defaults in code use an **aggressive-style** mode with UTXO-commitment expectations; **validate** your build features (`utxo-commitments` for aggressive) or choose **`type = "normal"`** / **`type = "disabled"`** explicitly. See [configuration reference](../reference/configuration-reference.md) and `blvm-node` pruning examples.
-
-```toml
-[storage.pruning]
-mode = { type = "disabled" }
-auto_prune = false
-min_blocks_to_keep = 144
-```
-
-**Note**: Pruning reduces storage but limits ability to serve historical blocks to peers.
+The pruning default expects UTXO commitments. Set `type = "normal"` or `type = "disabled"` unless the `utxo-commitments` feature is in the binary. Pruning stops the node from serving the blocks it deleted.
 
 ## Network Configuration
 
@@ -274,95 +211,15 @@ transport_preference = "tcponly"
 
 ## RBF Configuration
 
-Configure Replace-By-Fee (RBF) behavior with 4 modes: Disabled, Conservative, Standard (default), and Aggressive.
-
-### RBF Modes
-
-**Disabled**: No RBF replacements allowed
-```toml
-[rbf]
-mode = "disabled"
-```
-
-**Conservative**: Strict rules with higher fee requirements
-```toml
-[rbf]
-mode = "conservative"
-min_fee_rate_multiplier = 2.0
-min_fee_bump_satoshis = 5000
-min_confirmations = 1
-max_replacements_per_tx = 3
-cooldown_seconds = 300
-```
-
-**Standard** (default): Core-default replacement. The original does not need to signal; the bump is the incremental relay fee
-```toml
-[rbf]
-mode = "standard"
-```
-
-**Aggressive**: Relaxed rules for miners
-```toml
-[rbf]
-mode = "aggressive"
-min_fee_rate_multiplier = 1.05
-min_fee_bump_satoshis = 500
-allow_package_replacements = true
-```
-
-See [RBF and Mempool Policies](rbf-mempool-policies.md) for complete configuration guide.
+`[rbf].mode` is `disabled`, `conservative`, `standard`, or `aggressive`. `standard` is the default. The fee, confirmation, and cooldown keys are [`[mempool]` and `[rbf]`](../reference/configuration-reference.md#mempool-and-rbf). What each mode admits is [RBF and Mempool Policies](rbf-mempool-policies.md).
 
 ## Advanced Indexing
 
-Enable address and value range indexing for efficient queries:
-
-```toml
-[storage.indexing]
-enable_address_index = true
-enable_value_index = true
-strategy = "eager" # or "lazy"
-max_indexed_addresses = 0 # 0 = unlimited
-enable_compression = false # zstd index blobs; requires compression (blvm default features)
-background_indexing = false # lazy only: index on txindex-bg thread
-```
+Address and value indexes are [`[storage.indexing]`](../reference/configuration-reference.md#storage).
 
 ## Module Configuration
 
-Configure process-isolated modules. **There is no hardcoded default module list in the node**: copy pins from `blvm.toml.example` or set your own. An empty pin map auto-discovers modules already on disk under `modules_dir` (no HTTP bootstrap).
-
-```toml
-[modules]
-enabled = true # Enable module system (default: true)
-modules_dir = "modules" # Directory containing module binaries (default: "modules")
-data_dir = "data/modules" # Directory for module data/state (default: "data/modules")
-socket_dir = "data/modules/sockets" # Directory for IPC sockets (default: "data/modules/sockets")
-registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-# Version pins (wildcard or exact semver). Omit pins to load on-disk modules only.
-blvm-miniscript = "0.1.*"
-# When a module needs spawn overrides, put the pin in its table as `version`:
-[modules.blvm-zmq]
-version = "0.1.*"
-hashblock = "tcp://127.0.0.1:28332"
-# Legacy unpinned allowlist: enabled_modules = ["blvm-miniscript"]
-```
-
-See [Module System](../architecture/module-system.md) and [node modules README](https://github.com/BTCDecoded/blvm-node/blob/main/modules/README.md) for bootstrap and registry details. ZMQ topic endpoints: [ZMQ module](../modules/zmq.md).
-
-**Module resource limits** (optional) use the **`[module_resource_limits]`** table on **`NodeConfig`**, not `[modules.resource_limits]`:
-
-```toml
-[module_resource_limits]
-default_max_cpu_percent = 50
-default_max_memory_bytes = 536870912
-default_max_file_descriptors = 256
-default_max_child_processes = 10
-module_startup_wait_millis = 100
-module_socket_timeout_seconds = 5
-module_socket_check_interval_millis = 100
-module_socket_max_attempts = 50
-```
-
-See [Module System](../architecture/module-system.md) for module configuration details.
+There is no hardcoded default module list. Copy pins from `blvm.toml.example`, or leave the pin map empty to load modules already on disk under `modules_dir`. A pin is a key under `[modules]`. A module that needs spawn overrides puts `version` in `[modules.<name>]`. Resource limits are `[module_resource_limits]`, not `[modules.resource_limits]`. The keys are [RPC, ban list, governance, modules](../reference/configuration-reference.md#rpc-ban-list-governance-modules). Bootstrap is the [Module System](../architecture/module-system.md). ZMQ topic endpoints are the [ZMQ module](../modules/zmq.md).
 
 ## See Also
 
