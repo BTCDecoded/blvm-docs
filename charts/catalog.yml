@@ -82,14 +82,6 @@ charts:
     sha256: ec340b71a31379c61f5def7c557e576e247e6391beae026e30e8604a1219d766
     source: charts/carried/proof-maintenance-cost.png
 
-  - id: spec-drift
-    kind: series
-    title: Orange Paper sentences
-    measure: Sentences proved in Rust and Lean, proved in Lean only, or not proved
-    output: src/images/charts/spec-drift-vs-test-coverage.svg
-    sha256: 58856cbeae1ce4d60f97440ab3a30e4a3e5e0cc9907dd4304eca8037bef31284
-    source: charts/carried/spec-drift-vs-test-coverage.png
-
   - id: pr-review-time
     kind: carried
     title: Pull request review time

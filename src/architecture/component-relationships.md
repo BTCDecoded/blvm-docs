@@ -19,11 +19,12 @@ flowchart LR
  P --> C
  N --> P
  N --> C
- S --> P
- S --> C
+ S --> N
  G --> S
  G --> P
 ```
+
+`blvm-node` depends on `blvm-consensus` through the `production` feature. Default and `minimal` both enable it. `blvm-sdk` depends on `blvm-node` through the `node` feature, which is on by default. The SDK does not depend on `blvm-protocol` or `blvm-consensus`. Its `blvm-protocol` entry is a dev-dependency. `blvm-commons` depends on `blvm-sdk` and `blvm-protocol`.
 
 **blvm-primitives** (types, serialization, crypto) sits under **blvm-consensus** and **blvm-protocol**; it is not shown as its own stack layer here.
 

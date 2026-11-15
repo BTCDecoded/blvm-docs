@@ -170,12 +170,6 @@ Production `#[spec_locked]` attributes in `blvm-consensus` source, counted 2026-
 
 Developer-weeks are not measured. The panel stays empty until a series file records them.
 
-## Orange Paper sentences
-
-![Orange Paper sentences](../images/charts/spec-drift-vs-test-coverage.svg)
-
-The sentence inventory: 1 proved in Rust and Lean, 15 proved in Lean only, 259 not proved. The disputed 6.2.3 row is in the 259. `check-drift` is a pass/fail gate and does not draw this chart.
-
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 
 Policy and inventory: [verification policy](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md). Formal properties per rule: [Mathematical Specifications](mathematical-specifications.md).

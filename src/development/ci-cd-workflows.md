@@ -148,9 +148,9 @@ Builds follow **Cargo’s dependency graph** (simplified view):
  ↓
 5. blvm (CLI): depends on blvm-node
 
-blvm-sdk: depends on blvm-protocol + blvm-consensus (and optionally blvm-node); not a separate “no-deps” lane
+blvm-sdk: the default `node` feature depends on blvm-node. No direct dependency on blvm-protocol or blvm-consensus
  ↓
-blvm-commons: depends on blvm-sdk + blvm-protocol
+blvm-commons: depends on blvm-sdk and blvm-protocol
 ```
 
 **Security Gates**: Consensus verification (tests + **BLVM Specification Lock** where `#[spec_locked]` is enabled) must pass before downstream builds proceed. Details: [Formal Verification](../consensus/formal-verification.md).

@@ -1,9 +1,0 @@
-status: measured
-measured_at: "2026-11-14"
-source: "sentence-inventory.tsv. The disputed 6.2.3 row is counted in Not proved."
-unit: sentences
-categories: [Rust and Lean, Lean only, Not proved]
-series:
-  - name: Orange Paper sentences
-    color: "#7eb6e8"
-    values: [1, 15, 259]

@@ -103,7 +103,7 @@ class RenderChartsTest(unittest.TestCase):
         import hashlib
 
         carried = [c for c in rc.load_catalog() if c.get("sha256")]
-        self.assertEqual(len(carried), 6)
+        self.assertEqual(len(carried), 5)
         for chart in carried:
             digest = hashlib.sha256((ROOT / chart["source"]).read_bytes()).hexdigest()
             self.assertEqual(digest, chart["sha256"], chart["id"])
@@ -118,10 +118,9 @@ class RenderChartsTest(unittest.TestCase):
         cost = rendered[ROOT / "src/images/charts/proof-maintenance-cost.svg"]
         self.assertIn("No series is published.", cost)
         self.assertNotIn("Monolithic", cost)
-        drift = rendered[ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg"]
-        for value in (1, 15, 259):
-            self.assertIn(f">{value}<", drift)
-        self.assertIn("sentence-inventory.tsv", drift)
+        self.assertNotIn(
+            ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg", rendered
+        )
 
     def test_missing_series_stays_empty(self):
         svg = rc.series_chart(
