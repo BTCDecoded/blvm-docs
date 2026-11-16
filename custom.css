@@ -78,6 +78,27 @@
   margin-bottom: 0.35rem;
 }
 
+/* Same menu as thebitcoincommons.org. The chapter sidebar stays below it. */
+.commons-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--theme-hover);
+  font-size: 0.92rem;
+}
+
+.commons-nav a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.commons-nav a[aria-current="page"] {
+  color: var(--links);
+}
+
 /* Charts are drawn in the navy theme. Do not mat them in white. */
 .book-content img {
     background: transparent;

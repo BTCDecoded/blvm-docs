@@ -97,6 +97,9 @@ jobs:
             exit 1
           fi
 
+      - name: Add the Commons menu to the book
+        run: python3 scripts/inject-commons-nav.py book
+
       - name: Copy and inject custom.css
         run: |
           # Copy CSS file to output
