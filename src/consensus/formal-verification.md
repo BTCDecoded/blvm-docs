@@ -88,7 +88,7 @@ flowchart TB
 | **blvm-protocol** | 8 |
 | **Total** | **297** |
 
-The attribute count is the surface the spec-lock prover and Z3 check. A green `verify` run means they accepted that function's contract. The body-proof count is 13 functions. The written list in the consensus verification guide is 93 of 224. The tool's own list is 34 of 34.
+The attribute count is the surface the spec-lock prover and Z3 check. A green `verify` run means they accepted that function's contract. That run is not a proof. The body-proof count is 13 functions: the check passes on the code as written, and two edits of the body make it fail. The counts 93 of 224 and 34 of 34 are older mutation lists, not the 13. 93 of 224 is the written list in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md). 34 of 34 is the list in [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md). A green `verify` run is none of these counts.
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
