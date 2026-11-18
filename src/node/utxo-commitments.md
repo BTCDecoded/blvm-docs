@@ -140,7 +140,7 @@ BIP158 compact block filters support light clients and integrate with UTXO commi
 
 #### Filter Generation
 - **Golomb-Rice Coded Sets (GCS)** for efficient encoding
-- **False Positive Rate**: ~1 in 524,288 (P=19)
+- **Parameters**: Golomb-Rice `P` is 19. The range multiplier `M` is 784,931, about one false positive in `M`
 - **Filter Contents**:
  1. All spendable output scriptPubKeys in the block
  2. All scriptPubKeys from outputs spent by block's inputs
@@ -152,10 +152,10 @@ BIP158 compact block filters support light clients and integrate with UTXO commi
 
 ### Algorithm
 
-1. **Collect Scripts**: All output scriptPubKeys from block transactions and all scriptPubKeys from UTXOs being spent
-2. **Hash to Range**: Hash each script with SHA256, map to range [0, N*M) where N = number of elements, M = 2^19
-3. **Golomb-Rice Encoding**: Sort hashed values, compute differences, encode using Golomb-Rice
-4. **Filter Matching**: Light clients hash their scripts and check if script hash is in set
+1. **Collect Scripts**: Output scriptPubKeys from the block and scriptPubKeys from the outputs the block spends. Empty scripts and `OP_RETURN` outputs are left out.
+2. **Hash to Range**: SipHash-2-4 each script, keyed by the first 16 bytes of the block hash, into `[0, N×784931)`. `N` is the number of scripts.
+3. **Golomb-Rice Encoding**: Sort those values, encode the differences with Golomb-Rice parameter `P` = 19.
+4. **Filter Matching**: A light client hashes its own scripts the same way and checks the set.
 
 ### Integration with UTXO Commitments
 

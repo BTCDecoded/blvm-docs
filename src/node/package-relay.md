@@ -12,33 +12,11 @@ Package Relay (BIP331) enables nodes to relay and validate groups of transaction
 
 A transaction package contains:
 
-```rust
-pub struct TransactionPackage {
-    pub transactions: Vec<Transaction>,  // Ordered: parents first
-    pub package_id: PackageId,
-    pub combined_fee: u64,
-    pub combined_weight: usize,
-}
-```
-
+`TransactionPackage` in `blvm-node/src/network/package_relay.rs` carries the transactions in parent-first order, the package id, the combined fee, the combined weight, and `fee_known`.
 
 ### Package ID
 
-Package ID is calculated as double SHA256 of all transaction IDs:
-
-```rust
-pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
-    let mut hasher = Sha256::new();
-    for tx in transactions {
-        let txid = calculate_txid(tx);
-        hasher.update(txid);
-    }
-    let first = hasher.finalize();
-    let mut hasher2 = Sha256::new();
-    hasher2.update(first);
-    PackageId(final_hash)
-}
-```
+`PackageId::from_transactions` sorts the package wtxids lexicographically and hashes that byte string once with SHA256. With no witness, the wtxid is the txid.
 
 
 ## Validation Rules
@@ -60,17 +38,7 @@ Transactions must be ordered with parents before children:
 
 ### Fee Calculation
 
-Package fee is calculated as sum of all transaction fees:
-
-```rust
-combined_fee = sum(inputs) - sum(outputs) for all transactions
-```
-
-Fee rate is calculated as:
-
-```rust
-fee_rate = combined_fee / combined_weight
-```
+The package fee is the sum of the transaction fees. When `fee_known` is set, the package pays at least `min_fee_rate` satoshis per 1,000 virtual bytes, rounded up. Virtual size is `combined_weight` divided by 4, rounded up.
 
 
 ## Use Cases

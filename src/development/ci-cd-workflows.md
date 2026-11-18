@@ -372,13 +372,7 @@ For long-running runners, implement cache cleanup:
 
 ### Performance Improvements
 
-With proper caching optimization:
-- **Dependency checkout**: ~30s (once in setup job)
-- **Cache restore**: ~5s per job (local cache vs ~20s for GitHub cache)
-- **Dependency build**: ~30s (cached artifacts vs ~5min without cache)
-- **Total overhead**: ~2min vs ~35min without optimization
-
-**Estimated speedup**: measure setup overhead locally on self-hosted runners (varies by disk and cache state).
+Cache the dependency checkout and the build. Setup time depends on the runner disk and whether the cache is warm. Measure it on the self-hosted runners.
 
 ## Additional Resources
 

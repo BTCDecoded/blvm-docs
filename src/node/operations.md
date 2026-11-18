@@ -179,7 +179,7 @@ stateDiagram-v2
 | **Synced** | Caught up; normal relay and RPC |
 | **Error** | Recoverable or fatal fault (logged) |
 
-State transitions are managed by the `SyncStateMachine` (`Initial → Headers → Blocks → Synced`). Progress weighting in UI/logs uses ~30% at headers complete and ~60% at blocks complete before full sync.
+State transitions are managed by the `SyncStateMachine` (`Initial → Headers → Blocks → Synced`). Progress is 0.3 for the whole Headers state, 0.6 for the whole Blocks state, and 1.0 when Synced.
 
 ### Initial sync checklist
 

@@ -397,7 +397,7 @@ Catalog of shared **`EventType`** variants on the node bus. **Individual modules
 - `CompanionUdpPeerRegistered` / `CompanionUdpPeerUnregistered` - NODE_FIBRE companion UDP peers
 - `BanListShared`, `BanListReceived` - Ban list sharing
 - `PeerPayment` - Peer payment notification
-- `ModuleEvent` - Module-published event. Modules such as `blvm-lightning`, `blvm-mesh`, `blvm-governance`, and `blvm-selective-sync` publish their own events this way (their 0.1 releases after 2026-11-07)
+- `ModuleEvent` - Module-published event. Modules such as `blvm-lightning`, `blvm-mesh`, `blvm-governance`, and `blvm-selective-sync` publish their own events this way
 - `FeeTableReady` - A fee table is ready for the fee estimator
 
 **Reserved slots.** `blvm-node` e292087 renamed variants that nothing publishes to `Reserved*` (for example `ReservedShareSubmitted`, `ReservedPaymentSettled`, `ReservedGovernanceProposalCreated`, `ReservedDandelionFluffed`). The slots keep their bincode index, so the wire format does not shift. Do not subscribe to them: no node code path or shipped module emits them. Module-specific events travel as `ModuleEvent`.
