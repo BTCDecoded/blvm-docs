@@ -32,7 +32,7 @@ flowchart LR
 
 **Machine-checked alignment on merge.** Z3 checks those Rust contracts on every consensus change. Lean checks the Orange Paper model in the spec-lock lean-evidence workflow and does not check the Rust. Consensus and protocol CI run **`check-drift`** then **`verify`** on self-hosted runners (node CI runs `verify` only), so a PR that softens a rule or breaks a proven invariant fails the gate instead of shipping as “still green on unit tests.”
 
-**Growing, measurable coverage.** `#[spec_locked]` attributes: **281** in **blvm-consensus**, **8** in **blvm-node**, and **8** in **blvm-protocol** (**297**), counted in source at consensus f63c328, node 36bb40c, and protocol 0bc9307. Contract totals come from `cargo spec-lock coverage`. A green `verify` run is formal verification of those contracts: the spec-lock prover and Z3 accepted each one. The body-proof count is 13 functions, named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md).
+**The coverage is the attributes Z3 checks.** `cargo spec-lock coverage` counts them. A green `verify` run is formal verification of those contracts: the spec-lock prover and Z3 accepted each one. The body proofs are named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md). The figure is on [Assurance](assurance.md).
 
 **Confidence to evolve.** Proven bounds feed [optimization passes](overview.md#optimization-passes). Refactors and performance work land against the same contracts. Future implementations can share the Orange Paper as common IR; each codebase earns trust by locking to that IR, not by copying another node’s source.
 
@@ -157,7 +157,7 @@ Use the `verify` feature for full protocol verification builds; see [protocol ov
 
 ![Spec-lock attributes by area](../images/charts/consensus-coverage.svg)
 
-Production `#[spec_locked]` attributes in `blvm-consensus` source, counted 2026-11-14. Witness fixtures are not in the bars. The total with those fixtures is 281.
+The bars are the production `#[spec_locked]` attributes in `blvm-consensus`. Witness fixtures are included in the figure's total.
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 

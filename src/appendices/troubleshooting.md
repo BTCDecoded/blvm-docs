@@ -129,7 +129,7 @@ For Core chainstate import errors (LevelDB `.ldb` vs RocksDB layout, mixed `.ldb
 **Error**: `Connection refused` when calling RPC
 
 **Solutions**:
-- Verify the process is listening on **`--rpc-addr`**. An omitted address is `127.0.0.1` plus the network port: mainnet `8332`, testnet `18332`, testnet4 `48332`, signet `38332`, regtest `18443`
+- Verify the process is listening on **`--rpc-addr`**. An omitted address is loopback plus the network port in [Protocol variants](../protocol/overview.md#protocol-variants)
 - Check bind address: use `0.0.0.0:8332` when exposing RPC in a container
 - Check firewall for the RPC port you configured
 

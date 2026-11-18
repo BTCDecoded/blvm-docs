@@ -6,12 +6,12 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, testnet4 **`127.0.0.1:48332`**, signet **`127.0.0.1:38332`**, regtest **`127.0.0.1:18443`**.
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is loopback on that network's port. The ports are in [Protocol variants](../protocol/overview.md#protocol-variants).
 - **REST API** (optional): Requires **`rest-api`** feature and **`[rest_api].enabled = true`** in `blvm.toml`. Binds a separate port (default **8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000**). See [REST API](#rest-api).
 
 ## Connection
 
-Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. Defaults: mainnet `http://127.0.0.1:8332`, testnet `http://127.0.0.1:18332`, testnet4 `http://127.0.0.1:48332`, signet `http://127.0.0.1:38332`, regtest `http://127.0.0.1:18443`. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
+Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. An omitted address uses the port in [Protocol variants](../protocol/overview.md#protocol-variants). There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
 
 ## Authentication
 
@@ -53,7 +53,7 @@ Bitcoin Commons optionally serves JSON-RPC over **HTTP/3 on QUIC** (Quinn + **`h
 
 **When to use:** High-throughput internal services where clients support QUIC and you want built-in TLS without a separate layer.
 
-**When not to use:** Most ecosystem tooling assumes TCP HTTP to port 8332 (mainnet), 18332 (testnet), 48332 (testnet4), 38332 (signet), or 18443 (regtest). Prefer TCP for scripts, `curl`, and Core-compatible clients.
+**When not to use:** Most ecosystem tooling assumes TCP HTTP to the network's default RPC port ([Protocol variants](../protocol/overview.md#protocol-variants)). Prefer TCP for scripts, `curl`, and Core-compatible clients.
 
 ### Enable QUIC RPC
 
@@ -116,7 +116,7 @@ Source: [QUIC RPC](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_R
 ### Get Blockchain Info
 
 ```bash
-# Mainnet 8332; testnet 18332; testnet4 48332; signet 38332; regtest 18443
+# Mainnet example. Other ports: Protocol variants.
 curl -X POST http://localhost:8332 \
  -H "Content-Type: application/json" \
  -d '{
@@ -130,7 +130,7 @@ curl -X POST http://localhost:8332 \
 ### Get Block
 
 ```bash
-# Mainnet 8332; testnet 18332; testnet4 48332; signet 38332; regtest 18443
+# Mainnet example. Other ports: Protocol variants.
 curl -X POST http://localhost:8332 \
  -H "Content-Type: application/json" \
  -d '{
@@ -144,7 +144,7 @@ curl -X POST http://localhost:8332 \
 ### Get Network Info
 
 ```bash
-# Mainnet 8332; testnet 18332; testnet4 48332; signet 38332; regtest 18443
+# Mainnet example. Other ports: Protocol variants.
 curl -X POST http://localhost:8332 \
  -H "Content-Type: application/json" \
  -d '{
@@ -200,7 +200,7 @@ Submit a hex-encoded signed transaction. Returns the txid on success.
 Parameters, in order: the hex, `maxfeerate` (BTC per kvB), `maxburnamount` (BTC), and `allowhighfees`. An omitted `maxfeerate` is 0.10 unless `allowhighfees` is true, which removes the cap. An omitted `maxburnamount` is 0, so an unspendable output with a positive value is rejected.
 
 ```bash
-# Testnet example (18332). Testnet4 uses 48332, signet 38332, regtest 18443, mainnet 8332
+# Testnet example. Other ports: Protocol variants.
 curl -X POST http://127.0.0.1:18332 \
  -H "Content-Type: application/json" \
  -d '{"jsonrpc":"2.0","method":"sendrawtransaction","params":["<hex>"],"id":1}'
@@ -230,7 +230,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 | `meshsendpacket` / `meshpollreceived` | Module | Requires `blvm-mesh` |
 | REST `/api/v1/*` | BLVM-specific | `rest-api` feature + `[rest_api].enabled`; separate bind: see [REST API](#rest-api) |
 
-**Ports:** An omitted RPC address is `127.0.0.1` plus the network port: mainnet **8332**, testnet **18332**, testnet4 **48332**, signet **38332**, regtest **18443**. Set **`--rpc-addr`** / **`BLVM_RPC_ADDR`** when you need a different bind.
+**Ports:** An omitted RPC address is loopback plus the network port in [Protocol variants](../protocol/overview.md#protocol-variants). Set **`--rpc-addr`** / **`BLVM_RPC_ADDR`** when you need a different bind.
 
 ## Available Methods
 
@@ -489,7 +489,7 @@ The REST API is a **separate HTTP server** from JSON-RPC (`blvm-node/src/rpc/res
 
 > **Operator note**: REST is **off by default** (`[rest_api].enabled = false`). When enabled, it binds its **own** address (default loopback **8080** / **18080** from RPC port). Handler coverage matches **`rest/server.rs` routing**, not every function in `rest/*.rs`.
 
-When enabled programmatically, REST binds its **own** address (tests use `127.0.0.1:8080`). It does **not** share the JSON-RPC port (**8332** / **18332** / **48332** / **38332** / **18443**). HTTP **`GET /health`** on the RPC port is separate (see [Node Operations](operations.md)).
+When enabled programmatically, REST binds its **own** address (tests use `127.0.0.1:8080`). It does **not** share the JSON-RPC port ([Protocol variants](../protocol/overview.md#protocol-variants)). HTTP **`GET /health`** on the RPC port is separate (see [Node Operations](operations.md)).
 
 **Base URL (when running):** `http://<rest-bind>/api/v1/`
 

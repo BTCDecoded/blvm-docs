@@ -121,7 +121,7 @@ The environment sits between the CLI and the file. `BLVM_NETWORK`, `BLVM_DATA_DI
 | Option | Short | Default | Description |
 |--------|-------|---------|-------------|
 | `--network` | `-n` | `regtest` | `mainnet`, `testnet`, `testnet4`, `signet`, `regtest` |
-| `--rpc-addr` | `-r` | network-aware when omitted | RPC bind: mainnet `127.0.0.1:8332`; testnet `127.0.0.1:18332`; testnet4 `127.0.0.1:48332`; signet `127.0.0.1:38332`; regtest `127.0.0.1:18443` |
+| `--rpc-addr` | `-r` | network-aware when omitted | RPC bind. The ports are in the table above. |
 | `--listen-addr` | `-l` | network-aware when omitted | P2P listen. Unset uses `127.0.0.1` and the port in the table above. |
 | `--data-dir` | `-d` | unset | Data directory (overrides ENV and config) |
 | `--config` | `-c` | unset | Configuration file path (TOML or JSON) |

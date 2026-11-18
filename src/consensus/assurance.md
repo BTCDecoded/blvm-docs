@@ -4,19 +4,19 @@ Consensus coverage runs from an Orange Paper sentence to a mainnet block. The fi
 
 ![What locks the implementation](../images/charts/assurance-counts.svg)
 
-Z3 checks 281 `#[spec_locked]` functions, including witness fixtures. Thirteen functions are proved from the body. The mutation gate holds for 93 functions in the written guide and for all 34 in the tool's list. `blvm-consensus` has 2,353 test functions, 187 of them property tests, and 63 fuzz harnesses. Sixteen Orange Paper sentences are Lean proofs. Theorem 6.1.2, the subsidy rule, is proved in Lean for every natural number and in Rust for the heights the tool checks.
+Z3 checks the `#[spec_locked]` functions on the figure, including witness fixtures. The other rows are the body proofs, the mutation checks, the test functions, and the Lean proofs. Theorem 6.1.2, the subsidy rule, is proved in Lean for every natural number and in Rust for the heights the tool checks.
 
 ## Where the attributes sit
 
 ![Spec-lock attributes by area](../images/charts/consensus-coverage.svg)
 
-The bars are the production `#[spec_locked]` attributes in `blvm-consensus`, counted 2026-11-14. Witness fixtures bring the total to 281.
+The bars are the production `#[spec_locked]` attributes in `blvm-consensus`. Witness fixtures are included in the figure's total.
 
 ## Where the tests sit
 
 ![Consensus test functions](../images/charts/consensus-tests.svg)
 
-Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property tests include the Orange Paper property file, which compares results with the Orange Paper formulas. Sixty-three fuzz harnesses run beside this count.
+Counted from `#[test]` and `#[tokio::test]`. The property tests include the Orange Paper property file, which compares results with the Orange Paper formulas. The fuzz harnesses on the first figure run beside this count.
 
 ## Specification
 
@@ -24,7 +24,7 @@ Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property tests inclu
 <section>
 <p class="lock-name">Orange Paper</p>
 <p>The sentence is the rule the other rows refer to.</p>
-<p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv">sentence-inventory.tsv</a>: 275 sentences.</p>
+<p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv">sentence-inventory.tsv</a>.</p>
 </section>
 </div>
 
@@ -34,7 +34,7 @@ Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property tests inclu
 <section>
 <p class="lock-name"><code>#[spec_locked]</code></p>
 <p>The function carries an Orange Paper contract.</p>
-<p class="lock-where"><code>cargo spec-lock coverage --format json</code>, field <code>by_section</code>. Section map: <a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md">SPEC_LOCK_COVERAGE.md</a>. The consensus count with witness fixtures is 281.</p>
+<p class="lock-where"><code>cargo spec-lock coverage --format json</code>, field <code>by_section</code>. Section map: <a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md">SPEC_LOCK_COVERAGE.md</a>.</p>
 </section>
 <section>
 <p class="lock-name"><code>check-drift</code></p>
@@ -48,7 +48,7 @@ Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property tests inclu
 </section>
 <section>
 <p class="lock-name">Body proofs</p>
-<p>The proof is tied to the function body. Thirteen functions, named in <a href="https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md">VERIFICATION.md</a>.</p>
+<p>The proof is tied to the function body. The functions are named in <a href="https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md">VERIFICATION.md</a>.</p>
 <ul class="lock-names">
 <li><code>sigop_count_push_opcode</code></li>
 <li><code>is_pay_to_script_hash</code></li>
@@ -68,7 +68,7 @@ Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property tests inclu
 <section>
 <p class="lock-name">Mutation gate</p>
 <p>A semantic edit makes Z3 report that the obligation no longer holds.</p>
-<p class="lock-where">93 functions in that same guide. The tool's list is 34 of 34 in <a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md">MUTATION_COVERAGE.md</a>.</p>
+<p class="lock-where">The functions in that same guide, and the tool's list in <a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md">MUTATION_COVERAGE.md</a>.</p>
 </section>
 </div>
 
@@ -77,7 +77,7 @@ Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property tests inclu
 <div class="locks">
 <section>
 <p class="lock-name">Lean</p>
-<p>Sixteen sentences are theorems of the model in <code>blvm-spec/lean/</code>. The subsidy theorem (6.1.2) is proved in Lean for every natural number, and in Rust for the heights the tool checks.</p>
+<p>The theorems of the model in <code>blvm-spec/lean/</code> are marked in the sentence inventory. The subsidy theorem (6.1.2) is proved in Lean for every natural number, and in Rust for the heights the tool checks.</p>
 <p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv">sentence-inventory.tsv</a>.</p>
 </section>
 </div>

@@ -87,7 +87,7 @@ Confirm in the first log lines: config loaded, **`Network: …`**, and `Data dir
 
 ## Step 4: Verify RPC
 
-Mainnet **8332**; testnet **18332**; testnet4 **48332**; signet **38332**; regtest **18443**.
+Use the RPC port in the table above. This example is testnet.
 
 With no RPC password, the process writes `{datadir}/.cookie` as `__cookie__:<hex>`, mode `0600`, and deletes that file on stop. A configured password leaves the directory untouched.
 
@@ -172,7 +172,7 @@ blvm --config /path/to/blvm-mainnet-ibd.toml.example \
  --verbose
 ```
 
-**What you should see:** config loads → `Network: Mainnet` → quiet 15-60s (peer discovery) → `IBD: <height> / <tip>` in logs. Plan for **~15 GB+** pruned disk, **hours** on WAN-only (faster with LAN Core). Pruning limits what stays on disk, not what is downloaded: a pruned node still fetches and validates every block from genesis, about 690–740 GB of one-time IBD transfer as of mid-2026, the same as an archival node, which stores about 700–750 GB ([Full Cost of Running a Bitcoin Node](https://secsov.com/articles/full-cost-of-running-a-bitcoin-node/), v2.4, July 2026). Validation slows when the seeded assume-valid height (`912683`) ends: expected.
+**What you should see:** config loads → `Network: Mainnet` → quiet 15-60s (peer discovery) → `IBD: <height> / <tip>` in logs. A pruned node still fetches and validates every block from genesis. What stays on disk is the trailing window in [`[storage.pruning]`](../reference/configuration-reference.md#storage). A chain-size survey is [Full Cost of Running a Bitcoin Node](https://secsov.com/articles/full-cost-of-running-a-bitcoin-node/). Validation slows when the seeded assume-valid height (`912683`) ends: expected.
 
 **Monitor** (match start flags):
 
