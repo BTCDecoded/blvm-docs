@@ -96,3 +96,4 @@ Then meet **Required** items under **Supported contexts → Mainnet** above.
 
 - **[Threat models](threat-models.md)**: Attack surfaces and boundaries (developer + operator framing).
 - **[First node](../getting-started/first-node.md)**: Config-based setup; links here for production-facing posture.
+- **[Service manager](../node/operations.md#service-manager)**: systemd, OpenRC, and launchd. The unit does not change the RPC exposure rules on this page.

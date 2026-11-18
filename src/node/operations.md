@@ -8,7 +8,7 @@ Operational guide for running and maintaining a BLVM node.
 |------|---------|
 | Start regtest / testnet / mainnet | [Starting the Node](#starting-the-node) |
 | Import Bitcoin Core datadir | [Starting from a Bitcoin Core datadir](#starting-from-a-bitcoin-core-datadir) |
-| Graceful shutdown | [Maintenance: Updates](#updates) (stop before upgrade; RPC `stop` or SIGTERM) |
+| Graceful shutdown | [Service manager](#service-manager) (`systemctl stop` or RPC `stop`) |
 | Backup datadir | [Maintenance: Backup](#backup) |
 | Mainnet first sync | [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) |
 | RPC hardening before exposure | [Deployment posture](../security/deployment-posture.md) |
@@ -34,6 +34,45 @@ blvm --network testnet
 ```bash
 blvm --config blvm.toml
 ```
+
+## Service manager
+
+`systemctl start` returns when the RPC port is bound. The process sends systemd `READY=1` at that moment and leaves the notify socket open. Ready is not tip, and it is not `/health/ready`. Sync is `getblockchaininfo`: `initialblockdownload` and `verificationprogress`.
+
+The sample `TimeoutStartSec` is 61 seconds: an empty regtest start reached `RPC server listening` in 0.101 seconds on 2026-11-18, and the heed open inside that was 0.002 seconds, plus 60 seconds of slack. A larger store that opens slower needs `systemctl edit blvm` to raise it. A shell start with no `NOTIFY_SOCKET` is unchanged.
+
+`WatchdogSec` is 240 seconds, the same floor as the stop timeout. After the port is bound, a thread outside the runtime sends `WATCHDOG=1` only while a runtime heartbeat is younger than that. The runtime stamps that heartbeat every 30 seconds, the same period as the main-loop shutdown poll. A busy sync that still polls is left alone. A wedged runtime that stops polling is killed by systemd. This does not change the 30-second or 180-second stop exits. A start without `WATCHDOG_USEC` does not send those pings.
+
+`/health/live` is component liveness (network flag, storage bounds, RPC) and does not require auth. It is 200 when that status is `healthy` or `degraded`. `/health/ready` is the same report and is 200 only for `healthy`. Neither field is the sync flag.
+
+`systemctl stop` sends `SIGTERM`. RPC `stop` sets the same shutdown watch, so both end the process. The main loop then waits up to 30 seconds. A second timer exits 0 at 180 seconds if that wait cannot finish. A service timeout at or below 180 seconds kills the flush the process is still allowing. The sample unit uses 240 seconds.
+
+Logs go to stderr. Under systemd, journald collects them. The sample sets `NO_COLOR=1`. It does not add a log file.
+
+A fresh config loads `blvm-zmq`, which binds `127.0.0.1:28332` through `28336`. Two nodes on one host collide on those ports. `/metrics` uses the same auth as RPC once a cookie or password is set. This page does not install LND, CLN, or Prometheus.
+
+The container image runs `/usr/local/bin/blvm` as uid **61100** (gid 61100), with `STOPSIGNAL SIGTERM`. The engine’s default stop grace is still 10 seconds. Stop with `docker stop --time 240`, or set Compose `stop_grace_period: 240s`. Bind-mount a data directory you create and `chown` to 61100:61100. The image does not declare a volume.
+
+```bash
+mkdir -p /var/lib/blvm && chown 61100:61100 /var/lib/blvm
+docker run --rm -p 8333:8333 -v /var/lib/blvm:/var/lib/blvm ghcr.io/btcdecoded/blvm
+```
+
+`BLVM_DATA_DIR` defaults to `/var/lib/blvm`. Set `BLVM_CONFIG` to a TOML file when you need one. The image healthcheck runs `blvm health` with those same arguments. That command reads `{datadir}/.cookie` when the config has no password or bearer token, then calls `getblockchaininfo`. A closed RPC port exits 1. The call stays success while `initialblockdownload` is true. The healthcheck `start-period` is 300 seconds and is not a measured store-open time.
+
+The `.deb` and `.rpm` install `/usr/lib/systemd/system/blvm.service`, `/usr/lib/sysusers.d/blvm.conf`, and `/usr/share/doc/blvm/blvm.toml.example`. They do not enable the service. Copy the example to `/etc/blvm/blvm.toml`, then enable the unit. OpenRC, launchd, and the Windows sample stay in `contrib/init/` for the packager to copy. The NixOS module is `services.blvm` and is off until `enable = true`.
+
+| | Linux | macOS LaunchDaemon | Windows service |
+|---|---|---|---|
+| Binary | `/usr/bin/blvm` | `/usr/local/bin/blvm` | the installer’s `blvm.exe` |
+| Config | `/etc/blvm/blvm.toml` | `/Library/Application Support/BLVM/blvm.toml` | `%ProgramData%\BLVM\blvm.toml` |
+| State | `/var/lib/blvm` | `/Library/Application Support/BLVM` | `%ProgramData%\BLVM` |
+| Runtime | `/run/blvm` | — | — |
+| Account | user and group `blvm` | a dedicated user for the daemon; the logged-in user for a LaunchAgent | the service account the installer creates |
+
+`ExecStart` is `/usr/bin/blvm --config /etc/blvm/blvm.toml --data-dir /var/lib/blvm`. The sample TOML sets `protocol_version = "mainnet"` and `rpc_addr = "127.0.0.1:8332"`. A file that omits `protocol_version` starts regtest.
+
+The shipped samples are the systemd unit, the OpenRC script, the launchd plist, and `contrib/init/blvm-windows.xml` (WinSW). WinSW stop sends Ctrl+C, which sets the same shutdown watch as `SIGTERM`. `sc.exe create` does not: the binary has no service control handler. The Windows release omits `libc`, so it does not take the datadir lock. Run one Windows process against a datadir. The sample start mode is Manual. It is not an installer.
 
 ## Starting from a Bitcoin Core datadir
 
@@ -63,7 +102,7 @@ flowchart TD
 blvm start --network mainnet --data-dir ~/.bitcoin
 ```
 
-On first start BLVM detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. **Block files are not copied by default**: BLVM keeps reading bodies from Core **`blocks/`** (~700 GB stays in one place). Only the UTXO set and indexes are converted into BLVM format (~15-30 GB under **`blvm/`**).
+On first start a binary built with **`--features rocksdb`** detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. That feature is not in the default build or the release binaries; without it there is no `migrate` command and no reader for Core **`blocks/`**. With heed3 and rocksdb both compiled, the BLVM store is still heed3. **Block files are not copied by default**: BLVM keeps reading bodies from Core **`blocks/`** (~700 GB stays in one place). Only the UTXO set and indexes are converted into BLVM format (~15-30 GB under **`blvm/`**).
 
 ```bash
 # Optional: explicit migrate with verify, then start the BLVM store
@@ -252,7 +291,7 @@ tar -czf blvm-backup-$(date +%Y%m%d).tar.gz /var/lib/blvm
 
 When updating the node:
 
-1. Stop the node gracefully
+1. Stop the node ([service manager](#service-manager): `systemctl stop`, or RPC `stop`)
 2. Backup data directory
 3. Download new binary from [GitHub Releases](https://github.com/BTCDecoded/blvm/releases)
 4. Replace old binary with new one

@@ -43,6 +43,7 @@ For other architectures, experimental compile-time features, or development: [bl
 - [Quick Start](../getting-started/quick-start.md)
 - [Deployment posture](../security/deployment-posture.md) (before mainnet RPC)
 - [Node configuration](../node/configuration.md)
+- [Service manager](../node/operations.md#service-manager). The `.deb` and `.rpm` install the systemd unit and do not enable it. OpenRC, launchd, and Windows samples stay in the `blvm` repository `contrib/init/`.
 
 ## See also
 

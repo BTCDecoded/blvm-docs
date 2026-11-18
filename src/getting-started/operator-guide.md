@@ -15,6 +15,7 @@ The `blvm` binary speaks Bitcoin Core JSON-RPC. Script history is `blvm-index`. 
 | Config, RPC verify, and mainnet IBD | [First Node Setup](first-node.md) ([mainnet IBD](first-node.md#mainnet-initial-sync)) |
 | Regtest local dev (5 min) | [Quick Start](quick-start.md) |
 | Start / stop / backup | [Node Operations](../node/operations.md) |
+| systemd, OpenRC, launchd | [Service manager](../node/operations.md#service-manager) |
 | Import Bitcoin Core datadir | [Operations: Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) |
 | Configuration file and env | [Node configuration](../node/configuration.md) |
 | All config keys (reference) | [Configuration Reference](../reference/configuration-reference.md) |
