@@ -138,7 +138,7 @@ These seeds are this binary's. They are not Bitcoin Core's `defaultAssumeValid`.
 
 | Network | Seeded height | Header hash |
 |---------|---------------|-------------|
-| mainnet | 912683 | `00000000000000000000611fd22f2df7c8fbd0688745c3a6c3bb5109cc2a12cb` |
+| mainnet | 912683 | <code>0000000000000000<wbr>000000611fd22f2d<wbr>f7c8fbd0688745c3<wbr>a6c3bb5109cc2a12cb</code> |
 | testnet | 4550000 | unset |
 | signet | 267665 | unset |
 | testnet4 | 0 | no assume-valid section |

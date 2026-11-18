@@ -4,11 +4,32 @@ Operator reference for **which JSON-RPC surface supports which auth model**. P2P
 
 ## Matrix
 
-| Surface | Feature / bind | Bearer (`[rpc_auth]`) | HTTP Basic | TLS client certs | Notes |
-|---------|----------------|----------------------|------------|------------------|-------|
-| **JSON-RPC (TCP HTTP)** | Default **`blvm`** RPC | **Yes**: `Authorization: Bearer` | **Yes**: `Authorization: Basic` (ckpool; password auto-admin) | When configured | Prefer **loopback** for Basic (cleartext on wire). |
-| **JSON-RPC (QUIC HTTP/3)** | **`quinn`** listener; ALPN **`h3`** | **Yes**: same **`RpcAuthManager`** as TCP | **Yes**: HTTP/3 request headers | Server TLS on UDP listener | Shares live **`Arc<RpcServer>`** with TCP HTTP. UDP TLS cert lifecycle may differ from TCP unless you terminate at a proxy. |
-| **REST (`/api/v1/`)** | **`rest-api`** feature; **`[rest_api].enabled`** | **Yes**: when REST server built **`with_auth`** | Same auth stack; **admin RBAC** via `rest/rbac.rs` | Off by default | Separate bind (default **8080** / **18080** / **28443**). See [RPC API: REST](../node/rpc-api.md#rest-api). |
+<div class="locks">
+<section>
+<p class="lock-name">JSON-RPC (TCP HTTP)</p>
+<p>Default <code>blvm</code> RPC.</p>
+<p><strong>Bearer</strong> (<code>[rpc_auth]</code>). Yes: <code>Authorization: Bearer</code>.</p>
+<p><strong>HTTP Basic.</strong> Yes: <code>Authorization: Basic</code> (ckpool; password auto-admin).</p>
+<p><strong>TLS client certs.</strong> When configured.</p>
+<p class="lock-where">Prefer loopback for Basic (cleartext on wire).</p>
+</section>
+<section>
+<p class="lock-name">JSON-RPC (QUIC HTTP/3)</p>
+<p><code>quinn</code> listener; ALPN <code>h3</code>.</p>
+<p><strong>Bearer</strong> (<code>[rpc_auth]</code>). Yes: same <code>RpcAuthManager</code> as TCP.</p>
+<p><strong>HTTP Basic.</strong> Yes: HTTP/3 request headers.</p>
+<p><strong>TLS client certs.</strong> Server TLS on the UDP listener.</p>
+<p class="lock-where">Shares live <code>Arc&lt;RpcServer&gt;</code> with TCP HTTP. UDP TLS cert lifecycle may differ from TCP unless you terminate at a proxy.</p>
+</section>
+<section>
+<p class="lock-name">REST (<code>/api/v1/</code>)</p>
+<p><code>rest-api</code> feature; <code>[rest_api].enabled</code>.</p>
+<p><strong>Bearer</strong> (<code>[rpc_auth]</code>). Yes: when the REST server is built <code>with_auth</code>.</p>
+<p><strong>HTTP Basic.</strong> Same auth stack; admin RBAC via <code>rest/rbac.rs</code>.</p>
+<p><strong>TLS client certs.</strong> Off by default.</p>
+<p class="lock-where">Separate bind (default 8080 / 18080 / 28443). See <a href="../node/rpc-api.html#rest-api">RPC API: REST</a>.</p>
+</section>
+</div>
 
 ## Practical guidance
 

@@ -64,9 +64,8 @@
   margin: 0;
   font-weight: 700;
 }
-.locks .lock-name + p,
-.locks .lock-where {
-  margin: 0.8rem 0 0;
+.locks p {
+  margin: 1rem 0 0;
   line-height: 1.45;
 }
 .locks ul.lock-names {
