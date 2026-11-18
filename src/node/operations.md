@@ -61,13 +61,13 @@ docker run --rm --stop-timeout 240 -p 8333:8333 \
   --network mainnet --listen-addr 0.0.0.0:8333
 ```
 
-With no config and no `--network`, the image loads the local profile and starts regtest. RPC stays on loopback, so this example does not publish 8332. This command is the image in this tree. The install page serves the last published image, which still runs as user `blvm` with its data in `/app/data`. Use the install page command until the published tag is built from this Dockerfile.
+With no config and no `--network`, the image loads the local profile and starts regtest. RPC stays on loopback, so this example does not publish 8332. The install page uses this command. A tag built from the older Dockerfile still runs as user `blvm` with its data in `/app/data`.
 
 `BLVM_DATA_DIR` defaults to `/var/lib/blvm`. Set `BLVM_CONFIG` to a TOML file when you need one. The image healthcheck runs `blvm health` with those same arguments. That command reads `{datadir}/.cookie` when the config has no password or bearer token, then calls `getblockchaininfo`. A closed RPC port exits 1. The call stays success while `initialblockdownload` is true. The healthcheck `start-period` is 300 seconds and is not a measured store-open time.
 
-The x86_64 `.deb` and the `.rpm` install `/usr/lib/systemd/system/blvm.service`, `/usr/lib/sysusers.d/blvm.conf`, and `/usr/share/doc/blvm/blvm.toml.example`. They do not enable the service. Copy the example to `/etc/blvm/blvm.toml`, then enable the unit. The arm64 `.deb` is the binary only. The release job links the published `blvm-node` crate. A binary from that job does not send `READY=1` until the published crate includes this notify, and `systemctl start` then fails at the 61-second start timeout. The NixOS module is `services.blvm` and is off until `enable = true`.
+The Linux `.deb`, `.rpm`, and Arch packages install `/usr/lib/systemd/system/blvm.service`, `/usr/lib/sysusers.d/blvm.conf`, and `/usr/share/doc/blvm/blvm.toml.example`. They do not enable the service. Copy the example to `/etc/blvm/blvm.toml`, then enable the unit. The release job links the published `blvm-node` crate in `Cargo.lock`. This tree's lock sends `READY=1` after the RPC port binds. `systemctl start` fails at the 61-second start timeout if that crate does not. The NixOS module is `services.blvm` and is off until `enable = true`.
 
-| | Linux | macOS LaunchDaemon | Windows service |
+| | Linux | macOS LaunchAgent | Windows sample |
 |---|---|---|---|
 | Binary | `/usr/bin/blvm` | `/usr/local/bin/blvm` | `blvm.exe` |
 | Config | `/etc/blvm/blvm.toml` | the path in the plist | `%ProgramData%\BLVM\blvm.toml` |
