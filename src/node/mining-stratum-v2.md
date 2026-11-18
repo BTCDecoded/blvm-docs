@@ -66,15 +66,7 @@ merge_mining_enabled = false
 secondary_chains = []
 ```
 
-**Module `config.toml`** (inside `<modules.data_dir>/blvm-stratum-v2/`: **this** is where miners connect):
-
-```toml
-listen_addr = "0.0.0.0:3333"
-difficulty_target = 1
-max_connections = 100
-```
-
-Overrides: `[modules.blvm-stratum-v2]` in node `blvm.toml` (same flat keys, passed as `MODULE_CONFIG_*`). See [Stratum V2 module](../modules/stratum-v2.md#configuration).
+Miner TCP is the module `listen_addr`. The keys are [Stratum V2 module](../modules/stratum-v2.md#configuration). `[modules.blvm-stratum-v2]` in node `blvm.toml` passes the same flat keys as `MODULE_CONFIG_*`.
 
 
 ## Usage

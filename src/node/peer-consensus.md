@@ -20,17 +20,7 @@ The protocol uses an N-of-M consensus model:
 
 ### Peer Information
 
-Peer information tracks diversity:
-
-```rust
-pub struct PeerInfo {
- pub address: IpAddr,
- pub asn: Option<u32>, // Autonomous System Number
- pub country: Option<String>, // Country code (ISO 3166-1 alpha-2)
- pub implementation: Option<String>, // Bitcoin implementation
- pub subnet: u32, // /16 subnet for diversity checks
-}
-```
+`PeerInfo` in `blvm-protocol/src/utxo_commitments/peer_consensus.rs` records the address, ASN, country, implementation, and /16 subnet.
 
 
 ## Diverse Peer Discovery
@@ -70,7 +60,7 @@ Commitments are grouped by their values:
 
 Consensus threshold check:
 
-- **Threshold**: Configurable threshold (e.g., 70%)
+- **Threshold**: `consensus_threshold` defaults to 0.8
 - **Agreement Count**: Number of peers agreeing
 - **Required Count**: `ceil(total_peers * threshold)`
 - **Verification**: Check if agreement count >= required count
@@ -160,15 +150,7 @@ Network-wide protection against malicious peers:
 
 ### Consensus Configuration
 
-```rust
-pub struct ConsensusConfig {
- pub min_peers: usize, // Minimum peers required
- pub target_peers: usize, // Target number of diverse peers
- pub consensus_threshold: f64, // Consensus threshold (0.0-1.0)
- pub max_peers_per_asn: usize, // Max peers per ASN
- pub safety_margin: Natural, // Safety margin for checkpoint, default 2016
-}
-```
+`ConsensusConfig` in `blvm-protocol/src/utxo_commitments/peer_consensus.rs` defaults to 5 minimum peers, 10 target peers, a threshold of 0.8, 2 peers per ASN, and a safety margin of 2016 blocks.
 
 
 ## Benefits

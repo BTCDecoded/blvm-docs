@@ -4,65 +4,7 @@
 
 Bitcoin Commons uses property-based testing with Proptest to verify mathematical invariants across thousands of random inputs. The system includes property tests in the main test file and property test functions across all test files.
 
-## Property Test Categories
-
-### Economic Rules
-
-1. `prop_halving_interval_boundary` - Verifies the subsidy follows the halving schedule at the 210,000-block boundary
-2. `prop_total_supply_monotonic_bounded` - Verifies supply increases monotonically and is bounded
-3. `prop_block_subsidy_non_negative_decreasing` - Verifies subsidy is non-negative and decreasing
-
-### Proof of Work
-
-4. `prop_pow_target_expansion_valid_range` - Verifies target expansion within valid range
-5. `prop_target_expansion_deterministic` - Verifies target expansion is deterministic
-
-### Transaction Validation
-
-6. `prop_transaction_output_value_bounded` - Verifies output values are bounded
-7. `prop_transaction_non_empty_inputs_outputs` - Verifies transactions have inputs and outputs
-8. `prop_transaction_size_bounded` - Verifies transaction size is bounded
-9. `prop_coinbase_script_sig_length` - Verifies coinbase script sig length limits
-10. `prop_transaction_validation_deterministic` - Verifies validation is deterministic
-
-### Script Execution
-
-11. `prop_script_execution_deterministic` - Verifies script execution is deterministic
-12. `prop_script_size_bounded` - Verifies script size is bounded
-
-### Deterministic Execution
-
-13. `prop_transaction_validation_deterministic` - Verifies transaction validation determinism
-14. `prop_block_subsidy_deterministic` - Verifies block subsidy determinism
-15. `prop_total_supply_deterministic` - Verifies total supply determinism
-16. `prop_target_expansion_deterministic` - Verifies target expansion determinism
-17. `prop_fee_calculation_deterministic` - Verifies fee calculation determinism
-
-### Integer Overflow Safety
-
-18. `prop_fee_calculation_overflow_safety` - Verifies fee calculation overflow safety
-19. `prop_output_value_overflow_safety` - Verifies output value overflow safety
-20. `prop_total_supply_overflow_safety` - Verifies total supply overflow safety
-
-### Temporal/State Transition
-
-21. `prop_supply_never_decreases_across_blocks` - Verifies supply never decreases
-22. `prop_reorganization_preserves_supply` - Verifies reorganization preserves supply
-23. `prop_supply_matches_expected_across_blocks` - Verifies supply matches expected values
-
-### Compositional Verification
-
-24. `prop_connect_block_composition` - Verifies block connection composition
-25. `prop_disconnect_connect_idempotency` - Verifies disconnect/connect idempotency
-
-### SHA256 Correctness
-
-26. `sha256_matches_reference` - Verifies SHA256 matches the reference implementation
-27. `double_sha256_matches_reference` - Verifies double SHA256 matches the reference implementation
-28. `sha256_deterministic` - Verifies SHA256 determinism
-29. `sha256_output_length` - Verifies SHA256 output length
-30. `double_sha256_output_length` - Verifies double SHA256 output length
-
+The property tests live in `blvm-consensus` `tests/consensus_property_tests.rs` and `tests/orange_paper_property_tests.rs`. Edge cases live in `tests/unit/block_edge_cases.rs`, `reorganization_edge_cases.rs`, `transaction_edge_cases.rs`, `utxo_edge_cases.rs`, `difficulty_edge_cases.rs`, and `mempool_edge_cases.rs`.
 
 ## Proptest Integration
 
@@ -169,39 +111,6 @@ proptest! {
  }
 }
 ```
-
-## Additional Property Tests
-
-### Property test suites
-
-- Multiple `proptest!` blocks for cross-cutting scenarios
-
-### Script Opcode Property Tests
-
-- Multiple proptest! blocks for script opcode testing
-
-### SegWit/Taproot Property Tests
-
-- Multiple proptest! blocks for SegWit and Taproot
-
-### Edge Case Property Tests
-
-Multiple files with edge case testing:
-- `tests/unit/block_edge_cases.rs`: Multiple proptest! blocks
-- `tests/unit/reorganization_edge_cases.rs`: Multiple proptest! blocks
-- `tests/unit/transaction_edge_cases.rs`: Multiple proptest! blocks
-- `tests/unit/utxo_edge_cases.rs`: Multiple proptest! blocks
-- `tests/unit/difficulty_edge_cases.rs`: Multiple proptest! blocks
-- `tests/unit/mempool_edge_cases.rs`: Multiple proptest! blocks
-
-### Cross-BIP Property Tests
-
-- Multiple proptest! blocks for cross-BIP validation
-
-## Statistics
-
-- **Property Test Blocks**: Multiple proptest! blocks across all test files
-- **Property Test Functions**: Multiple prop_* functions across all test files
 
 ## Running Property Tests
 

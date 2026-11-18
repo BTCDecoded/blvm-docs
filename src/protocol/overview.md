@@ -38,16 +38,7 @@ Each variant also defines genesis block hash, difficulty targets, halving interv
 
 ### Protocol Engine
 
-The `BitcoinProtocolEngine` is the main interface:
-
-```rust
-pub struct BitcoinProtocolEngine {
- consensus: ConsensusProof,
- protocol_version: ProtocolVersion,
- network_params: NetworkParameters,
- config: ProtocolConfig,
-}
-```
+`BitcoinProtocolEngine` in `blvm-protocol/src/lib.rs` holds the consensus proof, the protocol version, the network parameters, and the protocol config.
 
 **Features**:
 - Protocol variant selection

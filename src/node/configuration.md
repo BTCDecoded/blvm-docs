@@ -27,15 +27,7 @@ The binary applies the CLI, then the environment variables it reads, then the fi
 
 ### Network defaults when the address is unset {#network-defaults-blvm-binary-no-rpc-addr-override}
 
-| Network | `protocol_version` | P2P | RPC |
-|---------|-------------------|-----|-----|
-| Mainnet | `mainnet` | `127.0.0.1:8333` | `127.0.0.1:8332` |
-| Testnet | `testnet` | `127.0.0.1:18333` | `127.0.0.1:18332` |
-| Testnet4 | `testnet4` | `127.0.0.1:48333` | `127.0.0.1:48332` |
-| Signet | `signet` | `127.0.0.1:38333` | `127.0.0.1:38332` |
-| Regtest | `regtest` | `127.0.0.1:18444` | `127.0.0.1:18443` |
-
-Separate **`data_dir` per network**. REST bind (when enabled) derives from RPC port: **8080** (mainnet), **18080** (testnet), **28443** (regtest).
+An unset address binds loopback on the port in [Protocol variants](../protocol/overview.md#protocol-variants). Separate **`data_dir` per network**. REST bind (when enabled) derives from the RPC port: **8080** (mainnet), **18080** (testnet), **28443** (regtest).
 
 ## Path Expansion
 
@@ -45,7 +37,7 @@ Config path fields (`storage.data_dir`, `modules.modules_dir`, `ibd.dump_dir`, e
 
 Create a `blvm.toml` configuration file. Keys are **top-level** or in nested tables such as `[storage]`: there is **no** `[network]` wrapper.
 
-`rpc_addr` is the RPC bind. `--rpc-addr` and `BLVM_RPC_ADDR` win over the file. An absent address uses the row above. `[rpc]` holds server limits. Auth is `[rpc_auth]`. The key list is the [configuration reference](../reference/configuration-reference.md).
+`rpc_addr` is the RPC bind. `--rpc-addr` and `BLVM_RPC_ADDR` win over the file. An absent address uses the loopback bind above. `[rpc]` holds server limits. Auth is `[rpc_auth]`. The key list is the [configuration reference](../reference/configuration-reference.md).
 
 ```toml
 listen_addr = "127.0.0.1:8333"

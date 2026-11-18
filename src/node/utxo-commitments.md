@@ -51,41 +51,7 @@ let commitment = tree.generate_commitment(block_hash, height);
 
 ## Peer Consensus Protocol
 
-### N-of-M Verification Model
-
-The peer consensus protocol discovers diverse peers and finds consensus among them to verify UTXO commitments without trusting any single peer.
-
-### Peer Diversity
-
-Peers are selected for diversity across:
-- **ASN (Autonomous System Number)**: Maximum 2 peers per ASN
-- **Country**: Geographic distribution
-- **Subnet**: /16 subnet distribution
-- **Implementation**: Different Bitcoin implementations may adopt commitment schemes independently
-
-
-### Consensus Configuration
-
-```rust
-pub struct ConsensusConfig {
- pub min_peers: usize, // Minimum: 5
- pub target_peers: usize, // Target: 10
- pub consensus_threshold: f64, // 0.8 (80% agreement)
- pub max_peers_per_asn: usize, // 2
- pub safety_margin: Natural, // 2016 blocks (~2 weeks)
-}
-```
-
-
-### Consensus Process
-
-1. **Discover Diverse Peers**: Find peers across different ASNs, countries, subnets
-2. **Request Commitments**: Query each peer for UTXO commitment at checkpoint height
-3. **Group Responses**: Group commitments by value (merkle root + supply + count + height)
-4. **Find Consensus**: Identify group with highest agreement
-5. **Verify Threshold**: Check if agreement meets consensus threshold (80%)
-6. **Verify Commitment**: Verify consensus commitment against block headers and PoW
-
+Diverse peers agree on a UTXO commitment before fast sync uses it. The peer set, the threshold, and the checkpoint margin are [Peer consensus](peer-consensus.md).
 
 ## Fast Sync Protocol
 
