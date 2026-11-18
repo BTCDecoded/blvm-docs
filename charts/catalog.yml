@@ -66,13 +66,6 @@ charts:
         O["Layer 3 OpenTimestamps: monthly anchoring to Bitcoin, court-grade record"]
         G --> N --> O
 
-  - id: release-gates
-    kind: series
-    title: Release pipeline gate strength
-    measure: No current gate-strength measurement is published
-    unit: percent
-    output: src/images/charts/release-gates.svg
-
   - id: pr-review-time
     kind: carried
     title: Pull request review time

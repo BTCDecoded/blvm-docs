@@ -39,7 +39,7 @@ There is no `[payment]` table on `NodeConfig`. `blvm-payment` reads its own modu
 
 ## `[mempool]` and `[rbf]`
 
-`[mempool]` is the node pool: `max_mempool_mb`, `max_mempool_txs`, `min_relay_fee_rate`, `bytes_per_sigop`, `count_sigops`, `min_tx_fee`, `incremental_relay_fee`, `max_ancestor_count`, `max_ancestor_size`, `max_descendant_count`, `max_descendant_size`, `eviction_strategy`, `mempool_expiry_hours`, `persist_mempool`, `mempool_persistence_path`, `tx_rate_limit_burst`, `tx_rate_limit_per_sec`, `tx_byte_rate_limit`, `tx_byte_rate_burst`, `require_standard`, `reject_spam_in_mempool`, `spam_filter`.
+`[mempool]` is the node pool: `max_mempool_mb`, `max_mempool_txs`, `min_relay_fee_rate`, `bytes_per_sigop`, `count_sigops`, `min_tx_fee`, `incremental_relay_fee`, `max_ancestor_count`, `max_ancestor_size`, `max_descendant_count`, `max_descendant_size`, `eviction_strategy`, `mempool_expiry_hours`, `persist_mempool`, `mempool_persistence_path`, `tx_rate_limit_burst`, `tx_rate_limit_per_sec`, `tx_byte_rate_limit`, `tx_byte_rate_burst`, `require_standard`, `max_op_return_script_bytes`, `reject_spam_in_mempool`, `spam_filter`. An omitted `max_op_return_script_bytes` is 100,000. That limit is the whole `OP_RETURN` script, opcode included. A loaded mempool reports it from `getmempoolinfo` at `policy.max_op_return_script_bytes`.
 
 When `[mempool]` or `[rbf]` is present, those sizes are copied onto the consensus mempool global. Admission does not call the consensus mempool checker.
 
@@ -59,7 +59,7 @@ When `[mempool]` or `[rbf]` is present, those sizes are copied onto the consensu
 
 `[storage.compression]`: `block_compression_enabled`, `block_compression_level`, `utxo_compression_enabled`, `utxo_compression_level`, `witness_compression_enabled`, `witness_compression_level`.
 
-`[storage.pruning]`: `mode` (`disabled`, `normal`, or `aggressive`), `keep_blocks` (default 288; `disabled` ignores it), `auto_prune`, `incremental_prune_during_ibd`. Automatic passes are every 144 blocks. A key other than those four fails to load.
+`[storage.pruning]`: `mode` (`disabled`, `normal`, or `aggressive`), `keep_blocks`, `auto_prune`, `incremental_prune_during_ibd`. An omitted `mode` is `aggressive` and expects UTXO commitments. `keep_blocks` defaults to 288; `disabled` ignores it. `auto_prune` and `incremental_prune_during_ibd` default to false. Automatic passes are every 144 blocks. A key other than those four fails to load.
 
 ## `[ibd]`
 

@@ -87,9 +87,9 @@ class RenderChartsTest(unittest.TestCase):
         block = rendered[ROOT / "charts/fragments/block-path.md"]
         self.assertIn("Governance logging", block)
         self.assertIn("Module execution", block)
-        gates = rendered[ROOT / "src/images/charts/release-gates.svg"]
-        self.assertIn("No series is published.", gates)
-        self.assertNotIn(">60<", gates)
+        self.assertNotIn(
+            ROOT / "src/images/charts/release-gates.svg", rendered
+        )
 
     def test_audit_cells_match_the_governance_wording(self):
         svg = rc.outputs()[ROOT / "src/images/charts/audit-completeness.svg"]

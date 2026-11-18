@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 170" role="img" width="720" height="170">
-<title>Release pipeline gate strength</title>
-<desc>No current gate-strength measurement is published</desc>
-<rect width="100%" height="100%" fill="#161923"/>
-<text x="32" y="40" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="20" font-weight="650">Release pipeline gate strength</text>
-<text x="32" y="72" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="15">No current gate-strength measurement is published</text>
-<text x="32" y="102" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="16" font-weight="650">No series is published.</text>
-<text x="32" y="126" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="13">Unit: percent</text>
-</svg>

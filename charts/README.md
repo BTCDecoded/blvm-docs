@@ -21,7 +21,6 @@ python3 scripts/test_render_charts.py
 | `block-path` | The six steps on the previous figure | Catalog diagram |
 | `spec-maintenance` | The steps on the previous figure, including its drift-detection label | Catalog diagram |
 | `verification-anchors` | The three layers printed on the previous figure | Catalog diagram |
-| `release-gates` | Gate strength | No series published |
 | `pr-review-time` | Monolith and modular review time | PNG pinned, not embedded. Draw from `charts/series/pr-review-time.yml` |
 | `process-latency` | Review days by action tier | `tier-review-days`, from `action-tiers.yml`. The Core comparison PNG is pinned and not embedded |
 | `multisig-sensitivity` | Quorum capture for the published signature counts | `quorum-capture`, from `repository-layers.yml`. The old sensitivity PNG is pinned and not embedded |
