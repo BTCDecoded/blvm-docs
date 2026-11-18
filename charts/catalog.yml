@@ -73,15 +73,6 @@ charts:
     unit: percent
     output: src/images/charts/release-gates.svg
 
-  - id: proof-maintenance-cost
-    kind: series
-    title: Proof maintenance cost
-    measure: Developer-weeks per quarter are not measured
-    unit: developer-weeks
-    output: src/images/charts/proof-maintenance-cost.svg
-    sha256: ec340b71a31379c61f5def7c557e576e247e6391beae026e30e8604a1219d766
-    source: charts/carried/proof-maintenance-cost.png
-
   - id: pr-review-time
     kind: carried
     title: Pull request review time

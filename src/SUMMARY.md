@@ -32,6 +32,7 @@
 
 # Consensus
 
+- [Assurance](consensus/assurance.md)
 - [Overview](consensus/overview.md)
 - [Mathematical specifications](consensus/mathematical-specifications.md)
 - [Formal verification](consensus/formal-verification.md)

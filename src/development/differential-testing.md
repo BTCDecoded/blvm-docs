@@ -4,7 +4,7 @@
 
 Differential testing compares BLVM validation against an independent reference, primarily Bitcoin Core, so consensus disagreements show up as test failures. Tooling lives in [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench). A local stub in [blvm-consensus/tests/integration/differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs) defers to bench for RPC and full-chain work.
 
-This is the Bitcoin Core row of the [assurance map](../consensus/formal-verification.md#assurance-map). It sits beside [property-based testing](property-based-testing.md) and [fuzzing](testing.md#fuzzing).
+The Core rows of [Assurance](../consensus/assurance.md) are the checks below. They sit beside [property-based testing](property-based-testing.md) and [fuzzing](testing.md#fuzzing).
 
 ## Consensus vs policy
 

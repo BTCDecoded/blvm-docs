@@ -2,7 +2,7 @@
 
 ## Overview
 
-The index of every check, including Z3 on spec-locked functions, body proofs, the mutation gate, Lean, and Bitcoin Core comparison, is the [assurance map](../consensus/formal-verification.md#assurance-map). This page is the test rows. Proof limits: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+Every check that locks the implementation is on [Assurance](../consensus/assurance.md). This page is how to run the in-crate tests. Proof limits: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Testing Strategy
 

@@ -6,20 +6,7 @@ How BLVM checks consensus against the [Orange Paper](../reference/orange-paper.m
 
 Inventory and verification policy: [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md), [spec-lock coverage inventory](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md), and [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
-## Assurance map {#assurance-map}
-
-This is the index. Each row is one check. The list of functions or sentences lives in the file that row names. Attribute totals move; re-run `cargo spec-lock coverage` for the current `#[spec_locked]` inventory.
-
-| Check | Kind | What a pass means | Where the list is |
-|-------|------|-------------------|-------------------|
-| Spec lock, Z3 | Formal verification of the Rust contract | `cargo spec-lock verify` asks Z3 whether the function meets the Orange Paper contract on its `#[spec_locked]` attribute. A **Passed** row is that contract discharged | `cargo spec-lock coverage --format json`, field `by_section`. The section map is [SPEC_LOCK_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md). Per-function status is the verify JSON |
-| Body proofs | Formal verification of the function body | The check passes on the code as written, and two edits of the body make it fail. This pass has 13 functions | Named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) |
-| Mutation gate | Formal verification that the obligation tracks the body | A semantic edit makes Z3 report that the obligation no longer holds. The written list is 93 of 224. The tool's list is 34 of 34 | The 93 are the table in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md). The 34 are [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md) |
-| Lean | Formal verification of the spec model | An Orange Paper sentence is a theorem of the model in `blvm-spec/lean/`. Lean does not check the Rust. The inventory is 275 sentences. The subsidy theorem (6.1.2) is proved in Lean for every natural number, and in Rust for the heights the tool checks. Fifteen sentences are Lean only. The other 259 are not proved | [sentence-inventory.tsv](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv) and the same verification guide |
-| Unit, property, fuzz, MIRI | Tests | The suite exercises the code. A pass is a test result | [Testing](../development/testing.md) |
-| Bitcoin Core comparison | Tests against another implementation | BLVM's verdict matches Core's, on the vectors or the chain that run covers | [Differential testing](../development/differential-testing.md) |
-
-Z3 on a spec-locked function is formal verification. The body-proof list and the mutation lists are narrower formal checks of the same Rust. A **Passed** verify row discharges the contract. The 13, the 93 of 224, and the 34 of 34 are the lists above.
+The full list, from the Orange Paper sentence to a mainnet block, is [Assurance](assurance.md).
 
 ## What formal verification delivers
 
@@ -103,7 +90,7 @@ flowchart TB
 | **blvm-protocol** | 8 |
 | **Total** | **297** |
 
-The attribute count is the surface Z3 checks. A green `verify` run means Z3 discharged those contracts. That is the spec-lock row of the [assurance map](#assurance-map). The body-proof count is 13 functions: the check passes on the code as written, and two edits of the body make it fail. The mutation gate is 93 of 224 in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) and 34 of 34 in [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md).
+The attribute count is the surface Z3 checks. A green `verify` run means Z3 discharged those contracts. That is the spec-lock row of [Assurance](assurance.md). The body-proof count is 13 functions: the check passes on the code as written, and two edits of the body make it fail. The mutation gate is 93 of 224 in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) and 34 of 34 in [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md).
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
@@ -178,12 +165,6 @@ Use the `verify` feature for full protocol verification builds; see [protocol ov
 ![Spec-lock attributes by area](../images/charts/consensus-coverage.svg)
 
 Production `#[spec_locked]` attributes in `blvm-consensus` source, counted 2026-11-14. Witness fixtures are not in the bars. The total with those fixtures is 281.
-
-## Proof Maintenance Cost
-
-![Proof maintenance cost](../images/charts/proof-maintenance-cost.svg)
-
-Developer-weeks are not measured. The panel stays empty until a series file records them.
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 

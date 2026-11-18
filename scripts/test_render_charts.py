@@ -103,7 +103,7 @@ class RenderChartsTest(unittest.TestCase):
         import hashlib
 
         carried = [c for c in rc.load_catalog() if c.get("sha256")]
-        self.assertEqual(len(carried), 5)
+        self.assertEqual(len(carried), 4)
         for chart in carried:
             digest = hashlib.sha256((ROOT / chart["source"]).read_bytes()).hexdigest()
             self.assertEqual(digest, chart["sha256"], chart["id"])
@@ -115,9 +115,6 @@ class RenderChartsTest(unittest.TestCase):
             self.assertIn(f">{value}<", attrs)
         self.assertIn("Total 281", attrs)
         self.assertIn("Not the 13 body proofs", attrs)
-        cost = rendered[ROOT / "src/images/charts/proof-maintenance-cost.svg"]
-        self.assertIn("No series is published.", cost)
-        self.assertNotIn("Monolithic", cost)
         self.assertNotIn(
             ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg", rendered
         )
