@@ -8,7 +8,7 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 
 ### Economic Rules
 
-1. `prop_block_subsidy_halving_schedule` - Verifies subsidy halves every 210,000 blocks
+1. `prop_halving_interval_boundary` - Verifies the subsidy follows the halving schedule at the 210,000-block boundary
 2. `prop_total_supply_monotonic_bounded` - Verifies supply increases monotonically and is bounded
 3. `prop_block_subsidy_non_negative_decreasing` - Verifies subsidy is non-negative and decreasing
 
@@ -57,12 +57,11 @@ Bitcoin Commons uses property-based testing with Proptest to verify mathematical
 
 ### SHA256 Correctness
 
-26. `sha256_matches_reference` - Verifies SHA256 matches reference implementation
-27. `double_sha256_matches_reference` - Verifies double SHA256 matches reference
-28. `sha256_idempotent` - Verifies SHA256 idempotency
-29. `sha256_deterministic` - Verifies SHA256 determinism
-30. `sha256_output_length` - Verifies SHA256 output length
-31. `double_sha256_output_length` - Verifies double SHA256 output length
+26. `sha256_matches_reference` - Verifies SHA256 matches the reference implementation
+27. `double_sha256_matches_reference` - Verifies double SHA256 matches the reference implementation
+28. `sha256_deterministic` - Verifies SHA256 determinism
+29. `sha256_output_length` - Verifies SHA256 output length
+30. `double_sha256_output_length` - Verifies double SHA256 output length
 
 
 ## Proptest Integration
@@ -189,7 +188,6 @@ proptest! {
 
 Multiple files with edge case testing:
 - `tests/unit/block_edge_cases.rs`: Multiple proptest! blocks
-- `tests/unit/economic_edge_cases.rs`: Multiple proptest! blocks
 - `tests/unit/reorganization_edge_cases.rs`: Multiple proptest! blocks
 - `tests/unit/transaction_edge_cases.rs`: Multiple proptest! blocks
 - `tests/unit/utxo_edge_cases.rs`: Multiple proptest! blocks
@@ -216,7 +214,7 @@ cargo test --test consensus_property_tests
 ### Run Specific Property Test
 
 ```bash
-cargo test --test consensus_property_tests prop_block_subsidy_halving_schedule
+cargo test --test consensus_property_tests prop_halving_interval_boundary
 ```
 
 ### Run with Verbose Output

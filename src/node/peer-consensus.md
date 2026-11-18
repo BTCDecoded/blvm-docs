@@ -14,7 +14,7 @@ The protocol uses an N-of-M consensus model:
 
 - **N**: Minimum number of peers required
 - **M**: Target number of diverse peers
-- **Threshold**: Consensus threshold (e.g., 70% agreement)
+- **Threshold**: `consensus_threshold` defaults to 0.8
 - **Diversity**: Peers must be diverse across ASNs, subnets, geographic regions
 
 
@@ -166,7 +166,7 @@ pub struct ConsensusConfig {
  pub target_peers: usize, // Target number of diverse peers
  pub consensus_threshold: f64, // Consensus threshold (0.0-1.0)
  pub max_peers_per_asn: usize, // Max peers per ASN
- pub safety_margin_blocks: Natural, // Safety margin for checkpoint
+ pub safety_margin: Natural, // Safety margin for checkpoint, default 2016
 }
 ```
 

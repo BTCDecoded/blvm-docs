@@ -245,16 +245,12 @@ Storage correctness for UTXO set operations is covered by tests and blvm-spec-lo
 ```rust
 use blvm_protocol::utxo_commitments::InitialSync;
 
-let sync = InitialSync::new(
- peer_consensus,
- network_client,
- config,
-);
+let sync = InitialSync::new(config);
 
-// Sync from checkpoint
-let commitment = sync.sync_from_checkpoint(
+let commitment = sync.execute_initial_sync(
+ peers,
  header_chain,
- diverse_peers,
+ network_client,
 ).await?;
 
 // Complete sync forward with full validation

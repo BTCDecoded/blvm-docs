@@ -42,8 +42,9 @@ The `BitcoinProtocolEngine` is the main interface:
 
 ```rust
 pub struct BitcoinProtocolEngine {
- version: ProtocolVersion,
- network_params: NetworkParams,
+ consensus: ConsensusProof,
+ protocol_version: ProtocolVersion,
+ network_params: NetworkParameters,
  config: ProtocolConfig,
 }
 ```
