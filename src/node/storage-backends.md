@@ -117,7 +117,7 @@ Bitcoin Core **`chainstate/`** uses **LevelDB** (`.ldb` / `.log` files). BLVM’
 | Mixed or corrupt index (`.ldb` + stray `.sst`, wrong magic) | Migration fails: **do not** `rm -rf` blindly; stop the node, back up the datadir, fix or use a fresh Core sync |
 | Existing **`{datadir}/heed3/`** or **`rocksdb/`** BLVM store | Core drop-in does **not** overwrite; use a fresh datadir or explicit backend choice |
 
-Portable Windows/aarch64 builds without **`rocksdb`** cannot run Core chainstate migration: use Linux x86_64 / default-feature builds or sync without Core import.
+A build without the **`rocksdb`** feature cannot import a Core chainstate. That includes the release binaries and a default-feature build. Sync from peers, or build from source with `--features rocksdb`.
 
 See [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir) and [Troubleshooting: Corrupted database](../appendices/troubleshooting.md#corrupted-database).
 

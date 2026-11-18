@@ -195,7 +195,9 @@ On regtest at genesis, `"blocks": 0`, `"difficulty": 1.0`, and `"initialblockdow
 
 ### `sendrawtransaction`
 
-Submit hex-encoded signed transaction. Returns txid on success; errors if policy or consensus rejects the tx.
+Submit a hex-encoded signed transaction. Returns the txid on success.
+
+Parameters, in order: the hex, `maxfeerate` (BTC per kvB), `maxburnamount` (BTC), and `allowhighfees`. An omitted `maxfeerate` is 0.10 unless `allowhighfees` is true, which removes the cap. An omitted `maxburnamount` is 0, so an unspendable output with a positive value is rejected.
 
 ```bash
 # Testnet example (18332); regtest uses 18443, mainnet 8332
@@ -215,7 +217,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 | `getblockchaininfo` | High | Standard fields; network names align with BLVM networks |
 | `getblock` / `getblockheader` | High | Verbosity levels supported |
 | `getrawtransaction` | High | Needs tx index or mempool/chain lookup context |
-| `sendrawtransaction` | High | Standard policy + relay |
+| `sendrawtransaction` | High | Fee cap 0.10 BTC/kvB unless `allowhighfees`; `maxburnamount` defaults to 0 |
 | `testmempoolaccept` | High | Multiple-tx batch where implemented |
 | `getmempoolinfo` / `getrawmempool` | High | |
 | `getnetworkinfo` / `getpeerinfo` | High | |

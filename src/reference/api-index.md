@@ -64,7 +64,7 @@ Reference list for contributors and spec readers. Rust paths: [blvm-consensus](h
 **Core Abstractions:**
 - `BitcoinProtocolEngine` - Protocol engine for network variants
 - `NetworkMessage` - P2P message types
-- `ProtocolVersion` - Network variant (BitcoinV1, Testnet3, Regtest)
+- `ProtocolVersion` - Network variant (BitcoinV1, Testnet3, Testnet4, Signet, Regtest)
 
 **Key Types:**
 - `NetworkMessage`, `MessageType`

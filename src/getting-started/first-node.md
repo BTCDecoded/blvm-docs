@@ -12,9 +12,13 @@ The operator binary is `blvm`. It does not hold keys. Wallet RPCs are absent. `g
 
 | Network | `protocol_version` | Default P2P | Default RPC | Next step |
 |---------|---------------------|-------------|-------------|-----------|
-| **Mainnet** | `BitcoinV1` | `0.0.0.0:8333` | `127.0.0.1:8332` | [Mainnet initial sync](#mainnet-initial-sync) below |
-| **Testnet** | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` | Steps 1-4 below |
-| **Regtest** | `Regtest` | `0.0.0.0:18444` | `127.0.0.1:18443` | [Quick Start](quick-start.md) |
+| **Mainnet** | `mainnet` | `127.0.0.1:8333` | `127.0.0.1:8332` | [Mainnet initial sync](#mainnet-initial-sync) below |
+| **Testnet** | `testnet` | `127.0.0.1:18333` | `127.0.0.1:18332` | Steps 1-4 below |
+| **Testnet4** | `testnet4` | `127.0.0.1:48333` | `127.0.0.1:48332` | Steps 1-4 below |
+| **Signet** | `signet` | `127.0.0.1:38333` | `127.0.0.1:38332` | Steps 1-4 below |
+| **Regtest** | `regtest` | `127.0.0.1:18444` | `127.0.0.1:18443` | [Quick Start](quick-start.md) |
+
+An unset listen address binds loopback. Set `listen_addr` to `0.0.0.0` when the node should accept peers from other machines. `BitcoinV1` and `Testnet3` are aliases. The binary writes the five names in the table.
 
 Bind addresses and CLI defaults: [Node Configuration](../node/configuration.md#network-defaults-blvm-binary-no-rpc-addr-override). Wire magic bytes and ports: [Protocol variants](../protocol/overview.md#protocol-variants).
 
@@ -48,7 +52,7 @@ Example for **testnet** (`~/.config/blvm/blvm-testnet.toml`) or learning config 
 ```toml
 transport_preference = "tcponly"
 listen_addr = "0.0.0.0:18333"
-protocol_version = "Testnet3"
+protocol_version = "testnet"
 
 [storage]
 data_dir = "~/.local/share/blvm-testnet"
@@ -192,7 +196,7 @@ blvm --network mainnet \
 ```toml
 transport_preference = "tcponly"
 listen_addr = "127.0.0.1:18445" # default P2P is 18444
-protocol_version = "Regtest"
+protocol_version = "regtest"
 
 [storage]
 data_dir = "~/.local/share/blvm-regtest"
