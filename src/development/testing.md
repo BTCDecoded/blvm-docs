@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bitcoin Commons uses [BLVM Specification Lock](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), [fuzzing](#fuzzing), integration tests, runtime assertions, and MIRI. Proof scope: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
+The index of every check, including Z3 on spec-locked functions, body proofs, the mutation gate, Lean, and Bitcoin Core comparison, is the [assurance map](../consensus/formal-verification.md#assurance-map). This page is the test rows. Proof limits: [proof limitations](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/PROOF_LIMITATIONS.md).
 
 ## Testing Strategy
 
