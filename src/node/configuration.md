@@ -158,7 +158,7 @@ blvm status --rpc-addr 127.0.0.1:8332
 
 BLVM does not read Core chainstate in place. With **`rocksdb`**, a synced Core **`--data-dir`** triggers one-time migration into **`<datadir>/blvm/`** unless disabled. After migrate, point **`--data-dir`** at the BLVM store or keep the Core path (node opens `blvm/` when marked).
 
-**Default behavior:** migrate UTXOs and indexes only; **do not copy** Core **`blocks/`** (~700 GB on mainnet). BLVM reads block bodies from the original Core **`blocks/`** directory via a fallback reader. Set **`storage.reuse_core_block_files = false`** (or **`BLVM_REUSE_CORE_BLOCK_FILES=0`**) only if you want a self-contained BLVM store that duplicates block files.
+**Default behavior:** migrate UTXOs and indexes only. BLVM reads block bodies from the original Core **`blocks/`** directory. Set **`storage.reuse_core_block_files = false`** (or **`BLVM_REUSE_CORE_BLOCK_FILES=0`**) to copy those bodies into a self-contained BLVM store.
 
 | Mechanism | Purpose |
 |-----------|---------|

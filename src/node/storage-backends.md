@@ -46,14 +46,13 @@ The four engines are owned by one crate, **`blvm-storage-fence`** (`blvm-node/cr
 - **Data directory**: `{datadir}/heed3/`
 - **Feature**: `heed3` (enabled in default `blvm` / `blvm-node` features)
 
-LMDB map size defaults to **64 GiB** (`max(65536, dbcache_mb × 128)` MB). Override only if you know your UTXO footprint:
+An unset LMDB map is 70% of free disk, clamped from 48 GiB to 4 TiB. An existing `data.mdb` is opened at least at that file's size plus 128 GiB of headroom, still capped at 4 TiB. `dbcache_mb` does not set the map. `map_size_mb` or `BLVM_HEED3_MAP_SIZE_MB` sets a fixed cap.
 
 ```toml
 [storage]
 database_backend = "heed3"
 
 [storage.heed3]
-# map_size_mb = 65536 # default; required headroom for mainnet UTXO set
 max_readers = 512
 ```
 

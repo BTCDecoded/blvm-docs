@@ -47,7 +47,7 @@ pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
 
 - **Maximum Transactions**: 25 (BIP331 limit)
 - **Maximum Weight**: 404,000 WU (~101,000 vB)
-- **Minimum Fee Rate**: Configurable (default: 1 sat/vB)
+- **Minimum Fee Rate**: 100 satoshis per 1,000 virtual bytes (0.1 sat/vB)
 
 
 ### Ordering Requirements
@@ -173,15 +173,9 @@ The `PackageRelayHandler` processes incoming package messages:
 - Relays accepted packages to other peers
 
 
-## Configuration
+## Defaults
 
-```toml
-[network.package_relay]
-enabled = true
-max_package_size = 25
-max_package_weight = 404000  # 404k WU
-min_fee_rate = 1000  # 1 sat/vB
-```
+`PackageValidator` in `blvm-node/src/network/package_relay.rs` uses the three limits above. There is no `[network.package_relay]` table.
 
 
 ## Benefits

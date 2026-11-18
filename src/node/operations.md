@@ -39,7 +39,7 @@ blvm --config blvm.toml
 
 `systemctl start` returns when the RPC port is bound. The process sends systemd `READY=1` at that moment and leaves the notify socket open. Ready is not tip, and it is not `/health/ready`. Sync is `getblockchaininfo`: `initialblockdownload` and `verificationprogress`.
 
-The sample `TimeoutStartSec` is 61 seconds: an empty regtest start reached `RPC server listening` in 0.101 seconds on 2026-11-18, and the heed open inside that was 0.002 seconds, plus 60 seconds of slack. A larger store that opens slower needs `systemctl edit blvm` to raise it. A shell start with no `NOTIFY_SOCKET` is unchanged.
+The sample `TimeoutStartSec` is 61 seconds: an empty regtest start reached `RPC server listening` in 0.101 seconds, and the heed open inside that was 0.002 seconds, plus 60 seconds of slack. A larger store that opens slower needs `systemctl edit blvm` to raise it. A shell start with no `NOTIFY_SOCKET` is unchanged.
 
 `WatchdogSec` is 240 seconds, the same floor as the stop timeout. After the port is bound, a thread outside the runtime sends `WATCHDOG=1` only while a runtime heartbeat is younger than that. The runtime stamps that heartbeat every 30 seconds, the same period as the main-loop shutdown poll. A busy sync that still polls is left alone. A wedged runtime that stops polling is killed by systemd. This does not change the 30-second or 180-second stop exits. A start without `WATCHDOG_USEC` does not send those pings.
 
@@ -107,7 +107,7 @@ flowchart TD
 blvm start --network mainnet --data-dir ~/.bitcoin
 ```
 
-On first start a binary built with **`--features rocksdb`** detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. That feature is not in the default build or the release binaries; without it there is no `migrate` command and no reader for Core **`blocks/`**. With heed3 and rocksdb both compiled, the BLVM store is still heed3. **Block files are not copied by default**: BLVM keeps reading bodies from Core **`blocks/`** (~700 GB stays in one place). Only the UTXO set and indexes are converted into BLVM format (~15-30 GB under **`blvm/`**).
+On first start a binary built with **`--features rocksdb`** detects the Core layout, migrates once into **`<datadir>/blvm/`**, then opens the BLVM store. That feature is not in the default build or the release binaries; without it there is no `migrate` command and no reader for Core **`blocks/`**. With heed3 and rocksdb both compiled, the BLVM store is still heed3. Block files stay in Core **`blocks/`**, and BLVM reads them there. The migration converts the UTXO set and indexes under **`blvm/`**.
 
 ```bash
 # Optional: explicit migrate with verify, then start the BLVM store
@@ -120,7 +120,7 @@ blvm start --network mainnet --data-dir ~/.bitcoin/blvm
 
 | Core path | Migrated? | Notes |
 |-----------|-----------|--------|
-| `chainstate/` (UTXO) | **Yes** → `blvm/` | One-time convert; ~12 GB on mainnet |
+| `chainstate/` (UTXO) | **Yes** → `blvm/` | One-time convert |
 | `blocks/blk*.dat` | **No** (default) | BLVM reads in place; **do not delete** `blocks/` |
 | `blocks/index/` | Partial | Height/header metadata copied when readable |
 
@@ -132,7 +132,7 @@ Keep Core **`blocks/`** on disk unless you explicitly copied block bodies into t
 
 </div>
 
-After a successful migrate you may delete Core **`chainstate/`** (~12 GB) if you will not run **`bitcoind`** on that datadir again.
+After a successful migrate you may delete Core **`chainstate/`** if you will not run **`bitcoind`** on that datadir again.
 
 ### Flags and settings
 

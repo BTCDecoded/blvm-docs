@@ -39,9 +39,9 @@ Block templates are built from **`blvm-consensus`** helpers (e.g. template const
 
 Transactions are selected using a fee-based priority algorithm:
 
-1. **Prioritize by Fee Rate**: Transactions sorted by fee rate (satoshis per byte)
+1. **Prioritize by Fee Rate**: Transactions sorted by fee rate (satoshis per virtual byte)
 2. **Size Limits**: Respect maximum block size (1MB) and weight (4M weight units)
-3. **Minimum Fee**: Filter transactions below minimum fee rate (1 sat/vB default)
+3. **Minimum Fee**: The block floor is 1 satoshi per 1,000 virtual bytes (0.001 sat/vB)
 4. **UTXO Validation**: Verify all transaction inputs exist in UTXO set
 
 
