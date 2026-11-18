@@ -83,19 +83,12 @@ flowchart TB
 
 **Coverage snapshot** (`#[spec_locked]` attributes in source at consensus f63c328, node 36bb40c, protocol 0bc9307, including `cfg_attr(feature = "spec-lock", spec_locked(...))` forms; re-run `cargo spec-lock coverage` for contract totals):
 
-| Crate | `#[spec_locked]` attributes |
-|-------|-----------------------------:|
-| **blvm-consensus** | 281 |
-| **blvm-node** | 8 |
-| **blvm-protocol** | 8 |
-| **Total** | **297** |
-
-The attribute count is the surface Z3 checks. A green `verify` run means Z3 discharged those contracts. That is the spec-lock row of [Assurance](assurance.md). The body-proof count is 13 functions: the check passes on the code as written, and two edits of the body make it fail. The mutation gate is 93 of 224 in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md) and 34 of 34 in [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md).
+The `#[spec_locked]` attributes are the surface Z3 checks. A green `verify` run means Z3 discharged those contracts. The counted surface is on [Assurance](assurance.md). The body proofs are named in the [consensus verification guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md). The mutation gate is recorded in that guide and in [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md).
 
 **Verification Command** (clone **[blvm-spec](https://github.com/BTCDecoded/blvm-spec)** next to the crate so `../blvm-spec` exists, or set **`SPEC_LOCK_SPEC_PATH`**):
 
 ```bash
-# Install CLI. Latest published 0.1.x; consensus and node CI currently pin 0.1.45 (see CI Integration)
+# Install the 0.1 line. Each repo's CI workflow names the checker it runs.
 cargo install blvm-spec-lock --version '>=0.1, <1' --locked --features z3
 
 export SPEC_LOCK_STRICT=1
@@ -136,13 +129,13 @@ Local development uses the same **`verify`** command as CI. For property tests, 
 
 The **Verify** jobs in [blvm-consensus](https://github.com/BTCDecoded/blvm-consensus/blob/main/.github/workflows/ci.yml), [blvm-node](https://github.com/BTCDecoded/blvm-node/blob/main/.github/workflows/ci.yml), and [blvm-protocol](https://github.com/BTCDecoded/blvm-protocol/blob/main/.github/workflows/ci.yml) CI are the **`cargo-spec-lock`** gates. They differ:
 
-| Repo | Steps | `blvm-spec-lock` version |
-|------|-------|--------------------------|
-| **blvm-consensus** | `check-drift`, then `verify` | Pinned to **0.1.45** for now, a temporary hold (held until `check-drift` passes on consensus (pending blvm-spec-lock#6/#7 and blvm-spec#7)) |
-| **blvm-node** | `verify` against the crates.io `blvm-consensus` release, then `verify` on the node tree. No `check-drift` | Pinned to **0.1.45**. Draft [blvm-node#45](https://github.com/BTCDecoded/blvm-node/pull/45) proposes floating again |
-| **blvm-protocol** | `check-drift`, then `verify` | Floats on `'>=0.1, <1'` |
+| Repo | Steps | Checker |
+|------|-------|----------|
+| **blvm-consensus** | `check-drift`, then `verify` | The release named in that workflow |
+| **blvm-node** | `verify` against the crates.io `blvm-consensus` release, then `verify` on the node tree. No `check-drift` | The current 0.1 release (`>=0.1, <1`) |
+| **blvm-protocol** | `check-drift`, then `verify` | The current 0.1 release (`>=0.1, <1`) |
 
-**spec-lock is an optional dependency.** `blvm-consensus` fe108a5 and `blvm-protocol` 7feb664 made `blvm-spec-lock` an optional `spec-lock` feature that the node does not enable, and `blvm-node` 90f890f dropped the dependency from the node. The node's 8 sites are written `#[cfg_attr(feature = "spec-lock", spec_locked(...))]`, so rustc compiles them out of the binary. `cargo-spec-lock` reads the attributes from source (`has_spec_locked` accepts the `cfg_attr` form), so node CI still verifies those contracts. Optional umbrella **`workflow_dispatch`** mirrors exist for multi-repo workspace checkouts.
+**spec-lock is an optional dependency.** `blvm-consensus` fe108a5 and `blvm-protocol` 7feb664 made `blvm-spec-lock` an optional `spec-lock` feature that the node does not enable, and `blvm-node` 90f890f dropped the dependency from the node. The node's sites are written `#[cfg_attr(feature = "spec-lock", spec_locked(...))]`, so rustc compiles them out of the binary. `cargo-spec-lock` reads the attributes from source (`has_spec_locked` accepts the `cfg_attr` form), so node CI still verifies those contracts. Optional umbrella **`workflow_dispatch`** mirrors exist for multi-repo workspace checkouts.
 
 1. **Unit & Property Tests** (required in each crate CI): `cargo test --all-features`
 2. **BLVM Specification Lock**: `check-drift` then `verify` in consensus and protocol, `verify` only in node, per the [spec-lock dependency guide](https://github.com/BTCDecoded/blvm-consensus/blob/main/SPEC_LOCK_DEPENDENCY.md)

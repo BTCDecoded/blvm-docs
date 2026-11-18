@@ -36,7 +36,7 @@ blvm --config ~/.local/share/blvm-quickstart/blvm.toml --verbose
 In the first log lines, confirm:
 
 - `Network: Regtest` (or equivalent)
-- RPC listening on **`127.0.0.1:18443`** (regtest default; testnet uses **18332**)
+- RPC listening on **`127.0.0.1:18443`** (regtest default; testnet **18332**, testnet4 **48332**, signet **38332**, mainnet **8332**)
 
 Leave this process running. On a **fresh datadir**, wait until logs show **`Component startup complete`** or **`NodeStartupCompleted`** (~10-15 seconds) before mining in step 4: RPC listens earlier, but `generatetoaddress` needs an initialized chain tip.
 
@@ -44,7 +44,7 @@ This sample sets an admin bearer token. When no RPC password is set, the process
 
 ## 3. Check chain state
 
-Regtest uses RPC port **18443** (Core-aligned; mainnet **8332**, testnet **18332**):
+Regtest uses RPC port **18443** (Core-aligned; mainnet **8332**, testnet **18332**, testnet4 **48332**, signet **38332**):
 
 ```bash
 curl -s -X POST http://127.0.0.1:18443 \

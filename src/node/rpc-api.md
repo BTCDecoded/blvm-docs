@@ -234,7 +234,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 
 ## Available Methods
 
-**Core JSON-RPC:** **75** methods in `CORE_RPC_METHODS` (see `blvm-node/src/rpc/methods.rs`). Module RPC (mesh, miniscript overrides, etc.) registers at runtime.
+**Core JSON-RPC:** the names in `CORE_RPC_METHODS` (`blvm-node/src/rpc/methods.rs`). Module RPC (mesh, miniscript overrides, etc.) registers at runtime.
 
 ### Blockchain Methods
 

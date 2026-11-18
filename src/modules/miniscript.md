@@ -31,7 +31,7 @@ registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/
 blvm-miniscript = "0.1.*"
 ```
 
-Runtime load (admin RPC; use the port from `--rpc-addr`: mainnet **8332**, testnet **18332**, regtest **18443**):
+Runtime load (admin RPC; use the port from `--rpc-addr`: mainnet **8332**, testnet **18332**, testnet4 **48332**, signet **38332**, regtest **18443**):
 
 ```bash
 curl -s -X POST http://127.0.0.1:18443 \

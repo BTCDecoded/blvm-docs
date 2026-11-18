@@ -70,7 +70,7 @@ When authentication, RBAC, or rate limiting fails **before** JSON-RPC dispatch, 
 
 | Helper | Typical message pattern | `data` hints |
 |--------|-------------------------|--------------|
-| `invalid_params` | Free-form message |: |
+| `invalid_params` | Free-form message | none |
 | `missing_parameter` | `Missing required parameter: {name}` | `parameter`, `expected_type`, `suggestions` |
 | `invalid_hash_format` | `Invalid hash format: …` | `hash`, `expected_length`, `suggestions` |
 | `invalid_address_format` | `Invalid address format: …` | `address`, `expected_format`, `suggestions` |

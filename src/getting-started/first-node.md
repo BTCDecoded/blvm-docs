@@ -87,7 +87,7 @@ Confirm in the first log lines: config loaded, **`Network: …`**, and `Data dir
 
 ## Step 4: Verify RPC
 
-Testnet **18332**; regtest **18443**; mainnet **8332**.
+Mainnet **8332**; testnet **18332**; testnet4 **48332**; signet **38332**; regtest **18443**.
 
 With no RPC password, the process writes `{datadir}/.cookie` as `__cookie__:<hex>`, mode `0600`, and deletes that file on stop. A configured password leaves the directory untouched.
 
