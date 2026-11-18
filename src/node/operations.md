@@ -65,19 +65,19 @@ With no config and no `--network`, the image loads the local profile and starts 
 
 `BLVM_DATA_DIR` defaults to `/var/lib/blvm`. Set `BLVM_CONFIG` to a TOML file when you need one. The image healthcheck runs `blvm health` with those same arguments. That command reads `{datadir}/.cookie` when the config has no password or bearer token, then calls `getblockchaininfo`. A closed RPC port exits 1. The call stays success while `initialblockdownload` is true. The healthcheck `start-period` is 300 seconds and is not a measured store-open time.
 
-The `.deb` and `.rpm` install `/usr/lib/systemd/system/blvm.service`, `/usr/lib/sysusers.d/blvm.conf`, and `/usr/share/doc/blvm/blvm.toml.example`. They do not enable the service. Copy the example to `/etc/blvm/blvm.toml`, then enable the unit. The release job links the published `blvm-node` crate. A binary from that job does not send `READY=1` until the published crate includes this notify, and `systemctl start` then fails at the 61-second start timeout. OpenRC, launchd, and the Windows sample stay in `contrib/init/` for the packager to copy. The NixOS module is `services.blvm` and is off until `enable = true`.
+The x86_64 `.deb` and the `.rpm` install `/usr/lib/systemd/system/blvm.service`, `/usr/lib/sysusers.d/blvm.conf`, and `/usr/share/doc/blvm/blvm.toml.example`. They do not enable the service. Copy the example to `/etc/blvm/blvm.toml`, then enable the unit. The arm64 `.deb` is the binary only. The release job links the published `blvm-node` crate. A binary from that job does not send `READY=1` until the published crate includes this notify, and `systemctl start` then fails at the 61-second start timeout. The NixOS module is `services.blvm` and is off until `enable = true`.
 
 | | Linux | macOS LaunchDaemon | Windows service |
 |---|---|---|---|
-| Binary | `/usr/bin/blvm` | `/usr/local/bin/blvm` | the installer’s `blvm.exe` |
-| Config | `/etc/blvm/blvm.toml` | `/Library/Application Support/BLVM/blvm.toml` | `%ProgramData%\BLVM\blvm.toml` |
-| State | `/var/lib/blvm` | `/Library/Application Support/BLVM` | `%ProgramData%\BLVM` |
+| Binary | `/usr/bin/blvm` | `/usr/local/bin/blvm` | `blvm.exe` |
+| Config | `/etc/blvm/blvm.toml` | the path in the plist | `%ProgramData%\BLVM\blvm.toml` |
+| State | `/var/lib/blvm` | the path in the plist | `%ProgramData%\BLVM` |
 | Runtime | `/run/blvm` | — | — |
-| Account | user and group `blvm` | a dedicated user for the daemon; the logged-in user for a LaunchAgent | the service account the installer creates |
+| Account | user and group `blvm` | the user who loads the agent | the account that runs the sample |
 
 `ExecStart` is `/usr/bin/blvm --config /etc/blvm/blvm.toml --data-dir /var/lib/blvm`. The sample TOML sets `protocol_version = "mainnet"` and `rpc_addr = "127.0.0.1:8332"`. A file that omits `protocol_version` starts regtest.
 
-The shipped samples are the systemd unit, the OpenRC script, the launchd plist, and `contrib/init/blvm-windows.xml` (WinSW). WinSW stop sends Ctrl+C, which sets the same shutdown watch as `SIGTERM`. `sc.exe create` does not: the binary has no service control handler. The Windows release omits `libc`, so it does not take the datadir lock. Run one Windows process against a datadir. The sample start mode is Manual. It is not an installer.
+The shipped samples are the systemd unit, the OpenRC script, the launchd plist, and `contrib/init/blvm-windows.xml` (WinSW). Copy `blvm.openrc` to `/etc/init.d/blvm` and `blvm.openrcconf` to `/etc/conf.d/blvm`. The plist is a LaunchAgent: copy it to `~/Library/LaunchAgents/org.blvm.blvm.plist` and replace the config and data-dir arguments. The checked-in arguments use `/Library/Application Support/BLVM`. Load it with `launchctl load`. WinSW stop sends Ctrl+C, which sets the same shutdown watch as `SIGTERM`. `sc.exe create` does not: the binary has no service control handler. The Windows release omits `libc`, so it does not take the datadir lock. Run one Windows process against a datadir. The sample start mode is Manual. It is not an installer.
 
 ## Starting from a Bitcoin Core datadir
 
