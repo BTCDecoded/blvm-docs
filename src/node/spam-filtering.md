@@ -179,7 +179,7 @@ The mempool also enforces stricter standard transaction checks:
 
 #### OP_RETURN Limits
 
-- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most **100,000 bytes**, the standard transaction weight (400,000) divided by four, and every byte after `OP_RETURN` must be a push (`blvm-node/src/node/mempool.rs:283`, `:294`, `:302–309`). The node's mempool applies this when `require_standard = true` (the default) and has no config key for it.
+- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most `max_op_return_script_bytes` bytes. The default is **100,000**, the standard transaction weight (400,000) divided by four. The limit is the whole script, including the opcode, and every byte after `OP_RETURN` must be a push. The node's mempool applies it when `require_standard` is true (the default). `getmempoolinfo` reports the initialized value at `policy.max_op_return_script_bytes`. An omitted config key stays 100,000.
 - **Multiple OP_RETURN outputs**: the node's admission path checks each output on its own and does not limit how many `OP_RETURN` outputs a transaction has.
 - **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_op_return_size` (default 80), `max_op_return_outputs` (1), and `reject_multiple_op_return` (`src/config.rs:135–145`, `:210`), read by `blvm-consensus` `is_standard_tx_with_config`. These are not `[mempool]` keys in the node and do not set the node's relay limit.
 
