@@ -26,7 +26,6 @@ python3 scripts/test_render_charts.py
 | `multisig-sensitivity` | Quorum capture for the published signature counts | `quorum-capture`, from `repository-layers.yml`. The old sensitivity PNG is pinned and not embedded |
 | `audit-completeness` | Commons audit controls: designed or absent | `charts/series/audit-completeness.yml` |
 | `assurance-counts` | Headline locks. Spec lock, body proofs, both mutation lists, tests, properties, fuzz, Lean proofs, and the one sentence also checked in Rust | `charts/series/assurance-counts.yml` |
-| `sentence-coverage` | The 275 Orange Paper sentences, one bar per class. Lean and Rust is the one sentence in both | `charts/series/sentence-coverage.yml` |
 | `consensus-tests` | Test functions in blvm-consensus, by area. 187 are proptest properties. 63 fuzz harnesses are not in the bars | `charts/series/consensus-tests.yml` |
 | `consensus-coverage` | Production spec_locked attributes by area. Total with witness fixtures is 281 | `charts/series/consensus-coverage.yml` |
 

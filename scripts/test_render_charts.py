@@ -132,26 +132,6 @@ class RenderChartsTest(unittest.TestCase):
         self.assertIn("Spec-locked functions", svg)
         self.assertIn("Also checked in Rust", svg)
 
-    def test_sentence_coverage_keeps_the_one_sentence_overlap(self):
-        svg = rc.hbar_chart(
-            {
-                "id": "sentence-coverage",
-                "title": "Orange Paper sentences",
-                "measure": "Each of the 275 sentences once. Lean and Rust is theorem 6.1.2",
-                "unit": "sentences",
-            }
-        )
-        for label, count in (
-            ("Lean and Rust", 1),
-            ("Lean only", 15),
-            ("Disputed", 1),
-            ("Model unwritten", 137),
-            ("Parse failed", 119),
-        ):
-            self.assertIn(label, svg)
-            self.assertIn(f">{count}<", svg)
-        self.assertNotIn("<polygon", svg)
-
     def test_consensus_test_counts_sum_to_the_functions(self):
         svg = rc.hbar_chart(
             {

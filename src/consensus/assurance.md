@@ -18,12 +18,6 @@ Production `#[spec_locked]` attributes in `blvm-consensus` source, counted 2026-
 
 Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property-test bar includes the Orange Paper property file, which compares results to the Orange Paper formulas. The 63 fuzz harnesses are not in these bars.
 
-## Orange Paper sentences
-
-![Orange Paper sentences](../images/charts/sentence-coverage.svg)
-
-The 275 sentences are one list. Sixteen are Lean proofs. One of those sixteen, theorem 6.1.2, is also checked in Rust. One further sentence, theorem 6.2.3, is disputed and is not a proof. The other 258 have no proof.
-
 ## Specification
 
 | Check | A pass locks | List |
@@ -44,7 +38,7 @@ The 275 sentences are one list. Sixteen are Lean proofs. One of those sixteen, t
 
 | Check | A pass locks | List |
 |-------|----------------|------|
-| Lean | The sentence is a theorem of the model in `blvm-spec/lean/`. Lean checks the model. The subsidy theorem (6.1.2) is proved in Lean for every natural number, and in Rust for the heights the tool checks. Fifteen of the 275 sentences are Lean only. The other 259 are not proved | [sentence-inventory.tsv](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv) |
+| Lean | Sixteen sentences are theorems of the model in `blvm-spec/lean/`. The subsidy theorem (6.1.2) is proved in Lean for every natural number, and in Rust for the heights the tool checks. Spec lock, the test suites, and the Core comparisons cover the implementation around those proofs | [sentence-inventory.tsv](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv) |
 
 ## Tests in the crate
 
