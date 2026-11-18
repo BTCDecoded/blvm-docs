@@ -100,7 +100,7 @@ See [RPC API Reference](../node/rpc-api.md) for authentication and the full meth
 
 ## Defaults this binary ships
 
-A fresh install enables `blvm-miniscript`, `blvm-zmq`, and `blvm-index`, each at `0.1.*`. `blvm-payment` is not in that set. Payment, vault, pool, and congestion methods return method-not-found until that module is loaded. The IBD example below sets `[modules].enabled = false` for the sync. That example is not the fresh-install default.
+A config file that omits `[modules]` enables `blvm-miniscript`, `blvm-zmq`, and `blvm-index`, each at `0.1.*`. A start with no config file loads the `local` profile, which turns modules off. The mainnet IBD example pins those three. `blvm-payment` is not in that set. Payment, vault, pool, and congestion methods return method-not-found until that module is loaded.
 
 `blvm-index` is script history. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port.
 
@@ -148,7 +148,7 @@ Mainnet AssumeUTXO data in this tree is an empty list. The node does not publish
 
 ## Mainnet initial sync {#mainnet-initial-sync}
 
-After [Installation](installation.md). **Do not** start first mainnet sync with bare `blvm --network mainnet`: use the release **IBD example config** (pruning, `[ibd].mode = "parallel"`, `[modules].enabled = false` during sync). Source: [blvm-mainnet-ibd.toml.example](https://github.com/BTCDecoded/blvm/blob/main/blvm-mainnet-ibd.toml.example).
+After [Installation](installation.md). **Do not** start first mainnet sync with bare `blvm --network mainnet`: use the release **IBD example config** (pruning, `[ibd].mode = "parallel"`, and the three baseline modules pinned). Source: [blvm-mainnet-ibd.toml.example](https://github.com/BTCDecoded/blvm/blob/main/blvm-mainnet-ibd.toml.example).
 
 **From a release directory** (contains `blvm`, `scripts/`, and the example TOML):
 
@@ -181,7 +181,7 @@ blvm --network mainnet \
 
 **Resume:** reuse the same `--data-dir`; never delete the active backend dir (`heed3/`, `rocksdb/`, …) mid-IBD.
 
-**Tune when needed:** `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`, `BLVM_IBD_WAN_SINGLE_PEER=1`, `BLVM_IBD_ENGINE=0` to opt out of the UTXO engine. See [Node configuration: IBD](../node/configuration.md#ibd-configuration), [IBD UTXO engine](../node/ibd-engine.md), [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd).
+**Tune when needed:** `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`, `BLVM_IBD_WAN_SINGLE_PEER=1`. See [Node configuration: IBD](../node/configuration.md#ibd-configuration), [IBD UTXO engine](../node/ibd-engine.md), [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd).
 
 ---
 

@@ -51,7 +51,7 @@ Create a `blvm.toml` configuration file. Keys are **top-level** or in nested tab
 listen_addr = "127.0.0.1:8333"
 rpc_addr = "127.0.0.1:8332"
 # File tags: tcponly, irohonly, quinnonly, hybrid, all.
-# The CLI and BLVM_NODE_TRANSPORT accept tcp_only.
+# BLVM_NODE_TRANSPORT accepts tcponly and tcp_only. There is no transport flag.
 transport_preference = "tcponly"
 max_peers = 100
 protocol_version = "mainnet"
@@ -81,7 +81,7 @@ To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-c
 
 ## IBD Configuration
 
-Default **`mode = "parallel"`**. LAN peers are auto-preferred for download. On WAN-only sync, **`parallel` mode uses multi-peer work-stealing**; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to force a single download peer. Overrides: **`BLVM_IBD_PEERS`**, **`BLVM_IBD_MODE`**, **`BLVM_IBD_ENGINE=0`** to opt out of the UTXO engine. First sync: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Engine details: [IBD UTXO engine](ibd-engine.md).
+Default **`mode = "parallel"`**. LAN peers are auto-preferred for download. On WAN-only sync, **`parallel` mode uses multi-peer work-stealing**; set **`BLVM_IBD_WAN_SINGLE_PEER=1`** to force a single download peer. Overrides: **`BLVM_IBD_PEERS`**, **`BLVM_IBD_MODE`**. The UTXO engine is the only IBD UTXO path. First sync: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Engine details: [IBD UTXO engine](ibd-engine.md).
 
 ```toml
 [ibd]
@@ -181,7 +181,7 @@ ENV and reference: [Configuration Reference](../reference/configuration-referenc
 
 `database_backend = "auto"` selects heed3 when that feature is compiled in, then RocksDB, Redb, and Sled. Naming `heed3`, `rocksdb`, `redb`, or `sled` forces that backend, and the binary has to be built with the feature. Release builds compile heed3. How a backend behaves is on [Storage Backends](storage-backends.md). Cache, indexing, and pruning keys are [`[storage]`](../reference/configuration-reference.md#storage).
 
-The pruning default expects UTXO commitments. Set `type = "normal"` or `type = "disabled"` unless the `utxo-commitments` feature is in the binary. Pruning stops the node from serving the blocks it deleted.
+The pruning default is aggressive and expects UTXO commitments. Set `mode = "normal"` or `mode = "disabled"` unless the `utxo-commitments` feature is in the binary. `keep_blocks` is the trailing window (default 288). Pruning stops the node from serving the blocks it deleted.
 
 ## Network Configuration
 
@@ -196,7 +196,7 @@ transport_preference = "tcponly"
 
 **Mapping (CLI / ENV vs config file)**:
 - **TOML/JSON** on `NodeConfig`: lowercase enum tags as above (`tcponly`, …).
-- **`blvm` flags / `BLVM_NODE_TRANSPORT`:** e.g. `tcp_only`, `iroh_only`, `hybrid` (see `blvm --help`).
+- **`BLVM_NODE_TRANSPORT`:** the TOML tags, plus `tcp` / `tcp_only`, `iroh` / `iroh_only`, and `quinn` / `quinn_only`. There is no transport command-line flag.
 
 **Available Transport Options**:
 - **TCP-only** (`tcponly` in file): default, Bitcoin P2P compatible

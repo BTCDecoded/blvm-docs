@@ -59,11 +59,11 @@ When `[mempool]` or `[rbf]` is present, those sizes are copied onto the consensu
 
 `[storage.compression]`: `block_compression_enabled`, `block_compression_level`, `utxo_compression_enabled`, `utxo_compression_level`, `witness_compression_enabled`, `witness_compression_level`.
 
-`[storage.pruning]`: `mode`, `auto_prune`, `auto_prune_interval`, `min_blocks_to_keep`, `prune_on_startup`, `incremental_prune_during_ibd`, `prune_window_size`, `min_blocks_for_incremental_prune`.
+`[storage.pruning]`: `mode` (`disabled`, `normal`, or `aggressive`), `keep_blocks` (default 288; `disabled` ignores it), `auto_prune`, `incremental_prune_during_ibd`. Automatic passes are every 144 blocks. A key other than those four fails to load.
 
 ## `[ibd]`
 
-Operator surface, including `dump_dir`. Fields: `chunk_size`, `download_timeout_secs`, `mode`, `preferred_peers`, `max_ahead_blocks`, `memory_only`, `dump_dir`, `snapshot_dir`, `yield_interval`, `eviction`, `earliest_first`, `prefetch_workers`, `prefetch_queue_size`, `utxo_prefetch_lookahead`, `max_blocks_in_transit_per_peer`, `headers_timeout_secs`, `headers_max_failures`, `dedicated`, `utxo_engine`, `checkpoint_interval`, `checkpoint_min_interval`, `checkpoint_max_interval`, `checkpoint_target_secs`, `muhash_persist_interval`.
+Operator surface, including `dump_dir`. Fields: `chunk_size`, `download_timeout_secs`, `mode`, `preferred_peers`, `max_ahead_blocks`, `memory_only`, `dump_dir`, `snapshot_dir`, `yield_interval`, `eviction`, `earliest_first`, `prefetch_workers`, `prefetch_queue_size`, `utxo_prefetch_lookahead`, `max_blocks_in_transit_per_peer`, `headers_timeout_secs`, `headers_max_failures`, `dedicated`, `checkpoint_interval`, `checkpoint_min_interval`, `checkpoint_max_interval`, `checkpoint_target_secs`, `muhash_persist_interval`.
 
 The parallel IBD assignment checkpoint stays a code constant. Bench and dest latches stay environment variables. They are not keys in this table.
 

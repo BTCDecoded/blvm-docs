@@ -14,19 +14,11 @@ First mainnet sync always starts from [First Node Setup: Mainnet IBD](../getting
 
 ## Overview
 
-During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. By default, the **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `<data_dir>/ibd_engine/`, with mid-sync checkpoints for crash-safe resume. The legacy in-process store remains available as an opt-out.
+During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. The **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `<data_dir>/ibd_engine/`, with mid-sync checkpoints for crash-safe resume.
 
-## Enable (default)
+## Enable
 
-The engine is **on by default**. Stable table path: `<data_dir>/ibd_engine/utxo_table.bin` (override with `BLVM_IBD_ENGINE_PATH`).
-
-**Opt-out:**
-
-```bash
-export BLVM_IBD_ENGINE=0
-```
-
-`[ibd] utxo_engine = false` does the same. `BLVM_IBD_ENGINE` wins over the file.
+The engine is the only IBD UTXO path. Stable table path: `<data_dir>/ibd_engine/utxo_table.bin` (override with `BLVM_IBD_ENGINE_PATH`). A file that still contains `utxo_engine = false` is loaded and ignored.
 
 Optional environment variables:
 

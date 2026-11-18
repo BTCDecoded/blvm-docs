@@ -4,7 +4,7 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-A fresh install enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. **blvm-payment** is not a default pin. **blvm-fibre** is not in the registry until `[downloads]` exists. The module list is the [catalog](../modules/overview.md).
+A config file that omits `[modules]` enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. A start with no config file loads the `local` profile, which turns modules off. **blvm-payment** is not a default pin. **blvm-fibre** is not in the registry until `[downloads]` exists. The module list is the [catalog](../modules/overview.md).
 
 | You are looking up | Read |
 |---|---|

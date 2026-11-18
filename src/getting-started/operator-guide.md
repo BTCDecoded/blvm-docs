@@ -28,7 +28,7 @@ Mainnet first sync touches several docs, use this map instead of reading them in
 |------|--------|
 | First mainnet sync (config, RPC verify, checklist) | [First Node Setup: Mainnet IBD](first-node.md#mainnet-initial-sync) |
 | Parallel download, chunk tuning, assume-valid | [Performance: Parallel IBD](../node/performance.md#parallel-initial-block-download-ibd) |
-| Age-tiered UTXO store (on unless `BLVM_IBD_ENGINE=0`) | [IBD UTXO engine](../node/ibd-engine.md) |
+| Age-tiered UTXO store | [IBD UTXO engine](../node/ibd-engine.md) |
 | Bandwidth limits when **serving** peers during their IBD | [IBD bandwidth protection](../node/ibd-protection.md) |
 | Stuck, slow, or quiet sync | [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
 | `[ibd]` keys and `BLVM_IBD_*` env vars | [Configuration Reference: IBD](../reference/configuration-reference.md#ibd-configuration) |

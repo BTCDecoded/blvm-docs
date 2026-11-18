@@ -286,7 +286,7 @@ To migrate between backends:
 
 ## Pruning Support
 
-Every backend can prune. The mode is `disabled` (keep every block), `normal` (keep recent blocks), `aggressive` (requires `utxo-commitments`), or `custom`. The keys are [`[storage.pruning]`](../reference/configuration-reference.md#storage).
+Every backend can prune. The mode is `disabled` (keep every block), `normal` (keep the trailing `keep_blocks` bodies), or `aggressive` (the same window, and it writes UTXO commitments; requires `utxo-commitments`). The keys are [`[storage.pruning]`](../reference/configuration-reference.md#storage).
 
 
 ## Error Handling

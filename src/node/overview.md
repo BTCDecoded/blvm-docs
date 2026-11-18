@@ -122,7 +122,7 @@ graph TB
 - [UTXO commitments](utxo-commitments.md) (compile-time feature in release binaries; enable at runtime when used)
 - [Peer consensus protocol](peer-consensus.md), [spam filtering](spam-filtering.md) (bandwidth optimization during sync)
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
-- [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with the [IBD UTXO engine](ibd-engine.md) on unless `BLVM_IBD_ENGINE=0`
+- [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with the [IBD UTXO engine](ibd-engine.md)
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → heed3 (LMDB)** in typical release builds; optional RocksDB, redb, sled behind opt-in features)
