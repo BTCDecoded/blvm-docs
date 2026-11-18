@@ -125,6 +125,8 @@ Stable release artifacts include:
 - **Linux aarch64**: standalone binary, `.tar.gz`
 - **Windows x86_64**: portable `.exe`, `.zip` (MinGW `gnu` target)
 
+The `.deb` and `.rpm` from this tree install `blvm.service` and do not enable it. The Arch package, tarballs, standalone binaries, and the Windows zip do not include a unit. The image from this tree runs as uid 61100 and keeps its data in `/var/lib/blvm`. The website install template has to use that command, and say that the `.deb` and `.rpm` install the unit disabled, in the same release that publishes this image. The published tag before that image still runs as user `blvm` with its data in `/app/data`.
+
 Rolling **nightly** binaries and `ghcr.io/btcdecoded/blvm:nightly` are published from the `develop` branch (see [Release channels](#release-channels)).
 
 ## Release Artifacts

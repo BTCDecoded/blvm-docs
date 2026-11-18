@@ -15,6 +15,8 @@ Always verify `checksums.sha256` (or the release checksum file) before running a
 | Docker | GHCR [ghcr.io/btcdecoded/blvm](https://github.com/BTCDecoded/blvm/pkgs/container/blvm) | Per-release tag | Container ops |
 | Source build | Any supported Rust target | Explicit `--features` | Experimental flags, custom arch |
 
+The `.deb` and `.rpm` install the systemd unit and leave it disabled. The tarball, the Arch package, the standalone binary, and the Windows zip do not. OpenRC, launchd, and the Windows sample stay in the `blvm` repository `contrib/init/`.
+
 Details: [Release process: Build variants](../development/release-process.md#build-variants).
 
 Local `cargo build` in the `blvm` repo uses default features unless you pass `--no-default-features` or explicit `--features`.
@@ -43,7 +45,7 @@ For other architectures, experimental compile-time features, or development: [bl
 - [Quick Start](../getting-started/quick-start.md)
 - [Deployment posture](../security/deployment-posture.md) (before mainnet RPC)
 - [Node configuration](../node/configuration.md)
-- [Service manager](../node/operations.md#service-manager). The `.deb` and `.rpm` install the systemd unit and do not enable it. OpenRC, launchd, and Windows samples stay in the `blvm` repository `contrib/init/`.
+- [Service manager](../node/operations.md#service-manager)
 
 ## See also
 

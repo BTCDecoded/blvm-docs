@@ -55,12 +55,17 @@ The container image runs `/usr/local/bin/blvm` as uid **61100** (gid 61100), wit
 
 ```bash
 mkdir -p /var/lib/blvm && chown 61100:61100 /var/lib/blvm
-docker run --rm -p 8333:8333 -v /var/lib/blvm:/var/lib/blvm ghcr.io/btcdecoded/blvm
+docker run --rm --stop-timeout 240 -p 8333:8333 \
+  -v /var/lib/blvm:/var/lib/blvm \
+  ghcr.io/btcdecoded/blvm \
+  --network mainnet --listen-addr 0.0.0.0:8333
 ```
+
+With no config and no `--network`, the image loads the local profile and starts regtest. RPC stays on loopback, so this example does not publish 8332. This command is the image in this tree. The install page serves the last published image, which still runs as user `blvm` with its data in `/app/data`. Use the install page command until the published tag is built from this Dockerfile.
 
 `BLVM_DATA_DIR` defaults to `/var/lib/blvm`. Set `BLVM_CONFIG` to a TOML file when you need one. The image healthcheck runs `blvm health` with those same arguments. That command reads `{datadir}/.cookie` when the config has no password or bearer token, then calls `getblockchaininfo`. A closed RPC port exits 1. The call stays success while `initialblockdownload` is true. The healthcheck `start-period` is 300 seconds and is not a measured store-open time.
 
-The `.deb` and `.rpm` install `/usr/lib/systemd/system/blvm.service`, `/usr/lib/sysusers.d/blvm.conf`, and `/usr/share/doc/blvm/blvm.toml.example`. They do not enable the service. Copy the example to `/etc/blvm/blvm.toml`, then enable the unit. OpenRC, launchd, and the Windows sample stay in `contrib/init/` for the packager to copy. The NixOS module is `services.blvm` and is off until `enable = true`.
+The `.deb` and `.rpm` install `/usr/lib/systemd/system/blvm.service`, `/usr/lib/sysusers.d/blvm.conf`, and `/usr/share/doc/blvm/blvm.toml.example`. They do not enable the service. Copy the example to `/etc/blvm/blvm.toml`, then enable the unit. The release job links the published `blvm-node` crate. A binary from that job does not send `READY=1` until the published crate includes this notify, and `systemctl start` then fails at the 61-second start timeout. OpenRC, launchd, and the Windows sample stay in `contrib/init/` for the packager to copy. The NixOS module is `services.blvm` and is off until `enable = true`.
 
 | | Linux | macOS LaunchDaemon | Windows service |
 |---|---|---|---|
