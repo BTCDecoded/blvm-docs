@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 360" role="img" width="962" height="360">
 <title>Spec-lock attributes by area</title>
-<desc>Production spec_locked attributes in blvm-consensus, counted from the source Unit: attributes. Measured 2026-11-14. Source: Count of spec_locked in blvm-consensus/src. 121 more are witness fixtures. Total 281. Not the 13 body proofs..</desc>
+<desc>Production spec_locked attributes in blvm-consensus, counted from the source Unit: attributes. Measured 2026-11-14. Source: Count of spec_locked in blvm-consensus/src. Production attributes in the bars. Witness fixtures bring the total to 281..</desc>
 <rect width="100%" height="100%" fill="#161923"/>
 <text x="32" y="32" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Spec-lock attributes by area</text>
 <text x="18" y="158.0" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" transform="rotate(-90 18 158.0)">attributes</text>
@@ -52,5 +52,5 @@
 <text x="906.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Root</text>
 <rect x="78" y="302" width="12" height="12" fill="#7eb6e8"/>
 <text x="96" y="312" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Production attributes</text>
-<text x="32" y="338" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Measured 2026-11-14. Source: Count of spec_locked in blvm-consensus/src. 121 more are witness fixtures. Total 281. Not the 13 body proofs..</text>
+<text x="32" y="338" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Measured 2026-11-14. Source: Count of spec_locked in blvm-consensus/src. Production attributes in the bars. Witness fixtures bring the total to 281..</text>
 </svg>

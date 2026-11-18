@@ -113,8 +113,8 @@ class RenderChartsTest(unittest.TestCase):
         attrs = rendered[ROOT / "src/images/charts/consensus-coverage.svg"]
         for value in (18, 40, 13, 2, 16):
             self.assertIn(f">{value}<", attrs)
-        self.assertIn("Total 281", attrs)
-        self.assertIn("Not the 13 body proofs", attrs)
+        self.assertIn("total to 281", attrs)
+        self.assertIn("Production attributes in the bars", attrs)
         self.assertNotIn(
             ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg", rendered
         )
@@ -127,8 +127,9 @@ class RenderChartsTest(unittest.TestCase):
                 "measure": "Headline counts. Each figure has its own list",
             }
         )
-        for value in ("281", "13", "93/224", "34/34", "2,353", "187", "63", "16", "1"):
+        for value in ("281", "13", "93", "34/34", "2,353", "187", "63", "16", "1"):
             self.assertIn(f">{value}<", svg)
+        self.assertIn("Mutation-checked functions", svg)
         self.assertIn("Spec-locked functions", svg)
         self.assertIn("Also checked in Rust", svg)
 

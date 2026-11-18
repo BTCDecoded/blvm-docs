@@ -8,8 +8,8 @@ groups:
         label: Spec-locked functions
       - value: "13"
         label: Proved from the body
-      - value: "93/224"
-        label: Mutation, written list
+      - value: "93"
+        label: Mutation-checked functions
       - value: "34/34"
         label: Mutation, tool list
   - name: Tests
