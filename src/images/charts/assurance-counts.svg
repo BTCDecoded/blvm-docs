@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 332" role="img" width="760" height="332">
 <title>What locks the implementation</title>
-<desc>Headline counts. Each figure has its own list Measured 2026-11-18. Spec lock 2026-11-14. Tests and sentences 2026-11-18.</desc>
+<desc>Headline counts. Each figure has its own list Each figure is its own list</desc>
 <rect width="100%" height="100%" fill="#161923"/>
 <text x="24" y="32" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="18" font-weight="650">What locks the implementation</text>
 <text x="24" y="56" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="13">Rust contracts</text>
@@ -24,5 +24,5 @@
 <text x="509" y="110" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="13">Lean proofs</text>
 <text x="509" y="150" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="26" font-weight="650">1</text>
 <text x="509" y="168" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="13">Also checked in Rust</text>
-<text x="24" y="316" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Measured 2026-11-18. Spec lock 2026-11-14. Tests and sentences 2026-11-18.</text>
+<text x="24" y="316" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Each figure is its own list</text>
 </svg>

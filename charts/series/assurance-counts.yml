@@ -1,6 +1,7 @@
 status: measured
 measured_at: "2026-11-18"
-source: "Spec lock 2026-11-14. Tests and sentences 2026-11-18."
+dated: false
+source: "Each figure is its own list."
 groups:
   - name: Rust contracts
     items:

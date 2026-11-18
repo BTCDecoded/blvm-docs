@@ -1,6 +1,7 @@
 status: measured
 measured_at: "2026-11-18"
-source: "#[test] and #[tokio::test] in blvm-consensus. 2,353 functions."
+dated: false
+source: "Test functions in blvm-consensus, by area."
 unit: tests
 categories:
   - Inline with the code

@@ -1,6 +1,7 @@
 status: measured
 measured_at: "2026-11-14"
-source: "Count of spec_locked in blvm-consensus/src. Production attributes in the bars. Witness fixtures bring the total to 281."
+dated: false
+source: "Production attributes. Witness fixtures are included in the total."
 unit: attributes
 categories: [Block, Tx, Script, PoW, Segwit, Witness, Taproot, Mempool, Econ, Reorg, Locktime, Root]
 series:

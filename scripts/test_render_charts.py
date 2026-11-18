@@ -113,8 +113,9 @@ class RenderChartsTest(unittest.TestCase):
         attrs = rendered[ROOT / "src/images/charts/consensus-coverage.svg"]
         for value in (18, 40, 13, 2, 16):
             self.assertIn(f">{value}<", attrs)
-        self.assertIn("total to 281", attrs)
-        self.assertIn("Production attributes in the bars", attrs)
+        self.assertIn("included in the total", attrs)
+        self.assertIn("Production attributes", attrs)
+        self.assertNotIn("2026-11-14", attrs)
         self.assertNotIn(
             ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg", rendered
         )
@@ -147,7 +148,8 @@ class RenderChartsTest(unittest.TestCase):
         for count in shown:
             self.assertIn(f">{count}<", svg)
         self.assertIn("Script, witness, sighash", svg)
-        self.assertIn("2,353 functions", svg)
+        self.assertIn("Test functions in blvm-consensus, by area", svg)
+        self.assertNotIn("2026-11-18", svg)
 
     def test_missing_series_stays_empty(self):
         svg = rc.series_chart(

@@ -27,7 +27,7 @@ python3 scripts/test_render_charts.py
 | `audit-completeness` | Commons audit controls: designed or absent | `charts/series/audit-completeness.yml` |
 | `assurance-counts` | Headline locks. Spec lock, body proofs, both mutation lists, tests, properties, fuzz, Lean proofs, and the one sentence also checked in Rust | `charts/series/assurance-counts.yml` |
 | `consensus-tests` | Test functions in blvm-consensus, by area. 187 are proptest properties. 63 fuzz harnesses are not in the bars | `charts/series/consensus-tests.yml` |
-| `consensus-coverage` | Production spec_locked attributes by area. Total with witness fixtures is 281 | `charts/series/consensus-coverage.yml` |
+| `consensus-coverage` | Production spec_locked attributes by area. Witness fixtures are included in the total | `charts/series/consensus-coverage.yml` |
 
 ## Adding a measurement
 

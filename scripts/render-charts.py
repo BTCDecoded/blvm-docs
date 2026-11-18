@@ -460,6 +460,15 @@ TONE = {
 }
 
 
+def figure_footnote(data: dict) -> str:
+    """The visible line under a figure. A dated figure names when it was counted."""
+    source = str(data.get("source") or "").strip().rstrip(".")
+    if data.get("dated") is False:
+        return source
+    label = "Carried" if data.get("status") == "carried" else "Measured"
+    return f"{label} {data['measured_at']}. {source}"
+
+
 def scoreboard_chart(chart: dict) -> str:
     """Headline counts. Each figure keeps its own denominator."""
     path = series_path(chart["id"])
@@ -477,8 +486,7 @@ def scoreboard_chart(chart: dict) -> str:
     gap = 16
     inner = width - 48 - gap * (len(groups) - 1)
     col_w = inner / len(groups)
-    label = "Carried" if data.get("status") == "carried" else "Measured"
-    footnote = f"{label} {data['measured_at']}. {data['source']}"
+    footnote = figure_footnote(data)
     parts = svg_open(width, height, chart["title"], f"{chart['measure']} {footnote}")
     parts.append(
         f'<text x="24" y="32" fill="{INK}" font-family="system-ui,sans-serif" '
@@ -532,8 +540,7 @@ def hbar_chart(chart: dict) -> str:
     count_x = width - 24
     bar_x = label_x + 16 + max(len(name) for name in categories) * 7
     bar_w = count_x - bar_x - 48
-    label = "Carried" if measured.get("status") == "carried" else "Measured"
-    footnote = f"{label} {measured['measured_at']}. Source: {measured['source']}."
+    footnote = figure_footnote(measured)
     parts = svg_open(
         width,
         height,
@@ -583,8 +590,7 @@ def series_chart(chart: dict) -> str:
                 "values": item["values"],
             }
         )
-    label = "Carried" if measured.get("status") == "carried" else "Measured"
-    footnote = f"{label} {measured['measured_at']}. Source: {measured['source']}."
+    footnote = figure_footnote(measured)
     return grouped_bars(
         chart["title"],
         f"{chart['measure']} Unit: {measured['unit']}. {footnote}",
