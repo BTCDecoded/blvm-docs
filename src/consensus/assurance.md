@@ -1,6 +1,28 @@
 # Assurance
 
-Every check that locks the consensus implementation, from an Orange Paper sentence to a mainnet block. A row names the check, what a pass locks, and the file that holds the list.
+Every check that locks the consensus implementation, from an Orange Paper sentence to a mainnet block. The counts above the fold are the locks. Each one is its own list. The rows below say what a pass means.
+
+![What locks the implementation](../images/charts/assurance-counts.svg)
+
+The 281 are `#[spec_locked]` functions, including witness fixtures. The 13 are proved from the function body. The mutation gate is 93 of 224 in the written list and 34 of 34 in the tool's list. The test count is 2,353 functions in `blvm-consensus`, of which 187 are proptest properties, plus 63 fuzz harnesses. Sixteen Orange Paper sentences are Lean proofs. Theorem 6.1.2 is the one also checked in Rust.
+
+## Where the attributes sit
+
+![Spec-lock attributes by area](../images/charts/consensus-coverage.svg)
+
+Production `#[spec_locked]` attributes in `blvm-consensus` source, counted 2026-11-14. Witness fixtures are not in the bars. The total with those fixtures is 281.
+
+## Where the tests sit
+
+![Consensus test functions](../images/charts/consensus-tests.svg)
+
+Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property-test bar includes the Orange Paper property file, which compares results to the Orange Paper formulas. The 63 fuzz harnesses are not in these bars.
+
+## Orange Paper sentences
+
+![Orange Paper sentences](../images/charts/sentence-coverage.svg)
+
+The 275 sentences are one list. Sixteen are Lean proofs. One of those sixteen, theorem 6.1.2, is also checked in Rust. One further sentence, theorem 6.2.3, is disputed and is not a proof. The other 258 have no proof.
 
 ## Specification
 

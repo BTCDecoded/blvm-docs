@@ -1,0 +1,16 @@
+status: measured
+measured_at: "2026-11-18"
+source: "sentence-inventory.tsv, 275 rows"
+unit: sentences
+categories:
+  - Lean and Rust
+  - Lean only
+  - Disputed
+  - Model unwritten
+  - Parse failed
+  - Emitter missing
+  - Out of scope
+tones: [proved, proved, disputed, open, open, open, open]
+series:
+  - name: Sentences
+    values: [1, 15, 1, 137, 119, 1, 1]

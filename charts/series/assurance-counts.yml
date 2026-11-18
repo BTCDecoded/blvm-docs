@@ -1,0 +1,28 @@
+status: measured
+measured_at: "2026-11-18"
+source: "Spec lock 2026-11-14. Tests and sentences 2026-11-18."
+groups:
+  - name: Rust contracts
+    items:
+      - value: "281"
+        label: Spec-locked functions
+      - value: "13"
+        label: Proved from the body
+      - value: "93/224"
+        label: Mutation, written list
+      - value: "34/34"
+        label: Mutation, tool list
+  - name: Tests
+    items:
+      - value: "2,353"
+        label: Test functions
+      - value: "187"
+        label: Property tests
+      - value: "63"
+        label: Fuzz harnesses
+  - name: Spec model
+    items:
+      - value: "16"
+        label: Lean proofs
+      - value: "1"
+        label: Also checked in Rust

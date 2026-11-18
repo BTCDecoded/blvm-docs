@@ -2,7 +2,7 @@
 # `scripts/render-charts.py` reads this file plus governance YAML and writes
 # the SVG and Mermaid fragments the book includes. Do not edit those outputs.
 #
-# kind: layer-thresholds | tier-review | quorum-curves | mermaid | series | radar | lines | bars-line
+# kind: layer-thresholds | tier-review | quorum-curves | mermaid | series | hbar | scoreboard | radar | lines | bars-line
 # A `series` chart draws bars only from charts/series/<id>.yml when that file
 # has status: measured, a measured_at date, and a source. Otherwise it draws
 # an empty panel that names the measure.
@@ -99,6 +99,26 @@ charts:
     title: Audit trail status
     measure: Commons controls from the governance wording. Designed means written and not running
     output: src/images/charts/audit-completeness.svg
+
+  - id: assurance-counts
+    kind: scoreboard
+    title: What locks the implementation
+    measure: Headline counts. Each figure has its own list
+    output: src/images/charts/assurance-counts.svg
+
+  - id: sentence-coverage
+    kind: hbar
+    title: Orange Paper sentences
+    measure: Each of the 275 sentences once. Lean and Rust is theorem 6.1.2
+    unit: sentences
+    output: src/images/charts/sentence-coverage.svg
+
+  - id: consensus-tests
+    kind: hbar
+    title: Consensus test functions
+    measure: "#[test] and #[tokio::test] in blvm-consensus, one bar per area"
+    unit: tests
+    output: src/images/charts/consensus-tests.svg
 
   - id: consensus-coverage
     kind: series

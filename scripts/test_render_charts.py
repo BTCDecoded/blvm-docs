@@ -119,6 +119,55 @@ class RenderChartsTest(unittest.TestCase):
             ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg", rendered
         )
 
+    def test_assurance_scoreboard_keeps_each_list(self):
+        svg = rc.scoreboard_chart(
+            {
+                "id": "assurance-counts",
+                "title": "What locks the implementation",
+                "measure": "Headline counts. Each figure has its own list",
+            }
+        )
+        for value in ("281", "13", "93/224", "34/34", "2,353", "187", "63", "16", "1"):
+            self.assertIn(f">{value}<", svg)
+        self.assertIn("Spec-locked functions", svg)
+        self.assertIn("Also checked in Rust", svg)
+
+    def test_sentence_coverage_keeps_the_one_sentence_overlap(self):
+        svg = rc.hbar_chart(
+            {
+                "id": "sentence-coverage",
+                "title": "Orange Paper sentences",
+                "measure": "Each of the 275 sentences once. Lean and Rust is theorem 6.1.2",
+                "unit": "sentences",
+            }
+        )
+        for label, count in (
+            ("Lean and Rust", 1),
+            ("Lean only", 15),
+            ("Disputed", 1),
+            ("Model unwritten", 137),
+            ("Parse failed", 119),
+        ):
+            self.assertIn(label, svg)
+            self.assertIn(f">{count}<", svg)
+        self.assertNotIn("<polygon", svg)
+
+    def test_consensus_test_counts_sum_to_the_functions(self):
+        svg = rc.hbar_chart(
+            {
+                "id": "consensus-tests",
+                "title": "Consensus test functions",
+                "measure": "#[test] and #[tokio::test] in blvm-consensus, one bar per area",
+                "unit": "tests",
+            }
+        )
+        shown = [644, 420, 301, 184, 171, 147, 115, 104, 92, 63, 62, 50]
+        self.assertEqual(sum(shown), 2353)
+        for count in shown:
+            self.assertIn(f">{count}<", svg)
+        self.assertIn("Script, witness, sighash", svg)
+        self.assertIn("2,353 functions", svg)
+
     def test_missing_series_stays_empty(self):
         svg = rc.series_chart(
             {

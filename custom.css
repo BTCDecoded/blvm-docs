@@ -10,19 +10,18 @@
   height: auto;
 }
 
-/* Tables — left align; wide matrices scroll horizontally instead of squishing */
+/* Tables fill the reading column and wrap. A cell floor of 9rem made every
+   table wider than the column, so the wrapper scrolled even when the words fit. */
 .content .table-wrapper {
   text-align: left;
-  overflow-x: auto;
   max-width: 100%;
 }
 
 .content table,
 .content .table-wrapper table {
   margin-left: 0;
-  margin-right: auto;
-  width: max-content;
-  min-width: 100%;
+  margin-right: 0;
+  width: 100%;
   table-layout: auto;
 }
 
@@ -33,12 +32,14 @@
   text-align: left;
   vertical-align: top;
   hyphens: auto;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
+  padding: 0.4rem 0.65rem;
 }
 
-.content .table-wrapper th,
-.content .table-wrapper td {
-  min-width: 9rem;
+.content table :is(code, a),
+.content .table-wrapper :is(code, a) {
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .admonition {

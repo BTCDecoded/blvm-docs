@@ -452,6 +452,122 @@ def load_series(chart_id: str) -> dict | None:
     return data
 
 
+TONE = {
+    "proved": TOTAL,
+    "disputed": REVIEW,
+    "open": MUTED,
+    "measured": REQUIRED,
+}
+
+
+def scoreboard_chart(chart: dict) -> str:
+    """Headline counts. Each figure keeps its own denominator."""
+    path = series_path(chart["id"])
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if data.get("status") not in ("measured", "carried"):
+        raise SystemExit(f"{path} scoreboard must be measured or carried")
+    groups = data.get("groups") or []
+    if not groups:
+        raise SystemExit(f"{path} scoreboard has no groups")
+    rows = max(len(group["items"]) for group in groups)
+    width = 760
+    top = 64
+    row_h = 58
+    height = top + rows * row_h + 36
+    gap = 16
+    inner = width - 48 - gap * (len(groups) - 1)
+    col_w = inner / len(groups)
+    label = "Carried" if data.get("status") == "carried" else "Measured"
+    footnote = f"{label} {data['measured_at']}. {data['source']}"
+    parts = svg_open(width, height, chart["title"], f"{chart['measure']} {footnote}")
+    parts.append(
+        f'<text x="24" y="32" fill="{INK}" font-family="system-ui,sans-serif" '
+        f'font-size="18" font-weight="650">{esc(chart["title"])}</text>'
+    )
+    for g, group in enumerate(groups):
+        x = 24 + g * (col_w + gap)
+        parts.append(
+            f'<text x="{x:.0f}" y="56" fill="{MUTED}" font-family="system-ui,sans-serif" '
+            f'font-size="13">{esc(group["name"])}</text>'
+        )
+        for i, item in enumerate(group["items"]):
+            y = top + 28 + i * row_h
+            parts.append(
+                f'<text x="{x:.0f}" y="{y}" fill="{INK}" font-family="system-ui,sans-serif" '
+                f'font-size="26" font-weight="650">{esc(item["value"])}</text>'
+            )
+            parts.append(
+                f'<text x="{x:.0f}" y="{y + 18}" fill="{MUTED}" font-family="system-ui,sans-serif" '
+                f'font-size="13">{esc(item["label"])}</text>'
+            )
+    parts.append(
+        f'<text x="24" y="{height - 16}" fill="{MUTED}" font-family="system-ui,sans-serif" '
+        f'font-size="12">{esc(footnote)}</text>'
+    )
+    parts.append("</svg>\n")
+    return "\n".join(parts)
+
+
+def hbar_chart(chart: dict) -> str:
+    """One bar per category. The count is printed, so a value of 1 stays readable."""
+    measured = load_series(chart["id"])
+    if measured is None:
+        return empty_panel(chart["title"], chart["measure"], chart["unit"])
+    if len(measured["series"]) != 1:
+        raise SystemExit(f"{chart['id']} hbar chart needs one series")
+    categories = [str(c) for c in measured["categories"]]
+    values = measured["series"][0]["values"]
+    tones = measured.get("tones") or ["open"] * len(categories)
+    if len(tones) != len(categories):
+        raise SystemExit(f"{chart['id']} tones must match categories")
+    for tone in tones:
+        if tone not in TONE:
+            raise SystemExit(f"{chart['id']} tone {tone} is not proved, disputed, open, or measured")
+    ceiling = max(values) or 1
+    row_h = 32
+    top = 56
+    width = 760
+    height = top + len(categories) * row_h + 44
+    label_x = 24
+    count_x = width - 24
+    bar_x = label_x + 16 + max(len(name) for name in categories) * 7
+    bar_w = count_x - bar_x - 48
+    label = "Carried" if measured.get("status") == "carried" else "Measured"
+    footnote = f"{label} {measured['measured_at']}. Source: {measured['source']}."
+    parts = svg_open(
+        width,
+        height,
+        chart["title"],
+        f"{chart['measure']} Unit: {measured['unit']}. {footnote}",
+    )
+    parts.append(
+        f'<text x="24" y="32" fill="{INK}" font-family="system-ui,sans-serif" '
+        f'font-size="18" font-weight="650">{esc(chart["title"])}</text>'
+    )
+    for i, (name, value, tone) in enumerate(zip(categories, values, tones)):
+        y = top + i * row_h
+        shown = str(int(value)) if float(value).is_integer() else f"{value:.2f}"
+        length = bar_w * (value / ceiling)
+        parts.append(
+            f'<text x="{label_x}" y="{y + 18}" fill="{INK}" '
+            f'font-family="system-ui,sans-serif" font-size="13">{esc(name)}</text>'
+        )
+        parts.append(
+            f'<rect x="{bar_x}" y="{y + 6}" width="{max(length, 2):.1f}" height="14" '
+            f'fill="{TONE[tone]}"/>'
+        )
+        parts.append(
+            f'<text x="{count_x}" y="{y + 18}" fill="{INK}" text-anchor="end" '
+            f'font-family="system-ui,sans-serif" font-size="13">{shown}</text>'
+        )
+    parts.append(
+        f'<text x="24" y="{height - 16}" fill="{MUTED}" font-family="system-ui,sans-serif" '
+        f'font-size="12">{esc(footnote)}</text>'
+    )
+    parts.append("</svg>\n")
+    return "\n".join(parts)
+
+
 def series_chart(chart: dict) -> str:
     measured = load_series(chart["id"])
     if measured is None:
@@ -775,6 +891,10 @@ def render_chart(chart: dict, layers: list[dict], tiers: list[dict]) -> str | No
         return mermaid_fragment(chart)
     if kind == "series":
         return series_chart(chart)
+    if kind == "hbar":
+        return hbar_chart(chart)
+    if kind == "scoreboard":
+        return scoreboard_chart(chart)
     if kind == "matrix":
         return matrix_chart(chart)
     if kind == "radar":
