@@ -10,8 +10,9 @@
   height: auto;
 }
 
-/* Tables fill the reading column and wrap. A cell floor of 9rem made every
-   table wider than the column, so the wrapper scrolled even when the words fit. */
+/* Tables fill the reading column. mdBook sets the root font-size to 62.5%,
+   so 1rem is 10px: padding has to be on that scale or the cells collapse.
+   Words break only when a single token is wider than its cell. */
 .content .table-wrapper {
   text-align: left;
   max-width: 100%;
@@ -31,14 +32,62 @@
 .content .table-wrapper td {
   text-align: left;
   vertical-align: top;
-  hyphens: auto;
-  overflow-wrap: anywhere;
-  padding: 0.4rem 0.65rem;
+  line-height: 1.45;
+  overflow-wrap: break-word;
+  word-break: normal;
+  padding: 1rem 1.2rem;
 }
 
 .content table :is(code, a),
 .content .table-wrapper :is(code, a) {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Assurance locks: one check per row, full reading width. */
+.locks {
+  margin: 1.2rem 0 2.4rem;
+  border: 1px solid var(--table-border-color);
+  border-radius: 4px;
+}
+.locks section {
+  padding: 1.4rem 1.8rem 1.6rem;
+  border-bottom: 1px solid var(--table-border-color);
+}
+.locks section:last-child {
+  border-bottom: 0;
+}
+.locks section:nth-child(2n) {
+  background: var(--table-alternate-bg);
+}
+.locks .lock-name {
+  margin: 0;
+  font-weight: 700;
+}
+.locks .lock-name + p,
+.locks .lock-where {
+  margin: 0.8rem 0 0;
+  line-height: 1.45;
+}
+.locks ul.lock-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+}
+.locks ul.lock-names li {
+  max-width: 100%;
+  margin: 0;
+}
+.locks ul.lock-names code {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  background: var(--quote-bg);
+  overflow-wrap: break-word;
   white-space: normal;
 }
 
@@ -77,6 +126,27 @@
 .admonition-title {
   font-weight: 600;
   margin-bottom: 0.35rem;
+}
+
+/* Same menu as thebitcoincommons.org. The chapter sidebar stays below it. */
+.commons-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--theme-hover);
+  font-size: 0.92rem;
+}
+
+.commons-nav a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.commons-nav a[aria-current="page"] {
+  color: var(--links);
 }
 
 /* Charts are drawn in the navy theme. Do not mat them in white. */

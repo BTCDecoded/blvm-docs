@@ -20,47 +20,137 @@ Counted 2026-11-18 from `#[test]` and `#[tokio::test]`. The property tests inclu
 
 ## Specification
 
-| Check | A pass locks | List |
-|-------|----------------|------|
-| Orange Paper | The sentence is the rule the other rows refer to | [sentence-inventory.tsv](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv): 275 sentences |
+<div class="locks">
+<section>
+<p class="lock-name">Orange Paper</p>
+<p>The sentence is the rule the other rows refer to.</p>
+<p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv">sentence-inventory.tsv</a>: 275 sentences.</p>
+</section>
+</div>
 
 ## Formal verification of the Rust
 
-| Check | A pass locks | List |
-|-------|----------------|------|
-| `#[spec_locked]` | The function carries an Orange Paper contract | `cargo spec-lock coverage --format json`, field `by_section`. Section map: [SPEC_LOCK_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md). The consensus count with witness fixtures is 281 |
-| `check-drift` | Those contracts still parse against the spec | The drift report from the command in [Formal verification](formal-verification.md) |
-| Spec lock, Z3 | Z3 discharged the contract. A **Passed** row is formal verification of that function | `cargo spec-lock verify` JSON, one row per function |
-| Body proofs | The proof is tied to the function body | 13 functions, named in [VERIFICATION.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md): `sigop_count_push_opcode`, `is_pay_to_script_hash`, `validate_supply_limit`, `is_witness_empty`, `is_witness_version_opcode`, `validate_taproot_script`, `validate_segwit_witness_structure`, `tx_has_nonempty_input_witness`, `script_bool_bytes`, `is_version_zero_witness_program`, `validate_taproot_script_path_with_leaf_version`, `locktime_types_match`, `tx_requires_witness_script_flags` |
-| Mutation gate | A semantic edit makes Z3 report that the obligation no longer holds | 93 functions in that same guide. The tool's list is 34 of 34 in [MUTATION_COVERAGE.md](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md) |
+<div class="locks">
+<section>
+<p class="lock-name"><code>#[spec_locked]</code></p>
+<p>The function carries an Orange Paper contract.</p>
+<p class="lock-where"><code>cargo spec-lock coverage --format json</code>, field <code>by_section</code>. Section map: <a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/SPEC_LOCK_COVERAGE.md">SPEC_LOCK_COVERAGE.md</a>. The consensus count with witness fixtures is 281.</p>
+</section>
+<section>
+<p class="lock-name"><code>check-drift</code></p>
+<p>Those contracts still parse against the spec.</p>
+<p class="lock-where">The drift report from the command in <a href="formal-verification.html">Formal verification</a>.</p>
+</section>
+<section>
+<p class="lock-name">Spec lock, Z3</p>
+<p>Z3 discharged the contract. A <strong>Passed</strong> row is formal verification of that function.</p>
+<p class="lock-where"><code>cargo spec-lock verify</code> JSON, one row per function.</p>
+</section>
+<section>
+<p class="lock-name">Body proofs</p>
+<p>The proof is tied to the function body. Thirteen functions, named in <a href="https://github.com/BTCDecoded/blvm-consensus/blob/main/docs/VERIFICATION.md">VERIFICATION.md</a>.</p>
+<ul class="lock-names">
+<li><code>sigop_count_push_opcode</code></li>
+<li><code>is_pay_to_script_hash</code></li>
+<li><code>validate_supply_limit</code></li>
+<li><code>is_witness_empty</code></li>
+<li><code>is_witness_version_opcode</code></li>
+<li><code>validate_taproot_script</code></li>
+<li><code>validate_segwit_witness_structure</code></li>
+<li><code>tx_has_nonempty_input_witness</code></li>
+<li><code>script_bool_bytes</code></li>
+<li><code>is_version_zero_witness_program</code></li>
+<li><code>validate_taproot_script_path_with_leaf_version</code></li>
+<li><code>locktime_types_match</code></li>
+<li><code>tx_requires_witness_script_flags</code></li>
+</ul>
+</section>
+<section>
+<p class="lock-name">Mutation gate</p>
+<p>A semantic edit makes Z3 report that the obligation no longer holds.</p>
+<p class="lock-where">93 functions in that same guide. The tool's list is 34 of 34 in <a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/MUTATION_COVERAGE.md">MUTATION_COVERAGE.md</a>.</p>
+</section>
+</div>
 
 ## Formal verification of the spec model
 
-| Check | A pass locks | List |
-|-------|----------------|------|
-| Lean | Sixteen sentences are theorems of the model in `blvm-spec/lean/`. The subsidy theorem (6.1.2) is proved in Lean for every natural number, and in Rust for the heights the tool checks | [sentence-inventory.tsv](https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv) |
+<div class="locks">
+<section>
+<p class="lock-name">Lean</p>
+<p>Sixteen sentences are theorems of the model in <code>blvm-spec/lean/</code>. The subsidy theorem (6.1.2) is proved in Lean for every natural number, and in Rust for the heights the tool checks.</p>
+<p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-spec-lock/blob/main/docs/sentence-inventory.tsv">sentence-inventory.tsv</a>.</p>
+</section>
+</div>
 
 ## Tests in the crate
 
-| Check | A pass locks | List |
-|-------|----------------|------|
-| Unit tests | The asserted case holds | `cargo test` in `blvm-consensus` |
-| Property tests | The invariant holds on the generated inputs | [property-based testing](../development/property-based-testing.md), `tests/consensus_property_tests.rs` |
-| Fuzz | The harness accepts the corpus and the generated inputs it has run | `[[bin]]` names in [blvm-consensus/fuzz/Cargo.toml](https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/Cargo.toml): transaction and block validation, script, proof of work, subsidy, serialization, sighash, ECDSA and Schnorr, locktime, sigops, witness, taproot, BIP 34, 54, 66, 90, 113, 119, and 147, plus `offchain_class` |
-| MIRI | The selected tests run without undefined behavior | [Testing](../development/testing.md#miri-integration) |
-| Internal differential fuzz | A serialize/deserialize round-trip inside this crate agrees with itself | `differential_fuzzing` in the same `fuzz/Cargo.toml` |
+<div class="locks">
+<section>
+<p class="lock-name">Unit tests</p>
+<p>The asserted case holds.</p>
+<p class="lock-where"><code>cargo test</code> in <code>blvm-consensus</code>.</p>
+</section>
+<section>
+<p class="lock-name">Property tests</p>
+<p>The invariant holds on the generated inputs.</p>
+<p class="lock-where"><a href="../development/property-based-testing.html">Property-based testing</a>, <code>tests/consensus_property_tests.rs</code>.</p>
+</section>
+<section>
+<p class="lock-name">Fuzz</p>
+<p>The harness accepts the corpus and the generated inputs it has run.</p>
+<p class="lock-where"><code>[[bin]]</code> names in <a href="https://github.com/BTCDecoded/blvm-consensus/blob/main/fuzz/Cargo.toml">blvm-consensus/fuzz/Cargo.toml</a>: transaction and block validation, script, proof of work, subsidy, serialization, sighash, ECDSA and Schnorr, locktime, sigops, witness, taproot, BIP 34, 54, 66, 90, 113, 119, and 147, plus <code>offchain_class</code>.</p>
+</section>
+<section>
+<p class="lock-name">MIRI</p>
+<p>The selected tests run without undefined behavior.</p>
+<p class="lock-where"><a href="../development/testing.html#miri-integration">Testing</a>.</p>
+</section>
+<section>
+<p class="lock-name">Internal differential fuzz</p>
+<p>A serialize/deserialize round-trip inside this crate agrees with itself.</p>
+<p class="lock-where"><code>differential_fuzzing</code> in the same <code>fuzz/Cargo.toml</code>.</p>
+</section>
+</div>
 
 ## Tests against Bitcoin Core
 
-| Check | A pass locks | List |
-|-------|----------------|------|
-| Core transaction vectors | BLVM accepts `tx_valid.json` and rejects `tx_invalid.json` | [core_test_vectors/README.md](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/core_test_vectors/README.md), run from `transaction_tests.rs` |
-| Activation-height scripts | The script verdict matches `libbitcoinconsensus` at the height before, on, and after each activation | [height_script_differential.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/height_script_differential.rs) |
-| Per-input script bench | The script verdict matches `libbitcoinconsensus` when the prevout is known | `blvm-bench` `script_validation.rs` |
-| Regtest BIP comparison | Accept and reject match a Core node over RPC for BIP30, BIP34, BIP90, and a valid block | [Differential testing](../development/differential-testing.md), `blvm-bench` `tests/integration.rs` |
-| Historical replay | BLVM's result matches Core on the mainnet blocks in the chosen height range | `test_historical_blocks_differential` |
-| Full-chain phase 1 | BLVM accepts every non-coinbase script on the canonical mainnet chain Core already accepted | [FULL_CHAIN_DIFFERENTIAL.md](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md), `sort_merge_test` step 6 |
-| Full-chain phase 2 | `connect_block` matches `libbitcoinkernel` `process_block` on block connection | The same note, `block_kernel_diff` |
+<div class="locks">
+<section>
+<p class="lock-name">Core transaction vectors</p>
+<p>BLVM accepts <code>tx_valid.json</code> and rejects <code>tx_invalid.json</code>.</p>
+<p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/core_test_vectors/README.md">core_test_vectors/README.md</a>, run from <code>transaction_tests.rs</code>.</p>
+</section>
+<section>
+<p class="lock-name">Activation-height scripts</p>
+<p>The script verdict matches <code>libbitcoinconsensus</code> at the height before, on, and after each activation.</p>
+<p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/height_script_differential.rs">height_script_differential.rs</a>.</p>
+</section>
+<section>
+<p class="lock-name">Per-input script bench</p>
+<p>The script verdict matches <code>libbitcoinconsensus</code> when the prevout is known.</p>
+<p class="lock-where"><code>blvm-bench</code> <code>script_validation.rs</code>.</p>
+</section>
+<section>
+<p class="lock-name">Regtest BIP comparison</p>
+<p>Accept and reject match a Core node over RPC for BIP30, BIP34, BIP90, and a valid block.</p>
+<p class="lock-where"><a href="../development/differential-testing.html">Differential testing</a>, <code>blvm-bench</code> <code>tests/integration.rs</code>.</p>
+</section>
+<section>
+<p class="lock-name">Historical replay</p>
+<p>BLVM's result matches Core on the mainnet blocks in the chosen height range.</p>
+<p class="lock-where"><code>test_historical_blocks_differential</code>.</p>
+</section>
+<section>
+<p class="lock-name">Full-chain phase 1</p>
+<p>BLVM accepts every non-coinbase script on the canonical mainnet chain Core already accepted.</p>
+<p class="lock-where"><a href="https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md">FULL_CHAIN_DIFFERENTIAL.md</a>, <code>sort_merge_test</code> step 6.</p>
+</section>
+<section>
+<p class="lock-name">Full-chain phase 2</p>
+<p><code>connect_block</code> matches <code>libbitcoinkernel</code> <code>process_block</code> on block connection.</p>
+<p class="lock-where">The same note, <code>block_kernel_diff</code>.</p>
+</section>
+</div>
 
 Phase 1 is the script comparison. Phase 2 is the block-connection comparison. The records are on the [differential testing](../development/differential-testing.md) page.
 
