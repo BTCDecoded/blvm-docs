@@ -201,15 +201,6 @@ All configuration keys follow a naming convention:
 
 See the governance repo `config/` tree for the live key set.
 
-## Benefits
-
-1. **YAML as Source of Truth**: Human-readable, version-controlled defaults
-2. **Governance Control**: Database enables governance-approved changes without YAML edits
-3. **Type Safety**: Type-safe accessors prevent configuration errors
-4. **Performance**: Caching reduces database queries
-5. **Flexibility**: Fallback chain ensures system always has valid configuration
-6. **Audit Trail**: Complete history of all configuration changes
-
 ## Source
 
 - [config/loader.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/config/loader.rs)

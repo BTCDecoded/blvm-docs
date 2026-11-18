@@ -146,24 +146,6 @@ The `PackageRelayHandler` processes incoming package messages:
 `PackageValidator` in `blvm-node/src/network/package_relay.rs` uses the three limits above. There is no `[network.package_relay]` table.
 
 
-## Benefits
-
-1. **Efficient Fee-Bumping**: Better fee rate calculation for packages
-2. **Reduced Orphans**: Reduces orphan transactions in mempool
-3. **Atomic Validation**: Package validated as unit
-4. **DoS Resistance**: Size and weight limits prevent abuse
-5. **CPFP Support**: Enables child-pays-for-parent scenarios
-
-## Components
-
-The Package Relay system includes:
-- Package structure and validation
-- Package ID calculation
-- Fee and weight calculation
-- Ordering validation
-- Package manager
-- Network message handling
-
 ## Source
 
 - [package_relay.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/package_relay.rs)

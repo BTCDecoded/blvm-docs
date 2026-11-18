@@ -1,6 +1,6 @@
 # Developer SDK Overview
 
-The developer SDK (`blvm-sdk`) provides governance infrastructure and a composition framework for Bitcoin. It includes reusable governance primitives and a composition framework for building alternative Bitcoin implementations.
+`blvm-sdk` is the crate you use to write a node module, and to sign a governance message.
 
 ## Architecture Position
 
@@ -12,7 +12,7 @@ The developer SDK (`blvm-sdk`) provides governance infrastructure and a composit
 3. blvm-protocol (Bitcoin abstraction)
 4. blvm-node (full node implementation)
 5. blvm-sdk (governance + composition) ← THIS LAYER
-6. blvm-commons (governance enforcement)
+6. blvm-commons (governance tools; enforcement is off)
 ```
 
 ## Core Components
@@ -51,18 +51,7 @@ Command-line tools for governance operations:
 - **`blvm-aggregate-signatures`**: Aggregate multiple signatures
 
 
-### Composition Framework
-
-Declarative node composition from modules:
-
-- **Module Registry**: Discover and manage available modules
-- **Lifecycle Management**: Load, unload, reload modules at runtime
-- **Dependency Resolution**: Automatic module dependency handling
-
-
-## Key Features
-
-### Governance Primitives
+## Signing a governance message
 
 ```rust
 use blvm_sdk::governance::{

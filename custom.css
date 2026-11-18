@@ -148,6 +148,11 @@
   color: var(--links);
 }
 
+/* The search field stays on the page. mdBook starts it hidden behind the icon. */
+#search-wrapper.hidden {
+  display: block !important;
+}
+
 /* Charts are drawn in the navy theme. Do not mat them in white. */
 .book-content img {
     background: transparent;

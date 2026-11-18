@@ -173,15 +173,6 @@ The `NetworkManager` supports multiple transports:
 - Automatic transport fallback
 
 
-## Benefits
-
-1. **Backward Compatibility**: TCP transport maintains Bitcoin P2P compatibility
-2. **Modern Protocols**: QUIC support for improved performance
-3. **Flexibility**: Runtime transport selection
-4. **Unified Interface**: Single API for all transports
-5. **NAT Traversal**: Iroh transport enables NAT traversal
-6. **Extensible**: Easy to add new transport types
-
 ## Usage
 
 ### Configuration

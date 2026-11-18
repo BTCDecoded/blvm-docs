@@ -234,7 +234,7 @@ export BLVM_ASSUME_VALID_HEIGHT=912683
 
 There is no hash environment variable. See [configuration-reference](../reference/configuration-reference.md#block_validationassume_valid_height).
 
-Script checks skip below that height only when the hash is set and chainwork meets the minimum. Set **`assume_valid_height = 0`** for full script checks.
+Script checks skip below that height only when the hash is set, the block is on that pin's chain, chainwork meets the minimum, and the pin is more than two weeks of proof-equivalent time behind the best header. `local` and `minimal-hardened` do not receive the seed. Set **`assume_valid_height = 0`** for full script checks.
 
 ## Parallel Transaction Validation
 

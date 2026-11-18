@@ -153,26 +153,6 @@ Network-wide protection against malicious peers:
 `ConsensusConfig` in `blvm-protocol/src/utxo_commitments/peer_consensus.rs` defaults to 5 minimum peers, 10 target peers, a threshold of 0.8, 2 peers per ASN, and a safety margin of 2016 blocks.
 
 
-## Benefits
-
-1. **No Single Point of Trust**: No need to trust any single peer
-2. **Diversity**: Diverse peer set reduces attack surface
-3. **Consensus**: Majority agreement ensures correctness
-4. **Network Protection**: Ban list sharing protects entire network
-5. **Efficiency**: Filtered blocks reduce bandwidth
-
-## Components
-
-The peer consensus protocol includes:
-- N-of-M consensus model
-- Diverse peer discovery
-- Consensus finding algorithm
-- Checkpoint height determination
-- Ban list sharing
-- Filtered block protocol
-- Network-wide malicious peer protection
-
-
 ## Source
 
 - [peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs)
@@ -180,7 +160,6 @@ The peer consensus protocol includes:
 - [ban_list_merging.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ban_list_merging.rs)
 - [protocol.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/protocol.rs)
 - [security policy](https://github.com/BTCDecoded/blvm-node/blob/main/SECURITY.md)
-- [blvm-protocol/src/utxo_commitments/peer_consensus.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/peer_consensus.rs), [blvm-node/src/network/ban_list_merging.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/ban_list_merging.rs), [blvm-node/src/network/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/network/mod.rs) (blvm-node/src/network/ban_list_merging.rsblvm-node/src/network/mod.rs`)
 ## See Also
 
 - [Node overview](overview.md)

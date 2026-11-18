@@ -1,6 +1,6 @@
 # Configuration reference
 
-`NodeConfig` is the node file. The `blvm` binary merges CLI, then the environment variables it reads, then this file, then the built-in default. An omitted table stays at that default. A present table fills every key in the table. Unknown keys are ignored.
+`NodeConfig` is the node file. The `blvm` binary merges CLI, then the environment variables it reads, then this file, then the built-in default. An omitted table stays at that default. A file with no `profile` ignores an unknown key. `profile = "local"` and `profile = "minimal-hardened"` reject an unknown top-level key. Any other known profile name is stored and does not change settings.
 
 `protocol_version` accepts `mainnet`, `testnet`, `testnet4`, `signet`, and `regtest`. `BitcoinV1` and `Testnet3` are aliases. The binary writes the five names above.
 
@@ -20,7 +20,9 @@ There is no `[payment]` table on `NodeConfig`. `blvm-payment` reads its own modu
 
 | Key | Meaning |
 |---|---|
+| `listen` | Omitted stays true. `false` skips the P2P binds. Core `listen=0` converts to this. |
 | `listen_addr` | P2P bind. Absent uses the network default port. |
+| `profile` | `local` or `minimal-hardened`. |
 | `rpc_addr` | RPC bind. Absent uses the network default. CLI and `BLVM_RPC_ADDR` win. |
 | `max_peers` | Maximum outbound peers. |
 | `protocol_version` | Chain name. |
@@ -31,7 +33,9 @@ There is no `[payment]` table on `NodeConfig`. `blvm-payment` reads its own modu
 | `persistent_peers` | Socket addresses to dial on start. |
 | `assumeutxo_blockhash` | Block hash of an AssumeUTXO snapshot. |
 
-`[block_validation]` holds `assume_valid_height` and `assume_valid_hash`. A 64-character block id is stored in internal byte order. Signatures skip only when the block height is below that height, chainwork meets the minimum, and the hash is set. The mainnet seed stores the checked hash at height `912683`. A seeded height with no hash, which is still the case for testnet and signet, does not skip. `BLVM_ASSUME_VALID_HEIGHT` overrides the height only.
+`profile = "local"` turns modules off, uses the built-in fee estimator, and saves the mempool to `mempool.dat`. The chain and the ports still come from the CLI. `profile = "minimal-hardened"` is the lock used by `blvm-minimal`: no inbound peers, loopback RPC with authentication required, modules off, assume-valid off, compact filters off, REST off, and Bitcoin TCP only.
+
+`[block_validation]` holds `assume_valid_height` and `assume_valid_hash`. A 64-character block id is stored in internal byte order. Script checks skip below that height only when the hash is set, the block is on that pin's chain, chainwork meets the minimum, and the pin is more than two weeks of proof-equivalent time behind the best header. A file that omits `profile` seeds mainnet height `912683` and the checked hash when this table is absent. `local` and `minimal-hardened` do not receive that seed. A seeded height with no hash, which is still the case for testnet and signet, does not skip. `BLVM_ASSUME_VALID_HEIGHT` overrides the height only.
 
 ## `[logging]`
 

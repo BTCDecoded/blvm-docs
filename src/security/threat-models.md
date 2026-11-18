@@ -2,29 +2,26 @@
 
 ## Overview
 
-Bitcoin Commons implements security boundaries and threat models to protect against various attack vectors. The system uses defense-in-depth principles with multiple layers of security.
-
-**Operator-facing maturity language** (required / recommended / unsupported for deployments) lives in **[Deployment posture](deployment-posture.md)**: use that page for bind addresses, RPC exposure, and QUIC × auth limitations.
+What the node is responsible for, and what it leaves alone. Bind addresses and RPC exposure are [Deployment posture](deployment-posture.md).
 
 ## Security Boundaries
 
 ### Node Security Boundaries
 
-**What blvm-node Handles**:
-- Consensus validation (delegated to blvm-consensus)
-- Network protocol (P2P message parsing, peer management)
-- Storage layer (block storage, UTXO set, chain state)
-- RPC interface (JSON-RPC 2.0 API)
-- Module orchestration (loading, IPC, lifecycle management)
-- Mempool management
-- Mining coordination
+The node does this:
 
-**What blvm-node NEVER Handles**:
-- Consensus rule validation (delegated to blvm-consensus)
-- Protocol variant selection (delegated to blvm-protocol)
-- Private key management (no wallet functionality)
-- Cryptographic key generation (delegated to blvm-sdk or modules)
-- Governance enforcement (delegated to blvm-commons)
+- Speaks the P2P protocol and tracks peers
+- Stores blocks, the UTXO set, and chain state
+- Serves JSON-RPC
+- Runs modules in other processes
+- Keeps a mempool and can build a block template
+
+The node does not do this:
+
+- Choose consensus rules. Those live in `blvm-consensus`, which the node calls.
+- Choose the chain's wire parameters. Those live in `blvm-protocol`.
+- Hold a wallet key, or generate one.
+- Enforce governance. The governance rules are published and enforcement is off.
 
 **Consensus validation and timing:** `blvm-consensus` **verifies** signatures and scripts on **public** block data only, variable-time verify paths are appropriate. It does **not** sign or hold private keys. Secret-path **constant-time** signing lives in **`blvm-secp256k1`** ([timing policy](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md)); governance signing in **blvm-sdk** delegates there. Spec-lock ([Formal Verification](../consensus/formal-verification.md)) checks consensus **conformance**, not side-channels.
 

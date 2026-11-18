@@ -179,24 +179,6 @@ All events are signed:
 - **Public Verification**: Anyone can verify signatures
 - **Tamper-Evident**: Cannot modify events without breaking signature
 
-## Benefits
-
-1. **Decentralization**: No single point of failure
-2. **Censorship Resistance**: Multiple relays, no central authority
-3. **Real-Time**: Immediate status updates
-4. **Public Verification**: Anyone can verify events
-5. **Transparency**: Complete public record of governance actions
-
-## Components
-
-The Nostr integration includes:
-- Multi-bot manager
-- Nostr client with multi-relay support
-- Event types (status, health, audit, actions)
-- Governance publisher
-- Status publisher
-- Zap tracker and voting processor
-
 ## Source
 
 - [bot_manager.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/nostr/bot_manager.rs)

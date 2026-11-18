@@ -67,6 +67,7 @@ Configuration is organized in logical sections (`storage`, `ibd`, `modules`, opt
 | `rpcuser` / `rpcpassword` | **`[rpc_auth].username`** / **`password`** (HTTP Basic; password auto-granted admin), or **`tokens`** / **`admin_tokens`** with **`Authorization: Bearer …`** |
 | `rpcbind` / `rpcport` | `rpc_addr`, or `--rpc-addr` / `BLVM_RPC_ADDR` |
 | `port` (P2P) | **`listen_addr`** (top-level TOML) or **`--listen-addr`** |
+| `listen=0` | `listen = false` (the node does not bind P2P) |
 | `addnode=` | **`persistent_peers`** or the **`addnode`** RPC after startup |
 
 To **draft** a `blvm.toml` from a Core config file, use **`blvm config convert-core <path/to/bitcoin.conf>`** (or the **`convert-bitcoin-core-config`** shell/Rust tools in the **`blvm-node`** repo). **Review and normalize** the output: remove legacy **`[network]`** wrappers and nested **`[transport_preference]`** blobs. **`[rpc_auth].username`** / **`password`** are valid for HTTP Basic (map from Core **`rpcuser`** / **`rpcpassword`**), or use **`tokens`** / **`admin_tokens`** for Bearer auth: see the [blvm-node Integration Guide: Migrating from bitcoin.conf](https://github.com/BTCDecoded/blvm-node/blob/main/docs/INTEGRATION_GUIDE.md#migrating-from-bitcoinconf). Set `rpc_addr` or `--rpc-addr`, and set `storage.data_dir` separately.

@@ -258,14 +258,6 @@ The release pipeline automatically:
 3. **Updates Cargo.toml** in dependent repos to use published versions
 4. **Builds final binary** using published crates (no compilation of dependencies)
 
-### Benefits
-
-- **Faster builds**: Final binary uses pre-built dependencies
-- **Better caching**: Cargo can cache published crates
-- **Version control**: Exact versions published and tracked
-- **Reproducibility**: Same versions available to all users
-- **Distribution**: Users can depend on published crates directly
-
 ### Crate Names
 
 Published crates use the same names as the repositories:

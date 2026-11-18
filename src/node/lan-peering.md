@@ -2,15 +2,7 @@
 
 ## Overview
 
-The LAN peering system automatically discovers and prioritizes local network (LAN) Bitcoin nodes for Initial Block Download (IBD), reducing sync time when a local node is available. Security is maintained through checkpoint validation and peer diversity requirements.
-
-## Benefits
-
-- **Lower latency**: LAN peers have much lower latency than remote internet peers
-- **Local throughput**: Local network capacity exceeds most residential uplinks
-- **Stable connectivity**: LAN peers are not subject to internet path failures
-- **Automatic Discovery**: Scans local network automatically during startup
-- **Secure by Default**: Internet checkpoint validation prevents eclipse attacks
+The node looks for other Bitcoin nodes on the local network and prefers them during initial download. Internet checkpoints are the control. The caps and the intervals are on this page.
 
 ## How It Works
 

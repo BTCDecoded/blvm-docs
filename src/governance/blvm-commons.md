@@ -4,14 +4,6 @@
 
 blvm-commons is the governance tooling crate for Bitcoin Commons. It contains GitHub, OpenTimestamps, and Nostr clients. Merge enforcement is off.
 
-## Key Features
-
-- **GitHub Integration**: App client for signature checks. `set_required_status_checks` sends `enforce_admins: false`. A failed branch-protection response is logged and returned as success.
-- **OpenTimestamps**: Calendar client for governance artifacts. Designed to anchor those artifacts to Bitcoin. Not a step in consensus CI today.
-- **Nostr Integration**: Relay client for governance messages
-- **Cross-Layer Validation**: Security-control checks in the crate
-- **CI/CD Workflows**: Reusable workflows for Bitcoin Commons repositories
-
 ## Components
 
 ### GitHub Integration

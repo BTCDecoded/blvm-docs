@@ -4,10 +4,7 @@
 
 ## Overview
 
-Spam filtering provides transaction-level filtering for bandwidth optimization and non-monetary transaction detection. The system filters spam transactions to achieve 40-60% bandwidth savings during ongoing sync while maintaining consensus correctness.
-
-
-Spam filtering is implemented in the protocol layer (blvm-protocol). It can be used independently of UTXO commitments; mempool and consensus config reference it where needed.
+These checks can keep a transaction out of the mempool. They do not change whether a block is valid. The switch is `reject_spam_in_mempool`. The patterns are below. The code is `blvm-protocol/src/spam_filter/mod.rs`.
 
 ## Detectors
 

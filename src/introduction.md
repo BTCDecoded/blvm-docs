@@ -1,6 +1,6 @@
 # Introduction
 
-BLVM (Bitcoin Low-Level Virtual Machine) implements Bitcoin consensus from the [Orange Paper](reference/orange-paper.md), provides protocol abstraction for multiple Bitcoin variants, a **reference** full node with P2P networking, a developer SDK, and cryptographic governance for transparent development.
+BLVM is a Bitcoin node. The rules are the [Orange Paper](reference/orange-paper.md). `blvm-consensus` implements them. `blvm-protocol` is the wire format for mainnet, testnet, testnet4, signet, and regtest. The program you run is `blvm`.
 
 ## Who is this for?
 
@@ -16,35 +16,21 @@ flowchart TD
 
 **Building a module or integrating with the SDK?** [Developer guide](getting-started/developer-guide.md) — [Building your first module](getting-started/first-module.md), then [Building modules](sdk/module-development.md).
 
-**Studying the spec or contributing to consensus?** The [Orange Paper](reference/orange-paper.md) is the normative spec. [Formal Verification](consensus/formal-verification.md) explains verification. Contributors: [Repository layout](development/repository-architecture.md), [Contributing](development/contributing.md).
+**Studying the spec or contributing to consensus?** Start with the [Orange Paper](reference/orange-paper.md) and [Formal verification](consensus/formal-verification.md). Contributors: [Repository layout](development/repository-architecture.md), [Contributing](development/contributing.md).
 
-## What is BLVM?
+## What is in this book
 
-BLVM is compiler-like infrastructure for Bitcoin implementations. The [Orange Paper](reference/orange-paper.md) is the mathematical specification (IR). **blvm-consensus** implements those rules; [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock) and tests check the code against the spec. See [compiler-like architecture](reference/glossary.md#compiler-like-architecture) in the glossary.
+The Orange Paper is the spec. This manual is what the code does and how to run the node. [Assurance](consensus/assurance.md) is the list of checks on the consensus code.
 
-**Stack:**
+- **[Orange Paper](reference/orange-paper.md)** is the spec.
+- **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)** checks the Rust against that spec. [Formal verification](consensus/formal-verification.md) says what a green run accepts.
+- **[blvm-consensus](consensus/overview.md)** is the consensus code.
+- **[blvm-protocol](protocol/overview.md)** is the wire format.
+- **[blvm-node](node/overview.md)** stores the chain, talks to peers, and serves RPC. Optional pieces are [modules](architecture/module-system.md).
+- **[blvm-sdk](sdk/overview.md)** is how you write a module.
+- **[Governance](governance/overview.md)** is the published review rules. Enforcement is off.
 
-- **[Orange Paper](reference/orange-paper.md)** – Mathematical specification (IR)
-- **[blvm-spec-lock](https://github.com/BTCDecoded/blvm-spec-lock)** – Links code to spec; validates implementation against the IR
-- **[blvm-consensus](consensus/overview.md)** – Consensus implementation with [formal verification](consensus/formal-verification.md)
-- **[blvm-protocol](protocol/overview.md)** – Protocol abstraction (mainnet, testnet, regtest)
-- **[blvm-node](node/overview.md)** – Full node (storage, networking, RPC, [modules](architecture/module-system.md))
-- **[blvm-sdk](sdk/overview.md)** – Developer toolkit and module composition
-- **[Governance](governance/overview.md)** – Cryptographic governance enforcement
-
-**Why "LVM"?** Like LLVM’s shared compiler infrastructure, BLVM provides shared infrastructure for Bitcoin implementations—the Orange Paper is the reference spec; node and consensus code is validated against it.
-
-## Documentation Structure
-
-Operator, module, and consensus paths are above. The rest of the book:
-
-- **Architecture** — system design, module system, events
-- **Layers** — consensus, protocol, and node, each with an overview and detail pages
-- **SDK reference** — [API reference](sdk/api-reference.md), [examples](sdk/examples.md)
-- **Governance** — [overview](governance/overview.md), model, configuration, procedures
-- **Reference** — specifications, [API index](reference/api-index.md), glossary
-
-Documentation is maintained in source repositories alongside code. This manual is the BLVM section of [docs.btcdecoded.org](https://docs.btcdecoded.org/blvm/).
+This manual is the BLVM section of [docs.btcdecoded.org](https://docs.btcdecoded.org/blvm/). The search box is at the top of every page.
 
 ## Getting Help
 

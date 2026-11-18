@@ -149,23 +149,6 @@ proofs_path = "./proofs"
 ```
 
 
-## Benefits
-
-1. **Immutability**: Proofs anchored to Bitcoin blockchain
-2. **Verifiability**: Anyone can verify proofs independently
-3. **Historical Record**: Complete timeline of governance state
-4. **Tamper-Evident**: Any modification breaks hash chain
-5. **Decentralized**: No single point of failure
-
-## Components
-
-The OpenTimestamps integration includes:
-- OTS client for calendar communication
-- Registry anchorer for monthly anchoring
-- Proof verification
-- Hash chain maintenance
-- Proof storage and publishing
-
 ## Source
 
 - [anchor.rs](https://github.com/BTCDecoded/blvm-commons/blob/main/src/ots/anchor.rs)

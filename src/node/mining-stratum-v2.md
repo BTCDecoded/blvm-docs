@@ -73,12 +73,6 @@ Miner TCP is the module `listen_addr`. The keys are [Stratum V2 module](../modul
 
 Integrate via the **`blvm-stratum-v2`** crate as a **node module** ([StratumV2Module](https://github.com/BTCDecoded/blvm-stratum-v2/blob/main/src/module.rs), [lib.rs](https://github.com/BTCDecoded/blvm-stratum-v2/blob/main/src/lib.rs)). The module calls node **`getblocktemplate`** / **`submitblock`** through NodeAPI: ensure the node RPC auth config grants **admin** to the operator or pool (same rules as [Mining integration](mining.md#mining-rpc-and-admin-auth)). Older snippets that imported `blvm_node::network::stratum_v2::StratumV2Server` are obsolete; use the module’s examples and the shared `[stratum_v2]` keys above (**miner TCP is bound by the module**, not by `blvm-node`).
 
-## Benefits
-
-1. **Bandwidth**: Stratum V2 binary framing vs Stratum V1 text
-2. **Modularity**: Server/pool logic and **miner `listen_addr`** live in **`blvm-stratum-v2`**; the node provides chain APIs, optional P2P Stratum TLV demux, and **`NodeAPI`** (including **`send_peer_transport_payload`** for peer-oriented bytes)
-3. **Optional merge mining**: Separate commercial module
-
 ## See also
 
 - [Mining integration](mining.md)

@@ -249,27 +249,6 @@ update_commitments_after_block(
 ```
 
 
-## Benefits
-
-1. **Fast sync**: Substantially less data than naïve full-block replay (see [Bandwidth savings](#bandwidth-savings))
-2. **Security**: N-of-M peer consensus prevents single peer attacks
-3. **Efficiency**: Incremental updates, no full set download
-4. **Flexibility**: Multiple sync modes and verification levels
-5. **Transport Agnostic**: Works with TCP or QUIC
-6. **Formal Verification**: blvm-spec-lock proofs ensure correctness
-
-## Components
-
-The UTXO Commitments system includes:
-- Sparse Merkle Tree with incremental updates
-- Peer consensus protocol (N-of-M verification)
-- Spam filtering
-- Commitment verification
-- Network integration (TCP and Iroh)
-- Fast sync protocol
-- blvm-spec-lock proofs
-
-
 ## Source
 
 - [mod.rs](https://github.com/BTCDecoded/blvm-protocol/blob/main/src/utxo_commitments/mod.rs)

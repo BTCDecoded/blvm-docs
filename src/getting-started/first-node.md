@@ -104,7 +104,7 @@ See [RPC API Reference](../node/rpc-api.md) for authentication and the full meth
 
 ## Defaults this binary ships
 
-A config file that omits `[modules]` enables `blvm-miniscript`, `blvm-zmq`, and `blvm-index`, each at `0.1.*`. A start with no config file loads the `local` profile, which turns modules off. The mainnet IBD example pins those three. `blvm-payment` is not in that set. Payment, vault, pool, and congestion methods return method-not-found until that module is loaded.
+A config file that omits `[modules]` enables `blvm-miniscript`, `blvm-zmq`, and `blvm-index`, each at `0.1.*`. A start with no config file loads the `local` profile: modules off, and no assume-valid seed. The mainnet IBD example is a file, so it still seeds height 912683. `blvm-payment` is not in the default set. Payment, vault, pool, and congestion methods return method-not-found until that module is loaded.
 
 `blvm-index` is script history. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port.
 
