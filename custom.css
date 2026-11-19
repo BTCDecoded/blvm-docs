@@ -5,9 +5,27 @@
 }
 
 .mermaid svg {
-  background: transparent !important;
+  background: #161923 !important;
   max-width: 100%;
   height: auto;
+}
+
+/* Mermaid puts HTML labels on a white chip. The theme text is light. */
+.mermaid svg .nodeLabel,
+.mermaid svg .nodeLabel p,
+.mermaid svg .nodeLabel span,
+.mermaid svg .edgeLabel,
+.mermaid svg .edgeLabel span,
+.mermaid svg .label,
+.mermaid svg foreignObject div,
+.mermaid svg foreignObject span {
+  color: #bcbdd0 !important;
+  background-color: transparent !important;
+}
+
+.mermaid svg .edgeLabel rect,
+.mermaid svg .labelBkg {
+  fill: #282d3f !important;
 }
 
 /* Tables fill the reading column. mdBook sets the root font-size to 62.5%,

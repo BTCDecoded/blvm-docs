@@ -15,32 +15,17 @@ The Datum module (`blvm-datum`) implements the DATUM Gateway mining protocol for
 
 The module integrates with both the node and the Stratum V2 module:
 
-```
-┌─────────────────┐
-│ blvm-node │
-│ (Core Node) │
-└────────┬────────┘
- │ NodeAPI
- │ (get_block_template, submit_block)
- │
- ┌────┴────┐
- │ │
- ▼ ▼
-┌─────────┐ ┌──────────────┐
-│ blvm- │ │ blvm-datum │
-│ stratum │ │ (Module) │
-│ v2 │ │ │
-│ │ │ ┌──────────┐ │
-│ ┌─────┐ │ │ │ DATUM │ │◄─── DATUM Pool (Ocean)
-│ │ SV2 │ │ │ │ Client │ │ (encrypts only if pool_public_key is set)
-│ │Server│ │ │ └──────────┘ │
-│ └─────┘ │ └──────────────┘
-│ │
-│ │ │
-│ ▼ │
-│ Mining │
-│Hardware │
-└─────────┘
+```mermaid
+flowchart TB
+  node["blvm-node\nget_block_template, submit_block"]
+  sv2["blvm-stratum-v2\nminer connections"]
+  datum["blvm-datum\nDATUM client"]
+  pool["DATUM pool\nencrypted when pool_public_key is set"]
+  hw["Mining hardware"]
+  node --> sv2
+  node --> datum
+  datum --> pool
+  sv2 --> hw
 ```
 
 **Key Points**:

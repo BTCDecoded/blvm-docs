@@ -8,13 +8,7 @@ Multiple network transport protocols (TCP for Bitcoin P2P compatibility and QUIC
 
 ## Architecture
 
-```
-NetworkManager
- └── Transport Trait (abstraction)
- ├── TcpTransport (Bitcoin P2P compatible)
- ├── QuinnTransport (direct QUIC)
- └── IrohTransport (QUIC with NAT traversal)
-```
+`NetworkManager` talks to one transport trait. The three implementations are TCP, Quinn, and Iroh. The comparison is the next table.
 
 ## Transport Types
 
