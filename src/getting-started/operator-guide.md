@@ -6,7 +6,7 @@ How-to hub for running a BLVM node. You do not need the Consensus, Protocol, or 
 
 **New to BLVM?** [Installation](installation.md) → [Quick Start](quick-start.md) (regtest, ~5 minutes) → this page for ongoing tasks.
 
-The `blvm` binary speaks Bitcoin Core JSON-RPC. Script history is `blvm-index`, which replaced `blvm-wallet-index`. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port. See [First Node Setup](first-node.md). Payment, vault, pool, and congestion methods are the separate `blvm-payment` process: `createpaymentrequest`, `createcovenantproof`, `getpaymentstate`, `listpayments`, `verifyonchainpayment`, `verifyonchainpaymentbytx`, `verifycovenantproof`, `createvault`, `unvault`, `withdrawfromvault`, `getvaultstate`, `createpool`, `joinpool`, `distributepool`, `getpoolstate`, `createbatch`, `addtobatch`, `getcongestion`, `getcongestionmetrics`, and `broadcastbatch`. The default node answers those names with method-not-found until that module is loaded. It is not in the default module set. Chain and mempool reads go through the node API. A `merchant_key` in the module `config.toml` signs a peer payment acknowledgement.
+The `blvm` binary speaks Bitcoin Core JSON-RPC. Script history is `blvm-index`. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port. See [First Node Setup](first-node.md). Payment, vault, pool, and congestion methods are the separate `blvm-payment` process: `createpaymentrequest`, `createcovenantproof`, `getpaymentstate`, `listpayments`, `verifyonchainpayment`, `verifyonchainpaymentbytx`, `verifycovenantproof`, `createvault`, `unvault`, `withdrawfromvault`, `getvaultstate`, `createpool`, `joinpool`, `distributepool`, `getpoolstate`, `createbatch`, `addtobatch`, `getcongestion`, `getcongestionmetrics`, and `broadcastbatch`. The default node answers those names with method-not-found until that module is loaded. It is not in the default module set. Chain and mempool reads go through the node API. A `merchant_key` in the module `config.toml` signs a peer payment acknowledgement.
 
 ## First sync and daily run
 
@@ -15,6 +15,7 @@ The `blvm` binary speaks Bitcoin Core JSON-RPC. Script history is `blvm-index`, 
 | Config, RPC verify, and mainnet IBD | [First Node Setup](first-node.md) ([mainnet IBD](first-node.md#mainnet-initial-sync)) |
 | Regtest local dev (5 min) | [Quick Start](quick-start.md) |
 | Start / stop / backup | [Node Operations](../node/operations.md) |
+| systemd, OpenRC, launchd | [Service manager](../node/operations.md#service-manager) |
 | Import Bitcoin Core datadir | [Operations: Core datadir](../node/operations.md#starting-from-a-bitcoin-core-datadir) |
 | Configuration file and env | [Node configuration](../node/configuration.md) |
 | All config keys (reference) | [Configuration Reference](../reference/configuration-reference.md) |
@@ -27,7 +28,7 @@ Mainnet first sync touches several docs, use this map instead of reading them in
 |------|--------|
 | First mainnet sync (config, RPC verify, checklist) | [First Node Setup: Mainnet IBD](first-node.md#mainnet-initial-sync) |
 | Parallel download, chunk tuning, assume-valid | [Performance: Parallel IBD](../node/performance.md#parallel-initial-block-download-ibd) |
-| Age-tiered UTXO store (on unless `BLVM_IBD_ENGINE=0`) | [IBD UTXO engine](../node/ibd-engine.md) |
+| Age-tiered UTXO store | [IBD UTXO engine](../node/ibd-engine.md) |
 | Bandwidth limits when **serving** peers during their IBD | [IBD bandwidth protection](../node/ibd-protection.md) |
 | Stuck, slow, or quiet sync | [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd) |
 | `[ibd]` keys and `BLVM_IBD_*` env vars | [Configuration Reference: IBD](../reference/configuration-reference.md#ibd-configuration) |

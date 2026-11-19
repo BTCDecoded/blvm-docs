@@ -2,6 +2,16 @@
 
 Optional node features (Lightning, merge mining, privacy relays, and similar) run in separate processes with IPC. See [Module system (design)](../architecture/module-system.md).
 
+| You are doing | Read |
+|---|---|
+| Laying out the crate and `module.toml` | [Module structure](#module-structure) |
+| Writing the module | [SDK declarative style](#sdk-declarative-style-recommended) |
+| Exposing commands on the `blvm` binary | [Module CLI](#module-cli-under-the-blvm-binary) |
+| Talking to the node without the macros | [Integration API](#basic-module-structure-integration-api) |
+| Timers or events | [Module timers](#module-timers), [events](#subscribing-to-events) |
+| Shipping a WASM guest | [WASM deployment](#wasm-deployment) |
+| Permissions and the sandbox | [Security model](#security-model) |
+
 ### Core Principles
 
 1. **Process Isolation**: Each module runs in a separate process with isolated memory
@@ -12,7 +22,7 @@ Optional node features (Lightning, merge mining, privacy relays, and similar) ru
 
 ### Communication
 
-Modules communicate with the node via **Inter-Process Communication (IPC)** using Unix domain sockets. Protocol uses length-delimited binary messages (bincode serialization) with message types: Requests, Responses, Events. Connection is persistent for request/response pattern; events use pub/sub pattern for real-time notifications.
+Modules talk to the node over the [Module IPC protocol](../architecture/module-ipc-protocol.md): length-delimited bincode on a Unix socket. That page is the wire format.
 
 ## Module Structure
 

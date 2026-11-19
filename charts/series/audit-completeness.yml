@@ -1,0 +1,13 @@
+status: measured
+measured_at: "2026-11-13"
+source: "Governance wording 2026-11-13. Designed means written, not running."
+categories: [Bitcoin Commons]
+rows:
+  - name: Release attestation
+    values: [designed]
+  - name: Signature record
+    values: [designed]
+  - name: Audit log
+    values: [designed]
+  - name: Live enforcement
+    values: [absent]

@@ -1,6 +1,6 @@
 # Node Implementation Overview
 
-The node implementation (`blvm-node`) is a minimal **reference** Bitcoin node: it adds only non-consensus infrastructure on top of the consensus and protocol layers. Treat mainnet and high-value deployments like any consensus-adjacent system, hardening, monitoring, and review are required. Consensus logic comes from [blvm-consensus](../consensus/overview.md), and protocol abstraction from [blvm-protocol](../protocol/overview.md).
+`blvm-node` stores the chain, talks to peers, and serves RPC. Consensus rules come from [blvm-consensus](../consensus/overview.md). The wire format comes from [blvm-protocol](../protocol/overview.md). Read [Deployment posture](../security/deployment-posture.md) before exposing RPC.
 
 **Release mainnet IBD:** [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync).
 
@@ -59,7 +59,7 @@ graph TB
 - UTXO set management
 - Chain state tracking
 - Transaction indexing
-- Pruning support: keeps a recent window of block bodies; initial block download still fetches and validates the full chain (about 690–740 GB as of mid-2026, per [Full Cost of Running a Bitcoin Node](https://secsov.com/articles/full-cost-of-running-a-bitcoin-node/), v2.4, July 2026)
+- Pruning support: keeps a recent window of block bodies; initial block download still fetches and validates the full chain ([pruning](../reference/configuration-reference.md#storage))
 
 
 ### RPC Server
@@ -122,7 +122,7 @@ graph TB
 - [UTXO commitments](utxo-commitments.md) (compile-time feature in release binaries; enable at runtime when used)
 - [Peer consensus protocol](peer-consensus.md), [spam filtering](spam-filtering.md) (bandwidth optimization during sync)
 - [LAN peering system](lan-peering.md) (automatic local network discovery for faster IBD when LAN peers exist)
-- [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with the [IBD UTXO engine](ibd-engine.md) on unless `BLVM_IBD_ENGINE=0`
+- [Parallel IBD](performance.md#parallel-initial-block-download-ibd) with the [IBD UTXO engine](ibd-engine.md)
 
 ### Storage Features
 - [Multiple database backends](storage-backends.md) with abstraction layer (**`auto` → heed3 (LMDB)** in typical release builds; optional RocksDB, redb, sled behind opt-in features)

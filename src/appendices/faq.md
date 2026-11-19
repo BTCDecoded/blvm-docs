@@ -16,7 +16,9 @@ No. BLVM does not fork Bitcoin’s chain or consensus rules. It implements the s
 
 ### Is the system production ready?
 
-BLVM publishes a full node stack, crates, tests, and formal verification tooling, but **readiness depends on your deployment**: apply your own security review, RPC hardening, and monitoring. Governance is in Phase 1. Rules and tooling exist. Enforcement is off and keys are test keys. Activation begins as BLVM moves from alpha to beta, on no fixed timeline, with community validation and adoption as criteria. See [Deployment posture](../security/deployment-posture.md) and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md). “Artifacts exist” is accurate; “production mainnet node with live governance” is not yet.
+BLVM publishes a full node stack, crates, tests, and formal verification tooling. Readiness of a deployment is your own security review, RPC hardening, and monitoring. See [Deployment posture](../security/deployment-posture.md).
+
+Governance is in Phase 1. The rules and the tooling exist. Enforcement is off and the keys are test keys. See [Governance overview](../governance/overview.md) and [System Status](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md).
 
 ### Where is the code?
 

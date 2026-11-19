@@ -11,4 +11,6 @@ if [ -f llms.txt ]; then
   cp llms.txt book/llms.txt
 fi
 python3 "$ROOT/scripts/postprocess-mermaid.py" "$ROOT/book"
+mkdir -p "$ROOT/book/charts/carried"
+cp -a "$ROOT/charts/carried/"*.png "$ROOT/book/charts/carried/"
 "$ROOT/scripts/assemble-docs-site.sh"

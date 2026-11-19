@@ -2,29 +2,26 @@
 
 ## Overview
 
-Bitcoin Commons implements security boundaries and threat models to protect against various attack vectors. The system uses defense-in-depth principles with multiple layers of security.
-
-**Operator-facing maturity language** (required / recommended / unsupported for deployments) lives in **[Deployment posture](deployment-posture.md)**: use that page for bind addresses, RPC exposure, and QUIC × auth limitations.
+What the node is responsible for, and what it leaves alone. Bind addresses and RPC exposure are [Deployment posture](deployment-posture.md).
 
 ## Security Boundaries
 
 ### Node Security Boundaries
 
-**What blvm-node Handles**:
-- Consensus validation (delegated to blvm-consensus)
-- Network protocol (P2P message parsing, peer management)
-- Storage layer (block storage, UTXO set, chain state)
-- RPC interface (JSON-RPC 2.0 API)
-- Module orchestration (loading, IPC, lifecycle management)
-- Mempool management
-- Mining coordination
+The node does this:
 
-**What blvm-node NEVER Handles**:
-- Consensus rule validation (delegated to blvm-consensus)
-- Protocol variant selection (delegated to blvm-protocol)
-- Private key management (no wallet functionality)
-- Cryptographic key generation (delegated to blvm-sdk or modules)
-- Governance enforcement (delegated to blvm-commons)
+- Speaks the P2P protocol and tracks peers
+- Stores blocks, the UTXO set, and chain state
+- Serves JSON-RPC
+- Runs modules in other processes
+- Keeps a mempool and can build a block template
+
+The node does not do this:
+
+- Choose consensus rules. Those live in `blvm-consensus`, which the node calls.
+- Choose the chain's wire parameters. Those live in `blvm-protocol`.
+- Hold a wallet key, or generate one.
+- Enforce governance. The governance rules are published and enforcement is off.
 
 **Consensus validation and timing:** `blvm-consensus` **verifies** signatures and scripts on **public** block data only, variable-time verify paths are appropriate. It does **not** sign or hold private keys. Secret-path **constant-time** signing lives in **`blvm-secp256k1`** ([timing policy](https://github.com/BTCDecoded/blvm-secp256k1/blob/main/TIMING.md)); governance signing in **blvm-sdk** delegates there. Spec-lock ([Formal Verification](../consensus/formal-verification.md)) checks consensus **conformance**, not side-channels.
 
@@ -293,48 +290,7 @@ Storage layer security:
 
 ## LAN Peering Security
 
-The LAN peering system includes multiple security mechanisms to prevent eclipse attacks while allowing fast local network sync:
-
-### Security Limits
-
-- **25% LAN Peer Cap**: Maximum percentage of peers that can be LAN peers (hard limit)
-- **75% Internet Peer Minimum**: Minimum percentage of peers that must be internet peers
-- **Minimum 3 Internet Peers**: Required for checkpoint validation consensus
-- **Maximum 1 Discovered LAN Peer**: Limits automatically discovered peers (whitelisted are separate)
-
-
-### Checkpoint Validation
-
-Internet checkpoints are the **primary security mechanism** for LAN peering:
-
-- **Block Checkpoints**: Every 1000 blocks, validate block hash against internet peers
-- **Header Checkpoints**: Every 10000 blocks, validate header hash against internet peers
-- **Consensus Requirement**: Requires agreement from at least 3 internet peers
-- **Failure Response**: Checkpoint failure results in permanent ban (1 year duration)
-
-
-### Progressive Trust System
-
-LAN peers start with limited trust and earn higher priority over time:
-
-- **Initial Trust**: 1.5x multiplier for newly discovered peers
-- **Level 2 Trust**: 2.0x multiplier after 1000 valid blocks
-- **Maximum Trust**: 3.0x multiplier after 10000 blocks AND 1 hour connection
-- **Demotion**: After 3 failures, peer loses LAN status
-- **Banning**: Checkpoint failure results in permanent ban
-
-
-### Eclipse Attack Prevention
-
-The security model ensures eclipse attack prevention:
-
-1. **Internet Peer Majority**: 75% minimum ensures connection to honest network
-2. **Checkpoint Validation**: Regular validation prevents chain divergence
-3. **LAN Address Privacy**: LAN addresses never advertised to external peers
-4. **Failure Handling**: Multiple failures result in demotion or ban
-
-
-For complete documentation, see [LAN Peering System](../node/lan-peering.md).
+LAN peers are capped, and internet checkpoints are the control. The caps, the checkpoint intervals, and the trust multipliers are [LAN peering](../node/lan-peering.md).
 
 ## Source
 

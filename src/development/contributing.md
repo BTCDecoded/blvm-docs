@@ -265,5 +265,4 @@ For documentation-specific contributions (improving docs, fixing typos, adding e
 - [CI/CD Workflows](ci-cd-workflows.md) - What happens when you push code
 - [Testing Infrastructure](testing.md) - Testing guides
 - [Release Process](release-process.md) - How releases are created
-- [Contributing to Documentation](../appendices/contributing-docs.md) - Documentation contribution guide
 

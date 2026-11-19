@@ -6,12 +6,12 @@ BLVM node provides both a JSON-RPC 2.0 interface (conventional Bitcoin RPC surfa
 
 ## API Overview
 
-- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is **network-aware**: mainnet **`127.0.0.1:8332`**, testnet **`127.0.0.1:18332`**, regtest **`127.0.0.1:18443`** (Core-aligned).
+- **JSON-RPC 2.0**: Methods aligned with widely documented Bitcoin node RPC docs. The **`blvm`** binary binds JSON-RPC to **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. When omitted, RPC is loopback on that network's port. The ports are in [Protocol variants](../protocol/overview.md#protocol-variants).
 - **REST API** (optional): Requires **`rest-api`** feature and **`[rest_api].enabled = true`** in `blvm.toml`. Binds a separate port (default **8080** when RPC is **8332**, **18080** when RPC is **18332**, otherwise RPC port **+ 10000**). See [REST API](#rest-api).
 
 ## Connection
 
-Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. Defaults: mainnet `http://127.0.0.1:8332`, testnet `http://127.0.0.1:18332`, regtest `http://127.0.0.1:18443`. There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
+Use the same **host:port** you configure as **`--rpc-addr`** / **`BLVM_RPC_ADDR`**. An omitted address uses the port in [Protocol variants](../protocol/overview.md#protocol-variants). There is no separate RPC `port` key in **`NodeConfig`**. See [Node Configuration](configuration.md).
 
 ## Authentication
 
@@ -53,7 +53,7 @@ Bitcoin Commons optionally serves JSON-RPC over **HTTP/3 on QUIC** (Quinn + **`h
 
 **When to use:** High-throughput internal services where clients support QUIC and you want built-in TLS without a separate layer.
 
-**When not to use:** Most ecosystem tooling assumes TCP HTTP to port 8332 (mainnet), 18332 (testnet), or 18443 (regtest). Prefer TCP for scripts, `curl`, and Core-compatible clients.
+**When not to use:** Most ecosystem tooling assumes TCP HTTP to the network's default RPC port ([Protocol variants](../protocol/overview.md#protocol-variants)). Prefer TCP for scripts, `curl`, and Core-compatible clients.
 
 ### Enable QUIC RPC
 
@@ -116,7 +116,7 @@ Source: [QUIC RPC](https://github.com/BTCDecoded/blvm-node/blob/main/docs/QUIC_R
 ### Get Blockchain Info
 
 ```bash
-# Mainnet 8332; testnet 18332; regtest 18443
+# Mainnet example. Other ports: Protocol variants.
 curl -X POST http://localhost:8332 \
  -H "Content-Type: application/json" \
  -d '{
@@ -130,7 +130,7 @@ curl -X POST http://localhost:8332 \
 ### Get Block
 
 ```bash
-# Mainnet 8332; testnet 18332; regtest 18443
+# Mainnet example. Other ports: Protocol variants.
 curl -X POST http://localhost:8332 \
  -H "Content-Type: application/json" \
  -d '{
@@ -144,7 +144,7 @@ curl -X POST http://localhost:8332 \
 ### Get Network Info
 
 ```bash
-# Mainnet 8332; testnet 18332; regtest 18443
+# Mainnet example. Other ports: Protocol variants.
 curl -X POST http://localhost:8332 \
  -H "Content-Type: application/json" \
  -d '{
@@ -167,7 +167,7 @@ Fifteen RPC methods cover most operator, wallet, and mining workflows. Full cata
 | `getrawtransaction` | Fetch tx by txid (with index when enabled) |
 | `sendrawtransaction` | Broadcast signed tx to mempool |
 | `testmempoolaccept` | Dry-run mempool acceptance |
-| `getmempoolinfo` | Mempool size and limits |
+| `getmempoolinfo` | Size, fee floor, and `policy.max_op_return_script_bytes` when the mempool is loaded |
 | `getrawmempool` | List mempool txids |
 | `validateaddress` | Decode / validate an address |
 | `getblocktemplate` | Mining template (admin auth) |
@@ -195,10 +195,12 @@ On regtest at genesis, `"blocks": 0`, `"difficulty": 1.0`, and `"initialblockdow
 
 ### `sendrawtransaction`
 
-Submit hex-encoded signed transaction. Returns txid on success; errors if policy or consensus rejects the tx.
+Submit a hex-encoded signed transaction. Returns the txid on success.
+
+Parameters, in order: the hex, `maxfeerate` (BTC per kvB), `maxburnamount` (BTC), and `allowhighfees`. An omitted `maxfeerate` is 0.10 unless `allowhighfees` is true, which removes the cap. An omitted `maxburnamount` is 0, so an unspendable output with a positive value is rejected.
 
 ```bash
-# Testnet example (18332); regtest uses 18443, mainnet 8332
+# Testnet example. Other ports: Protocol variants.
 curl -X POST http://127.0.0.1:18332 \
  -H "Content-Type: application/json" \
  -d '{"jsonrpc":"2.0","method":"sendrawtransaction","params":["<hex>"],"id":1}'
@@ -215,7 +217,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 | `getblockchaininfo` | High | Standard fields; network names align with BLVM networks |
 | `getblock` / `getblockheader` | High | Verbosity levels supported |
 | `getrawtransaction` | High | Needs tx index or mempool/chain lookup context |
-| `sendrawtransaction` | High | Standard policy + relay |
+| `sendrawtransaction` | High | Fee cap 0.10 BTC/kvB unless `allowhighfees`; `maxburnamount` defaults to 0 |
 | `testmempoolaccept` | High | Multiple-tx batch where implemented |
 | `getmempoolinfo` / `getrawmempool` | High | |
 | `getnetworkinfo` / `getpeerinfo` | High | |
@@ -228,11 +230,11 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 | `meshsendpacket` / `meshpollreceived` | Module | Requires `blvm-mesh` |
 | REST `/api/v1/*` | BLVM-specific | `rest-api` feature + `[rest_api].enabled`; separate bind: see [REST API](#rest-api) |
 
-**Ports:** BLVM defaults RPC to **`18332`** (testnet) and **`18443`** (regtest, Core-aligned). Set **`--rpc-addr`** / **`BLVM_RPC_ADDR`** when you need a different bind.
+**Ports:** An omitted RPC address is loopback plus the network port in [Protocol variants](../protocol/overview.md#protocol-variants). Set **`--rpc-addr`** / **`BLVM_RPC_ADDR`** when you need a different bind.
 
 ## Available Methods
 
-**Core JSON-RPC:** **75** methods in `CORE_RPC_METHODS` (see `blvm-node/src/rpc/methods.rs`). Module RPC (mesh, miniscript overrides, etc.) registers at runtime.
+**Core JSON-RPC:** the names in `CORE_RPC_METHODS` (`blvm-node/src/rpc/methods.rs`). Module RPC (mesh, miniscript overrides, etc.) registers at runtime.
 
 ### Blockchain Methods
 
@@ -276,7 +278,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 
 | Method | Description |
 |--------|-------------|
-| `getmempoolinfo` | Mempool statistics |
+| `getmempoolinfo` | Size, fee floor, and the OP_RETURN script limit when the mempool is loaded |
 | `getrawmempool` | Txids or verbose entries |
 | `savemempool` | Write `{datadir}/mempool.dat` |
 | `getmempoolancestors` / `getmempooldescendants` | Dependency graph |
@@ -311,7 +313,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 
 `estimatesmartfee` takes positional `conf_target` (default `6`, 1 to 1008), `estimate_mode` (`unset`, `economical`, or `conservative`; default and `unset` are conservative), `fee_rate_estimator` (`none`, `history`, `mempool`, or a module-registered estimator name), and `verbosity` (`0` to `2`). `feerate` is BTC per kvB. Verbosity 1 adds `source`, `mempool_healthy`, `requested_estimator`, `active_estimator`, and `degraded`; verbosity 2 adds the tip, the table age, and the mempool health ratio. When no rate is available, the reply carries `errors` and, at verbosity 1 or 2, a `reason` (`warming_up`, `mempool_unhealthy`, `empty_mempool`, `disabled`, or `external_stale`). Out-of-range parameters are `invalid_params` errors.
 
-The estimator is configured under [`[fees]`](../reference/configuration-reference.md#fee-estimator-fees). Modules such as [blvm-fees](../modules/fees.md) register named estimators that `listfeeestimators` reports. Full reply shapes: [blvm-node RPC reference](https://github.com/BTCDecoded/blvm-node/blob/main/docs/RPC_REFERENCE.md#estimatesmartfee).
+The estimator is configured under [`[fees]`](../reference/configuration-reference.md#fees). Modules such as [blvm-fees](../modules/fees.md) register named estimators that `listfeeestimators` reports. Full reply shapes: [blvm-node RPC reference](https://github.com/BTCDecoded/blvm-node/blob/main/docs/RPC_REFERENCE.md#estimatesmartfee).
 
 ### Module Methods
 
@@ -487,7 +489,7 @@ The REST API is a **separate HTTP server** from JSON-RPC (`blvm-node/src/rpc/res
 
 > **Operator note**: REST is **off by default** (`[rest_api].enabled = false`). When enabled, it binds its **own** address (default loopback **8080** / **18080** from RPC port). Handler coverage matches **`rest/server.rs` routing**, not every function in `rest/*.rs`.
 
-When enabled programmatically, REST binds its **own** address (tests use `127.0.0.1:8080`). It does **not** share the JSON-RPC port (**8332** / **18332** / **18443**). HTTP **`GET /health`** on the RPC port is separate (see [Node Operations](operations.md)).
+When enabled programmatically, REST binds its **own** address (tests use `127.0.0.1:8080`). It does **not** share the JSON-RPC port ([Protocol variants](../protocol/overview.md#protocol-variants)). HTTP **`GET /health`** on the RPC port is separate (see [Node Operations](operations.md)).
 
 **Base URL (when running):** `http://<rest-bind>/api/v1/`
 

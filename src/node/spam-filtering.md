@@ -4,110 +4,32 @@
 
 ## Overview
 
-Spam filtering provides transaction-level filtering for bandwidth optimization and non-monetary transaction detection. The system filters spam transactions to achieve 40-60% bandwidth savings during ongoing sync while maintaining consensus correctness.
+These checks can keep a transaction out of the mempool. They do not change whether a block is valid. The switch is `reject_spam_in_mempool`. The patterns are below. The code is `blvm-protocol/src/spam_filter/mod.rs`.
 
+## Detectors
 
-Spam filtering is implemented in the protocol layer (blvm-protocol). It can be used independently of UTXO commitments; mempool and consensus config reference it where needed.
+| Detector | Default | Rule |
+|---|---|---|
+| Ordinals | on | Witness data, an `OP_RETURN` script longer than 80 bytes, or an UnexecIf envelope |
+| Dust | on | Every output is below 546 satoshis (`dust_threshold`) |
+| BRC-20 | on | `OP_RETURN` JSON with `"p":"brc-20"` and mint, transfer, or deploy |
+| Large witness | on | A witness stack larger than 1000 bytes (`max_witness_size`) |
+| Low fee rate | off | Below 1 sat/vbyte (`min_fee_rate`) |
+| High size-to-value | on | More than 1000 bytes per satoshi (`max_size_value_ratio`) |
+| Many small outputs | on | More than 10 outputs below the dust threshold (`max_small_outputs`) |
+| UnexecIf | on | The envelope pattern below (`filter_unexec_if`) |
+| Null-data `OP_13` | on | The wrapper below (`filter_null_data_op13`) |
+| Null-data magic | on | The prefixes below (`filter_null_data_magic`) |
+| Data-like multisig | on | The bare-multisig pattern below (`filter_data_like_ms`) |
 
-## Spam Detection Types
+Four detectors are script patterns rather than a size cutoff.
 
-### 1. Ordinals/Inscriptions (`SpamType::Ordinals`)
+- **UnexecIf.** Exactly one `OP_0` / `OP_IF` … `OP_ENDIF` whose interior is data pushes only, plus a 34-byte `PUSH32 <32-byte key> OP_CHECKSIG` immediately before or after that envelope. Scripts that contain `OP_SUCCESS` are skipped. `ScriptTemplate::UnexecIf`.
+- **Null-data `OP_13`.** `OP_RETURN` `OP_13` followed only by pushes. `ScriptTemplate::NullDataOp13`.
+- **Null-data magic.** The first push after `OP_RETURN` begins with `CNTRPRTY`, `omni`, or the OpenTimestamps tag `05 88 96 0d 73 d7 19 01`. `ScriptTemplate::NullDataMagic`.
+- **Data-like multisig.** A bare `m`-of-`n` ending in `OP_CHECKMULTISIG` where every pushed key fails the compressed-pubkey check (length 33 and prefix `0x02` or `0x03`). `ScriptTemplate::DataLikeMs`.
 
-Detects data embedded in Bitcoin transactions:
-
-- **Witness Scripts**: Detects data embedded in witness scripts (SegWit v0 or Taproot) - **PRIMARY METHOD**
-- **OP_RETURN Outputs**: Detects OP_RETURN outputs with large data pushes
-- **UnexecIf**: Detects UnexecIf patterns (`OP_FALSE OP_IF` … `OP_ENDIF`)
-- **Pattern Detection**: An `OP_RETURN` output script longer than 80 bytes (`blvm-protocol/src/spam_filter/mod.rs:789–791`)
-- **Witness Detection**: Large witness stacks (>1000 bytes) or suspicious data patterns
-
-### 2. Dust Outputs (`SpamType::Dust`)
-
-Filters outputs below threshold:
-
-- **Threshold**: Default 546 satoshis (configurable)
-- **Detection**: All outputs must be below threshold for transaction to be considered dust
-- **Configuration**: `SpamFilterConfig::dust_threshold`
-
-### 3. BRC-20 Tokens (`SpamType::BRC20`)
-
-Detects BRC-20 token transactions:
-
-- **Pattern Matching**: Detects BRC-20 JSON patterns in OP_RETURN outputs
-- **Patterns**: `"p":"brc-20"`, `"op":"mint"`, `"op":"transfer"`, `"op":"deploy"`
-
-### 4. Large Witness Data (`SpamType::LargeWitness`)
-
-Detects transactions with suspiciously large witness data:
-
-- **Threshold**: Default 1000 bytes (configurable)
-- **Indication**: Potential data embedding in witness data
-- **Configuration**: `SpamFilterConfig::max_witness_size`
-
-### 5. Low Fee Rate (`SpamType::LowFeeRate`)
-
-Detects transactions with suspiciously low fee rates:
-
-- **Detection**: Low fee rate relative to transaction size
-- **Indication**: Non-monetary transactions pay minimal fees
-- **Threshold**: Default 1 sat/vbyte (configurable)
-- **Configuration**: `SpamFilterConfig::min_fee_rate`
-- **Status**: **Disabled by default** (can be too aggressive)
-
-### 6. High Size-to-Value Ratio (`SpamType::HighSizeValueRatio`)
-
-Detects transactions with very large size relative to value transferred:
-
-- **Pattern**: >1000 bytes per satoshi (default threshold)
-- **Indication**: Non-monetary use (large data, small value)
-- **Configuration**: `SpamFilterConfig::max_size_value_ratio`
-
-### 7. Many Small Outputs (`SpamType::ManySmallOutputs`)
-
-Detects transactions with many small outputs:
-
-- **Pattern**: >10 outputs below dust threshold (default)
-- **Indication**: Common in token distributions and Ordinal transfers
-- **Configuration**: `SpamFilterConfig::max_small_outputs`
-
-### 8. UnexecIf (`SpamType::UnexecIf`)
-
-Detects tapscripts that wrap data in an unexecuted `OP_IF` and finish with a Taproot CHECKSIG leaf:
-
-- **Pattern**: Exactly one `OP_0` / `OP_IF` … `OP_ENDIF` whose interior is **data pushes only** (no nested `OP_IF` / `OP_NOTIF` / `OP_ELSE`), plus a 34-byte remainder `PUSH32 <32-byte key> OP_CHECKSIG` immediately before or after that envelope
-- **Skips**: Scripts that contain an `OP_SUCCESS` opcode
-- **Indication**: Common inscription / envelope-style witness scripts
-- **Configuration**: `SpamFilterConfig::filter_unexec_if` (default: **true**)
-- **Implementation**: `blvm-consensus::script::templates` (`ScriptTemplate::UnexecIf`); policy wiring in `blvm-protocol` spam filter; coverage in `blvm-protocol/tests/spam_filter_templates.rs`
-
-### 9. Null-Data OP_13 (`SpamType::NullDataOp13`)
-
-Detects `OP_RETURN` scripts that use the `OP_13` null-data wrapper:
-
-- **Pattern**: `OP_RETURN` `OP_13` followed by zero or more push opcodes only (runestone-style wrapper)
-- **Indication**: Structured null-data payloads that are not plain OP_RETURN text
-- **Configuration**: `SpamFilterConfig::filter_null_data_op13` (default: **true**)
-- **Implementation**: `ScriptTemplate::NullDataOp13` in `blvm-consensus/src/script/templates.rs`
-
-### 10. Null-Data Magic Prefix (`SpamType::NullDataMagic`)
-
-Detects `OP_RETURN` payloads that start with a known magic prefix:
-
-- **Pattern**: `OP_RETURN` plus a first push whose payload begins with one of:
-  - `CNTRPRTY` (`NULLDATA_CNTRPRTY`)
-  - `omni` (`NULLDATA_OMNI`)
-  - OpenTimestamps attestation tag `05 88 96 0d 73 d7 19 01` (`NULLDATA_OTS`)
-- **Configuration**: `SpamFilterConfig::filter_null_data_magic` (default: **true**)
-- **Implementation**: `ScriptTemplate::NullDataMagic` in `blvm-consensus/src/script/templates.rs`
-
-### 11. Data-Like Multisig (`SpamType::DataLikeMs`)
-
-Detects bare multisig outputs whose “keys” are data blobs rather than compressed pubkeys:
-
-- **Pattern**: `m`-of-`n` bare multisig ending in `OP_CHECKMULTISIG` where **every** pushed key fails the compressed-pubkey check (length 33 and prefix `0x02` or `0x03`)
-- **Indication**: Data embedding disguised as multisig
-- **Configuration**: `SpamFilterConfig::filter_data_like_ms` (default: **true**)
-- **Implementation**: `ScriptTemplate::DataLikeMs` in `blvm-consensus/src/script/templates.rs`; coverage in `blvm-protocol/tests/spam_filter_templates.rs`
+The templates live in `blvm-consensus/src/script/templates.rs`. The ordinals length check is `blvm-protocol/src/spam_filter/mod.rs`. Coverage is `blvm-protocol/tests/spam_filter_templates.rs`.
 
 ## Critical Design: Output-Only Filtering
 
@@ -254,44 +176,23 @@ The mempool also enforces stricter standard transaction checks:
 
 #### OP_RETURN Limits
 
-- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most **100,000 bytes**, the standard transaction weight (400,000) divided by four, and every byte after `OP_RETURN` must be a push. The node's mempool applies this when `require_standard = true` (the default). Operators can set `[mempool] max_op_return_size` (`blvm-node/src/config/mempool.rs:271`, `:368`; applied in `src/node/mempool.rs:296`, `:304–309`). This requires [blvm-node#46](https://github.com/BTCDecoded/blvm-node/pull/46).
-- **Multiple OP_RETURN outputs**: by default the node's admission path still checks each output on its own and does not cap how many `OP_RETURN` outputs a transaction has (`reject_multiple_op_return = false`, `max_op_return_outputs = 4294967295`, i.e. `u32::MAX`). Operators can set `reject_multiple_op_return = true` or lower `max_op_return_outputs` (`blvm-node/src/config/mempool.rs:278–283`, `:372–376`; applied in `src/node/mempool.rs:351–356`). This requires [blvm-node#46](https://github.com/BTCDecoded/blvm-node/pull/46).
-- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_op_return_size` (default 80), `max_op_return_outputs` (1), and `reject_multiple_op_return` (true) (`src/config.rs:135–145`, `:210`), read by `blvm-consensus` `is_standard_tx_with_config`. Those library defaults are not the node's `[mempool]` defaults and do not set the node's relay limit unless an operator configures the node keys.
+- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most `max_op_return_script_bytes` bytes. The default is **100,000**, the standard transaction weight (400,000) divided by four. The limit is the whole script, including the opcode, and every byte after `OP_RETURN` must be a push. The node's mempool applies it when `require_standard` is true (the default). `getmempoolinfo` reports the initialized value at `policy.max_op_return_script_bytes`. An omitted config key stays 100,000 (`blvm-node/src/config/mempool.rs`, `output_script_is_standard` in `blvm-node/src/node/mempool.rs`).
+- **Multiple OP_RETURN outputs**: the default does not cap the count (`max_op_return_outputs` is `u32::MAX`, and `reject_multiple_op_return` is false). Set `reject_multiple_op_return = true`, or set `max_op_return_outputs` to 1, to refuse a second `OP_RETURN`. The check is `op_return_count_exceeds_policy` in `blvm-node/src/node/mempool.rs`.
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_op_return_size` (default 80), `max_op_return_outputs` (1), and `reject_multiple_op_return` (`blvm-primitives/src/config.rs`), read by `blvm-consensus` `is_standard_tx_with_config`. Those fields are separate from the node's `[mempool]` keys.
 
-#### Data-carrying channels by cost (Core v30 accounting)
+#### Data-carrying channels
 
-The channel order and tables below come from [The Achievable Floor](https://secsov.com/articles/the-achievable-floor/), §II. They describe Bitcoin Core v30 policy (`-datacarriersize` 100,000) and BIP141 weight accounting, not a BLVM measurement. BLVM's node default for a standard `OP_RETURN` output is 100,000 bytes (see [OP_RETURN Limits](#op_return-limits)). The knobs on this page touch the `OP_RETURN` and script-pattern channels; hash and key fields that look like real payments cannot be told apart by policy.
-
-The article ranks five channel types by what they cost the person embedding the data, in this order: Free, Near-free, Expensive, Unenforced, Dedicated. The first table lists them in that order, with what each costs and whether consensus could close it.
-
-| Channel | Embedding cost | Closable at consensus? | Cost to close |
-|---|---|---|---|
-| Free | None beyond tx fee | No | Lose privacy, precision, or supply audit |
-| Near-free | ~2 trial attempts | Partial | Filters barely help |
-| Expensive | Exponential with chosen bits | No | Cost is the only limit |
-| Unenforced | Low; no validation yet | Yes | Tighten unused upgrade hooks |
-| Dedicated | Fee-paid, large payloads | Yes | No hit to normal payments |
-
-Fees per embedded byte, BIP141 accounting, Core v30 `-datacarriersize` (100k), dust at 3 sat/vB. Fee columns are (vbytes × rate + dust where applicable) ÷ payload bytes. The two fake-data rows assume the article's §III changes.
-
-| Channel | Payload bytes | vbytes / embedded byte | sats / byte @ 10 sat/vB | @ 50 sat/vB | @ 100 sat/vB |
-|---|---:|---:|---:|---:|---:|
-| OP_RETURN (dedicated) | 1,024 | 1.01 | 10.1 | 50.7 | 101.5 |
-| Taproot envelope (dedicated) | 1,024 | 0.29 | 2.9 | 14.6 | 29.2 |
-| P2WPKH fake hash (free, after §III) | 20 | 1.55 | 30.2 | 92.2 | 169.7 |
-| P2TR fake pubkey (near-free, after §III) | 32 | 1.34 | 23.8 | 77.5 | 144.7 |
-
-The durable point is the witness discount: an envelope byte costs about 0.29 vbytes against about 1.01 for an `OP_RETURN` byte. The sat columns move with fee rates and Core policy.
+An envelope byte costs about 0.29 vbytes, and an `OP_RETURN` byte costs about 1.01, under BIP141 weight accounting. The channel comparison is [The Achievable Floor](https://secsov.com/articles/the-achievable-floor/). The knobs on this page touch the `OP_RETURN` and script-pattern channels. Hash and key fields that look like real payments stay in the transaction.
 
 #### UnexecIf rejection
 
-- **UnexecIf detection**: when `reject_spam_in_mempool` is on, the protocol spam filter rejects UnexecIf (`OP_FALSE OP_IF` … `OP_ENDIF`) scripts if `filter_unexec_if` is true (the default) (`blvm-protocol/src/spam_filter/mod.rs:411–414`, `:312`). That flag is a `[mempool.spam_filter]` key (`blvm-node/src/config/mempool.rs:262–264`, `blvm-protocol/src/spam_filter/mod.rs:1348–1349`). The node's `require_standard` path does not read it.
-- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `reject_unexec_if` (default true), and still accepts the old name `reject_envelope_protocol` as a serde alias (`src/config.rs:154–158`, `:226–227`, `:255`), read by `blvm-consensus` `is_standard_tx_with_config` (`src/mempool.rs:195`, `:216`). These are not `[mempool]` keys in the node.
+- **UnexecIf detection**: when `reject_spam_in_mempool` is on, the protocol spam filter rejects UnexecIf (`OP_FALSE OP_IF` … `OP_ENDIF`) scripts if `filter_unexec_if` is true (the default). That flag is a `[mempool.spam_filter]` key in `blvm-node/src/config/mempool.rs`, and the check lives in `blvm-protocol/src/spam_filter/mod.rs`. The node's `require_standard` path leaves this flag alone.
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `reject_unexec_if` (default true) and accepts the old name `reject_envelope_protocol` as a serde alias (`blvm-primitives/src/config.rs`). `blvm-consensus` `is_standard_tx_with_config` reads that field (`blvm-consensus/src/mempool.rs`). That field is separate from the node's `[mempool]` keys.
 
 #### Script Size Limits
 
-- **scriptSig size**: a standard `scriptSig` is at most **1,650 bytes** (`MAX_STANDARD_SCRIPTSIG_SIZE`). The node's mempool applies this when `require_standard = true` (the default). Operators can set `[mempool] max_standard_script_size` (`blvm-node/src/config/mempool.rs:289`, `:380`; applied in `src/node/mempool.rs:291`, `:2386`, `:3148`). This requires [blvm-node#46](https://github.com/BTCDecoded/blvm-node/pull/46).
-- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_standard_script_size` (default 200) (`src/config.rs:149–150`, `:222–223`, `:254`), read by `blvm-consensus` `is_standard_tx_with_config` (`src/mempool.rs:214–226`). That library default is not the node's `[mempool]` default and does not set the node's scriptSig limit unless an operator configures the node key.
+- **scriptSig size**: a standard `scriptSig` is at most `max_standard_script_size` bytes. The default is **1,650** (`MAX_STANDARD_SCRIPTSIG_SIZE`). The node's mempool applies this when `require_standard` is true (the default) (`blvm-node/src/config/mempool.rs`, `preview_accept` in `blvm-node/src/node/mempool.rs`).
+- **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_standard_script_size` (default 200) in `blvm-primitives/src/config.rs`, read by `blvm-consensus` `is_standard_tx_with_config`. That field is separate from the node's scriptSig limit.
 
 #### Sigop-adjusted vsize and structural templates
 
@@ -313,7 +214,7 @@ Transactions exceeding the rate limit are dropped before processing.
 
 ### What `reject_spam_in_mempool` turns on
 
-`reject_spam_in_mempool` defaults to false (`blvm-node/src/config/mempool.rs:339–341`), so out of the box the node relays OP_RETURN outputs up to the 100,000-byte standardness limit. Setting it to true makes the node reject any transaction the spam filter flags (`blvm-node/src/node/mempool.rs:3144–3160`), and that applies every filter that is on by default, not only the 80-byte OP_RETURN check: `filter_ordinals`, `filter_unexec_if`, `filter_null_data_op13`, `filter_null_data_magic`, `filter_data_like_ms`, `filter_dust`, `filter_brc20`, `filter_large_witness`, `filter_high_size_value_ratio` and `filter_many_small_outputs` all default to true, and only `filter_low_fee_rate` defaults to false (`blvm-protocol/src/spam_filter/mod.rs:308–322`, `:1492–1505`). The 80-byte OP_RETURN rule is part of `filter_ordinals`, which also catches inscription envelopes. An operator who wants only that check sets the other `filter_*` keys to false:
+`reject_spam_in_mempool` defaults to false (`blvm-node/src/config/mempool.rs`), so the node relays `OP_RETURN` outputs up to the 100,000-byte standardness limit. Setting it to true makes the node reject any transaction the spam filter flags (`blvm-node/src/node/mempool.rs`). The filter's defaults live in `blvm-protocol/src/spam_filter/mod.rs`: `filter_ordinals`, `filter_unexec_if`, `filter_null_data_op13`, `filter_null_data_magic`, `filter_data_like_ms`, `filter_dust`, `filter_brc20`, `filter_large_witness`, `filter_high_size_value_ratio`, and `filter_many_small_outputs` are true, and `filter_low_fee_rate` and `filter_large_total_witness` are false. The 80-byte `OP_RETURN` rule is part of `filter_ordinals`, which also catches inscription envelopes. `filter_taproot_spam` is true and runs inside that Ordinals check. An operator who wants only the Ordinals check sets the other `filter_*` keys to false, including `filter_taproot_spam`:
 
 ```toml
 [mempool]
@@ -321,6 +222,7 @@ reject_spam_in_mempool = true
 
 [mempool.spam_filter]
 filter_ordinals = true
+filter_taproot_spam = false
 filter_unexec_if = false
 filter_null_data_op13 = false
 filter_null_data_magic = false
@@ -339,9 +241,9 @@ filter_many_small_outputs = false
 # Enable spam filtering at mempool entry (default: false)
 reject_spam_in_mempool = true
 
-# Standardness limits (defaults match current node behavior).
-# Requires https://github.com/BTCDecoded/blvm-node/pull/46.
-max_op_return_size = 100000
+# Standardness limits. Defaults match the node: a 100,000-byte OP_RETURN
+# script, no OP_RETURN count cap, and a 1,650-byte scriptSig.
+max_op_return_script_bytes = 100000
 # No count cap (u32::MAX). Set to 1, or set reject_multiple_op_return = true, to refuse a second OP_RETURN.
 max_op_return_outputs = 4294967295
 reject_multiple_op_return = false
@@ -379,7 +281,6 @@ Spam filtering is used in UTXO commitment processing to reduce bandwidth during 
 
 - **Location**: `blvm-protocol/src/utxo_commitments/initial_sync.rs`
 - **Usage**: Filters outputs when processing blocks for UTXO commitments
-- **Benefit**: 40-60% bandwidth reduction during ongoing sync
 
 ### Protocol Extensions
 
@@ -397,13 +298,6 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 - **Usage**: Optional spam check before accepting transactions to mempool
 - **Benefit**: Prevents spam from entering mempool, reducing memory usage
 - **Status**: Opt-in (default: disabled) to maintain backward compatibility
-
-## Bandwidth Savings
-
-- **40-60% bandwidth reduction** during ongoing sync
-- Maintains consensus correctness
-- Enables efficient UTXO commitment synchronization
-- Reduces storage requirements for filtered block relay
 
 ## Performance Characteristics
 
@@ -429,8 +323,8 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 - **Ancestor/Descendant Limits**: Package limits prevent transaction package spam (default: 25 transactions, 101 kB)
 - **DoS Protection**: Automatic peer banning for connection rate violations
 - **Per-Peer Byte Rate Limiting**: Limits bytes per second per peer (default: 100 KB/s, 1 MB burst)
-- **Fee Rate Requirements for Large Transactions**: when `filter_low_fee_rate` is true (default false), the spam filter requires 2 sat/vB for transactions larger than 1000 bytes (`blvm-protocol/src/spam_filter/mod.rs:319`, `:460`, `:896–900`)
-- **Spam-Aware Eviction**: evict spam transactions first when mempool is full if `eviction_strategy` is `spamfirst` (the default is `lowestfeerate`, `blvm-node/src/config/mempool.rs:228–229`, `:307–308`, `:380`)
+- **Fee Rate Requirements for Large Transactions**: when `filter_low_fee_rate` is true (default false), the spam filter requires 2 sat/vB for transactions larger than 1000 bytes (`blvm-protocol/src/spam_filter/mod.rs`)
+- **Spam-Aware Eviction**: evict spam transactions first when mempool is full if `eviction_strategy` is `spamfirst`. The default is `lowestfeerate` (`blvm-node/src/config/mempool.rs`)
 - **Spam-Specific Peer Banning**: Auto-ban peers that repeatedly send spam transactions (default: ban after 10 spam transactions, 1 hour duration)
 
 ### Per-Peer Byte Rate Limiting
@@ -445,7 +339,7 @@ tx_byte_rate_burst = 1000000 # 1 MB burst
 
 ### Fee Rate Requirements for Large Transactions
 
-The protocol spam filter can require a higher fee rate for large transactions. Those keys are under `[mempool.spam_filter]`, and they apply only when `filter_low_fee_rate` is true (default false, `blvm-protocol/src/spam_filter/mod.rs:319`, `:460`, `:896–900`):
+The protocol spam filter can require a higher fee rate for large transactions. Those keys are under `[mempool.spam_filter]`, and they apply when `filter_low_fee_rate` is true (default false, `blvm-protocol/src/spam_filter/mod.rs`):
 
 ```toml
 [mempool.spam_filter]

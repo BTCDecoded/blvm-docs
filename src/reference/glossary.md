@@ -28,7 +28,7 @@ Key terms and concepts used throughout the BLVM documentation.
 
 **Forkable Governance** - Governance rules can be forked by users if they disagree with decisions, creating exit competition and preventing capture. See [Governance Fork](../governance/governance-fork.md).
 
-**Cryptographic Enforcement** - All governance actions require cryptographic signatures from maintainers, making power visible and accountable. See [Keyholder Procedures](../governance/keyholder-procedures.md).
+**Cryptographic Enforcement** - The written schedule says a governance action carries maintainer signatures. That check is Designed and is not on. The keys are test keys. See [Keyholder Procedures](../governance/keyholder-procedures.md).
 
 
 ## Technical Concepts
@@ -63,9 +63,9 @@ The [Orange Paper](orange-paper.md) is the spec (IR); [blvm-consensus](../consen
 
 **Transport Abstraction** - Unified abstraction supporting multiple transport protocols: **TCP** (default, Bitcoin P2P compatible) and **Iroh/QUIC** (experimental). See [Transport Abstraction](../node/transport-abstraction.md).
 
-**Network Variants** - Bitcoin network types: **Mainnet** (BitcoinV1, production), **Testnet3** (test network), **Regtest** (regression testing, isolated).
+**Network Variants** - Bitcoin network types: **mainnet**, **testnet**, **testnet4**, **signet**, and **regtest**. `BitcoinV1` and `Testnet3` are aliases the file accepts. The binary writes the five names.
 
-**IBD engine** - Age-tiered UTXO store during initial sync. On unless **`BLVM_IBD_ENGINE=0`**. See [IBD UTXO engine](../node/ibd-engine.md).
+**IBD engine** - Age-tiered UTXO store during initial sync. See [IBD UTXO engine](../node/ibd-engine.md).
 
 **admin_tokens** - RPC Bearer tokens with permission to call admin methods (`getblocktemplate`, `submitblock`, destructive control). Tokens in `tokens` alone are read-only unless also listed here. **`[rpc_auth].password`** (HTTP Basic) is registered as admin when set.
 

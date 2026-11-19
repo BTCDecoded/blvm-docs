@@ -46,14 +46,13 @@ The four engines are owned by one crate, **`blvm-storage-fence`** (`blvm-node/cr
 - **Data directory**: `{datadir}/heed3/`
 - **Feature**: `heed3` (enabled in default `blvm` / `blvm-node` features)
 
-LMDB map size defaults to **64 GiB** (`max(65536, dbcache_mb × 128)` MB). Override only if you know your UTXO footprint:
+An unset LMDB map is 70% of free disk, clamped from 48 GiB to 4 TiB. An existing `data.mdb` is opened at least at that file's size plus 128 GiB of headroom, still capped at 4 TiB. `dbcache_mb` does not set the map. `map_size_mb` or `BLVM_HEED3_MAP_SIZE_MB` sets a fixed cap.
 
 ```toml
 [storage]
 database_backend = "heed3"
 
 [storage.heed3]
-# map_size_mb = 65536 # default; required headroom for mainnet UTXO set
 max_readers = 512
 ```
 
@@ -117,7 +116,7 @@ Bitcoin Core **`chainstate/`** uses **LevelDB** (`.ldb` / `.log` files). BLVM’
 | Mixed or corrupt index (`.ldb` + stray `.sst`, wrong magic) | Migration fails: **do not** `rm -rf` blindly; stop the node, back up the datadir, fix or use a fresh Core sync |
 | Existing **`{datadir}/heed3/`** or **`rocksdb/`** BLVM store | Core drop-in does **not** overwrite; use a fresh datadir or explicit backend choice |
 
-Portable Windows/aarch64 builds without **`rocksdb`** cannot run Core chainstate migration: use Linux x86_64 / default-feature builds or sync without Core import.
+A build without the **`rocksdb`** feature cannot import a Core chainstate. That includes the release binaries and a default-feature build. Sync from peers, or build from source with `--features rocksdb`.
 
 See [Starting from a Bitcoin Core datadir](operations.md#starting-from-a-bitcoin-core-datadir) and [Troubleshooting: Corrupted database](../appendices/troubleshooting.md#corrupted-database).
 
@@ -201,20 +200,11 @@ Transaction indexing:
 
 ## Configuration
 
-### Backend Selection
+`database_backend` chooses the engine. The other `[storage]` keys, including cache and pruning, are the [configuration reference](../reference/configuration-reference.md#storage).
 
-```toml
-[storage]
-data_dir = "/var/lib/blvm"
-database_backend = "auto" # release builds: heed3 (LMDB); or "rocksdb" | "redb" | "sled" when compiled in
-```
-
-**Options**:
-- `"auto"`: Select by build features (heed3 when `heed3` enabled, then RocksDB, Redb, Sled)
-- `"heed3"`: Force heed3 / LMDB (requires `heed3` feature; rkyv UTXO encoding)
-- `"rocksdb"`: Force RocksDB (requires `rocksdb` feature)
-- `"redb"`: Force redb backend (requires `redb` feature)
-- `"sled"`: Force sled backend (requires `sled` feature)
+- `auto`: heed3 when that feature is compiled in, then RocksDB, Redb, Sled
+- `heed3`: LMDB, with rkyv UTXO encoding
+- `rocksdb`, `redb`, `sled`: that engine, and the matching Cargo feature
 
 
 ### RocksDB Configuration
@@ -236,18 +226,6 @@ The system can detect typical Bitcoin-style data directories:
 - Mainnet: `~/.bitcoin/` or `~/Library/Application Support/Bitcoin/`
 - Testnet: `~/.bitcoin/testnet3/` or `~/Library/Application Support/Bitcoin/testnet3/`
 - Regtest: `~/.bitcoin/regtest/` or `~/Library/Application Support/Bitcoin/regtest/`
-
-
-### Cache Configuration
-
-```toml
-[storage.cache]
-block_cache_mb = 100
-utxo_cache_mb = 50
-header_cache_mb = 10
-```
-
-**Cache Sizes**: See [Configuration Reference](../reference/configuration-reference.md) for canonical defaults (e.g. block 100 MB, UTXO 50 MB, header 10 MB).
 
 
 ## Performance Characteristics
@@ -307,20 +285,7 @@ To migrate between backends:
 
 ## Pruning Support
 
-All backends support pruning:
-
-```toml
-[storage.pruning]
-mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
-auto_prune = true
-auto_prune_interval = 144
-```
-
-**Pruning Modes**:
-- **Disabled**: Keep all blocks (archival node)
-- **Normal**: Conservative pruning (keep recent blocks)
-- **Aggressive**: Prune with UTXO commitments (requires utxo-commitments feature)
-- **Custom**: Fine-grained control over what to keep
+Every backend can prune. The mode is `disabled` (keep every block), `normal` (keep the trailing `keep_blocks` bodies), or `aggressive` (the same window, and it writes UTXO commitments; requires `utxo-commitments`). The keys are [`[storage.pruning]`](../reference/configuration-reference.md#storage).
 
 
 ## Error Handling

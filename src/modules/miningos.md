@@ -6,16 +6,17 @@ The Mining OS module (`blvm-miningos`) integrates BLVM with MiningOS (Mos): BLVM
 
 ## Features
 
-- **BLVM → MiningOS**: Register BLVM as a MiningOS rack, expose miners as things, provide block templates
-- **MiningOS → BLVM**: Execute actions (reboot, power management, pool config updates), query statistics, receive commands
-- **HTTP REST API Client**: Full REST API integration with MiningOS app-node
-- **OAuth2 Authentication**: Token-based authentication with automatic token refresh
-- **P2P Worker Bridge**: Node.js bridge for Hyperswarm P2P integration
-- **Block Template Provider**: Provides block templates to MiningOS
-- **Enhanced Statistics**: Chain info, network stats, mempool statistics
-- **Action Execution System**: Executes MiningOS actions (integrates with Stratum V2 for pool config updates)
-- **Data Conversion**: Converts BLVM data to MiningOS "Thing" format
-- **Event Subscription**: Subscribes to block mined, template updates, and other events
+| Direction | What it does |
+|---|---|
+| BLVM to MiningOS | Register as a rack, expose miners as things, provide block templates |
+| MiningOS to BLVM | Reboot, power, pool config, statistics, and commands |
+| HTTP | REST client for the MiningOS app-node |
+| Auth | OAuth2 tokens, refreshed automatically |
+| P2P | Node.js bridge on Hyperswarm |
+| Statistics | Chain, network, and mempool |
+| Actions | MiningOS actions, including Stratum V2 pool config |
+| Data | BLVM records become MiningOS things |
+| Events | Block mined, template updates, and the other subscribed events |
 
 ## Architecture
 
@@ -25,24 +26,15 @@ The module uses a hybrid approach combining:
 2. **Node.js Bridge**: P2P worker that extends `TetherWrkBase` for Hyperswarm integration
 3. **IPC Communication**: Unix socket-based JSON-RPC between Rust and Node.js
 
-```
-┌─────────────────────┐
-│ MiningOS │
-│ Orchestrator │
-│ (Hyperswarm P2P) │
-└──────────┬──────────┘
- │
- │ Hyperswarm
- │
-┌──────────▼──────────┐ Unix Socket ┌──────────────┐
-│ Node.js Bridge │ ◄───────────────────► │ Rust Module │
-│ (worker.js) │ JSON-RPC │ │
-└─────────────────────┘ └──────┬───────┘
- │ IPC
- │
- ┌──────▼───────┐
- │ BLVM Node │
- └──────────────┘
+```mermaid
+flowchart TB
+  mos["MiningOS orchestrator\nHyperswarm"]
+  bridge["Node.js bridge\nworker.js"]
+  rust["Rust module"]
+  node["BLVM node"]
+  mos ---|"Hyperswarm"| bridge
+  bridge ---|"Unix socket, JSON-RPC"| rust
+  rust ---|"IPC"| node
 ```
 
 ## Installation

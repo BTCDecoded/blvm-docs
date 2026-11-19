@@ -271,19 +271,3 @@ Tests for GitHub integration:
 - [Fuzzing Infrastructure](testing.md#fuzzing) - Automated bug discovery
 - [Contributing](contributing.md) - Testing requirements for contributions
 
-## Benefits
-
-1. **Easy Regression Detection**: Catch unexpected changes easily
-2. **Complex Output Testing**: Test complex structures without detailed assertions
-3. **Documentation**: Snapshots document expected behavior
-4. **Interactive Review**: Review changes before accepting
-5. **Version Control**: Track changes over time
-
-## Components
-
-The snapshot testing system includes:
-- Insta snapshot testing library
-- Snapshot test suites
-- Snapshot file management
-- Interactive review tools
-- CI integration

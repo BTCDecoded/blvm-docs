@@ -1,61 +1,10 @@
 # Transaction relay
 
-> **Platform / build**: **Dandelion++** (`dandelion`) is in **`blvm` default features** and in the release feature set on every platform. **FIBRE** is a loadable module (`blvm-fibre`), not an in-node config table. See [Release process: Build variants](../development/release-process.md#build-variants).
+Dandelion++ is transaction relay in the default `blvm` build. FIBRE is block relay in the [`blvm-fibre` module](../modules/fibre.md). Package relay is a separate page: [Package relay (BIP331)](package-relay.md).
 
-## Overview
+## Dandelion++
 
-The node supports **Dandelion++** for privacy-preserving **transaction** relay (optional `dandelion` compile-time feature). **FIBRE** is **block** relay over UDP/FEC: provided by the loadable **`blvm-fibre`** module, not an in-node `[network.fibre]` table. See [FIBRE module](../modules/fibre.md). **Package relay (BIP331)** is documented in [Package Relay (BIP331)](package-relay.md).
-
-**`blvm` default features** include Dandelion++ (Linux x86_64 release artifacts use the same default set). Portable Windows/aarch64 releases use a smaller CI subset. CTV, Stratum V2 node demux, and other flags may still require explicit `--features`: see [Release process: Build variants](../development/release-process.md#build-variants).
-
-## Dandelion++ *(experimental build)*
-
-Dandelion++ provides privacy-preserving transaction relay with formal anonymity guarantees against transaction origin analysis. It operates in two phases: stem phase (obscures origin) and fluff phase (standard diffusion).
-
-**Requires:** `dandelion` Cargo feature in the binary (**`blvm` default features** and every release build).
-
-### Architecture
-
-Dandelion++ operates in two phases:
-
-1. **Stem Phase**: Transaction relayed along a random path (obscures origin)
-2. **Fluff Phase**: Transaction broadcast to all peers (standard diffusion)
-
-### Stem Path Management
-
-Each peer maintains a stem path to a randomly selected peer:
-
-```rust
-pub struct StemPath {
- pub next_peer: String,
- pub expiry: Instant,
- pub hop_count: u8,
-}
-```
-
-
-### Stem Phase Behavior
-
-- Transactions relayed to next peer in stem path
-- Random path selection obscures transaction origin
-- Stem timeout: 10 seconds (default)
-- Fluff probability: 10% per hop (default)
-- Maximum stem hops: 2 (default)
-
-
-### Fluff Phase Behavior
-
-- Transaction broadcast to all peers
-- Standard Bitcoin transaction diffusion
-- Triggered by:
- - Random probability at each hop
- - Stem timeout expiration
- - Maximum hop count reached
-
-
-### Configuration
-
-Enable at runtime via **`[relay].enable_dandelion`** (or `--enable-dandelion` when the binary includes the feature). Tune stem/fluff under **`[dandelion]`**:
+A transaction first walks a short random path (the stem), then floods (the fluff). Each stem draws its own deadline from `stem_timeout_seconds` up to one and a half times that value. The defaults are a 10 second base, a 10% chance to fluff at each hop, and 2 hops. `[relay].enable_dandelion` turns it on. `--enable-dandelion` does the same when the binary includes the feature.
 
 ```toml
 [relay]
@@ -63,17 +12,9 @@ enable_dandelion = true
 
 [dandelion]
 stem_timeout_seconds = 10
-fluff_probability = 0.1 # 10%
+fluff_probability = 0.1
 max_stem_hops = 2
 ```
-
-
-### Benefits
-
-1. **Privacy**: Obscures transaction origin
-2. **Formal Guarantees**: Anonymity guarantees against origin analysis
-3. **Backward Compatible**: Falls back to standard relay if disabled
-4. **Configurable**: Adjustable timeouts and probabilities
 
 ## FIBRE block relay (module)
 

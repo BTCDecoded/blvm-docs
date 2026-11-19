@@ -5,24 +5,42 @@
 }
 
 .mermaid svg {
-  background: transparent !important;
+  background: #161923 !important;
   max-width: 100%;
   height: auto;
 }
 
-/* Tables — left align; wide matrices scroll horizontally instead of squishing */
+/* Mermaid puts HTML labels on a white chip. The theme text is light. */
+.mermaid svg .nodeLabel,
+.mermaid svg .nodeLabel p,
+.mermaid svg .nodeLabel span,
+.mermaid svg .edgeLabel,
+.mermaid svg .edgeLabel span,
+.mermaid svg .label,
+.mermaid svg foreignObject div,
+.mermaid svg foreignObject span {
+  color: #bcbdd0 !important;
+  background-color: transparent !important;
+}
+
+.mermaid svg .edgeLabel rect,
+.mermaid svg .labelBkg {
+  fill: #282d3f !important;
+}
+
+/* Tables fill the reading column. mdBook sets the root font-size to 62.5%,
+   so 1rem is 10px: padding has to be on that scale or the cells collapse.
+   Words break only when a single token is wider than its cell. */
 .content .table-wrapper {
   text-align: left;
-  overflow-x: auto;
   max-width: 100%;
 }
 
 .content table,
 .content .table-wrapper table {
   margin-left: 0;
-  margin-right: auto;
-  width: max-content;
-  min-width: 100%;
+  margin-right: 0;
+  width: 100%;
   table-layout: auto;
 }
 
@@ -32,13 +50,90 @@
 .content .table-wrapper td {
   text-align: left;
   vertical-align: top;
-  hyphens: auto;
+  line-height: 1.45;
   overflow-wrap: break-word;
+  word-break: normal;
+  padding: 1rem 1.2rem;
 }
 
-.content .table-wrapper th,
-.content .table-wrapper td {
-  min-width: 9rem;
+.content table :is(code, a),
+.content .table-wrapper :is(code, a) {
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Assurance locks: one check per row, full reading width. */
+.locks {
+  margin: 1.2rem 0 2.4rem;
+  border: 1px solid var(--table-border-color);
+  border-radius: 4px;
+}
+.locks section {
+  padding: 1.4rem 1.8rem 1.6rem;
+  border-bottom: 1px solid var(--table-border-color);
+}
+.locks section:last-child {
+  border-bottom: 0;
+}
+.locks section:nth-child(2n) {
+  background: var(--table-alternate-bg);
+}
+.locks .lock-name {
+  margin: 0;
+  font-weight: 700;
+}
+.locks p {
+  margin: 1rem 0 0;
+  line-height: 1.45;
+}
+.locks ul.lock-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+}
+.locks ul.lock-names li {
+  max-width: 100%;
+  margin: 0;
+}
+.locks ul.lock-names code {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  background: var(--quote-bg);
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Assurance counts. 1rem is 10px, so the value is 26px and the grid wraps. */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.2rem;
+  margin: 1.2rem 0 2.4rem;
+}
+.figures section {
+  border: 1px solid var(--table-border-color);
+  border-radius: 4px;
+  padding: 1.4rem 1.8rem 1.6rem;
+}
+.figures .figure-group {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.figures .figure-value {
+  margin: 1.2rem 0 0;
+  font-size: 2.6rem;
+  font-weight: 650;
+  line-height: 1.1;
+}
+.figures .figure-label {
+  margin: 0.4rem 0 0;
+  line-height: 1.45;
 }
 
 .admonition {
@@ -78,65 +173,35 @@
   margin-bottom: 0.35rem;
 }
 
-/* Custom CSS for chart images with white backgrounds */
-/* Force white background on all images with maximum specificity */
-
-/* Universal selector - highest priority */
-img {
-    background-color: white !important;
-    background-image: none !important;
-    padding: 8px !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.1) !important;
+/* Same menu as thebitcoincommons.org. The chapter sidebar stays below it. */
+.commons-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--theme-hover);
+  font-size: 0.92rem;
 }
 
-/* Target all PNG images */
-img[src$='.png'],
-img[src*='.png'],
-img[src*='png'] {
-    background-color: white !important;
-    background-image: none !important;
-    padding: 8px !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
+.commons-nav a {
+  color: var(--fg);
+  text-decoration: none;
 }
 
-/* Target images in various path patterns */
-img[src*='images/'],
-img[src*='../images/'],
-img[src*='/images/'],
-img[src*='./images/'],
-img[src*='images'] {
-    background-color: white !important;
-    background-image: none !important;
-    padding: 8px !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
+.commons-nav a[aria-current="page"] {
+  color: var(--links);
 }
 
-/* Target images within content areas with high specificity */
-.chapter-content img,
-.content img,
-main img,
-section img,
-article img,
-.chapter img,
-.page img {
-    background-color: white !important;
-    background-image: none !important;
-    padding: 8px !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
+/* The search field stays on the page. mdBook starts it hidden behind the icon. */
+#search-wrapper.hidden {
+  display: block !important;
 }
 
-/* Even more specific selectors for mdBook structure */
-.mdbook-content img,
-.mdbook-body img,
+/* Charts are drawn in the navy theme. Do not mat them in white. */
 .book-content img {
-    background-color: white !important;
-    background-image: none !important;
-    padding: 8px !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
+    background: transparent;
+    max-width: 100%;
+    height: auto;
 }

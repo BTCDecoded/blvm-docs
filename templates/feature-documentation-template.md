@@ -44,7 +44,7 @@
 - **Technical details** (not just overview)
 - **No placeholder text** (TODO, FIXME, XXX)
 - **No vague descriptions**
-- **Code references** with line numbers where applicable
+- **Code references** name the file and the symbol, with no line numbers
 
 ## Example Structure
 
@@ -59,9 +59,7 @@
 
 [100-200 words on how it works, key components]
 
-**Code**: ```startLine:endLine:filepath
-// code snippet
-```
+**Code**: `path/to/file.rs` (`function_name`)
 
 ## Usage
 

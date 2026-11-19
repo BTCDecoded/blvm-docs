@@ -1,0 +1,22 @@
+status: measured
+measured_at: "2026-11-18"
+dated: false
+source: "Test functions in blvm-consensus, by area."
+unit: tests
+categories:
+  - Inline with the code
+  - Script, witness, sighash
+  - Engineering and config
+  - Property tests
+  - Integration, mempool, reorg
+  - Blocks
+  - Forks and BIPs
+  - Transactions and encoding
+  - Crypto, supply, and flags
+  - Core, golden, mainnet
+  - Proof of work
+  - Unit and regression
+tones: [measured, measured, measured, measured, measured, measured, measured, measured, measured, measured, measured, measured]
+series:
+  - name: Test functions
+    values: [644, 420, 301, 184, 171, 147, 115, 104, 92, 63, 62, 50]

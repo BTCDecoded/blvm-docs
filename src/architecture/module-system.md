@@ -4,24 +4,16 @@
 
 Optional features ([Lightning Network](../modules/lightning.md), [merge mining](../node/mining-stratum-v2.md), privacy relays) run in separate processes with [IPC communication](module-ipc-protocol.md).
 
-A fresh install enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. **blvm-payment** is not a default pin. **blvm-fibre** is not in the registry until `[downloads]` exists. See [Module catalog](../modules/overview.md) and [First Node Setup](../getting-started/first-node.md).
+A config file that omits `[modules]` enables **blvm-miniscript**, **blvm-zmq**, and **blvm-index**. A start with no config file loads the `local` profile: modules off, and no assume-valid seed. **blvm-payment** is not a default pin. **blvm-fibre** is not in the registry until `[downloads]` exists. The module list is the [catalog](../modules/overview.md).
 
-## Available modules
-
-- **[Lightning Network Module](../modules/lightning.md)**: Lightning payment processing
-- **[Commons Mesh Module](../modules/mesh.md)**: Payment-gated mesh overlay; four JSON-RPC methods when `blvm-mesh` is loaded
-- **[Stratum V2 Module](../modules/stratum-v2.md)**: Stratum V2 mining protocol
-- **[Datum Module](../modules/datum.md)**: DATUM Gateway mining protocol
-- **blvm-zmq**: [ZMQ module](../modules/zmq.md)
-- **blvm-index**: [Wallet index](../modules/wallet-index.md)
-- **blvm-miniscript**: [Miniscript module](../modules/miniscript.md)
-- **blvm-governance**: [Governance module](../modules/governance-module.md)
-- **blvm-fibre**: [FIBRE module](../modules/fibre.md)
-- **blvm-marketplace**: [Marketplace module](../modules/marketplace-module.md) (optional; registry bootstrap usually does not need it)
-
-For detailed documentation on each module, see the [Modules](../modules/overview.md) section.
-
-**Writing modules:** Use the **SDK declarative style** (blvm-sdk attribute macros and `run_module!`) to define CLI, RPC, and event handling in one impl block without manual IPC loops; see [Building modules](../sdk/module-development.md#sdk-declarative-style-recommended). Alternatively use the integration API or low-level IPC for custom control.
+| You are looking up | Read |
+|---|---|
+| Which modules exist | [Module catalog](../modules/overview.md) |
+| How a module is isolated | [Architecture](#architecture) |
+| Load order | [Module lifecycle](#module-lifecycle) |
+| `module.toml` | [Module manifest](#module-manifest) |
+| Events and timers | [Event system](#event-system), [Module timers](#module-timers) |
+| How to write one | [Building modules](../sdk/module-development.md#sdk-declarative-style-recommended) |
 
 ## Architecture
 
@@ -31,43 +23,47 @@ Each module runs in a separate process with isolated memory. The base node conse
 
 ```mermaid
 graph TB
- subgraph "blvm-node Process"
+ subgraph nodeProc["blvm-node Process"]
  CS[Consensus State<br/>Protected, Read-Only]
  MM[Module Manager<br/>Orchestration]
  NM[Network Manager]
  SM[Storage Manager]
  RM[RPC Manager]
  end
- 
- subgraph "Module Process 1<br/>blvm-lightning"
+
+ subgraph mod1["Module Process 1<br/>blvm-lightning"]
  LS[Lightning State<br/>Isolated Memory]
  SB1[Sandbox<br/>Resource Limits]
  end
- 
- subgraph "Module Process 2<br/>blvm-mesh"
+
+ subgraph mod2["Module Process 2<br/>blvm-mesh"]
  MS[Mesh State<br/>Isolated Memory]
  SB2[Sandbox<br/>Resource Limits]
  end
- 
- subgraph "Module Process 3<br/>blvm-stratum-v2"
+
+ subgraph mod3["Module Process 3<br/>blvm-stratum-v2"]
  SS[Stratum V2 State<br/>Isolated Memory]
  SB3[Sandbox<br/>Resource Limits]
  end
- 
+
  MM -->|IPC Unix Sockets| LS
  MM -->|IPC Unix Sockets| MS
  MM -->|IPC Unix Sockets| SS
- 
+
  CS -.->|Read-Only Access| MM
  NM --> MM
  SM --> MM
  RM --> MM
- 
- style CS fill:#fbb,stroke:#333,stroke-width:3px
- style MM fill:#bbf,stroke:#333,stroke-width:2px
- style LS fill:#bfb,stroke:#333,stroke-width:2px
- style MS fill:#bfb,stroke:#333,stroke-width:2px
- style SS fill:#bfb,stroke:#333,stroke-width:2px
+
+ style nodeProc fill:#1e2333,stroke:#505274,color:#bcbdd0
+ style mod1 fill:#1e2333,stroke:#505274,color:#bcbdd0
+ style mod2 fill:#1e2333,stroke:#505274,color:#bcbdd0
+ style mod3 fill:#1e2333,stroke:#505274,color:#bcbdd0
+ style CS fill:#3d2c32,stroke:#e07a7a,stroke-width:2px,color:#f6ecec
+ style MM fill:#243044,stroke:#7eb6e8,stroke-width:2px,color:#e7f1fb
+ style LS fill:#1c3330,stroke:#5dcaa5,stroke-width:2px,color:#e5f6f0
+ style MS fill:#1c3330,stroke:#5dcaa5,stroke-width:2px,color:#e5f6f0
+ style SS fill:#1c3330,stroke:#5dcaa5,stroke-width:2px,color:#e5f6f0
 ```
 
 
@@ -165,11 +161,10 @@ Modules request capabilities that are validated before API access. Capabilities 
 ## Module Lifecycle
 
 ```
-Discovery → Verification → Loading → Execution → Monitoring
- │ │ │ │ │
- │ │ │ │ │
- ▼ ▼ ▼ ▼ ▼
-Registry Signer Loader Process Monitor
+Discovery --> Verification --> Loading --> Execution --> Monitoring
+    |               |             |            |              |
+    v               v             v            v              v
+ Registry        Signer         Loader      Process       Monitor
 ```
 
 ### Discovery
@@ -236,17 +231,14 @@ Module crashes are isolated and do not affect the base node. The `ModuleProcessM
 
 ### Security Flow
 
-```
-Module Binary
- │
- ├─→ Hash Verification ──→ Integrity Check
- │
- ├─→ Signature Verification ──→ Multisig Check ──→ Maintainer Verification
- │
- ├─→ Permission Check ──→ Capability Validation
- │
- └─→ Sandbox Creation ──→ Resource Limits ──→ Isolation
-```
+Each check starts from the module binary.
+
+| Check | What it establishes |
+|---|---|
+| Hash verification | Integrity of the binary |
+| Signature verification | Multisig check, then maintainer verification |
+| Permission check | The requested capabilities |
+| Sandbox creation | Resource limits, then process isolation |
 
 ## Module Manifest
 
@@ -329,84 +321,64 @@ client.subscribe_events(event_types).await?;
 
 ### Event Categories
 
-Catalog of shared **`EventType`** variants on the node bus. **Individual modules subscribe/publish subsets only**: see each [module page](../modules/overview.md). Listed below are the non-reserved variants; see **Reserved slots** at the end of this list.
-- `NewBlock` - Block connected to chain
-- `NewTransaction` - Transaction in mempool
-- `BlockDisconnected` - Block disconnected (reorg)
-- `ChainReorg` - Chain reorganization
+Shared `EventType` variants on the node bus. A module subscribes to a subset. The module pages name the subset each one uses. These are the variants a module can receive. Reserved slots are below the table.
 
-
-**Mining Events:**
-- `BlockMined` - Block mined successfully
-- `BlockTemplateUpdated` - Block template updated
-- `MiningDifficultyChanged` - Mining difficulty changed
-
-**Mesh Networking Events:**
-- `MeshPacketReceived` - Mesh packet received from network
-
-**Stratum V2 Events:**
-- `StratumV2MessageReceived` - Stratum V2 message received from network
-
-**Module Lifecycle Events:**
-- `ModuleLoaded` - Module loaded (published after subscription)
-- `ModuleUnloaded` - Module unloaded
-- `ModuleCrashed` - Module crashed
-- `ModuleDiscovered` - Module discovered
-- `ModuleInstalled` - Module installed
-- `ModuleUpdated` - Module updated
-- `ModuleRemoved` - Module removed
-
-**Configuration Events:**
-- `ConfigLoaded` - Node configuration loaded/changed
-
-**Node Lifecycle Events:**
-- `NodeStartupCompleted` - Node fully operational
-- `NodeShutdown` - Node shutting down
-- `NodeShutdownCompleted` - Shutdown complete
-
-**Maintenance Events:**
-- `DataMaintenance` - Unified cleanup/flush event (replaces StorageFlush + DataCleanup)
-- `HealthCheck` - Health check performed
-
-**Resource Management Events:**
-- `DiskSpaceLow` - Disk space low
-
-
-**Network Events:**
-- `PeerConnected` - Peer connected
-- `PeerDisconnected` - Peer disconnected
-- `PeerBanned` - Peer banned
-- `PeerUnbanned` - Peer unbanned
-- `MessageReceived` - Network message received
-- `MessageSent` - Network message sent
-
-**Consensus Events:**
-- `BlockValidationStarted` - Block validation started
-- `BlockValidationCompleted` - Block validation completed (success/failure)
-- `DifficultyAdjusted` - Network difficulty adjusted
-
-**Sync Events:**
-- `HeadersSyncStarted` - Headers sync started
-- `HeadersSyncProgress` - Headers sync progress update
-- `HeadersSyncCompleted` - Headers sync completed
-- `BlockSyncStarted` - Block sync started (IBD)
-- `BlockSyncProgress` - Block sync progress update
-- `BlockSyncCompleted` - Block sync completed
-
-**Mempool Events:**
-- `MempoolTransactionAdded` - Transaction added to mempool
-- `MempoolTransactionRemoved` - Transaction removed from mempool
-- `FeeRateChanged` - Fee rate changed
-
-**Additional events:**
-- `ModuleReloaded`, `ModuleHealthChanged`, `ModuleStateChanged` - Module lifecycle detail
-- `MempoolThresholdExceeded`, `MempoolCleared` - Mempool state
-- `SyncStateChanged` - Sync state transition
-- `CompanionUdpPeerRegistered` / `CompanionUdpPeerUnregistered` - NODE_FIBRE companion UDP peers
-- `BanListShared`, `BanListReceived` - Ban list sharing
-- `PeerPayment` - Peer payment notification
-- `ModuleEvent` - Module-published event. Modules such as `blvm-lightning`, `blvm-mesh`, `blvm-governance`, and `blvm-selective-sync` publish their own events this way (their 0.1 releases after 2026-11-07)
-- `FeeTableReady` - A fee table is ready for the fee estimator
+| Event | What it signals |
+|---|---|
+| `NewBlock` | A block connected to the chain |
+| `NewTransaction` | A transaction entered the mempool |
+| `BlockDisconnected` | A block disconnected in a reorg |
+| `ChainReorg` | The chain reorganized |
+| `BlockMined` | A block was mined |
+| `BlockTemplateUpdated` | The block template changed |
+| `MiningDifficultyChanged` | Mining difficulty changed |
+| `MeshPacketReceived` | A mesh packet arrived |
+| `StratumV2MessageReceived` | A Stratum V2 message arrived |
+| `ModuleLoaded` | The module loaded, after its subscription |
+| `ModuleUnloaded` | The module unloaded |
+| `ModuleCrashed` | The module crashed |
+| `ModuleDiscovered` | A module was discovered |
+| `ModuleInstalled` | A module was installed |
+| `ModuleUpdated` | A module was updated |
+| `ModuleRemoved` | A module was removed |
+| `ModuleReloaded` | The module reloaded |
+| `ModuleHealthChanged` | Module health changed |
+| `ModuleStateChanged` | Module state changed |
+| `ConfigLoaded` | Node configuration loaded or changed |
+| `NodeStartupCompleted` | The node is operational |
+| `NodeShutdown` | The node is shutting down |
+| `NodeShutdownCompleted` | Shutdown finished |
+| `DataMaintenance` | Cleanup or flush |
+| `HealthCheck` | A health check ran |
+| `DiskSpaceLow` | Disk space is low |
+| `PeerConnected` | A peer connected |
+| `PeerDisconnected` | A peer disconnected |
+| `PeerBanned` | A peer was banned |
+| `PeerUnbanned` | A peer was unbanned |
+| `MessageReceived` | A network message arrived |
+| `MessageSent` | A network message was sent |
+| `BlockValidationStarted` | Block validation started |
+| `BlockValidationCompleted` | Block validation finished |
+| `DifficultyAdjusted` | Network difficulty adjusted |
+| `HeadersSyncStarted` | Header sync started |
+| `HeadersSyncProgress` | Header sync progress |
+| `HeadersSyncCompleted` | Header sync finished |
+| `BlockSyncStarted` | Block sync started |
+| `BlockSyncProgress` | Block sync progress |
+| `BlockSyncCompleted` | Block sync finished |
+| `MempoolTransactionAdded` | A transaction entered the mempool |
+| `MempoolTransactionRemoved` | A transaction left the mempool |
+| `FeeRateChanged` | The fee rate changed |
+| `MempoolThresholdExceeded` | The mempool crossed a threshold |
+| `MempoolCleared` | The mempool was cleared |
+| `SyncStateChanged` | Sync state changed |
+| `CompanionUdpPeerRegistered` | A NODE_FIBRE companion UDP peer registered |
+| `CompanionUdpPeerUnregistered` | That companion peer left |
+| `BanListShared` | A ban list was shared |
+| `BanListReceived` | A ban list arrived |
+| `PeerPayment` | A peer payment notification |
+| `ModuleEvent` | An event published by a module, including `blvm-lightning`, `blvm-mesh`, `blvm-governance`, and `blvm-selective-sync` |
+| `FeeTableReady` | A fee table is ready for the estimator |
 
 **Reserved slots.** `blvm-node` e292087 renamed variants that nothing publishes to `Reserved*` (for example `ReservedShareSubmitted`, `ReservedPaymentSettled`, `ReservedGovernanceProposalCreated`, `ReservedDandelionFluffed`). The slots keep their bincode index, so the wire format does not shift. Do not subscribe to them: no node code path or shipped module emits them. Module-specific events travel as `ModuleEvent`.
 
@@ -422,7 +394,7 @@ The IPC requests are `TimerCreate`, `TimerCancel`, `TimerPause`, `TimerResume`, 
 
 A durable timer lives in the **node** database tree `module_timers`, not the module database. Unload/disconnect detaches it; it resumes when the module reconnects. `delete_module_timers` removes records, but there is no uninstall path that calls it yet. `Persist::Durable { audit: true }` also appends to `module_timer_journal`. The journal detects changed records, not a writer who can rewrite the entire tree and recompute every hash.
 
-Configure global limits under [`[timers]`](../reference/configuration-reference.md#module-timers-timers); `[module_timers.<name>]` can override `max_timers` for one handshake module name. RPCs `listtimers`, `gettimerstats`, `gettimerjournal`, and `verifytimerjournal` inspect the service. Metrics include active timers, fires, lateness, acknowledgement time, and circuit-breaker trips.
+Configure global limits under [`[timers]`](../reference/configuration-reference.md#timers); `[module_timers.<name>]` can override `max_timers` for one handshake module name. RPCs `listtimers`, `gettimerstats`, `gettimerjournal`, and `verifytimerjournal` inspect the service. Metrics include active timers, fires, lateness, acknowledgement time, and circuit-breaker trips.
 
 ## Module Registry
 
@@ -469,38 +441,10 @@ manager.auto_load_modules().await?;
 ```
 
 
-## Benefits
-
-1. **Consensus Isolation**: Modules cannot affect consensus rules
-2. **Crash Containment**: Module failures don't affect base node
-3. **Security**: Process isolation and permission system
-4. **Extensibility**: Add features without consensus changes
-5. **Flexibility**: Load/unload modules at runtime
-6. **Governance**: Modules subject to governance approval
-
-## Use Cases
-
-- **Lightning Network**: Payment channel management
-- **Merge Mining**: Auxiliary chain support
-- **Privacy Enhancements**: Transaction mixing, coinjoin
-- **Alternative Mempool Policies**: Custom transaction selection
-- **Smart Contracts**: Layer 2 contract execution
-
-## Components
-
-The module system includes:
-- Process isolation
-- IPC communication
-- Security sandboxing
-- Permission system
-- Module registry
-- Event system
-- API hub
-
 
 ## IPC Communication
 
-Modules communicate with the node via the Module IPC Protocol:
+The wire format is the [Module IPC protocol](module-ipc-protocol.md). The samples below are how a module connects.
 
 - **Protocol**: Length-delimited binary messages over Unix domain sockets
 - **Message Types**: Requests, Responses, Events, Logs
@@ -597,12 +541,3 @@ For detailed protocol documentation, see [Module IPC Protocol](module-ipc-protoc
 - [events.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/api/events.rs)
 - [client.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/module/registry/client.rs)
 - [blvm-node/src/module/](https://github.com/BTCDecoded/blvm-node/tree/main/src/module/)
-## See Also
-
-- [Module IPC Protocol](module-ipc-protocol.md) - Complete IPC protocol documentation
-- [Module catalog](../modules/overview.md) - Overview of all available modules
-- [Lightning Network Module](../modules/lightning.md) - Lightning Network payment processing
-- [Commons Mesh Module](../modules/mesh.md) - Payment-gated mesh networking
-- [Stratum V2 Module](../modules/stratum-v2.md) - Stratum V2 mining protocol
-- [Datum Module](../modules/datum.md) - DATUM Gateway mining protocol
-- [Building modules](../sdk/module-development.md) - Guide for developing custom modules

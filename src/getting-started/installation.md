@@ -10,10 +10,14 @@ Always verify `checksums.sha256` (or the release checksum file) before running a
 
 | Artifact | Platform | Feature set | Typical use |
 |----------|----------|-------------|-------------|
-| Release tarball / package | Linux **x86_64** | `blvm` default features (`heed3`, `rest-api`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, `sigop`, …). `bip70-http` is not a default | Production mainnet / testnet |
-| Release tarball / package | Linux **aarch64**, Windows **x86_64** | Same set as the defaults (`BLVM_COMMON_FEATURES` in `scripts/ci-portable-cross-features.sh`); Windows omits `libc`. heed3 is the only storage engine | Lighter deployments |
+| `.deb`, `.rpm`, and Arch packages | Linux **x86_64** and **aarch64**, as published | `blvm` default features (`heed3`, `rest-api`, `compression`, `governance`, `iroh`, `dandelion`, `utxo-commitments`, `sigop`, …). `bip70-http` is not a default | Installs the systemd unit and leaves it disabled |
+| Tarballs and standalone binaries | Linux **x86_64** and **aarch64** | Same default features | Binary only |
+| Windows `.exe` / `.zip` | Windows **x86_64** | Same set (`BLVM_COMMON_FEATURES` in `scripts/ci-portable-cross-features.sh`); omits `libc` | Binary only. The WinSW sample is in the repository |
 | Docker | GHCR [ghcr.io/btcdecoded/blvm](https://github.com/BTCDecoded/blvm/pkgs/container/blvm) | Per-release tag | Container ops |
+| `blvm-minimal` | The release archives | heed3 and the production consensus build. No iroh, Dandelion, REST, governance, UTXO commitments, sigop, or module HTTP | No config file loads `minimal-hardened`: no inbound peers, modules off, assume-valid off |
 | Source build | Any supported Rust target | Explicit `--features` | Experimental flags, custom arch |
+
+The Linux `.deb`, `.rpm`, and Arch packages install the systemd unit and leave it disabled. The tarballs, the standalone binaries, and the Windows zip do not. OpenRC, launchd, and the Windows sample stay in the `blvm` repository `contrib/init/`.
 
 Details: [Release process: Build variants](../development/release-process.md#build-variants).
 
@@ -43,6 +47,7 @@ For other architectures, experimental compile-time features, or development: [bl
 - [Quick Start](../getting-started/quick-start.md)
 - [Deployment posture](../security/deployment-posture.md) (before mainnet RPC)
 - [Node configuration](../node/configuration.md)
+- [Service manager](../node/operations.md#service-manager)
 
 ## See also
 

@@ -1,38 +1,32 @@
 # Governance Model
 
-Bitcoin Commons publishes a constitutional governance model: graduated signature thresholds and review periods.
+The rules are published. Enforcement is off. The keys are test keys. A signature does not block a merge.
 
-{{#include ../../modules/governance/GOVERNANCE.md}}
+A change has a repository layer and an action tier. When both apply, the higher signature count and the longer review window win. The matrix is on [Layers and tiers](layer-tier-model.md).
 
-## Governance Signature Thresholds
+## Signature thresholds by layer
 
-![Governance Signature Thresholds](../images/governance-signature-thresholds.png)
-*Figure: Signature thresholds by layer showing the graduated security model. Constitutional layers require [[gov:layer_1_signatures]], while extension layers require [[gov:layer_5_signatures]].*
+{{#include ../../charts/fragments/layer-signatures.md}}
 
-## Governance Process Latency
+Required signatures and maintainer set size come from `repository-layers.yml`. Constitutional layers require [[gov:layer_1_signatures]]. Extension layers require [[gov:layer_5_signatures]]. The table is that policy. It is not a count of signatures collected on a pull request.
 
-![Governance Process Latency](../images/governance-process-latency.png)
-*Figure: Governance process latency showing review periods and decision timelines across different tiers.*
+## Review window by repository layer
 
-## PR Review Time Distribution
+![Review window by repository layer](../images/charts/layer-thresholds.svg)
 
-![PR Review Time Distribution](../images/pr-review-time-distribution.png)
-*Figure: Pull request review time distribution. Long tails reveal why throughput stalls without process and tooling. Bitcoin Commons addresses this through structured review periods and automated tooling.*
+Review days and the consensus-change window come from `repository-layers.yml`. The bars are that policy. They are not a measured review duration.
 
-## See Also
+## Review period by action tier
 
-### Operator quick answers (FAQ)
+![Review period by action tier](../images/charts/tier-review-days.svg)
 
-- [Do I need governance to run a node?](../appendices/faq.md#do-i-need-governance-to-run-a-node)
-- [What is Bitcoin Commons vs BLVM?](../appendices/faq.md#what-is-bitcoin-commons-vs-blvm)
-- [What are layers, tiers, and signatures?](../appendices/faq.md#what-are-layers-tiers-and-signatures)
-- [Why graduated signature thresholds?](../appendices/faq.md#why-graduated-signature-thresholds)
-- [Is the system production ready?](../appendices/faq.md#is-the-system-production-ready) (governance is not universally activated)
+Each bar is the published review period in `action-tiers.yml`. The emergency tier is [[gov:tier_4_review_days]] days. Signature counts for the tiers are on [Layers and tiers](layer-tier-model.md).
 
-### Governance docs
+Emergency classes, the maintainer roster, and the constitutional text stay in [GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md).
 
-- [PR Process](../development/pr-process.md) - How governance applies to pull requests
-- [Layer-Tier Model](layer-tier-model.md) - Layer and tier combination rules
-- [Multisig Configuration](multisig-configuration.md) - Signature threshold configuration
-- [Governance Overview](overview.md) - Governance system introduction
-- [Keyholder Procedures](keyholder-procedures.md) - Maintainer responsibilities
+## See also
+
+- [Layers and tiers](layer-tier-model.md)
+- [Multisig configuration](multisig-configuration.md)
+- [PR process](../development/pr-process.md)
+- [Governance overview](overview.md)

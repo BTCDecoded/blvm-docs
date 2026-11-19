@@ -12,33 +12,11 @@ Package Relay (BIP331) enables nodes to relay and validate groups of transaction
 
 A transaction package contains:
 
-```rust
-pub struct TransactionPackage {
-    pub transactions: Vec<Transaction>,  // Ordered: parents first
-    pub package_id: PackageId,
-    pub combined_fee: u64,
-    pub combined_weight: usize,
-}
-```
-
+`TransactionPackage` in `blvm-node/src/network/package_relay.rs` carries the transactions in parent-first order, the package id, the combined fee, the combined weight, and `fee_known`.
 
 ### Package ID
 
-Package ID is calculated as double SHA256 of all transaction IDs:
-
-```rust
-pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
-    let mut hasher = Sha256::new();
-    for tx in transactions {
-        let txid = calculate_txid(tx);
-        hasher.update(txid);
-    }
-    let first = hasher.finalize();
-    let mut hasher2 = Sha256::new();
-    hasher2.update(first);
-    PackageId(final_hash)
-}
-```
+`PackageId::from_transactions` sorts the package wtxids lexicographically and hashes that byte string once with SHA256. With no witness, the wtxid is the txid.
 
 
 ## Validation Rules
@@ -47,7 +25,7 @@ pub fn from_transactions(transactions: &[Transaction]) -> PackageId {
 
 - **Maximum Transactions**: 25 (BIP331 limit)
 - **Maximum Weight**: 404,000 WU (~101,000 vB)
-- **Minimum Fee Rate**: Configurable (default: 1 sat/vB)
+- **Minimum Fee Rate**: 100 satoshis per 1,000 virtual bytes (0.1 sat/vB)
 
 
 ### Ordering Requirements
@@ -60,17 +38,7 @@ Transactions must be ordered with parents before children:
 
 ### Fee Calculation
 
-Package fee is calculated as sum of all transaction fees:
-
-```rust
-combined_fee = sum(inputs) - sum(outputs) for all transactions
-```
-
-Fee rate is calculated as:
-
-```rust
-fee_rate = combined_fee / combined_weight
-```
+The package fee is the sum of the transaction fees. When `fee_known` is set, the package pays at least `min_fee_rate` satoshis per 1,000 virtual bytes, rounded up. Virtual size is `combined_weight` divided by 4, rounded up.
 
 
 ## Use Cases
@@ -173,34 +141,10 @@ The `PackageRelayHandler` processes incoming package messages:
 - Relays accepted packages to other peers
 
 
-## Configuration
+## Defaults
 
-```toml
-[network.package_relay]
-enabled = true
-max_package_size = 25
-max_package_weight = 404000  # 404k WU
-min_fee_rate = 1000  # 1 sat/vB
-```
+`PackageValidator` in `blvm-node/src/network/package_relay.rs` uses the three limits above. There is no `[network.package_relay]` table.
 
-
-## Benefits
-
-1. **Efficient Fee-Bumping**: Better fee rate calculation for packages
-2. **Reduced Orphans**: Reduces orphan transactions in mempool
-3. **Atomic Validation**: Package validated as unit
-4. **DoS Resistance**: Size and weight limits prevent abuse
-5. **CPFP Support**: Enables child-pays-for-parent scenarios
-
-## Components
-
-The Package Relay system includes:
-- Package structure and validation
-- Package ID calculation
-- Fee and weight calculation
-- Ordering validation
-- Package manager
-- Network message handling
 
 ## Source
 

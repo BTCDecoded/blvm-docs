@@ -51,41 +51,7 @@ let commitment = tree.generate_commitment(block_hash, height);
 
 ## Peer Consensus Protocol
 
-### N-of-M Verification Model
-
-The peer consensus protocol discovers diverse peers and finds consensus among them to verify UTXO commitments without trusting any single peer.
-
-### Peer Diversity
-
-Peers are selected for diversity across:
-- **ASN (Autonomous System Number)**: Maximum 2 peers per ASN
-- **Country**: Geographic distribution
-- **Subnet**: /16 subnet distribution
-- **Implementation**: Different Bitcoin implementations may adopt commitment schemes independently
-
-
-### Consensus Configuration
-
-```rust
-pub struct ConsensusConfig {
- pub min_peers: usize, // Minimum: 5
- pub target_peers: usize, // Target: 10
- pub consensus_threshold: f64, // 0.8 (80% agreement)
- pub max_peers_per_asn: usize, // 2
- pub safety_margin: Natural, // 2016 blocks (~2 weeks)
-}
-```
-
-
-### Consensus Process
-
-1. **Discover Diverse Peers**: Find peers across different ASNs, countries, subnets
-2. **Request Commitments**: Query each peer for UTXO commitment at checkpoint height
-3. **Group Responses**: Group commitments by value (merkle root + supply + count + height)
-4. **Find Consensus**: Identify group with highest agreement
-5. **Verify Threshold**: Check if agreement meets consensus threshold (80%)
-6. **Verify Commitment**: Verify consensus commitment against block headers and PoW
-
+Diverse peers agree on a UTXO commitment before fast sync uses it. The peer set, the threshold, and the checkpoint margin are [Peer consensus](peer-consensus.md).
 
 ## Fast Sync Protocol
 
@@ -140,7 +106,7 @@ BIP158 compact block filters support light clients and integrate with UTXO commi
 
 #### Filter Generation
 - **Golomb-Rice Coded Sets (GCS)** for efficient encoding
-- **False Positive Rate**: ~1 in 524,288 (P=19)
+- **Parameters**: Golomb-Rice `P` is 19. The range multiplier `M` is 784,931, about one false positive in `M`
 - **Filter Contents**:
  1. All spendable output scriptPubKeys in the block
  2. All scriptPubKeys from outputs spent by block's inputs
@@ -152,10 +118,10 @@ BIP158 compact block filters support light clients and integrate with UTXO commi
 
 ### Algorithm
 
-1. **Collect Scripts**: All output scriptPubKeys from block transactions and all scriptPubKeys from UTXOs being spent
-2. **Hash to Range**: Hash each script with SHA256, map to range [0, N*M) where N = number of elements, M = 2^19
-3. **Golomb-Rice Encoding**: Sort hashed values, compute differences, encode using Golomb-Rice
-4. **Filter Matching**: Light clients hash their scripts and check if script hash is in set
+1. **Collect Scripts**: Output scriptPubKeys from the block and scriptPubKeys from the outputs the block spends. Empty scripts and `OP_RETURN` outputs are left out.
+2. **Hash to Range**: SipHash-2-4 each script, keyed by the first 16 bytes of the block hash, into `[0, N×784931)`. `N` is the number of scripts.
+3. **Golomb-Rice Encoding**: Sort those values, encode the differences with Golomb-Rice parameter `P` = 19.
+4. **Filter Matching**: A light client hashes its own scripts the same way and checks the set.
 
 ### Integration with UTXO Commitments
 
@@ -245,16 +211,12 @@ Storage correctness for UTXO set operations is covered by tests and blvm-spec-lo
 ```rust
 use blvm_protocol::utxo_commitments::InitialSync;
 
-let sync = InitialSync::new(
- peer_consensus,
- network_client,
- config,
-);
+let sync = InitialSync::new(config);
 
-// Sync from checkpoint
-let commitment = sync.sync_from_checkpoint(
+let commitment = sync.execute_initial_sync(
+ peers,
  header_chain,
- diverse_peers,
+ network_client,
 ).await?;
 
 // Complete sync forward with full validation
@@ -285,27 +247,6 @@ update_commitments_after_block(
  height,
 )?;
 ```
-
-
-## Benefits
-
-1. **Fast sync**: Substantially less data than naïve full-block replay (see [Bandwidth savings](#bandwidth-savings))
-2. **Security**: N-of-M peer consensus prevents single peer attacks
-3. **Efficiency**: Incremental updates, no full set download
-4. **Flexibility**: Multiple sync modes and verification levels
-5. **Transport Agnostic**: Works with TCP or QUIC
-6. **Formal Verification**: blvm-spec-lock proofs ensure correctness
-
-## Components
-
-The UTXO Commitments system includes:
-- Sparse Merkle Tree with incremental updates
-- Peer consensus protocol (N-of-M verification)
-- Spam filtering
-- Commitment verification
-- Network integration (TCP and Iroh)
-- Fast sync protocol
-- blvm-spec-lock proofs
 
 
 ## Source

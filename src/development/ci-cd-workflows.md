@@ -148,9 +148,9 @@ Builds follow **Cargo’s dependency graph** (simplified view):
  ↓
 5. blvm (CLI): depends on blvm-node
 
-blvm-sdk: depends on blvm-protocol + blvm-consensus (and optionally blvm-node); not a separate “no-deps” lane
+blvm-sdk: the default `node` feature depends on blvm-node. No direct dependency on blvm-protocol or blvm-consensus
  ↓
-blvm-commons: depends on blvm-sdk + blvm-protocol
+blvm-commons: depends on blvm-sdk and blvm-protocol
 ```
 
 **Security Gates**: Consensus verification (tests + **BLVM Specification Lock** where `#[spec_locked]` is enabled) must pass before downstream builds proceed. Details: [Formal Verification](../consensus/formal-verification.md).
@@ -372,13 +372,7 @@ For long-running runners, implement cache cleanup:
 
 ### Performance Improvements
 
-With proper caching optimization:
-- **Dependency checkout**: ~30s (once in setup job)
-- **Cache restore**: ~5s per job (local cache vs ~20s for GitHub cache)
-- **Dependency build**: ~30s (cached artifacts vs ~5min without cache)
-- **Total overhead**: ~2min vs ~35min without optimization
-
-**Estimated speedup**: measure setup overhead locally on self-hosted runners (varies by disk and cache state).
+Cache the dependency checkout and the build. Setup time depends on the runner disk and whether the cache is warm. Measure it on the self-hosted runners.
 
 ## Additional Resources
 

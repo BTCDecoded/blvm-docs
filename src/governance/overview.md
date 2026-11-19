@@ -10,7 +10,7 @@ Cryptographic governance for Bitcoin Commons repositories: tiers, signatures, an
 
 | Topic | Guide |
 |------|--------|
-| Constitutional model, tiers, capture resistance | [Governance Model](governance-model.md) |
+| Layer and tier schedules | [Governance Model](governance-model.md) |
 | Layers × tiers and signature rules | [Layer-tier model](layer-tier-model.md) |
 | PR lifecycle, signatures, merge rules | [PR process](../development/pr-process.md) |
 | Human review and AI review intelligence | [Review standards](#review-standards) |
@@ -23,10 +23,9 @@ Cryptographic governance for Bitcoin Commons repositories: tiers, signatures, an
 | blvm-commons enforcement | [blvm-commons](blvm-commons.md) |
 | OpenTimestamps / Nostr integrations | [OpenTimestamps](opentimestamps-integration.md), [Nostr](nostr-integration.md) |
 | Operator FAQ (governance) | [FAQ: governance](../appendices/faq.md#do-i-need-governance-to-run-a-node) |
+| Governance primitives in code | [SDK API Reference](../sdk/api-reference.md) |
 
-The governance system enforces development processes cryptographically across Bitcoin Commons repositories. Module README (below) covers day-to-day governance module usage; the [Governance Model](governance-model.md) page includes the full constitutional document.
-
-{{#include ../../modules/governance/README.md}}
+The governance rules are published and are not enforced. Phase 1 is current, the keys in the governance repository are test keys, and merges are not blocked by a second reviewer. The schedules are on [Governance Model](governance-model.md). The constitutional text is [GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md).
 
 ## Review standards {#review-standards}
 
@@ -36,13 +35,4 @@ Human maintainer expectations and AI-assisted “review intelligence” for Bitc
 - **[Review intelligence](https://github.com/BTCDecoded/governance/blob/main/guides/REVIEW_INTELLIGENCE.md)**: Operating document for **AI-assisted** review of Bitcoin implementations: true alternative vs Core fork taxonomy, flag structure, and alignment with the [Orange Paper](../reference/orange-paper.md) and the [Bitcoin Commons Compact](https://github.com/BTCDecoded/governance/blob/main/COMPACT.md).
 
 For PR tiers, cryptographic signatures, and merge rules, see [PR process](../development/pr-process.md) and [Layer-tier model](layer-tier-model.md).
-
-## See Also
-
-- [Governance Model](governance-model.md): Constitutional model and included [governance policy](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md)
-- [PR Process](../development/pr-process.md): How tiers apply to pull requests
-- [Multisig Configuration](multisig-configuration.md): Configuring multisig thresholds
-- [Keyholder Procedures](keyholder-procedures.md): Maintainer responsibilities
-- [Audit Trails](audit-trails.md): Audit logging and verification
-- [SDK API Reference](../sdk/api-reference.md): Governance primitives API
 

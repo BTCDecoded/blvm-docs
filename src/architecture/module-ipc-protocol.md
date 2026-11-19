@@ -6,24 +6,11 @@ The Module IPC (Inter-Process Communication) protocol enables secure communicati
 
 ## Architecture
 
-```
-┌─────────────────────────────────────┐
-│ blvm-node Process │
-│ ┌───────────────────────────────┐ │
-│ │ Module IPC Server │ │
-│ │ (Unix Domain Socket) │ │
-│ └───────────────────────────────┘ │
-└─────────────────────────────────────┘
- │ IPC Protocol
- │ (Unix Domain Socket)
- │
-┌─────────────┴─────────────────────┐
-│ Module Process (Isolated) │
-│ ┌───────────────────────────────┐ │
-│ │ Module IPC Client │ │
-│ │ (Unix Domain Socket) │ │
-│ └───────────────────────────────┘ │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TB
+  node["blvm-node process\nModule IPC server"]
+  mod["Module process\nModule IPC client"]
+  node ---|"Unix domain socket"| mod
 ```
 
 ## Protocol Format
@@ -42,14 +29,16 @@ Messages use length-delimited binary encoding:
 
 ### Message Types
 
-The protocol uses length-delimited **`ModuleMessage`** variants:
+The protocol uses length-delimited `ModuleMessage` variants.
 
-1. **Request**: module → node (NodeAPI calls, handshake, `RegisterModuleApi`, …)
-2. **Response**: node → module
-3. **Event**: node → module (subscribed notifications)
-4. **Log**: module → node (forwarded to node logging)
-5. **Invocation**: node → module (CLI, RPC, or **`ModuleApi`** dispatch)
-6. **InvocationResult**: module → node (correlated reply)
+| Message | Direction | What it carries |
+|---|---|---|
+| Request | module to node | NodeAPI calls, handshake, `RegisterModuleApi` |
+| Response | node to module | The reply |
+| Event | node to module | Subscribed notifications |
+| Log | module to node | Forwarded into node logging |
+| Invocation | node to module | CLI, RPC, or `ModuleApi` dispatch |
+| InvocationResult | module to node | The correlated reply |
 
 
 ## Message Structure

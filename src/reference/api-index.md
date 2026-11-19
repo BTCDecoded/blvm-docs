@@ -64,7 +64,7 @@ Reference list for contributors and spec readers. Rust paths: [blvm-consensus](h
 **Core Abstractions:**
 - `BitcoinProtocolEngine` - Protocol engine for network variants
 - `NetworkMessage` - P2P message types
-- `ProtocolVersion` - Network variant (BitcoinV1, Testnet3, Regtest)
+- `ProtocolVersion` - Network variant (BitcoinV1, Testnet3, Testnet4, Signet, Regtest)
 
 **Key Types:**
 - `NetworkMessage`, `MessageType`
@@ -139,7 +139,7 @@ pub struct ModuleContext {
 
 #### RPC API
 
-**RPC Methods:** JSON-RPC methods aligned with widely documented Bitcoin node APIs. **75 core methods** in `CORE_RPC_METHODS`: full list in [RPC API Reference](../node/rpc-api.md#available-methods). Module-loaded methods (mesh, miniscript overrides) register at runtime.
+**RPC Methods:** JSON-RPC methods aligned with widely documented Bitcoin node APIs. The names in `CORE_RPC_METHODS` are listed in [RPC API Reference](../node/rpc-api.md#available-methods). Module-loaded methods (mesh, miniscript overrides) register at runtime.
 
 **Key categories (summary: not exhaustive):**
 - **Blockchain / raw tx / mempool / network / mining / control**: Core parity surface (`getblockchaininfo`, `sendrawtransaction`, `getblocktemplate`, `generatetoaddress`, …)

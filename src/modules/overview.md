@@ -15,13 +15,12 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 **Registry modules** (bootstrap from `registry/modules.json`):
 
 - **blvm-zmq**: ZMQ PUB notifications ([ZMQ module](zmq.md))
-- **blvm-index**: script history. Replaces `blvm-wallet-index`. The node binds Electrum and Esplora ([Wallet index](wallet-index.md)).
+- **blvm-index**: script history. The node binds Electrum and Esplora ([Script history](wallet-index.md)).
 - **blvm-payment**: payment, vault, pool, and congestion RPC. Not in the default module pins.
 - **blvm-miniscript**: Descriptor / PSBT RPC overrides ([Miniscript module](miniscript.md))
 - **blvm-governance**: On-chain proposal webhook module ([Governance module](governance-module.md))
 - **blvm-marketplace**: Optional registry/payments ([Marketplace module](marketplace-module.md))
 - **blvm-selective-sync**: Registry policy, P2P serve denylists, and IBD witness/OP_RETURN strip ([Selective Sync](selective-sync.md))
-- **blvm-wallet-index**: Older name of the script-history index; `blvm-index` replaces it
 
 A fresh install pins **blvm-miniscript**, **blvm-zmq**, and **blvm-index** (`default_enabled_modules` in `blvm-node/src/config/mod.rs`).
 

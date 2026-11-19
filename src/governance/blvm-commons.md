@@ -4,14 +4,6 @@
 
 blvm-commons is the governance tooling crate for Bitcoin Commons. It contains GitHub, OpenTimestamps, and Nostr clients. Merge enforcement is off.
 
-## Key Features
-
-- **GitHub Integration**: App client for signature checks. `set_required_status_checks` sends `enforce_admins: false`. A failed branch-protection response is logged and returned as success.
-- **OpenTimestamps**: Calendar client for governance artifacts. Designed to anchor those artifacts to Bitcoin. Not a step in consensus CI today.
-- **Nostr Integration**: Relay client for governance messages
-- **Cross-Layer Validation**: Security-control checks in the crate
-- **CI/CD Workflows**: Reusable workflows for Bitcoin Commons repositories
-
 ## Components
 
 ### GitHub Integration
@@ -37,19 +29,14 @@ Validates code changes, detects placeholder implementations, and enforces securi
 
 **Documentation:** [PR security control classification](../development/security-controls.md)
 
-## Repository
-
-**GitHub**: [blvm-commons](https://github.com/BTCDecoded/blvm-commons)
-
 ## Source
 
-- [GitHub App](https://github.com/BTCDecoded/blvm-commons)
+- [blvm-commons](https://github.com/BTCDecoded/blvm-commons)
 - [OpenTimestamps Integration](opentimestamps-integration.md)
 - [Nostr Integration](nostr-integration.md)
+
 ## See Also
 
-- [Governance Overview](overview.md) - Governance system introduction
-- [OpenTimestamps Integration](opentimestamps-integration.md) - Audit trail system
-- [Nostr Integration](nostr-integration.md) - Decentralized communication
-- [PR security control classification](../development/security-controls.md) - Security validation
-- [CI/CD Workflows](../development/ci-cd-workflows.md) - Reusable workflows
+- [Governance Overview](overview.md) — where this crate sits
+- [PR security control classification](../development/security-controls.md)
+- [CI/CD Workflows](../development/ci-cd-workflows.md)

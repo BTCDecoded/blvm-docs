@@ -1,5 +1,7 @@
 # Repository layout
 
+The crates are separate repositories. A local build redirects those dependencies with `[patch.crates-io]`. CI removes that patch and builds against the published crates.
+
 How the Bitcoin Commons Rust implementation is split across repositories, why, and how local development and CI relate.
 
 ## Summary
@@ -12,7 +14,7 @@ The rest of this document describes how that first implementation is organized: 
 
 The repositories described here make up the Rust implementation, the first implementation of the Bitcoin Commons specification. They fall into a few categories.
 
-The layered core consists of blvm-primitives, blvm-consensus, blvm-protocol, blvm-node, and blvm-sdk. These form the spine of the system, from foundational types up through the node binary and the software development kit. Dependencies point **inward only**, with a deliberate **volatility gradient**: SDK and node change most often; consensus and primitives change least. That ordering is what makes per-layer forks practical, a fork of the SDK depends on published consensus crates, not on maintaining a copy of the whole core.
+The layered core consists of blvm-primitives, blvm-consensus, blvm-protocol, blvm-node, and blvm-sdk. These form the spine of the system, from foundational types up through the node binary and the software development kit. Dependencies point **inward only**, with a deliberate **volatility gradient**: SDK and node change most often; consensus and primitives change least. That ordering is what makes per-layer forks practical. A fork of the SDK, with its default features, depends on the published node crate. The node depends on the published protocol and consensus crates. The fork does not carry a copy of the whole core.
 
 The standalone cryptographic and infrastructure crates include blvm-secp256k1, blvm-muhash, and blvm-miniscript. These have value entirely independent of Bitcoin Commons. Any Rust project that needs a fast secp256k1 implementation or a MuHash accumulator can consume these directly without adopting anything else from the project.
 

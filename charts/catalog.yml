@@ -1,0 +1,115 @@
+# Chart contract for the BLVM manual.
+# `scripts/render-charts.py` reads this file plus governance YAML and writes
+# the SVG and Mermaid fragments the book includes. Do not edit those outputs.
+#
+# kind: layer-thresholds | tier-review | quorum-curves | mermaid | series | hbar | scoreboard | radar | lines | bars-line
+# A `series` chart draws bars only from charts/series/<id>.yml when that file
+# has status: measured, a measured_at date, and a source. Otherwise it draws
+# an empty panel that names the measure.
+
+charts:
+  - id: layer-thresholds
+    kind: layer-thresholds
+    title: Review window by repository layer
+    measure: Published review period and the consensus-change window, in days
+    source: modules/governance/config/repository-layers.yml
+    output: src/images/charts/layer-thresholds.svg
+
+  - id: tier-review-days
+    kind: tier-review
+    title: Review period by action tier
+    measure: Published review period in days for action tiers 1–5
+    source: modules/governance/config/action-tiers.yml
+    output: src/images/charts/tier-review-days.svg
+
+  - id: quorum-capture
+    kind: quorum-curves
+    title: Quorum capture probability
+    measure: Probability that independent per-signer compromises reach the required signature count
+    source: modules/governance/config/repository-layers.yml
+    output: src/images/charts/quorum-capture.svg
+
+  - id: block-path
+    kind: mermaid
+    title: Path of a received block
+    measure: The six steps printed on the previous figure
+    output: charts/fragments/block-path.md
+    diagram: |
+      flowchart LR
+        A["1 Block arrives"] --> B["2 Consensus validation"]
+        B --> C["3 Protocol processing"]
+        C --> D["4 Module execution"]
+        D --> E["5 State update"]
+        E --> F["6 Governance logging"]
+
+  - id: spec-maintenance
+    kind: mermaid
+    title: Spec maintenance
+    measure: The steps printed on the previous figure
+    output: charts/fragments/spec-maintenance.md
+    diagram: |
+      flowchart LR
+        C[Code change] --> D["Drift detection: CI/CD runs AI extraction"]
+        D --> A[Alert generated]
+        A --> U["Update spec: Orange Paper updated"]
+        U --> R["Re-verify: formal verification runs"]
+
+  - id: verification-anchors
+    kind: mermaid
+    title: Verification records
+    measure: The three layers printed on the previous figure
+    output: charts/fragments/verification-anchors.md
+    diagram: |
+      flowchart TB
+        G["Layer 1 GitHub enforcement: 3-of-5 merge multisig, webhook gate, VPN runner"]
+        N["Layer 2 Nostr: hourly signed status broadcasts, public verification"]
+        O["Layer 3 OpenTimestamps: monthly anchoring to Bitcoin, court-grade record"]
+        G --> N --> O
+
+  - id: pr-review-time
+    kind: carried
+    title: Pull request review time
+    measure: Monolith and modular review-time boxes on the previous figure
+    source: charts/carried/pr-review-time-distribution.png
+    sha256: 0a3079b46e0f6f327ad1416f96305ab93c456cb1fb54c82d228b41ee774dcfa4
+
+  - id: process-latency
+    kind: carried
+    title: Governance process latency
+    measure: Core and Commons review-day bars for tiers 1–5 on the previous figure
+    source: charts/carried/governance-process-latency.png
+    sha256: f0d321c087c4b5cd7a291a7265ef68fc16ce58390f846a4e856b578f427c80f3
+
+  - id: multisig-sensitivity
+    kind: carried
+    title: Multisig threshold sensitivity
+    measure: The policy bars on the previous figure
+    source: charts/carried/multisig-threshold-sensitivity.png
+    sha256: 7afc3d5b6d3793bd765f804863f01e36dfb9d9ffbaf6862e070d244966a769d1
+
+  - id: audit-completeness
+    kind: matrix
+    title: Audit trail status
+    measure: Commons controls from the governance wording. Designed means written and not running
+    output: src/images/charts/audit-completeness.svg
+
+  - id: assurance-counts
+    kind: scoreboard
+    title: What locks the implementation
+    measure: Headline counts. Each figure has its own list
+    output: charts/fragments/assurance-counts.md
+
+  - id: consensus-tests
+    kind: hbar
+    title: Consensus test functions
+    measure: "#[test] and #[tokio::test] in blvm-consensus, one bar per area"
+    unit: tests
+    output: src/images/charts/consensus-tests.svg
+
+  - id: consensus-coverage
+    kind: hbar
+    title: Spec-lock attributes by area
+    measure: Production spec_locked attributes in blvm-consensus, counted from the source
+    output: src/images/charts/consensus-coverage.svg
+    sha256: f5b63683f72186308ac0e5d79bf89b9dac82bf45374552c792d35277d8cca777
+    source: charts/carried/consensus-coverage.png

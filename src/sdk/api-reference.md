@@ -1,6 +1,6 @@
 # SDK API Reference
 
-Complete API documentation for the BLVM Developer SDK, including governance primitives and composition framework.
+The generated API is [docs.rs/blvm-sdk](https://docs.rs/blvm-sdk). This page is the governance and composition guide.
 
 ## Overview
 
@@ -17,12 +17,6 @@ For more API overview and cross-references, see [API Index](../reference/api-ind
 #### `GovernanceKeypair`
 
 Cryptographic keypair for signing governance messages.
-
-```rust
-pub struct GovernanceKeypair {
- // Private fields
-}
-```
 
 **Methods:**
 - `generate() -> GovernanceResult<Self>` - Generate a new random keypair
@@ -43,12 +37,6 @@ let pubkey = keypair.public_key();
 
 Public key for governance operations (Bitcoin-compatible secp256k1).
 
-```rust
-pub struct PublicKey {
- // Private fields
-}
-```
-
 **Methods:**
 - `from_bytes(bytes: &[u8]) -> GovernanceResult<Self>` - Create from bytes
 - `to_bytes(&self) -> [u8; 33]` - Get compressed public key bytes
@@ -58,12 +46,6 @@ pub struct PublicKey {
 #### `Signature`
 
 Cryptographic signature for governance messages.
-
-```rust
-pub struct Signature {
- // Private fields
-}
-```
 
 **Methods:**
 - `from_bytes(bytes: &[u8]) -> GovernanceResult<Self>` - Create from bytes
@@ -98,12 +80,6 @@ pub enum GovernanceMessage {
 #### `Multisig`
 
 Multisig configuration for threshold signatures.
-
-```rust
-pub struct Multisig {
- // Private fields
-}
-```
 
 **Methods:**
 - `new(threshold: usize, total: usize, public_keys: Vec<PublicKey>) -> GovernanceResult<Self>` - Create new multisig (e.g., [[gov:tier_1_signatures]])
@@ -193,12 +169,6 @@ pub type GovernanceResult<T> = Result<T, GovernanceError>;
 
 Manages module discovery, installation, and dependency resolution.
 
-```rust
-pub struct ModuleRegistry {
- // Private fields
-}
-```
-
 **Methods:**
 - `new<P: AsRef<Path>>(modules_dir: P) -> Self` - Create registry for modules directory
 - `discover_modules(&mut self) -> Result<Vec<ModuleInfo>>` - Discover all modules in directory
@@ -243,12 +213,6 @@ pub struct ModuleInfo {
 
 Composes nodes from module specifications.
 
-```rust
-pub struct NodeComposer {
- // Private fields
-}
-```
-
 **Methods:**
 - `new<P: AsRef<Path>>(modules_dir: P) -> Self` - Create composer with module registry
 - `validate_composition(&self, spec: &NodeSpec) -> Result<ValidationResult>` - Validate node composition
@@ -286,12 +250,6 @@ pub struct ModuleSpec {
 #### `ModuleLifecycle`
 
 Manages module lifecycle (start, stop, restart, health checks).
-
-```rust
-pub struct ModuleLifecycle {
- // Private fields
-}
-```
 
 **Methods:**
 - `new(registry: ModuleRegistry) -> Self` - Create lifecycle manager

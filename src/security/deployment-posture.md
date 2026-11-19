@@ -27,7 +27,7 @@ flowchart TD
 ```
 
 - **Regtest / local development**: **Supported** for day-to-day work when P2P and RPC are unreachable from untrusted networks (typical loopback defaults). **`rpc_auth.required = false`** is acceptable **only** while RPC stays on **`127.0.0.1`**, **`::1`**, or equivalent loopback.
-- **Testnet**: Treat as **internet-adjacent**: peer set is untrusted; apply **Recommended** items below before exposing RPC beyond loopback. (Signet is not yet a supported network in BLVM.)
+- **Testnet, testnet4, and signet**: Treat as **internet-adjacent**: peer set is untrusted; apply **Recommended** items below before exposing RPC beyond loopback.
 - **Mainnet**: **High assurance**: assume global attackers on P2P and opportunistic scanning on RPC-shaped ports. Meet **Required** items for any non-loopback control plane.
 
 ## Critical deployment concerns
@@ -79,7 +79,7 @@ Complete before running a mainnet node or exposing RPC beyond loopback:
 1. **Release verification**: Download from [btcdecoded.org/install](https://btcdecoded.org/install) or [GitHub Releases](https://github.com/BTCDecoded/blvm/releases/latest); verify `checksums.sha256` ([Installation](../getting-started/installation.md)).
 2. **Sync path**: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync) (`start-ibd-mainnet.sh` or bundled example TOML), not bare `blvm --network mainnet`.
 3. **Data directory**: Dedicated path (e.g. `~/.local/share/blvm-mainnet`); restrict filesystem permissions to the node OS user.
-4. **IBD tuning**: Review bundled `blvm-mainnet-ibd.toml.example`. The UTXO engine is on unless `BLVM_IBD_ENGINE=0`. See [IBD UTXO engine](../node/ibd-engine.md).
+4. **IBD tuning**: Review bundled `blvm-mainnet-ibd.toml.example`. IBD uses the UTXO engine. See [IBD UTXO engine](../node/ibd-engine.md).
 5. **Modules**: Keep third-party modules disabled during first sync; verify maintainer policy before production enablement.
 6. **Backups**: Plan snapshot/backup policy; snapshot `data_dir` when stopped or per [Storage backends](../node/storage-backends.md).
 7. **RPC exposure**: Before binding RPC off loopback, complete the [Minimum checklist (non-loopback RPC)](#minimum-checklist-non-loopback-rpc) below.
@@ -96,3 +96,4 @@ Then meet **Required** items under **Supported contexts → Mainnet** above.
 
 - **[Threat models](threat-models.md)**: Attack surfaces and boundaries (developer + operator framing).
 - **[First node](../getting-started/first-node.md)**: Config-based setup; links here for production-facing posture.
+- **[Service manager](../node/operations.md#service-manager)**: systemd, OpenRC, and launchd. The unit does not change the RPC exposure rules on this page.

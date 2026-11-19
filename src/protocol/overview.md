@@ -1,6 +1,6 @@
 # Protocol Layer Overview
 
-The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple variants and protocol evolution. It sits between the pure mathematical consensus rules ([blvm-consensus](../consensus/overview.md)) and the Bitcoin node implementation ([blvm-node](../node/overview.md)), supporting mainnet, testnet, regtest, and future protocol variants.
+The protocol layer (`blvm-protocol`) abstracts Bitcoin protocol for multiple variants and protocol evolution. It sits between the pure mathematical consensus rules ([blvm-consensus](../consensus/overview.md)) and the Bitcoin node implementation ([blvm-node](../node/overview.md)), supporting mainnet, testnet, testnet4, signet, and regtest.
 
 ## Architecture Position
 
@@ -25,6 +25,8 @@ The protocol layer supports multiple Bitcoin network variants:
 |---------|--------------|-------------|-------------|----------------------|---------|
 | **BitcoinV1** | mainnet | `f9beb4d9` | 8333 | 8332 | Production Bitcoin network |
 | **Testnet3** | testnet | `0b110907` | 18333 | 18332 | Bitcoin test network |
+| **Testnet4** | testnet4 | `1c163f28` | 48333 | 48332 | BIP94 test network |
+| **Signet** | signet | `0a03cf40` | 38333 | 38332 | BIP325 default signet |
 | **Regtest** | regtest | `fabfb5da` | 18444 | 18443 | Regression testing network |
 
 ### Network Parameters
@@ -36,15 +38,7 @@ Each variant also defines genesis block hash, difficulty targets, halving interv
 
 ### Protocol Engine
 
-The `BitcoinProtocolEngine` is the main interface:
-
-```rust
-pub struct BitcoinProtocolEngine {
- version: ProtocolVersion,
- network_params: NetworkParams,
- config: ProtocolConfig,
-}
-```
+`BitcoinProtocolEngine` in `blvm-protocol/src/lib.rs` holds the consensus proof, the protocol version, the network parameters, and the protocol config.
 
 **Features**:
 - Protocol variant selection

@@ -121,9 +121,11 @@ See [Installation: Experimental build variant](../getting-started/installation.m
 
 Stable release artifacts include:
 
-- **Linux x86_64**: `.deb`, `.rpm`, Arch `.pkg.tar.gz`, standalone binary, `.tar.gz`
-- **Linux aarch64**: standalone binary, `.tar.gz`
+- **Linux x86_64**: `.deb`, `.rpm`, and Arch `.pkg.tar.gz` (each installs `blvm.service` and does not enable it), standalone binary, `.tar.gz`
+- **Linux aarch64**: arm64 `.deb` and Arch `.pkg.tar.gz` (each installs `blvm.service` and does not enable it), standalone binary, `.tar.gz`
 - **Windows x86_64**: portable `.exe`, `.zip` (MinGW `gnu` target)
+
+The Linux `.deb`, `.rpm`, and Arch packages from this tree install `blvm.service` and do not enable it. The tarballs, the standalone binaries, and the Windows zip do not include a unit. The image runs as uid 61100 and keeps its data in `/var/lib/blvm`. The install page uses that command. A tag built from the older Dockerfile still runs as user `blvm` with its data in `/app/data`.
 
 Rolling **nightly** binaries and `ghcr.io/btcdecoded/blvm:nightly` are published from the `develop` branch (see [Release channels](#release-channels)).
 
@@ -255,14 +257,6 @@ The release pipeline automatically:
 2. **Waits for publication** to complete before building dependents
 3. **Updates Cargo.toml** in dependent repos to use published versions
 4. **Builds final binary** using published crates (no compilation of dependencies)
-
-### Benefits
-
-- **Faster builds**: Final binary uses pre-built dependencies
-- **Better caching**: Cargo can cache published crates
-- **Version control**: Exact versions published and tracked
-- **Reproducibility**: Same versions available to all users
-- **Distribution**: Users can depend on published crates directly
 
 ### Crate Names
 

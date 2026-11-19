@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 484" role="img" width="760" height="484">
+<title>Consensus test functions</title>
+<desc>#[test] and #[tokio::test] in blvm-consensus, one bar per area Unit: tests. Test functions in blvm-consensus, by area</desc>
+<rect width="100%" height="100%" fill="#161923"/>
+<text x="24" y="32" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Consensus test functions</text>
+<text x="24" y="74" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Inline with the code</text>
+<rect x="229" y="62" width="459.0" height="14" fill="#7eb6e8"/>
+<text x="736" y="74" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">644</text>
+<text x="24" y="106" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Script, witness, sighash</text>
+<rect x="229" y="94" width="299.3" height="14" fill="#7eb6e8"/>
+<text x="736" y="106" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">420</text>
+<text x="24" y="138" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Engineering and config</text>
+<rect x="229" y="126" width="214.5" height="14" fill="#7eb6e8"/>
+<text x="736" y="138" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">301</text>
+<text x="24" y="170" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Property tests</text>
+<rect x="229" y="158" width="131.1" height="14" fill="#7eb6e8"/>
+<text x="736" y="170" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">184</text>
+<text x="24" y="202" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Integration, mempool, reorg</text>
+<rect x="229" y="190" width="121.9" height="14" fill="#7eb6e8"/>
+<text x="736" y="202" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">171</text>
+<text x="24" y="234" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Blocks</text>
+<rect x="229" y="222" width="104.8" height="14" fill="#7eb6e8"/>
+<text x="736" y="234" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">147</text>
+<text x="24" y="266" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Forks and BIPs</text>
+<rect x="229" y="254" width="82.0" height="14" fill="#7eb6e8"/>
+<text x="736" y="266" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">115</text>
+<text x="24" y="298" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Transactions and encoding</text>
+<rect x="229" y="286" width="74.1" height="14" fill="#7eb6e8"/>
+<text x="736" y="298" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">104</text>
+<text x="24" y="330" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Crypto, supply, and flags</text>
+<rect x="229" y="318" width="65.6" height="14" fill="#7eb6e8"/>
+<text x="736" y="330" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">92</text>
+<text x="24" y="362" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Core, golden, mainnet</text>
+<rect x="229" y="350" width="44.9" height="14" fill="#7eb6e8"/>
+<text x="736" y="362" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">63</text>
+<text x="24" y="394" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Proof of work</text>
+<rect x="229" y="382" width="44.2" height="14" fill="#7eb6e8"/>
+<text x="736" y="394" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">62</text>
+<text x="24" y="426" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Unit and regression</text>
+<rect x="229" y="414" width="35.6" height="14" fill="#7eb6e8"/>
+<text x="736" y="426" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">50</text>
+<text x="24" y="468" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Test functions in blvm-consensus, by area</text>
+</svg>

@@ -12,9 +12,13 @@ The operator binary is `blvm`. It does not hold keys. Wallet RPCs are absent. `g
 
 | Network | `protocol_version` | Default P2P | Default RPC | Next step |
 |---------|---------------------|-------------|-------------|-----------|
-| **Mainnet** | `BitcoinV1` | `0.0.0.0:8333` | `127.0.0.1:8332` | [Mainnet initial sync](#mainnet-initial-sync) below |
-| **Testnet** | `Testnet3` | `0.0.0.0:18333` | `127.0.0.1:18332` | Steps 1-4 below |
-| **Regtest** | `Regtest` | `0.0.0.0:18444` | `127.0.0.1:18443` | [Quick Start](quick-start.md) |
+| **Mainnet** | `mainnet` | `127.0.0.1:8333` | `127.0.0.1:8332` | [Mainnet initial sync](#mainnet-initial-sync) below |
+| **Testnet** | `testnet` | `127.0.0.1:18333` | `127.0.0.1:18332` | Steps 1-4 below |
+| **Testnet4** | `testnet4` | `127.0.0.1:48333` | `127.0.0.1:48332` | Steps 1-4 below |
+| **Signet** | `signet` | `127.0.0.1:38333` | `127.0.0.1:38332` | Steps 1-4 below |
+| **Regtest** | `regtest` | `127.0.0.1:18444` | `127.0.0.1:18443` | [Quick Start](quick-start.md) |
+
+An unset listen address binds loopback. Set `listen_addr` to `0.0.0.0` when the node should accept peers from other machines. `BitcoinV1` and `Testnet3` are aliases. The binary writes the five names in the table.
 
 Bind addresses and CLI defaults: [Node Configuration](../node/configuration.md#network-defaults-blvm-binary-no-rpc-addr-override). Wire magic bytes and ports: [Protocol variants](../protocol/overview.md#protocol-variants).
 
@@ -48,7 +52,7 @@ Example for **testnet** (`~/.config/blvm/blvm-testnet.toml`) or learning config 
 ```toml
 transport_preference = "tcponly"
 listen_addr = "0.0.0.0:18333"
-protocol_version = "Testnet3"
+protocol_version = "testnet"
 
 [storage]
 data_dir = "~/.local/share/blvm-testnet"
@@ -83,7 +87,7 @@ Confirm in the first log lines: config loaded, **`Network: …`**, and `Data dir
 
 ## Step 4: Verify RPC
 
-Testnet **18332**; regtest **18443**; mainnet **8332**.
+Use the RPC port in the table above. This example is testnet.
 
 With no RPC password, the process writes `{datadir}/.cookie` as `__cookie__:<hex>`, mode `0600`, and deletes that file on stop. A configured password leaves the directory untouched.
 
@@ -100,9 +104,9 @@ See [RPC API Reference](../node/rpc-api.md) for authentication and the full meth
 
 ## Defaults this binary ships
 
-A fresh install enables `blvm-miniscript`, `blvm-zmq`, and `blvm-index`, each at `0.1.*`. `blvm-payment` is not in that set. Payment, vault, pool, and congestion methods return method-not-found until that module is loaded. The IBD example below sets `[modules].enabled = false` for the sync. That example is not the fresh-install default.
+A config file that omits `[modules]` enables `blvm-miniscript`, `blvm-zmq`, and `blvm-index`, each at `0.1.*`. A start with no config file loads the `local` profile: modules off, and no assume-valid seed. The mainnet IBD example is a file, so it still seeds height 912683. `blvm-payment` is not in the default set. Payment, vault, pool, and congestion methods return method-not-found until that module is loaded.
 
-`blvm-index` replaces `blvm-wallet-index`. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port.
+`blvm-index` is script history. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port.
 
 ZMQ's default binds are loopback:
 
@@ -134,7 +138,7 @@ These seeds are this binary's. They are not Bitcoin Core's `defaultAssumeValid`.
 
 | Network | Seeded height | Header hash |
 |---------|---------------|-------------|
-| mainnet | 912683 | `00000000000000000000611fd22f2df7c8fbd0688745c3a6c3bb5109cc2a12cb` |
+| mainnet | 912683 | <code>0000000000000000<wbr>0000611fd22f2df7<wbr>c8fbd0688745c3a6<wbr>c3bb5109cc2a12cb</code> |
 | testnet | 4550000 | unset |
 | signet | 267665 | unset |
 | testnet4 | 0 | no assume-valid section |
@@ -148,7 +152,7 @@ Mainnet AssumeUTXO data in this tree is an empty list. The node does not publish
 
 ## Mainnet initial sync {#mainnet-initial-sync}
 
-After [Installation](installation.md). **Do not** start first mainnet sync with bare `blvm --network mainnet`: use the release **IBD example config** (pruning, `[ibd].mode = "parallel"`, `[modules].enabled = false` during sync). Source: [blvm-mainnet-ibd.toml.example](https://github.com/BTCDecoded/blvm/blob/main/blvm-mainnet-ibd.toml.example).
+After [Installation](installation.md). **Do not** start first mainnet sync with bare `blvm --network mainnet`: use the release **IBD example config** (pruning, `[ibd].mode = "parallel"`, and the three baseline modules pinned). Source: [blvm-mainnet-ibd.toml.example](https://github.com/BTCDecoded/blvm/blob/main/blvm-mainnet-ibd.toml.example).
 
 **From a release directory** (contains `blvm`, `scripts/`, and the example TOML):
 
@@ -168,7 +172,7 @@ blvm --config /path/to/blvm-mainnet-ibd.toml.example \
  --verbose
 ```
 
-**What you should see:** config loads → `Network: Mainnet` → quiet 15-60s (peer discovery) → `IBD: <height> / <tip>` in logs. Plan for **~15 GB+** pruned disk, **hours** on WAN-only (faster with LAN Core). Pruning limits what stays on disk, not what is downloaded: a pruned node still fetches and validates every block from genesis, about 690–740 GB of one-time IBD transfer as of mid-2026, the same as an archival node, which stores about 700–750 GB ([Full Cost of Running a Bitcoin Node](https://secsov.com/articles/full-cost-of-running-a-bitcoin-node/), v2.4, July 2026). Validation slows when the seeded assume-valid height (`912683`) ends: expected.
+**What you should see:** config loads → `Network: Mainnet` → quiet 15-60s (peer discovery) → `IBD: <height> / <tip>` in logs. A pruned node still fetches and validates every block from genesis. What stays on disk is the trailing window in [`[storage.pruning]`](../reference/configuration-reference.md#storage). A chain-size survey is [Full Cost of Running a Bitcoin Node](https://secsov.com/articles/full-cost-of-running-a-bitcoin-node/). Validation slows when the seeded assume-valid height (`912683`) ends: expected.
 
 **Monitor** (match start flags):
 
@@ -181,7 +185,7 @@ blvm --network mainnet \
 
 **Resume:** reuse the same `--data-dir`; never delete the active backend dir (`heed3/`, `rocksdb/`, …) mid-IBD.
 
-**Tune when needed:** `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`, `BLVM_IBD_WAN_SINGLE_PEER=1`, `BLVM_IBD_ENGINE=0` to opt out of the UTXO engine. See [Node configuration: IBD](../node/configuration.md#ibd-configuration), [IBD UTXO engine](../node/ibd-engine.md), [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd).
+**Tune when needed:** `BLVM_IBD_PEERS`, `BLVM_IBD_MODE`, `BLVM_IBD_WAN_SINGLE_PEER=1`. See [Node configuration: IBD](../node/configuration.md#ibd-configuration), [IBD UTXO engine](../node/ibd-engine.md), [Troubleshooting: Mainnet IBD](../appendices/troubleshooting.md#mainnet-ibd).
 
 ---
 
@@ -192,7 +196,7 @@ blvm --network mainnet \
 ```toml
 transport_preference = "tcponly"
 listen_addr = "127.0.0.1:18445" # default P2P is 18444
-protocol_version = "Regtest"
+protocol_version = "regtest"
 
 [storage]
 data_dir = "~/.local/share/blvm-regtest"
@@ -217,6 +221,6 @@ Blocks, UTXO set, chain state, and indexes live under `[storage].data_dir`. See 
 
 ## See also
 
-- [Node Configuration](../node/configuration.md) · [Configuration Reference](../reference/configuration-reference.md)
+- [Configuration Reference](../reference/configuration-reference.md)
 - [Node Operations](../node/operations.md): backup, Core datadir import
 - [Deployment posture](../security/deployment-posture.md): before exposing mainnet RPC

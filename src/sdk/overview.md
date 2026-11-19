@@ -1,10 +1,10 @@
 # Developer SDK Overview
 
-The developer SDK (`blvm-sdk`) provides governance infrastructure and a composition framework for Bitcoin. It includes reusable governance primitives and a composition framework for building alternative Bitcoin implementations.
+`blvm-sdk` is the crate you use to write a node module, and to sign a governance message.
 
 ## Architecture Position
 
-**Stack layer 5** of the six-layer Bitcoin Commons architecture (technology stack):
+**Stack layer 5** of the BLVM stack. Bitcoin Commons is the specification and the governance model. BLVM is one implementation of that spec.
 
 ```
 1. Orange Paper (mathematical foundation)
@@ -12,7 +12,7 @@ The developer SDK (`blvm-sdk`) provides governance infrastructure and a composit
 3. blvm-protocol (Bitcoin abstraction)
 4. blvm-node (full node implementation)
 5. blvm-sdk (governance + composition) ← THIS LAYER
-6. blvm-commons (governance enforcement)
+6. blvm-commons (governance tools; enforcement is off)
 ```
 
 ## Core Components
@@ -51,18 +51,7 @@ Command-line tools for governance operations:
 - **`blvm-aggregate-signatures`**: Aggregate multiple signatures
 
 
-### Composition Framework
-
-Declarative node composition from modules:
-
-- **Module Registry**: Discover and manage available modules
-- **Lifecycle Management**: Load, unload, reload modules at runtime
-- **Dependency Resolution**: Automatic module dependency handling
-
-
-## Key Features
-
-### Governance Primitives
+## Signing a governance message
 
 ```rust
 use blvm_sdk::governance::{
@@ -145,22 +134,6 @@ blvm-verify release \
  --pubkeys keys.json
 ```
 
-### Library Usage
-
-```rust
-use blvm_sdk::governance::{GovernanceKeypair, GovernanceMessage};
-
-// Generate keypair
-let keypair = GovernanceKeypair::generate()?;
-
-// Sign message
-let message = GovernanceMessage::Release {
- version: "v1.0.0".to_string(),
- commit_hash: "abc123".to_string(),
-};
-let signature = keypair.sign(&message.to_signing_bytes())?;
-```
-
 ## Quick start
 
 ### Author a node module
@@ -177,9 +150,8 @@ For more detail, see the [blvm-sdk README](https://github.com/BTCDecoded/blvm-sd
 - [blvm-keygen.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/bin/blvm-keygen.rs)
 - [mod.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/composition/mod.rs)
 - [multisig.rs](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/multisig.rs)
+
 ## See Also
 
-- [Building modules](module-development.md) - Module development guide
-- [API Reference](api-reference.md) - Complete SDK API documentation
-- [SDK Examples](examples.md) - Usage examples
-- [Governance Overview](../governance/overview.md) - Governance system
+- [API Reference](api-reference.md)
+- [SDK Examples](examples.md)

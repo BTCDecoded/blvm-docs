@@ -50,7 +50,12 @@ header.site {
 }
 
 header.site a { color: inherit; text-decoration: none; }
-header.site nav { display: flex; gap: 1rem; }
+header.site nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  justify-content: flex-end;
+}
 header.site nav a { color: var(--muted); }
 
 h1 {

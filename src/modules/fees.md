@@ -28,7 +28,7 @@ submit_interval_secs = 10
 
 ## Selecting it on the node
 
-The node only uses a module estimator when `[fees]` selects it. See [Fee estimator](../reference/configuration-reference.md#fee-estimator-fees).
+The node only uses a module estimator when `[fees]` selects it. See [Fee estimator](../reference/configuration-reference.md#fees).
 
 ```toml
 [fees]

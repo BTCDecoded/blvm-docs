@@ -10,22 +10,15 @@ First mainnet sync always starts from [First Node Setup: Mainnet IBD](../getting
 | `[ibd]` keys and `BLVM_IBD_*` | [Configuration reference: IBD](../reference/configuration-reference.md#ibd-configuration) |
 | Serving-side bandwidth limits | [IBD bandwidth protection](ibd-protection.md) |
 | LAN Core / same-subnet peers | [LAN peering](lan-peering.md) |
+| Chainstate backend and `data_dir` | [Storage backends](storage-backends.md) |
 
 ## Overview
 
-During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. By default, the **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `<data_dir>/ibd_engine/`, with mid-sync checkpoints for crash-safe resume. The legacy in-process store remains available as an opt-out.
+During parallel initial block download (IBD), the node validates blocks in height order while downloading from one or more peers. The **age-tiered UTXO engine** holds live UTXOs in memory and on disk under `<data_dir>/ibd_engine/`, with mid-sync checkpoints for crash-safe resume.
 
-## Enable (default)
+## Enable
 
-The engine is **on by default**. Stable table path: `<data_dir>/ibd_engine/utxo_table.bin` (override with `BLVM_IBD_ENGINE_PATH`).
-
-**Opt-out:**
-
-```bash
-export BLVM_IBD_ENGINE=0
-```
-
-`[ibd] utxo_engine = false` does the same. `BLVM_IBD_ENGINE` wins over the file.
+The engine is the only IBD UTXO path. Stable table path: `<data_dir>/ibd_engine/utxo_table.bin` (override with `BLVM_IBD_ENGINE_PATH`). A file that still contains `utxo_engine = false` is loaded and ignored.
 
 Optional environment variables:
 
@@ -51,22 +44,10 @@ Download scheduling still uses **[parallel IBD](performance.md#parallel-initial-
 - Use the **same** `storage.data_dir` on every run; do not delete the active database backend directory (`heed3/`, `rocksdb/`, …) mid-sync.
 - On **SIGTERM** / **SIGINT** during parallel IBD, the node drains in-flight validation and flushes the UTXO watermark before exit when possible.
 - **`io_uring`** accelerates engine table I/O on **Linux**; other platforms use a `pread` fallback (engine still runs on Windows).
-- **[Assume-valid](../reference/configuration-reference.md#block_validationassume_valid_height)** skips signature verification below the configured height when the hash is set and chainwork meets the minimum. The mainnet seed sets that hash at height **912683**. Block structure, Merkle roots, and proof-of-work are still checked.
-- First mainnet sync: [First Node Setup: Mainnet IBD](../getting-started/first-node.md#mainnet-initial-sync). Tune `[ibd]` in config or `BLVM_IBD_*` overrides only when you need explicit peer or mode control.
-
-## Configuration
-
-See **[IBD Configuration](../reference/configuration-reference.md#ibd-configuration)** for `[ibd]` keys and **`BLVM_IBD_*`** environment variables shared with parallel download.
+- **[Assume-valid](../reference/configuration-reference.md#top-level)** skips script checks below the configured height when the hash is set, the block is on that pin's chain, chainwork meets the minimum, and the pin is more than two weeks of proof-equivalent time behind the best header. A config file that omits `profile` seeds that hash at height **912683**. `local` and `minimal-hardened` do not. Block structure, Merkle roots, and proof-of-work are still checked.
+- Tune `[ibd]` or `BLVM_IBD_*` only when you need explicit peer or mode control. The map is the [sync tuning guide](#sync-tuning-guide).
 
 ## Source
 
 - [ibd_engine/](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/), [parallel_ibd/validation_loop.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/node/parallel_ibd/validation_loop.rs)
 - [ibd_engine/mod.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/mod.rs), [spend_session.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/spend_session.rs), [export.rs](https://github.com/BTCDecoded/blvm-node/blob/main/src/storage/ibd_engine/export.rs)
-
-## See Also
-
-- [Operator guide: IBD hub](../getting-started/operator-guide.md#initial-block-download-ibd): Map of all IBD docs
-- [Performance Optimizations](performance.md): Parallel download, pipelining, reorder buffer
-- [IBD Bandwidth Protection](ibd-protection.md): Serving-side bandwidth limits
-- [LAN Peering System](lan-peering.md): LAN peer preference during download
-- [Storage Backends](storage-backends.md): `database_backend` and `data_dir`

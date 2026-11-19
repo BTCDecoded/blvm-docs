@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   build-book:
-    runs-on: [self-hosted, Linux, X64, builds]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

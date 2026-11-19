@@ -4,7 +4,7 @@
 
 Differential testing compares BLVM validation against an independent reference, primarily Bitcoin Core, so consensus disagreements show up as test failures. Tooling lives in [**blvm-bench**](https://github.com/BTCDecoded/blvm-bench). A local stub in [blvm-consensus/tests/integration/differential_tests.rs](https://github.com/BTCDecoded/blvm-consensus/blob/main/tests/integration/differential_tests.rs) defers to bench for RPC and full-chain work.
 
-This complements [formal verification](../consensus/formal-verification.md), [property-based testing](property-based-testing.md), and [fuzzing](testing.md#fuzzing).
+The Core rows of [Assurance](../consensus/assurance.md) are the checks below. They sit beside [property-based testing](property-based-testing.md) and [fuzzing](testing.md#fuzzing).
 
 ## Consensus vs policy
 
@@ -27,7 +27,7 @@ Consensus mismatches are bugs. Mempool-policy mismatches may be intentional, doc
 
 The **full-chain program** (Phase 1 + Phase 2) is the mainnet consensus differential. Integration and historical tests are faster dev/CI loops.
 
-**Full-chain status:** Phase 1 and Phase 2 are operator-driven. A default target height near 900,000 blocks appears in `blvm-bench` tooling. That target is not a signed completion record for a full differential, so this page does not state zero divergence across the chain as a finished measurement. The runs are complementary to spec-lock. The self-hosted differential CI workflow may be paused. Do not assume a full-chain result is CI-gated to the chain tip without checking current operator logs. A clean Phase 1 step can report `Failed: 0`, and a Phase 2 height can report `"match": true`. Those lines are run records, not a completed chain-wide proof.
+**Full-chain status:** Phase 1 and Phase 2 are operator-driven. A default target height near 900,000 blocks appears in `blvm-bench` tooling. That target is not a signed completion record for a full differential, so this page does not state a finished full-chain match. The runs are complementary to spec-lock. The self-hosted differential CI workflow may be paused. Do not assume a full-chain result is CI-gated to the chain tip without checking current operator logs. A clean Phase 1 step can report `Failed: 0`, and a Phase 2 height can report `"match": true`. Those lines are run records, not a completed chain-wide proof.
 
 Operator detail: [full-chain differential testing](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md), [differential testing README](https://github.com/BTCDecoded/blvm-bench/blob/main/README_DIFFERENTIAL_TESTING.md).
 
@@ -113,5 +113,3 @@ Script differentials live in `blvm-consensus` (`height_script_differential` and 
 ## See also
 
 - [Testing](testing.md)
-- [Fuzzing](testing.md#fuzzing)
-- [Formal Verification](../consensus/formal-verification.md)
