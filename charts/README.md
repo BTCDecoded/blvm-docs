@@ -15,7 +15,7 @@ python3 scripts/test_render_charts.py
 
 | Id | Measure | Source today |
 |---|---|---|
-| `layer-thresholds` | Required signatures, maintainer set size, review window, and the consensus-change window where the YAML has one | `repository-layers.yml` |
+| `layer-thresholds` | Review days and the consensus-change window. Required signatures and set size are `charts/fragments/layer-signatures.md` | `repository-layers.yml` |
 | `tier-review-days` | Published review period for action tiers 1–5, in days | `action-tiers.yml` |
 | `quorum-capture` | Model: independent per-signer compromise probability *p*, curve is P(at least *k* signers compromised) for each published quorum | *k* and *n* from `repository-layers.yml`. *p* is the axis, not a measured rate |
 | `block-path` | The six steps on the previous figure | Catalog diagram |
@@ -25,9 +25,9 @@ python3 scripts/test_render_charts.py
 | `process-latency` | Review days by action tier | `tier-review-days`, from `action-tiers.yml`. The Core comparison PNG is pinned and not embedded |
 | `multisig-sensitivity` | Quorum capture for the published signature counts | `quorum-capture`, from `repository-layers.yml`. The old sensitivity PNG is pinned and not embedded |
 | `audit-completeness` | Commons audit controls: designed or absent | `charts/series/audit-completeness.yml` |
-| `assurance-counts` | Headline locks. Spec lock, body proofs, both mutation lists, tests, properties, fuzz, Lean proofs, and the one sentence also checked in Rust | `charts/series/assurance-counts.yml` |
+| `assurance-counts` | Headline locks, as cards. Spec lock, body proofs, both mutation lists, tests, proptest properties, fuzz, Lean proofs, and the one sentence also checked in Rust | `charts/series/assurance-counts.yml` |
 | `consensus-tests` | Test functions in blvm-consensus, by area. 187 are proptest properties. 63 fuzz harnesses are not in the bars | `charts/series/consensus-tests.yml` |
-| `consensus-coverage` | Production spec_locked attributes by area. Witness fixtures are included in the total | `charts/series/consensus-coverage.yml` |
+| `consensus-coverage` | Production spec_locked attributes by area. The footnote is the sum of the bars | `charts/series/consensus-coverage.yml` |
 
 ## Adding a measurement
 

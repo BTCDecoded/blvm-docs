@@ -10,8 +10,8 @@
 charts:
   - id: layer-thresholds
     kind: layer-thresholds
-    title: Signature thresholds by repository layer
-    measure: Required signatures, maintainer set size, and the published review window
+    title: Review window by repository layer
+    measure: Published review period and the consensus-change window, in days
     source: modules/governance/config/repository-layers.yml
     output: src/images/charts/layer-thresholds.svg
 
@@ -97,7 +97,7 @@ charts:
     kind: scoreboard
     title: What locks the implementation
     measure: Headline counts. Each figure has its own list
-    output: src/images/charts/assurance-counts.svg
+    output: charts/fragments/assurance-counts.md
 
   - id: consensus-tests
     kind: hbar
@@ -107,7 +107,7 @@ charts:
     output: src/images/charts/consensus-tests.svg
 
   - id: consensus-coverage
-    kind: series
+    kind: hbar
     title: Spec-lock attributes by area
     measure: Production spec_locked attributes in blvm-consensus, counted from the source
     output: src/images/charts/consensus-coverage.svg

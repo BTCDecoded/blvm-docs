@@ -266,26 +266,12 @@ def grouped_bars(
 
 
 def layer_chart(layers: list[dict]) -> str:
+    """Review windows only. Signature counts are the markdown table."""
     cats = [row["short"] for row in layers]
-    sig = grouped_bars(
-        "Signatures by repository layer",
-        "Required signatures and maintainer set size from repository-layers.yml.",
-        cats,
-        [
-            {"name": "Required", "color": REQUIRED, "values": [r["required"] for r in layers]},
-            {"name": "Set size", "color": TOTAL, "values": [r["total"] for r in layers]},
-        ],
-        y_max=max(r["total"] for r in layers),
-        y_label="signatures",
-        footnote="From repository-layers.yml. Counts are the published policy, not observed signatures.",
-    )
-    days_values = []
-    consensus_values = []
-    for row in layers:
-        days_values.append(row["review"])
-        consensus_values.append(row["consensus_review"])
-    y_max = max([v for v in days_values + consensus_values if v is not None])
-    days = grouped_bars(
+    days_values = [row["review"] for row in layers]
+    consensus_values = [row["consensus_review"] for row in layers]
+    y_max = max(v for v in days_values + consensus_values if v is not None)
+    return grouped_bars(
         "Review window by repository layer",
         "Published review windows from repository-layers.yml. Consensus-change windows exist only for layers 1 and 2.",
         cats,
@@ -297,31 +283,18 @@ def layer_chart(layers: list[dict]) -> str:
         y_label="days",
         footnote="Policy windows. Not a measured review duration.",
     )
-    # Stack the two SVGs in one file by dropping the second XML declaration-less root
-    # and placing both panels in a taller canvas. Rebuild as one SVG instead.
-    return _stack_svgs(
-        "Signature thresholds by repository layer",
-        "Required signatures, set size, and review windows from repository-layers.yml.",
-        sig,
-        days,
-    )
 
 
-def _inner(svg: str) -> str:
-    title = svg.find("<text ")
-    end = svg.rfind("</svg>")
-    return svg[title:end]
-
-
-def _stack_svgs(title: str, desc: str, top_svg: str, bottom_svg: str) -> str:
-    # Each panel SVG is 760x360. Place them in one 760x700 canvas with a shared title strip removed
-    # by cropping the panel titles which are already inside.
-    width, height = 760, 720
-    parts = svg_open(width, height, title, desc)
-    parts.append(f'<g transform="translate(0 0)">{_inner(top_svg)}</g>')
-    parts.append(f'<g transform="translate(0 360)">{_inner(bottom_svg)}</g>')
-    parts.append("</svg>\n")
-    return "\n".join(parts)
+def signature_table(layers: list[dict]) -> str:
+    """Required signatures and set size, from the same YAML as the review chart."""
+    lines = [
+        "| Layer | Required | Set size |",
+        "|---|---:|---:|",
+    ]
+    for row in layers:
+        lines.append(f"| {row['short']} | {row['required']} | {row['total']} |")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def tier_chart(tiers: list[dict]) -> str:
@@ -470,7 +443,7 @@ def figure_footnote(data: dict) -> str:
 
 
 def scoreboard_chart(chart: dict) -> str:
-    """Headline counts. Each figure keeps its own denominator."""
+    """Headline counts as wrapping cards. Each group keeps its own list."""
     path = series_path(chart["id"])
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if data.get("status") not in ("measured", "carried"):
@@ -478,41 +451,16 @@ def scoreboard_chart(chart: dict) -> str:
     groups = data.get("groups") or []
     if not groups:
         raise SystemExit(f"{path} scoreboard has no groups")
-    rows = max(len(group["items"]) for group in groups)
-    width = 760
-    top = 64
-    row_h = 58
-    height = top + rows * row_h + 36
-    gap = 16
-    inner = width - 48 - gap * (len(groups) - 1)
-    col_w = inner / len(groups)
-    footnote = figure_footnote(data)
-    parts = svg_open(width, height, chart["title"], f"{chart['measure']} {footnote}")
-    parts.append(
-        f'<text x="24" y="32" fill="{INK}" font-family="system-ui,sans-serif" '
-        f'font-size="18" font-weight="650">{esc(chart["title"])}</text>'
-    )
-    for g, group in enumerate(groups):
-        x = 24 + g * (col_w + gap)
-        parts.append(
-            f'<text x="{x:.0f}" y="56" fill="{MUTED}" font-family="system-ui,sans-serif" '
-            f'font-size="13">{esc(group["name"])}</text>'
-        )
-        for i, item in enumerate(group["items"]):
-            y = top + 28 + i * row_h
-            parts.append(
-                f'<text x="{x:.0f}" y="{y}" fill="{INK}" font-family="system-ui,sans-serif" '
-                f'font-size="26" font-weight="650">{esc(item["value"])}</text>'
-            )
-            parts.append(
-                f'<text x="{x:.0f}" y="{y + 18}" fill="{MUTED}" font-family="system-ui,sans-serif" '
-                f'font-size="13">{esc(item["label"])}</text>'
-            )
-    parts.append(
-        f'<text x="24" y="{height - 16}" fill="{MUTED}" font-family="system-ui,sans-serif" '
-        f'font-size="12">{esc(footnote)}</text>'
-    )
-    parts.append("</svg>\n")
+    parts = ['<div class="figures">']
+    for group in groups:
+        parts.append("<section>")
+        parts.append(f'<p class="figure-group">{esc(group["name"])}</p>')
+        for item in group["items"]:
+            parts.append(f'<p class="figure-value">{esc(item["value"])}</p>')
+            parts.append(f'<p class="figure-label">{esc(item["label"])}</p>')
+        parts.append("</section>")
+    parts.append("</div>")
+    parts.append("")
     return "\n".join(parts)
 
 
@@ -541,6 +489,10 @@ def hbar_chart(chart: dict) -> str:
     bar_x = label_x + 16 + max(len(name) for name in categories) * 7
     bar_w = count_x - bar_x - 48
     footnote = figure_footnote(measured)
+    if measured.get("print_sum"):
+        total = sum(values)
+        shown = str(int(total)) if float(total).is_integer() else f"{total:.2f}"
+        footnote = f"{footnote}. These bars sum to {shown}."
     parts = svg_open(
         width,
         height,
@@ -922,6 +874,7 @@ def outputs() -> dict[Path, str]:
             continue
         path = ROOT / chart["output"]
         rendered[path] = text
+    rendered[ROOT / "charts/fragments/layer-signatures.md"] = signature_table(layers)
     return rendered
 
 

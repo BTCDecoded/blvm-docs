@@ -6,9 +6,15 @@ A change has a repository layer and an action tier. When both apply, the higher 
 
 ## Signature thresholds by layer
 
-![Signature thresholds by repository layer](../images/charts/layer-thresholds.svg)
+{{#include ../../charts/fragments/layer-signatures.md}}
 
-Required signatures, maintainer set size, and the review window come from `repository-layers.yml`. Constitutional layers require [[gov:layer_1_signatures]]. Extension layers require [[gov:layer_5_signatures]]. The bars are that policy. They are not a count of signatures collected on a pull request.
+Required signatures and maintainer set size come from `repository-layers.yml`. Constitutional layers require [[gov:layer_1_signatures]]. Extension layers require [[gov:layer_5_signatures]]. The table is that policy. It is not a count of signatures collected on a pull request.
+
+## Review window by repository layer
+
+![Review window by repository layer](../images/charts/layer-thresholds.svg)
+
+Review days and the consensus-change window come from `repository-layers.yml`. The bars are that policy. They are not a measured review duration.
 
 ## Review period by action tier
 

@@ -155,9 +155,7 @@ Use the `verify` feature for full protocol verification builds; see [protocol ov
 
 ## Spec-lock attributes by area
 
-![Spec-lock attributes by area](../images/charts/consensus-coverage.svg)
-
-The bars are the production `#[spec_locked]` attributes in `blvm-consensus`. Witness fixtures are included in the figure's total.
+Each bar is the production attribute count for that area. The figure is on [Assurance](assurance.md#where-the-attributes-sit).
 
 See also [Network Protocol](../protocol/network-protocol.md) for transport and wire-format documentation.
 

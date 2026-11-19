@@ -1,9 +1,11 @@
 status: measured
 measured_at: "2026-11-14"
 dated: false
-source: "Production attributes. Witness fixtures are included in the total."
+source: "Production attributes by area."
+print_sum: true
 unit: attributes
 categories: [Block, Tx, Script, PoW, Segwit, Witness, Taproot, Mempool, Econ, Reorg, Locktime, Root]
+tones: [measured, measured, measured, measured, measured, measured, measured, measured, measured, measured, measured, measured]
 series:
   - name: Production attributes
     color: "#7eb6e8"

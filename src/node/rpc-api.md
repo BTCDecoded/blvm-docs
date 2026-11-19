@@ -313,7 +313,7 @@ BLVM targets **common Bitcoin Core JSON-RPC** shapes for interoperability (ckpoo
 
 `estimatesmartfee` takes positional `conf_target` (default `6`, 1 to 1008), `estimate_mode` (`unset`, `economical`, or `conservative`; default and `unset` are conservative), `fee_rate_estimator` (`none`, `history`, `mempool`, or a module-registered estimator name), and `verbosity` (`0` to `2`). `feerate` is BTC per kvB. Verbosity 1 adds `source`, `mempool_healthy`, `requested_estimator`, `active_estimator`, and `degraded`; verbosity 2 adds the tip, the table age, and the mempool health ratio. When no rate is available, the reply carries `errors` and, at verbosity 1 or 2, a `reason` (`warming_up`, `mempool_unhealthy`, `empty_mempool`, `disabled`, or `external_stale`). Out-of-range parameters are `invalid_params` errors.
 
-The estimator is configured under [`[fees]`](../reference/configuration-reference.md#fee-estimator-fees). Modules such as [blvm-fees](../modules/fees.md) register named estimators that `listfeeestimators` reports. Full reply shapes: [blvm-node RPC reference](https://github.com/BTCDecoded/blvm-node/blob/main/docs/RPC_REFERENCE.md#estimatesmartfee).
+The estimator is configured under [`[fees]`](../reference/configuration-reference.md#fees). Modules such as [blvm-fees](../modules/fees.md) register named estimators that `listfeeestimators` reports. Full reply shapes: [blvm-node RPC reference](https://github.com/BTCDecoded/blvm-node/blob/main/docs/RPC_REFERENCE.md#estimatesmartfee).
 
 ### Module Methods
 

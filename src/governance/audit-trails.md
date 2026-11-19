@@ -43,8 +43,6 @@ The rules are published and are not enforced. The keys in the governance reposit
 
 ## Audit Trail Completeness
 
-![Audit trail status](../images/charts/audit-completeness.svg)
-
 Bitcoin Commons only. Release attestation, the public signature record, and the audit log are designed and are not running. Live enforcement is off. Other implementations are not scored. `security-control-status.yml` is not the source.
 
 ## OpenTimestamps Integration

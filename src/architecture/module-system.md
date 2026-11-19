@@ -414,7 +414,7 @@ The IPC requests are `TimerCreate`, `TimerCancel`, `TimerPause`, `TimerResume`, 
 
 A durable timer lives in the **node** database tree `module_timers`, not the module database. Unload/disconnect detaches it; it resumes when the module reconnects. `delete_module_timers` removes records, but there is no uninstall path that calls it yet. `Persist::Durable { audit: true }` also appends to `module_timer_journal`. The journal detects changed records, not a writer who can rewrite the entire tree and recompute every hash.
 
-Configure global limits under [`[timers]`](../reference/configuration-reference.md#module-timers-timers); `[module_timers.<name>]` can override `max_timers` for one handshake module name. RPCs `listtimers`, `gettimerstats`, `gettimerjournal`, and `verifytimerjournal` inspect the service. Metrics include active timers, fires, lateness, acknowledgement time, and circuit-breaker trips.
+Configure global limits under [`[timers]`](../reference/configuration-reference.md#timers); `[module_timers.<name>]` can override `max_timers` for one handshake module name. RPCs `listtimers`, `gettimerstats`, `gettimerjournal`, and `verifytimerjournal` inspect the service. Metrics include active timers, fires, lateness, acknowledgement time, and circuit-breaker trips.
 
 ## Module Registry
 

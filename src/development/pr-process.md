@@ -42,9 +42,7 @@ CI is the check that runs. A signature count and a review period do not enable o
 
 ## Schedules
 
-![Review period by action tier](../images/charts/tier-review-days.svg)
-
-![Signature thresholds by repository layer](../images/charts/layer-thresholds.svg)
+Review windows by layer and by tier are on [Governance model](../governance/governance-model.md#review-window-by-repository-layer).
 
 | Tier | What it covers | Signatures | Review |
 |---|---|---|---|

@@ -2,7 +2,7 @@
 
 Consensus coverage runs from an Orange Paper sentence to a mainnet block. The figures are the locks. The rows say what a pass means.
 
-![What locks the implementation](../images/charts/assurance-counts.svg)
+{{#include ../../charts/fragments/assurance-counts.md}}
 
 Z3 checks the `#[spec_locked]` functions on the figure, including witness fixtures. The other rows are the body proofs, the mutation checks, the test functions, and the Lean proofs. Theorem 6.1.2, the subsidy rule, is proved in Lean for every natural number and in Rust for the heights the tool checks.
 
@@ -10,13 +10,13 @@ Z3 checks the `#[spec_locked]` functions on the figure, including witness fixtur
 
 ![Spec-lock attributes by area](../images/charts/consensus-coverage.svg)
 
-The bars are the production `#[spec_locked]` attributes in `blvm-consensus`. Witness fixtures are included in the figure's total.
+Each bar is the production attribute count for that area.
 
 ## Where the tests sit
 
 ![Consensus test functions](../images/charts/consensus-tests.svg)
 
-Counted from `#[test]` and `#[tokio::test]`. The property tests include the Orange Paper property file, which compares results with the Orange Paper formulas. The fuzz harnesses on the first figure run beside this count.
+The bars partition the 2,353 test functions. The property-test area is 184 of them. Counted from `#[test]` and `#[tokio::test]`. The 187 counts proptest properties. The property-test area includes the Orange Paper property file, which compares results with the Orange Paper formulas. The fuzz harnesses in the counts above run beside this count.
 
 ## Specification
 

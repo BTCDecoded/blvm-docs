@@ -1,56 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 360" role="img" width="962" height="360">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 484" role="img" width="760" height="484">
 <title>Spec-lock attributes by area</title>
-<desc>Production spec_locked attributes in blvm-consensus, counted from the source Unit: attributes. Production attributes. Witness fixtures are included in the total</desc>
+<desc>Production spec_locked attributes in blvm-consensus, counted from the source Unit: attributes. Production attributes by area. These bars sum to 160.</desc>
 <rect width="100%" height="100%" fill="#161923"/>
-<text x="32" y="32" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Spec-lock attributes by area</text>
-<text x="18" y="158.0" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" transform="rotate(-90 18 158.0)">attributes</text>
-<line x1="78" y1="252.0" x2="942" y2="252.0" stroke="#505274"/>
-<text x="70" y="256.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">0</text>
-<line x1="78" y1="205.0" x2="942" y2="205.0" stroke="#505274"/>
-<text x="70" y="209.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">10</text>
-<line x1="78" y1="158.0" x2="942" y2="158.0" stroke="#505274"/>
-<text x="70" y="162.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">20</text>
-<line x1="78" y1="111.0" x2="942" y2="111.0" stroke="#505274"/>
-<text x="70" y="115.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">30</text>
-<line x1="78" y1="64.0" x2="942" y2="64.0" stroke="#505274"/>
-<text x="70" y="68.0" fill="#8e90a8" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">40</text>
-<rect x="103.0" y="167.4" width="19.0" height="84.6" fill="#7eb6e8"/>
-<text x="112.5" y="163.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">18</text>
-<text x="114.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Block</text>
-<rect x="175.0" y="167.4" width="19.0" height="84.6" fill="#7eb6e8"/>
-<text x="184.5" y="163.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">18</text>
-<text x="186.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Tx</text>
-<rect x="247.0" y="64.0" width="19.0" height="188.0" fill="#7eb6e8"/>
-<text x="256.5" y="60.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">40</text>
-<text x="258.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Script</text>
-<rect x="319.0" y="205.0" width="19.0" height="47.0" fill="#7eb6e8"/>
-<text x="328.5" y="201.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">10</text>
-<text x="330.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">PoW</text>
-<rect x="391.0" y="214.4" width="19.0" height="37.6" fill="#7eb6e8"/>
-<text x="400.5" y="210.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">8</text>
-<text x="402.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Segwit</text>
-<rect x="463.0" y="214.4" width="19.0" height="37.6" fill="#7eb6e8"/>
-<text x="472.5" y="210.4" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">8</text>
-<text x="474.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Witness</text>
-<rect x="535.0" y="190.9" width="19.0" height="61.1" fill="#7eb6e8"/>
-<text x="544.5" y="186.9" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">13</text>
-<text x="546.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Taproot</text>
-<rect x="607.0" y="242.6" width="19.0" height="9.4" fill="#7eb6e8"/>
-<text x="616.5" y="238.6" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">2</text>
-<text x="618.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Mempool</text>
-<rect x="679.0" y="228.5" width="19.0" height="23.5" fill="#7eb6e8"/>
-<text x="688.5" y="224.5" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">5</text>
-<text x="690.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Econ</text>
-<rect x="751.0" y="195.6" width="19.0" height="56.4" fill="#7eb6e8"/>
-<text x="760.5" y="191.6" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">12</text>
-<text x="762.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Reorg</text>
-<rect x="823.0" y="205.0" width="19.0" height="47.0" fill="#7eb6e8"/>
-<text x="832.5" y="201.0" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">10</text>
-<text x="834.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Locktime</text>
-<rect x="895.0" y="176.8" width="19.0" height="75.2" fill="#7eb6e8"/>
-<text x="904.5" y="172.8" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11">16</text>
-<text x="906.0" y="272" fill="#bcbdd0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12">Root</text>
-<rect x="78" y="302" width="12" height="12" fill="#7eb6e8"/>
-<text x="96" y="312" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="12">Production attributes</text>
-<text x="32" y="338" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Production attributes. Witness fixtures are included in the total</text>
+<text x="24" y="32" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="18" font-weight="650">Spec-lock attributes by area</text>
+<text x="24" y="74" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Block</text>
+<rect x="96" y="62" width="266.4" height="14" fill="#7eb6e8"/>
+<text x="736" y="74" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">18</text>
+<text x="24" y="106" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Tx</text>
+<rect x="96" y="94" width="266.4" height="14" fill="#7eb6e8"/>
+<text x="736" y="106" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">18</text>
+<text x="24" y="138" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Script</text>
+<rect x="96" y="126" width="592.0" height="14" fill="#7eb6e8"/>
+<text x="736" y="138" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">40</text>
+<text x="24" y="170" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">PoW</text>
+<rect x="96" y="158" width="148.0" height="14" fill="#7eb6e8"/>
+<text x="736" y="170" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">10</text>
+<text x="24" y="202" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Segwit</text>
+<rect x="96" y="190" width="118.4" height="14" fill="#7eb6e8"/>
+<text x="736" y="202" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">8</text>
+<text x="24" y="234" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Witness</text>
+<rect x="96" y="222" width="118.4" height="14" fill="#7eb6e8"/>
+<text x="736" y="234" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">8</text>
+<text x="24" y="266" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Taproot</text>
+<rect x="96" y="254" width="192.4" height="14" fill="#7eb6e8"/>
+<text x="736" y="266" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">13</text>
+<text x="24" y="298" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Mempool</text>
+<rect x="96" y="286" width="29.6" height="14" fill="#7eb6e8"/>
+<text x="736" y="298" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">2</text>
+<text x="24" y="330" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Econ</text>
+<rect x="96" y="318" width="74.0" height="14" fill="#7eb6e8"/>
+<text x="736" y="330" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">5</text>
+<text x="24" y="362" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Reorg</text>
+<rect x="96" y="350" width="177.6" height="14" fill="#7eb6e8"/>
+<text x="736" y="362" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">12</text>
+<text x="24" y="394" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Locktime</text>
+<rect x="96" y="382" width="148.0" height="14" fill="#7eb6e8"/>
+<text x="736" y="394" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">10</text>
+<text x="24" y="426" fill="#bcbdd0" font-family="system-ui,sans-serif" font-size="13">Root</text>
+<rect x="96" y="414" width="236.8" height="14" fill="#7eb6e8"/>
+<text x="736" y="426" fill="#bcbdd0" text-anchor="end" font-family="system-ui,sans-serif" font-size="13">16</text>
+<text x="24" y="468" fill="#8e90a8" font-family="system-ui,sans-serif" font-size="12">Production attributes by area. These bars sum to 160.</text>
 </svg>

@@ -18,7 +18,7 @@ groups:
       - value: "2,353"
         label: Test functions
       - value: "187"
-        label: Property tests
+        label: Proptest properties
       - value: "63"
         label: Fuzz harnesses
   - name: Spec model

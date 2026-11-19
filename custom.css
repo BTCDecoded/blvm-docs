@@ -90,6 +90,34 @@
   white-space: normal;
 }
 
+/* Assurance counts. 1rem is 10px, so the value is 26px and the grid wraps. */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.2rem;
+  margin: 1.2rem 0 2.4rem;
+}
+.figures section {
+  border: 1px solid var(--table-border-color);
+  border-radius: 4px;
+  padding: 1.4rem 1.8rem 1.6rem;
+}
+.figures .figure-group {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.figures .figure-value {
+  margin: 1.2rem 0 0;
+  font-size: 2.6rem;
+  font-weight: 650;
+  line-height: 1.1;
+}
+.figures .figure-label {
+  margin: 0.4rem 0 0;
+  line-height: 1.45;
+}
+
 .admonition {
   border-left: 4px solid #6c757d;
   padding: 0.75rem 1rem;

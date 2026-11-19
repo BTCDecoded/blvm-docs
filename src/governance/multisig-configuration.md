@@ -10,11 +10,9 @@ The curves use the current *k* and *n* in `repository-layers.yml`. Each signer i
 
 ## Thresholds
 
-![Signature thresholds by repository layer](../images/charts/layer-thresholds.svg)
+Signature counts are on [Governance model](governance-model.md#signature-thresholds-by-layer). Review windows by layer and by tier are on [the same page](governance-model.md#review-window-by-repository-layer).
 
-![Review period by action tier](../images/charts/tier-review-days.svg)
-
-The layer chart is `repository-layers.yml`. The tier chart is the review window in `action-tiers.yml`. Tier 5 has a second written pair in [GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md). That pair is not the `tier_5_governance` row alone.
+The layer counts are `repository-layers.yml`. The tier review period is `action-tiers.yml`. Tier 5 has a second written pair in [GOVERNANCE.md](https://github.com/BTCDecoded/governance/blob/main/GOVERNANCE.md). That pair is not the `tier_5_governance` row alone.
 
 N counts distinct signers. `blvm-sdk` 0.1.23 (29b0eba) and `blvm-commons` (faa7320) count each signer once, so a repeated signature does not satisfy a threshold. Nested multisig for a team or a hierarchy is in the [SDK overview](../sdk/overview.md).
 

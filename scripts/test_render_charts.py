@@ -60,11 +60,19 @@ class RenderChartsTest(unittest.TestCase):
         layers = rc.load_layers()
         rendered = rc.outputs()
         layer_svg = rendered[ROOT / "src/images/charts/layer-thresholds.svg"]
+        self.assertIn('viewBox="0 0 760 360"', layer_svg)
+        self.assertIn("Review window by repository layer", layer_svg)
+        self.assertNotIn("Signatures by repository layer", layer_svg)
         for row in layers:
             self.assertIn(f">{row['review']}<", layer_svg)
             if row["consensus_review"] is not None:
                 self.assertIn(f">{row['consensus_review']}<", layer_svg)
         self.assertIn("Policy windows", layer_svg)
+        table = rendered[ROOT / "charts/fragments/layer-signatures.md"]
+        for row in layers:
+            self.assertIn(
+                f"| {row['short']} | {row['required']} | {row['total']} |", table
+            )
         tier_svg = rendered[ROOT / "src/images/charts/tier-review-days.svg"]
         for row in rc.load_tiers():
             self.assertIn(f">{row['days']}<", tier_svg)
@@ -111,10 +119,17 @@ class RenderChartsTest(unittest.TestCase):
     def test_coverage_figures_are_drawn_from_series_files(self):
         rendered = rc.outputs()
         attrs = rendered[ROOT / "src/images/charts/consensus-coverage.svg"]
-        for value in (18, 40, 13, 2, 16):
+        series = yaml.safe_load(
+            (ROOT / "charts/series/consensus-coverage.yml").read_text(encoding="utf-8")
+        )
+        values = series["series"][0]["values"]
+        for value in values:
             self.assertIn(f">{value}<", attrs)
-        self.assertIn("included in the total", attrs)
-        self.assertIn("Production attributes", attrs)
+        self.assertIn(f"These bars sum to {sum(values)}.", attrs)
+        self.assertIn('viewBox="0 0 760 ', attrs)
+        self.assertIn("Production attributes by area", attrs)
+        self.assertNotIn("included in the total", attrs)
+        self.assertNotIn("Witness fixtures", attrs)
         self.assertNotIn("2026-11-14", attrs)
         self.assertNotIn(
             ROOT / "src/images/charts/spec-drift-vs-test-coverage.svg", rendered
@@ -132,7 +147,10 @@ class RenderChartsTest(unittest.TestCase):
             self.assertIn(f">{value}<", svg)
         self.assertIn("Mutation-checked functions", svg)
         self.assertIn("Spec-locked functions", svg)
+        self.assertIn("Proptest properties", svg)
+        self.assertNotIn("Property tests", svg)
         self.assertIn("Also checked in Rust", svg)
+        self.assertIn('class="figures"', svg)
 
     def test_consensus_test_counts_sum_to_the_functions(self):
         svg = rc.hbar_chart(

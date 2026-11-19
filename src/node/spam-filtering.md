@@ -273,7 +273,6 @@ Spam filtering is used in UTXO commitment processing to reduce bandwidth during 
 
 - **Location**: `blvm-protocol/src/utxo_commitments/initial_sync.rs`
 - **Usage**: Filters outputs when processing blocks for UTXO commitments
-- **Benefit**: 40-60% bandwidth reduction during ongoing sync
 
 ### Protocol Extensions
 
@@ -291,13 +290,6 @@ Spam filtering can be applied at mempool entry to reject spam transactions:
 - **Usage**: Optional spam check before accepting transactions to mempool
 - **Benefit**: Prevents spam from entering mempool, reducing memory usage
 - **Status**: Opt-in (default: disabled) to maintain backward compatibility
-
-## Bandwidth Savings
-
-- **40-60% bandwidth reduction** during ongoing sync
-- Maintains consensus correctness
-- Enables efficient UTXO commitment synchronization
-- Reduces storage requirements for filtered block relay
 
 ## Performance Characteristics
 

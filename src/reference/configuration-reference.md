@@ -11,10 +11,12 @@ There is no `[payment]` table on `NodeConfig`. `blvm-payment` reads its own modu
 | Where the node listens, and which chain | [Top level](#top-level) |
 | Log filter | [`[logging]`](#logging) |
 | Pool size, fees, replacement | [`[mempool]` and `[rbf]`](#mempool-and-rbf) |
+| Fee estimator | [`[fees]`](#fees) |
 | Data directory, backend, pruning | [`[storage]`](#storage) |
 | Initial sync | [`[ibd]`](#ibd) |
 | Timeouts, relay, DoS | [Network, RPC, and limits](#network-rpc-and-limits) |
 | Auth, modules, ban sharing | [RPC, ban list, governance, modules](#rpc-ban-list-governance-modules) |
+| Timer service | [`[timers]`](#timers) |
 
 ## Top level
 
@@ -48,6 +50,10 @@ There is no `[payment]` table on `NodeConfig`. `blvm-payment` reads its own modu
 When `[mempool]` or `[rbf]` is present, those sizes are copied onto the consensus mempool global. Admission does not call the consensus mempool checker.
 
 `[rbf]`: `mode` (`disabled`, `conservative`, `standard`, `aggressive`), `min_fee_rate_multiplier`, `min_fee_bump_satoshis`, `min_confirmations`, `allow_package_replacements`, `max_replacements_per_tx`, `cooldown_seconds`.
+
+## `[fees]`
+
+The node selects the estimator with `estimator` and `fallback`. The example is on the [fees module](../modules/fees.md) page.
 
 ## `[storage]`
 
@@ -87,7 +93,7 @@ The parallel IBD assignment checkpoint stays a code constant. Bench and dest lat
 
 `[network_timing]`: `target_peer_count` (`target_outbound_peers` is an alias), `peer_connection_delay_seconds`, `addr_relay_min_interval_seconds`, `max_addresses_per_addr_message`, `max_addresses_from_dns`.
 
-`[request_timeouts]`: `async_request_timeout_seconds`, `utxo_commitment_request_timeout_seconds`, `request_cleanup_interval_seconds`, `pending_request_max_age_seconds`, `storage_timeout_seconds`, `network_timeout_seconds`, `rpc_timeout_seconds`, `handshake_timeout_secs`, `connect_timeout_secs`.
+`[request_timeouts]`: `async_request_timeout_seconds`, `utxo_commitment_request_timeout_seconds`, `request_cleanup_interval_seconds`, `pending_request_max_age_seconds`, `storage_timeout_seconds`, `rpc_timeout_seconds`, `handshake_timeout_secs`, `connect_timeout_secs`.
 
 `[protocol_limits]`: `max_protocol_message_length`, `max_addr_to_send`, `max_inv_sz`, `max_headers_results`.
 
@@ -114,3 +120,7 @@ The parallel IBD assignment checkpoint stays a code constant. Bench and dest lat
 `[module_resource_limits]`: `default_max_cpu_percent`, `default_max_memory_bytes`, `default_max_file_descriptors`, `default_max_child_processes`, `module_startup_wait_millis`, `module_socket_timeout_seconds`, `module_socket_check_interval_millis`, `module_socket_max_attempts`.
 
 Each module has its own file at `{modules.data_dir}/{manifest name}/config.toml`. `[modules.<manifest name>]` overrides only the fields that module marks for the environment overlay. The manifest name is the table key. `[modules.blvm-stratum-v2]` is the miner TCP overlay. `[modules.stratum-v2]` is not.
+
+## `[timers]`
+
+`[timers]` is the node-owned timer service. `[module_timers.<name>]` overrides `max_timers` for one module. The behavior is on the [module system](../architecture/module-system.md#module-timers) page.
