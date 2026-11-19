@@ -1,5 +1,7 @@
 # Commons Mesh Module
 
+> **Registry status:** Not listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json). `[modules]` registry bootstrap cannot download `blvm-mesh`; [build it from source](overview.md#build-from-source) and place it under `modules_dir`.
+
 Payment-gated mesh overlay for **blvm-node**: route discovery, replay prevention, optional payment proofs, and subprocess ModuleAPI. Wire format and smoke tests live in the [blvm-mesh](https://github.com/BTCDecoded/blvm-mesh) repo ([mesh transport](https://github.com/BTCDecoded/blvm-mesh/blob/main/docs/TRANSPORT.md), [mesh API](https://github.com/BTCDecoded/blvm-mesh/blob/main/API.md)).
 
 ## Install

@@ -1,5 +1,7 @@
 # Governance module (`blvm-governance`)
 
+> **Registry status:** Listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json) as `blvm-governance`. Pin it under `[modules]` for [registry bootstrap](overview.md#registry-bootstrap-recommended).
+
 On-chain proposal tracking and optional webhook notifications for **`blvm-node`**. Distinct from the **Bitcoin Commons governance framework** documented under [Governance](../governance/overview.md): this page covers the **loadable module** only.
 
 ## Overview

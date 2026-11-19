@@ -1,5 +1,7 @@
 # Marketplace module (`blvm-marketplace`)
 
+> **Registry status:** Listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json) as `blvm-marketplace`. Pin it under `[modules]` for [registry bootstrap](overview.md#registry-bootstrap-recommended).
+
 Optional **module discovery, registry, and payment** integration for **`blvm-node`**. Most operators use **`[modules].registry_url`** bootstrap (GitHub Releases + `modules.json`) without loading this module.
 
 ## Overview

@@ -1,5 +1,7 @@
 # Lightning Network Module
 
+> **Registry status:** Not listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json). `[modules]` registry bootstrap cannot download `blvm-lightning`; [build it from source](overview.md#build-from-source) and place it under `modules_dir`.
+
 ## Overview
 
 The Lightning Network module (`blvm-lightning`) handles invoice verification and payment state for blvm-node. LNBits talks to an external wallet. The LDK provider keeps a channel manager inside the module process.

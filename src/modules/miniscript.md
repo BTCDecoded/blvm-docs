@@ -1,5 +1,7 @@
 # Miniscript module (`blvm-miniscript`)
 
+> **Registry status:** Listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json) as `blvm-miniscript`. Pin it under `[modules]` for [registry bootstrap](overview.md#registry-bootstrap-recommended).
+
 Descriptor and PSBT helpers for **`blvm-node`**. Overrides two core JSON-RPC methods via the module RPC extender when loaded.
 
 ## Overview

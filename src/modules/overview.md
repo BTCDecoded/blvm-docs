@@ -4,15 +4,9 @@ BLVM node runs optional features as separate, process-isolated modules. See [Bui
 
 ## Available modules
 
-**Core integration modules** (documented in this book):
+Registry status comes from [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json) in the `blvm` repository. Each module page repeats it in a **Registry status** line.
 
-- **[Lightning Network Module](lightning.md)**: Lightning payment processing (LNBits, LDK, Stub)
-- **[Commons Mesh Module](mesh.md)**: Payment-gated mesh overlay; four JSON-RPC methods when loaded
-- **[Stratum V2 Module](stratum-v2.md)**: Stratum V2 mining protocol
-- **[Datum Module](datum.md)**: DATUM Gateway (with Stratum V2)
-- **[Selective Sync Module](selective-sync.md)**: IBD sync policy and witness filtering
-
-**Registry modules** (bootstrap from `registry/modules.json`):
+**In the registry** (bootstrap via `[modules].registry_url`):
 
 - **blvm-zmq**: ZMQ PUB notifications ([ZMQ module](zmq.md))
 - **blvm-index**: script history. The node binds Electrum and Esplora ([Script history](wallet-index.md)).
@@ -30,6 +24,15 @@ A fresh install pins **blvm-miniscript**, **blvm-zmq**, and **blvm-index** (`def
 - **blvm-fees**: `blend` and `blend-min` fee estimators ([Fee estimators](fees.md))
 - **blvm-upstream**: mempool.space, Esplora, and bitcoind connectors behind `blvm.upstream.v1` ([Upstream connectors](upstream.md))
 - **blvm-miningos**: MiningOS rack integration with a Node.js Hyperswarm bridge ([Mining OS](miningos.md))
+
+**Not in the registry** (build from source; registry bootstrap cannot download these):
+
+- **blvm-lightning**: Lightning payment processing (LNBits, LDK, Stub) ([Lightning Network Module](lightning.md))
+- **blvm-mesh**: Payment-gated mesh overlay; four JSON-RPC methods when loaded ([Commons Mesh Module](mesh.md))
+- **blvm-stratum-v2**: Stratum V2 mining protocol ([Stratum V2 Module](stratum-v2.md))
+- **blvm-datum**: DATUM Gateway (with Stratum V2) ([Datum Module](datum.md))
+- **blvm-selective-sync**: IBD sync policy and witness filtering ([Selective Sync Module](selective-sync.md))
+- **blvm-miningos**: MiningOS rack integration ([Mining OS Module](miningos.md))
 
 ## Module system architecture
 
@@ -60,8 +63,8 @@ Pin modules in `blvm.toml` under **`[modules]`** (merge into your existing file:
 ```toml
 [modules]
 registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/modules.json"
-blvm-mesh = "0.1.*"
 blvm-zmq = "0.1.*"
+blvm-miniscript = "0.1.*"
 ```
 
 The node downloads version-pinned binaries from GitHub Releases (`sha256sums.txt` on each tag) when a pinned module is missing on disk. See [blvm README](https://github.com/BTCDecoded/blvm/blob/main/README.md) in the `blvm` repository for the full bootstrap contract.

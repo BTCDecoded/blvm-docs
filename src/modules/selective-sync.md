@@ -1,5 +1,7 @@
 # Selective Synchronization Module
 
+> **Registry status:** Not listed in [`registry/modules.json`](https://github.com/BTCDecoded/blvm/blob/main/registry/modules.json). `[modules]` registry bootstrap cannot download `blvm-selective-sync`; [build it from source](overview.md#build-from-source) and place it under `modules_dir`.
+
 The **blvm-selective-sync** module provides a configurable **sync policy**: operators can avoid serving or persisting certain flagged transaction content during IBD while keeping full cryptographic validation of the chain.
 
 ## Requirements
