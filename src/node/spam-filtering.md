@@ -176,8 +176,8 @@ The mempool also enforces stricter standard transaction checks:
 
 #### OP_RETURN Limits
 
-- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most `max_op_return_script_bytes` bytes. The default is **100,000**, the standard transaction weight (400,000) divided by four. The limit is the whole script, including the opcode, and every byte after `OP_RETURN` must be a push. The node's mempool applies it when `require_standard` is true (the default). `getmempoolinfo` reports the initialized value at `policy.max_op_return_script_bytes`. An omitted config key stays 100,000.
-- **Multiple OP_RETURN outputs**: the node's admission path checks each output on its own and does not limit how many `OP_RETURN` outputs a transaction has.
+- **Maximum OP_RETURN size**: a standard `OP_RETURN` output script is at most `max_op_return_script_bytes` bytes. The default is **100,000**, the standard transaction weight (400,000) divided by four. The limit is the whole script, including the opcode, and every byte after `OP_RETURN` must be a push. The node's mempool applies it when `require_standard` is true (the default). `getmempoolinfo` reports the initialized value at `policy.max_op_return_script_bytes`. An omitted config key stays 100,000 (`blvm-node/src/config/mempool.rs`, `output_script_is_standard` in `blvm-node/src/node/mempool.rs`).
+- **Multiple OP_RETURN outputs**: the default does not cap the count (`max_op_return_outputs` is `u32::MAX`, and `reject_multiple_op_return` is false). Set `reject_multiple_op_return = true`, or set `max_op_return_outputs` to 1, to refuse a second `OP_RETURN`. The check is `op_return_count_exceeds_policy` in `blvm-node/src/node/mempool.rs`.
 - **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_op_return_size` (default 80), `max_op_return_outputs` (1), and `reject_multiple_op_return` (`blvm-primitives/src/config.rs`), read by `blvm-consensus` `is_standard_tx_with_config`. Those fields are separate from the node's `[mempool]` keys.
 
 #### Data-carrying channels
@@ -191,7 +191,7 @@ An envelope byte costs about 0.29 vbytes, and an `OP_RETURN` byte costs about 1.
 
 #### Script Size Limits
 
-- **scriptSig size**: a standard `scriptSig` is at most **1,650 bytes** (`MAX_STANDARD_SCRIPTSIG_SIZE` in `blvm-node/src/node/mempool.rs`). The node's mempool applies this when `require_standard` is true (the default). There is no config key for it.
+- **scriptSig size**: a standard `scriptSig` is at most `max_standard_script_size` bytes. The default is **1,650** (`MAX_STANDARD_SCRIPTSIG_SIZE`). The node's mempool applies this when `require_standard` is true (the default) (`blvm-node/src/config/mempool.rs`, `preview_accept` in `blvm-node/src/node/mempool.rs`).
 - **Library defaults**: `blvm-primitives` `MempoolConfig` still carries `max_standard_script_size` (default 200) in `blvm-primitives/src/config.rs`, read by `blvm-consensus` `is_standard_tx_with_config`. That field is separate from the node's scriptSig limit.
 
 #### Sigop-adjusted vsize and structural templates
@@ -240,6 +240,14 @@ filter_many_small_outputs = false
 [mempool]
 # Enable spam filtering at mempool entry (default: false)
 reject_spam_in_mempool = true
+
+# Standardness limits. Defaults match the node: a 100,000-byte OP_RETURN
+# script, no OP_RETURN count cap, and a 1,650-byte scriptSig.
+max_op_return_script_bytes = 100000
+# No count cap (u32::MAX). Set to 1, or set reject_multiple_op_return = true, to refuse a second OP_RETURN.
+max_op_return_outputs = 4294967295
+reject_multiple_op_return = false
+max_standard_script_size = 1650
 
 # Per-peer transaction rate limiting (defaults: 10, 1)
 tx_rate_limit_burst = 10
