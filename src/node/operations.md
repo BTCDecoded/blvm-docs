@@ -49,7 +49,7 @@ The sample `TimeoutStartSec` is 61 seconds: an empty regtest start reached `RPC 
 
 Logs go to stderr. Under systemd, journald collects them. The sample sets `NO_COLOR=1`. It does not add a log file.
 
-A fresh config loads `blvm-zmq`, which binds `127.0.0.1:28332` through `28336`. Two nodes on one host collide on those ports. `/metrics` uses the same auth as RPC once a cookie or password is set. This page does not install LND, CLN, or Prometheus.
+A fresh config loads `blvm-zmq` with `endpoint = "tcp://127.0.0.1:28332"`. Two nodes on one host collide on that port. `/metrics` uses the same auth as RPC once a cookie or password is set. This page does not install LND, CLN, or Prometheus.
 
 The container image runs `/usr/local/bin/blvm` as uid **61100** (gid 61100), with `STOPSIGNAL SIGTERM`. The engine’s default stop grace is still 10 seconds. Stop with `docker stop --time 240`, or set Compose `stop_grace_period: 240s`. Bind-mount a data directory you create and `chown` to 61100:61100. The image does not declare a volume.
 

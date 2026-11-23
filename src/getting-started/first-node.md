@@ -108,15 +108,7 @@ A config file that omits `[modules]` enables `blvm-miniscript`, `blvm-zmq`, and 
 
 `blvm-index` is script history. The node binds Electrum and Esplora. An unset `[services]` `listen` does not open a port.
 
-ZMQ's default binds are loopback:
-
-| Topic | Bind |
-|-------|------|
-| `hashblock` | `tcp://127.0.0.1:28332` |
-| `hashtx` | `tcp://127.0.0.1:28333` |
-| `rawblock` | `tcp://127.0.0.1:28334` |
-| `rawtx` | `tcp://127.0.0.1:28335` |
-| `sequence` | `tcp://127.0.0.1:28336` |
+ZMQ's default is one loopback PUB socket, `endpoint = "tcp://127.0.0.1:28332"`. `hashblock`, `hashtx`, `rawblock`, `rawtx`, and `sequence` are subscribe topics on that socket. A topic key binds that topic on its own address.
 
 The `sequence` body is 33 bytes: `0x01` for a mempool entry and `0x02` for a removal. It is not Bitcoin Core's `C`/`D`/`R`/`A` frame. The socket is not authenticated.
 

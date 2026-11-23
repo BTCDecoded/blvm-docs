@@ -4,7 +4,7 @@ Bitcoin-compatible **ZeroMQ PUB** notifications for blocks and mempool events. R
 
 ## Overview
 
-**blvm-zmq** binds one ZMQ **PUB** socket per configured topic and publishes when the node emits matching events:
+**blvm-zmq** binds one ZMQ **PUB** socket per distinct address and publishes when the node emits matching events. Topics that share an address share that socket:
 
 | Topic | Payload | When |
 |-------|---------|------|
@@ -22,7 +22,7 @@ If the module cannot fetch a full block or transaction from the node API, it sti
 
 - `blvm-node` with the module system enabled.
 - Module pinned in **`registry/modules.json`** or installed on the module search path.
-- Each topic is optional: omit endpoints you do not need. With **no** endpoints set, the module loads but does not bind sockets.
+- `endpoint` publishes every topic. A topic key publishes that topic on its own address. With neither set, the module loads but does not bind a socket.
 
 ## Loading
 
@@ -34,15 +34,11 @@ registry_url = "https://raw.githubusercontent.com/BTCDecoded/blvm/main/registry/
 blvm-zmq = "0.1.*"
 ```
 
-With per-topic overrides in the node config:
+One bind for every topic:
 
 ```toml
 [modules.blvm-zmq]
-hashblock = "tcp://127.0.0.1:28332"
-hashtx = "tcp://127.0.0.1:28333"
-rawblock = "tcp://127.0.0.1:28334"
-rawtx = "tcp://127.0.0.1:28335"
-sequence = "tcp://127.0.0.1:28336"
+endpoint = "tcp://127.0.0.1:28332"
 ```
 
 Or place a release binary + `module.toml` under the modules directory. See [Module catalog: Installing modules](overview.md#installing-modules).
@@ -51,21 +47,18 @@ Module data-dir config: `<modules.data_dir>/blvm-zmq/config.toml` (same keys as 
 
 ## Configuration
 
-| Key | Topic | Typical bind (mainnet-style) |
-|-----|-------|------------------------------|
-| `hashblock` | Block hash | `tcp://127.0.0.1:28332` |
-| `hashtx` | Transaction hash | `tcp://127.0.0.1:28333` |
-| `rawblock` | Raw block | `tcp://127.0.0.1:28334` |
-| `rawtx` | Raw transaction | `tcp://127.0.0.1:28335` |
-| `sequence` | Mempool sequence | `tcp://127.0.0.1:28336` |
+| Key | Effect | Default |
+|-----|--------|---------|
+| `endpoint` | One PUB socket for every topic | `tcp://127.0.0.1:28332` |
+| `hashblock`, `hashtx`, `rawblock`, `rawtx`, `sequence` | Bind that topic on its own address | unset |
 
 **Endpoint format:** `transport://address`: `tcp://`, `ipc://`, or `inproc://` (same as Bitcoin Core ZMQ).
 
-**Capabilities (`module.toml`):** `read_blockchain`, `subscribe_events`
+**Capabilities (`module.toml`):** `read_blockchain`, `read_mempool`, `subscribe_events`
 
 ## Wire format
 
-- **Topics:** UTF-8 strings (`hashblock`, `hashtx`, `rawblock`, `rawtx`, `sequence`) sent as the first frame with `SNDMORE`, payload as the second frame (Bitcoin ZMQ style).
+- **Topics:** three frames: the topic, the payload, and a 32-bit little-endian counter for that socket.
 - **`rawblock` / `rawtx` payloads:** Bitcoin **P2P wire serialization** from `blvm-protocol` (`serialize_block_witnesses` / `serialize_tx`): the same encoding as P2P `block` / `tx` message bodies, **not** bincode. Subscribers must decode wire format.
 
 ## Behaviour
