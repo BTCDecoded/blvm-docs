@@ -22,7 +22,7 @@ If the module cannot fetch a full block or transaction from the node API, it sti
 
 - `blvm-node` with the module system enabled.
 - Module pinned in **`registry/modules.json`** or installed on the module search path.
-- `endpoint` publishes every topic. A topic key publishes that topic on its own address. With neither set, the module loads but does not bind a socket.
+- `[config_defaults]` in `module.toml` publishes every topic on `endpoint`. The node copies that table at load and does not name the keys. A topic key publishes that topic on its own address. An empty topic value turns that topic off.
 
 ## Loading
 
