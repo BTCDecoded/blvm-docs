@@ -1,6 +1,6 @@
 # Script history (`blvm-index`)
 
-`blvm-index` keeps the script-history database format. The node binds Electrum (`[services.electrum]`) and Esplora (`[services.esplora]`). This process does not bind them. An unset `listen` does not open a port.
+`blvm-index` keeps the script-history database format. The node binds Electrum (`[services.electrum]`) and Esplora (`[services.esplora]`). This process does not bind them. An unset service `listen` does not open a port.
 
 Script history for outputs created on chain, and for spends of those outputs. The module process owns the database. It does not open the node chain store, and it does not hold keys.
 
@@ -19,6 +19,7 @@ The script key is SHA256(`scriptPubKey`), byte-reversed. That is the scripthash 
 The node binds Electrum only when `[services.electrum]` sets `listen`:
 
 ```toml
+[services.electrum]
 listen = "127.0.0.1:50001"
 ```
 

@@ -9,7 +9,7 @@ UDP/FEC **block** relay as a **loadable Commons module**. Distinct from Dandelio
 - **Outbound:** on `NewBlock` / `BlockMined`, fetches the block via `NodeAPI::get_block`, FEC-encodes, and sends UDP chunks to registered FIBRE peers.
 - **Inbound:** assembles chunks and enqueues raw block bytes via `NodeAPI::queue_received_block_bytes` (same validation path as P2P `BlockReceived`).
 
-The node advertises **`NODE_FIBRE`** (`1 << 26`) only while the module that set the bit is still running. Setup sets it after UDP bind succeeds. Unload, crash, and `fibre.enabled = false` leave the bit clear. The node still emits companion-UDP events when a remote peer advertises FIBRE (UDP port = peer TCP port + 1) for dynamic peer registration.
+The node advertises **`NODE_FIBRE`** (`1 << 26`) only while the module that set the bit is still running. Setup sets it after UDP bind succeeds. Unload and crash leave the bit clear. The node still emits companion-UDP events when a remote peer advertises FIBRE (UDP port = peer TCP port + 1) for dynamic peer registration.
 
 Wire types (`FecChunk`, `FibreConfig`, `FIBRE_MAGIC`, CRC32) live in **`blvm-fibre`** (`src/wire.rs`). The module crate owns UDP, Reed-Solomon, and relay logic.
 
@@ -31,18 +31,15 @@ Module `config.toml` (or `[modules.blvm-fibre]` overrides):
 
 | Key | Purpose |
 |-----|---------|
-| `fibre.enabled` | Enable relay when `true` (nested `fibre` table / `FibreConfig`) |
-| `udp_bind` | UDP listen `host:port` when not using TCP+1 follow mode (default `0.0.0.0:8334`) |
-| `udp_follow_node_tcp_plus_one` | Listen on node P2P TCP port **+ 1** (node injects `MODULE_CONFIG_NODE_P2P_LISTEN_*` on spawn) |
+| `udp_bind` | UDP listen `host:port`. Omit it to listen on the node P2P port **+ 1**. An empty value is an error |
 | `register_peers_from_p2p` | Register peers that advertise `NODE_FIBRE` on P2P (UDP = peer TCP port + 1) |
 | `[[fibre_peers]]` | Static outbound targets: `peer_id`, `udp_addr` |
 
-FEC and timeout options are under the nested **`fibre`** table (`FibreConfig` in `blvm-fibre` `src/wire.rs`), including **`fibre.enabled`** (default true).
+FEC and timeout options are under the nested **`fibre`** table (`FibreConfig` in `blvm-fibre` `src/wire.rs`: `fec_parity_ratio`, `chunk_timeout_secs`, `max_retries`, `max_assemblies`).
 
-Example: follow node P2P port (mainnet P2P 8333 → FIBRE UDP 8334):
+Example: follow the node P2P port (mainnet P2P 8333 → FIBRE UDP 8334). The node injects `MODULE_CONFIG_NODE_P2P_LISTEN_*` on spawn:
 
 ```toml
-udp_follow_node_tcp_plus_one = true
 register_peers_from_p2p = true
 ```
 
