@@ -27,7 +27,7 @@ Consensus mismatches are bugs. Mempool-policy mismatches may be intentional, doc
 
 The **full-chain program** (Phase 1 + Phase 2) is the mainnet consensus differential. Integration and historical tests are faster dev/CI loops.
 
-**Full-chain status:** Phase 1 and Phase 2 are operator-driven. A default target height near 900,000 blocks appears in `blvm-bench` tooling. That target is not a signed completion record for a full differential, so this page does not state a finished full-chain match. The runs are complementary to spec-lock. The self-hosted differential CI workflow may be paused. Do not assume a full-chain result is CI-gated to the chain tip without checking current operator logs. A clean Phase 1 step can report `Failed: 0`, and a Phase 2 height can report `"match": true`. Those lines are run records, not a completed chain-wide proof.
+**Full-chain status:** An operator Phase 1 (`sort_merge_test` step 6) and Phase 2 (`block_kernel_diff`) run completed through the Extra block-cache tip (~912722 / 912723). That clears the beta **Full chain** gate on [Why BLVM?](https://btcdecoded.org/whyblvm/). It is not a signed attestation of every later mainnet tip, and it is not CI-gated to live tip. The runs remain complementary to spec-lock. The self-hosted differential CI workflow may be paused.
 
 Operator detail: [full-chain differential testing](https://github.com/BTCDecoded/blvm-bench/blob/main/docs/FULL_CHAIN_DIFFERENTIAL.md), [differential testing README](https://github.com/BTCDecoded/blvm-bench/blob/main/README_DIFFERENTIAL_TESTING.md).
 
