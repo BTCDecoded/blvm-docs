@@ -2,9 +2,9 @@
 
 Config-file walkthrough: create `~/.config/blvm/blvm.toml`, validate it, start the node, and confirm RPC. For a five-minute regtest tutorial, use [Quick Start](quick-start.md) instead.
 
-The operator binary is `blvm`. It does not hold keys. Wallet RPCs are absent. `getdescriptorinfo` and `analyzepsbt` are the miniscript override. Signing stays out.
+The operator binary is `blvm`, the file named in the release `SHA256SUMS`. A local `cargo build` is not that file. It does not hold keys. Wallet RPCs are absent. `getdescriptorinfo` and `analyzepsbt` are the miniscript override. Signing stays out.
 
-`blvm-node` is pre-production for mainnet. A release checksum is a SHA256 file, not a signature.
+`blvm-node` is pre-production for mainnet. `v0.3.0-beta.1` through `v0.3.0-beta.6` are annotated and unsigned. Later project tags are signed, and the release carries `SHA256SUMS.asc`.
 
 ---
 
@@ -136,7 +136,7 @@ These seeds are this binary's. They are not Bitcoin Core's `defaultAssumeValid`.
 | testnet4 | 0 | no assume-valid section |
 | regtest | 0 | no assume-valid section |
 
-When the hash is unset, script checks still run. A CLI disable sets the height to 0 and clears the hash. Fork choice states no maximum reorg depth. Do not copy another node's 1024 or 288.
+When the hash is unset, script checks still run. Signatures skip only when the height is strictly below the pin, chain work meets the minimum, the pin hash is set and present, and the best header is more than two weeks of proof-equivalent time ahead. A build without the `production` feature does not skip. A CLI disable sets the height to 0 and clears the hash. Fork choice states no maximum reorg depth. Do not copy another node's 1024 or 288.
 
 Mainnet AssumeUTXO data in this tree is an empty list. The node does not publish a mainnet snapshot. Regtest has a test entry at height 100. A matching MuHash is not a snapshot load.
 
